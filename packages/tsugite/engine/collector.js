@@ -17,7 +17,7 @@
 // modern dependency left in output is the oklch literal — one @supports gate.
 
 import { oklch } from "culori";
-import { rawColorTokens } from "../theme-default/raw.color.tokens.js";
+import { rawColorTokens, rawRefName, assertRawReferences } from "../theme-default/raw.color.tokens.js";
 import { semanticColorTokens } from "../theme-default/semantic.color.tokens.js";
 import { themeVoices, themeChannels, voiceMatrix, cellName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 import { uiSeamTokens } from "../theme-default/seam.ui.tokens.js";
@@ -35,6 +35,7 @@ export function allTokens() {
 
 /** Every token defines every mode; every value must resolve (refusal rule). */
 export function validateTokens() {
+  assertRawReferences("semantic", allTokens());
   const problems = [];
   for (const [token, modes] of Object.entries(allTokens())) {
     for (const a of APPEARANCES) {
@@ -85,8 +86,8 @@ function asColorLiteral(value) {
   if (isRecipe(value)) return toSrgbCss(computeMix(value));
   if (typeof value !== "string") return null;
   if (value === "transparent") return "transparent";
-  const m = value.match(/^var\((--COLOR-[A-Z0-9]+)\)$/);
-  if (m && rawColorTokens[m[1]]) return toSrgbCss(oklch(rawColorTokens[m[1]]));
+  const name = rawRefName(value); // EN definition av RAW-grammatiken (theme-default)
+  if (name) return toSrgbCss(oklch(rawColorTokens[name]));
   return null; // shadow lists, multi-part values — not registrable as <color>
 }
 
@@ -183,6 +184,7 @@ export function generateStylesheet() {
 /** The combination law + slot schema, enforced: a voice must fill EVERY
     channel for EVERY volume the matrix allows — and nothing else. */
 export function validateVoices() {
+  assertRawReferences("voices", themeVoices);
   const problems = [];
   const channelKeys = Object.keys(themeChannels);
 

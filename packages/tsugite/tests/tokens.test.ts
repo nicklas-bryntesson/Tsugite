@@ -19,6 +19,7 @@ import {
 } from "../engine/collector.js";
 import { rawColorTokens } from "../theme-default/raw.color.tokens.js";
 import { themeVoices, themeChannels, voiceMatrix, cellName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
+import { rawRefName } from "../theme-default/raw.color.tokens.js";
 import { isRecipe, computeMix, toSrgbCss, toSrgbHex, fidelity, mix } from "../engine/color-engine.js";
 
 describe("token factories", () => {
@@ -154,8 +155,8 @@ describe("theme voices (ADR-0006: voice × volume)", () => {
     // accent/subtle/light textMuted at 4.66:1 — tuning below AA fails here.
     const resolveRaw = (value: string) => {
       if (value === "transparent") return null;
-      const m = value.match(/var\((--COLOR-[A-Z0-9]+)\)/);
-      return m ? rawColorTokens[m[1]] : null;
+      const name = rawRefName(value);
+      return name ? rawColorTokens[name] : null;
     };
     const pairs: Array<[string, string]> = [
       ["text", "surface"],
@@ -224,8 +225,8 @@ describe("T7 — oklch single-sourcing", () => {
 
   it("precomputed mixes match spec color-mix semantics for transparent", () => {
     // color-mix(in oklch, X 60%, transparent) = X with alpha 0.6 — exact.
-    const c = computeMix(mix("--COLOR-B20", 60));
-    const base = oklch(rawColorTokens["--COLOR-B20"]);
+    const c = computeMix(mix("--COLOR-AI-20", 60));
+    const base = oklch(rawColorTokens["--COLOR-AI-20"]);
     expect(c.l).toBeCloseTo(base.l, 10);
     expect(c.c).toBeCloseTo(base.c, 10);
     expect(c.alpha).toBeCloseTo(0.6, 10);
@@ -251,7 +252,7 @@ describe("T7 — oklch single-sourcing", () => {
 
   it("raw registrations carry the oklch intent as initial-value", () => {
     expect(rawCss).toContain(
-      `@property --COLOR-B50 {\n  syntax: "<color>";\n  inherits: false;\n  initial-value: ${rawColorTokens["--COLOR-B50"]};\n}`,
+      `@property --COLOR-AI-50 {\n  syntax: "<color>";\n  inherits: false;\n  initial-value: ${rawColorTokens["--COLOR-AI-50"]};\n}`,
     );
   });
 
