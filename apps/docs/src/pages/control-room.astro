@@ -1,0 +1,215 @@
+---
+// /control-room — drift checks for humans. The conformance suites are
+// the mechanical twin; this is the instrument panel where drift SHOWS:
+//   1. Resolution — which branch of every support gate THIS browser and
+//      display actually resolve (drag the window to another monitor and
+//      watch the gamut row change).
+//   2. Alignment — the comparison table: the field control (one height,
+//      2.5rem) against each button size, between dashed guides. Which
+//      button stop lines up with a field is a finding, not a given.
+//   3. Baseline trim — the heading text-trim check (shared with the bench).
+//   4. The donut matrix — voices × volumes (shared with the bench).
+import Layout from "../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import Prose from "tsugite/components/Prose/Prose.astro";
+import AffixField from "tsugite/components/AffixField/AffixField.astro";
+import LinkButton from "tsugite/components/Button/LinkButton.astro";
+import ActionButton from "tsugite/components/Button/ActionButton.astro";
+import Misc from "tsugite/fixtures/Misc.astro";
+import ThemesSection from "tsugite/fixtures/ThemesSection.astro";
+
+const buttonSizes = ["sm", "md", "lg"];
+---
+
+<Layout title="Control room">
+  <main class="Main ControlRoom grid-container">
+    <div class="content">
+      <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Control room</nav>
+      <Heading element="h1" size="1" text="Control room" />
+      <Prose variant="basic">
+        <p>Where drift shows before it ships. Every control has a mechanical twin in the e2e suite.</p>
+      </Prose>
+
+      <section class="KitchenSink-section" id="Resolution">
+        <Heading element="h2" size="2" text="Resolution" />
+        <p class="note">
+          What this browser and display actually resolve. Drag the window to another
+          monitor and watch the gamut row follow.
+        </p>
+        <ul class="resolution-list">
+          <li><span class="res-name">display gamut</span> <output class="res-value" data-probe="gamut"></output></li>
+          <li><span class="res-name">oklch</span> <output class="res-value" data-probe="oklch"></output></li>
+          <li><span class="res-name">@property</span> <output class="res-value" data-probe="property"></output></li>
+          <li><span class="res-name">color-mix</span> <output class="res-value" data-probe="colormix"></output></li>
+          <li><span class="res-name">container queries</span> <output class="res-value" data-probe="cq"></output></li>
+          <li><span class="res-name">text-box-trim</span> <output class="res-value" data-probe="textboxtrim"></output></li>
+        </ul>
+        <div class="gamut-pair">
+          <span class="gamut-swatch" style="background: oklch(67.13% 0.2851 343.06)"></span>
+          <span class="gamut-swatch" style="background: #ff0ac2"></span>
+          <p class="note">
+            The same color, authored (oklch) and gamut-mapped (hex). Identical on an
+            sRGB display — the left one is more saturated on P3.
+          </p>
+        </div>
+      </section>
+
+      <section class="KitchenSink-section" id="Alignment">
+        <Heading element="h2" size="2" text="Alignment" />
+        <p class="note">
+          The field control has one height — <code>2.5rem</code>. Each row pairs it
+          with one button size between the guides: a row that doesn't line up is a
+          finding, not a layout bug on this page.
+        </p>
+
+        {buttonSizes.map((size) => (
+          <div class="guide-group">
+            <p class="guide-label">field × button <code>{size}</code></p>
+            <div class="guide-row" data-guide={size}>
+              <AffixField id={`align-affix-${size}`} label="Amount" input={{ inputmode: "decimal" }} />
+              <LinkButton href="#Alignment" size={size} emphasis="primary">Link {size}</LinkButton>
+              <ActionButton size={size} emphasis="secondary">Action {size}</ActionButton>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <Misc />
+
+      <ThemesSection />
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Resolution probes: live answers per support gate. The gamut probe stays
+  // subscribed so dragging the window between displays updates the row.
+  const set = (probe: string, value: string, active: boolean) => {
+    const out = document.querySelector<HTMLElement>(`[data-probe="${probe}"]`);
+    if (!out) return;
+    out.textContent = value;
+    out.dataset.active = String(active);
+  };
+
+  const gamuts: Array<[string, MediaQueryList]> = [
+    ["rec2020", matchMedia("(color-gamut: rec2020)")],
+    ["p3", matchMedia("(color-gamut: p3)")],
+    ["srgb", matchMedia("(color-gamut: srgb)")],
+  ];
+  const readGamut = () => {
+    const hit = gamuts.find(([, mq]) => mq.matches);
+    set("gamut", hit ? hit[0] : "unknown", !!hit && hit[0] !== "srgb");
+  };
+  readGamut();
+  for (const [, mq] of gamuts) mq.addEventListener("change", readGamut);
+
+  const supports = (probe: string, ok: boolean) =>
+    set(probe, ok ? "supported" : "fallback branch", ok);
+  supports("oklch", CSS.supports("color", "oklch(1 0 0)"));
+  supports("property", typeof CSSPropertyRule !== "undefined");
+  supports("colormix", CSS.supports("color", "color-mix(in oklch, red, blue)"));
+  supports("cq", CSS.supports("container-type: inline-size"));
+  supports("textboxtrim", CSS.supports("text-box-trim", "trim-both"));
+</script>
+
+<style is:global>
+.ControlRoom {
+  padding-block: 3rem 4rem;
+  background-color: var(--color-surface-page);
+
+  & .content {
+    /* placed in the main area by the .grid-container > * default */
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  & .doc-breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    & a { color: var(--color-interactive-secondary-text); }
+  }
+
+  & .note { margin: 0; color: var(--color-text-secondary); font-size: 0.9rem; }
+
+  & .resolution-list {
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
+    gap: 0.5rem;
+    inline-size: 100%;
+  }
+
+  & .resolution-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.5rem;
+  }
+
+  & .res-name { font-size: 0.85rem; color: var(--color-text-secondary); }
+
+  & .res-value {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--color-text-primary);
+
+    /* active-branch marker is a decorative dot — small green TEXT on the
+       page ground fails AA (2.4:1), a finding this page's own axe twin
+       caught on first light */
+    &[data-active="true"]::before {
+      content: "";
+      display: inline-block;
+      inline-size: 0.5rem;
+      block-size: 0.5rem;
+      border-radius: 50%;
+      background-color: var(--color-feedback-success);
+      margin-inline-end: 0.4rem;
+      vertical-align: 0.05em;
+    }
+  }
+
+  & .gamut-pair {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block-start: 0.75rem;
+  }
+
+  & .gamut-swatch {
+    inline-size: 3rem;
+    block-size: 3rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border-subtle);
+    flex: none;
+  }
+
+  & .guide-group { inline-size: 100%; }
+
+  & .guide-label {
+    margin: 1rem 0 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  /* dashed guides around the control line; controls bottom-align so
+     labels can hang above without disturbing the measurement */
+  & .guide-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    border-block: 1px dashed var(--color-feedback-error);
+    padding-block: 0;
+    inline-size: 100%;
+  }
+}
+</style>

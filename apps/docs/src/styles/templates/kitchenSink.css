@@ -1,0 +1,228 @@
+.KitchenSink {
+    > .page-header {
+        display: flex;
+        flex-direction: column;
+        gap: var(--size-lg);
+        margin-block-end: var(--size-xl);
+    }
+
+    /* Deviation from AiPoc: overflow-x on the whole .scroll-container made the
+       page a clipping context for every popup in normal flow (an overflow on
+       one axis computes the other to auto — the ADR-0012 limitation). Wide
+       tables scroll individually below instead; popup-bearing demos stay in
+       an overflow-visible flow. */
+    & .component-map {
+        overflow-x: auto;
+    }
+}
+
+.KitchenSink-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    row-gap: var(--size-2xl);
+    margin-block-end: var(--size-2xl);
+}
+
+.kithensink-table {
+    & .table-head {
+        padding-block: var(--size-sm);
+        border-block-end: 1px solid var(--color-border-default);
+        margin-block-end: var(--size-md);
+        display: grid;
+        grid-template-columns: repeat(var(--_cols), 1fr);
+        column-gap: var(--size-lg);
+        row-gap: var(--size-md);
+
+        > h3 {
+            grid-column: 1/-1;
+        }
+
+        & .cell:first-of-type {
+        }
+
+        & .cell {
+            inline-size: var(--_colWidth);
+            display: block;
+        }
+    }
+
+    & .table-row {
+        display: grid;
+        grid-template-columns: repeat(var(--_cols), 1fr);
+        row-gap: var(--size-md);
+        column-gap: var(--size-lg);
+        place-items: start;
+        align-items: center;
+        margin-block-end: var(--size-md);
+
+        > .cell {
+            inline-size: 100%;
+            max-inline-size: var(--_colWidth);
+        }
+    }
+
+    & hr {
+        display: block;
+        margin-block-end: var(--size-md);
+        border: none;
+        border-top: 1px solid var(--color-border-default);
+    }
+}
+
+.group-inputs {
+    max-inline-size: 100%;
+
+    .col-1,
+    .col-2,
+    .col-3 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    border-block: 1px solid var(--color-border-subtle);
+    padding-block-start: 1rem;
+
+    & .header,
+    & .row {
+        display: grid;
+        grid-template-columns: repeat(var(--_cols, 10), 1fr);
+        gap: 1rem;
+
+        & .col {
+            min-inline-size: 5rem;
+             min-block-size: 4rem;
+             display: flex;
+             align-items: center;
+        }
+    }
+
+    & .header {
+        border-block-end: 1px solid var(--color-border-subtle);
+        margin-block-end: 1rem;
+    }
+}
+
+.text-alignment {
+    border: 1px dashed rebeccapurple;
+    max-inline-size: 34ch;
+
+    & .above {
+        display: block;
+        block-size: 2rem;
+        background-color: var(--color-surface-inset);
+        border-block-end: 1px dashed rebeccapurple;
+    }
+
+    & .below {
+        display: block;
+        block-size: 2rem;
+        background-color: var(--color-surface-inset);
+        border-block-start: 1px dashed rebeccapurple;
+    }
+}
+
+.example-box {
+    margin-block: 10rem;
+
+    & .above,
+    & .below {
+        background-color: transparent;
+        block-size: 1.75rem;
+    }
+
+    figure {
+        aspect-ratio: 16/9;
+        background-color: var(--color-surface-chrome);
+        border: 1px solid var(--color-border-default);
+        border-radius: 0.5rem;;
+    }
+
+    .text {
+        border-block-start: 1px dashed rebeccapurple;
+        line-height: 1cap;
+        font-family: var(--fontFamily-body);
+        font-weight: var(--fontWeight-body);
+        font-size: var(--fontSize-body-large);
+        line-height: 1cap;
+        letter-spacing: var(--letterSpacing-body);
+        font-feature-settings: var(--fontFeatureSettings-body);        
+    }
+
+}
+
+
+.component-map {
+    --_labelWidth: 12rem;
+
+    margin-block: var(--size-2xl);
+
+    & > header {
+        margin-block-end: var(--size-lg);
+        display: flex;
+        flex-direction: column;
+        gap: var(--size-md);
+    }
+
+    /* Every selector below is a `>` chain anchored on the showcase table's own
+       structure (table > thead/tbody > tr > th/td). This keeps the styling from
+       descending into tables rendered *inside* a component demo cell — e.g. the
+       DateField calendar's <table class="Grid">, whose th/td live several layers
+       deeper and therefore never match these chains. */
+    & > table {
+        table-layout: fixed;
+        width: max-content;
+        text-align: left;
+        border-collapse: collapse;
+        margin-block-end: var(--size-2xl);
+
+        & > caption {
+            caption-side: top;
+            text-align: left;
+            padding: 0;
+            margin: 0;
+        }
+
+        & > caption,
+        & > thead > tr > th,
+        & > tbody > tr > th {
+            font-family: monospace;
+            font-weight: normal;
+            text-transform: lowercase;
+            inline-size: var(--_labelWidth);
+        }
+
+        & > thead > tr > th[scope="col"] {
+            inline-size: var(--_colWidth);
+            padding-inline: var(--size-md);
+        }
+
+        & > thead {
+            border-block-end: 1px solid;
+
+            & > tr {
+                padding-block: var(--size-md);
+            }
+        }
+
+        & > tbody {
+            & > tr {
+                border-block-end: 1px solid;
+            }
+
+            & > tr > td {
+                padding-block: var(--size-md);
+                inline-size: var(--_colWidth);
+                padding-inline: var(--size-md);
+            }
+        }
+    }
+}

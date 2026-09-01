@@ -1,0 +1,77 @@
+---
+// Port of AiPoc Views/KitchenSink.cshtml
+// Sections are added task by task; inputs (Form/DateField/DateTimeField/TimeField)
+// are intentionally left out — they arrive later from the ReferenceComponents library.
+import Layout from "../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import Prose from "tsugite/components/Prose/Prose.astro";
+import Typography from "tsugite/fixtures/Typography.astro";
+import Buttons from "tsugite/fixtures/Buttons.astro";
+import CtaButtonSection from "tsugite/fixtures/CtaButtonSection.astro";
+import Components from "tsugite/fixtures/Components.astro";
+import ProseSection from "tsugite/fixtures/ProseSection.astro";
+import Misc from "tsugite/fixtures/Misc.astro";
+import TablesSection from "tsugite/fixtures/TablesSection.astro";
+import NoticeSection from "tsugite/fixtures/NoticeSection.astro";
+import ChoiceFieldSection from "tsugite/fixtures/ChoiceFieldSection.astro";
+import ChoiceGroupSection from "tsugite/fixtures/ChoiceGroupSection.astro";
+import MonthFieldSection from "tsugite/fixtures/MonthFieldSection.astro";
+import TimeFieldSection from "tsugite/fixtures/TimeFieldSection.astro";
+import WeekFieldSection from "tsugite/fixtures/WeekFieldSection.astro";
+import DateFieldSection from "tsugite/fixtures/DateFieldSection.astro";
+import DateTimeFieldSection from "tsugite/fixtures/DateTimeFieldSection.astro";
+import MotionRegionSection from "tsugite/fixtures/MotionRegionSection.astro";
+import ThemeSwitchSection from "tsugite/fixtures/ThemeSwitchSection.astro";
+import ThemesSection from "tsugite/fixtures/ThemesSection.astro";
+import ToggleTipSection from "tsugite/fixtures/ToggleTipSection.astro";
+import RangeFieldSection from "tsugite/fixtures/RangeFieldSection.astro";
+import RangeScaleSection from "tsugite/fixtures/RangeScaleSection.astro";
+import RangeGroupSection from "tsugite/fixtures/RangeGroupSection.astro";
+import AffixFieldSection from "tsugite/fixtures/AffixFieldSection.astro";
+import ScrollAreaSection from "tsugite/fixtures/ScrollAreaSection.astro";
+import PicklistSection from "tsugite/fixtures/PicklistSection.astro";
+import FileUploadSection from "tsugite/fixtures/FileUploadSection.astro";
+
+const pageTitle = "Kitchen Sink";
+const pageIntro = "Component showcase — all variants and states.";
+---
+
+<Layout title={pageTitle} template="kitchenSink">
+  <main class="Main grid-container KitchenSink">
+    <div class="page-header">
+      <Heading text={pageTitle} element="h1" size="1" variant="display" />
+      <Prose variant="basic" size="md">
+        <p>{pageIntro}</p>
+      </Prose>
+    </div>
+
+    <div class="scroll-container">
+      <Typography />
+      <ThemesSection />
+      <Buttons />
+      <CtaButtonSection />
+      <Components />
+      <ProseSection />
+      <Misc />
+      <TablesSection />
+      <NoticeSection />
+      <ChoiceFieldSection />
+      <ChoiceGroupSection />
+      <MonthFieldSection />
+      <TimeFieldSection />
+      <WeekFieldSection />
+      <DateFieldSection />
+      <DateTimeFieldSection />
+      <MotionRegionSection />
+      <ThemeSwitchSection />
+      <ToggleTipSection />
+      <RangeFieldSection />
+      <RangeScaleSection />
+      <RangeGroupSection />
+      <AffixFieldSection />
+      <ScrollAreaSection />
+      <PicklistSection />
+      <FileUploadSection />
+    </div>
+  </main>
+</Layout>

@@ -1,0 +1,235 @@
+---
+// /map — the system map, rendered entirely from the docs manifest:
+// the map cannot lie about the system, because it IS the system's data.
+// Three pillars stand on the ground strip (Foundations + Kernel — the
+// no-DOM material); Chrome gets its own box; the test bench is linked
+// but lives outside the map.
+import Layout from "../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import Prose from "tsugite/components/Prose/Prose.astro";
+import { manifest, foundations, kernelModules, pillarLabels, pillarMeta, foundationsMeta, type Pillar } from "../lib/manifest.ts";
+
+const pillars: Pillar[] = ["primitive", "composition", "region"];
+const byPillar = (p: Pillar) => manifest.filter((e) => e.pillar === p);
+const chrome = byPillar("chrome");
+const pillarNotes: Record<string, string> = {
+  primitive: "Owns its own vocabulary — is content.",
+  composition: "Owns arrangement only.",
+  region: "Governs a capability, projects state.",
+};
+---
+
+<Layout title="Map">
+  <main class="Main MapPage grid-container">
+    <div class="content">
+      <Heading element="h1" size="1" text="Map" />
+      <Prose variant="basic">
+        <p>Everything in the system, sorted by what each piece owns.</p>
+      </Prose>
+
+      <div class="pillars">
+        {pillars.map((p) => (
+          <section class="pillar" aria-labelledby={`pillar-${p}`}>
+            {pillarMeta[p].romaji && (
+              <p class="pillar-eyebrow">
+                {pillarMeta[p].romaji} <span lang="ja" aria-hidden="true">{pillarMeta[p].kanji}</span>
+              </p>
+            )}
+            <Heading element="h2" size="4" text={pillarLabels[p]} id={`pillar-${p}`} />
+            <p class="pillar-note">{pillarNotes[p]}</p>
+            <ul class="cards">
+              {byPillar(p).map((e) => (
+                <li>
+                  {e.published ? (
+                    <a class="card" href={`/docs/${e.slug}`}>
+                      <span class="card-title">{e.title}</span>
+                      {e.family && <span class="badge" data-family={e.family}>fields</span>}
+                    </a>
+                  ) : (
+                    <span class="card" data-unpublished>
+                      <span class="card-title">{e.title}</span>
+                      <span class="badge">soon</span>
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+
+      <section class="ground" aria-label="Foundations">
+        <div class="ground-col">
+          <p class="pillar-eyebrow">
+            {foundationsMeta.romaji} <span lang="ja" aria-hidden="true">{foundationsMeta.kanji}</span>
+          </p>
+          <Heading element="h2" size="5" text={foundationsMeta.label} />
+          <p class="pillar-note">Tokens — what everything is made of.</p>
+          <ul class="cards">
+            {foundations.map((f) => (
+              <li>
+                {f.published ? (
+                  <a class="card" href={f.href}><span class="card-title">{f.title}</span></a>
+                ) : (
+                  <span class="card" data-unpublished><span class="card-title">{f.title}</span><span class="badge">soon</span></span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="ground-col">
+          <Heading element="h2" size="5" text="Kernel" />
+          <p class="pillar-note">Logic without DOM.</p>
+          <ul class="kernel-list">
+            {kernelModules.map((m) => <li><code>{m}</code></li>)}
+          </ul>
+        </div>
+        <div class="ground-col">
+          <Heading element="h2" size="5" text="Chrome" />
+          <p class="pillar-note">The site’s own shell.</p>
+          <ul class="cards">
+            {chrome.map((e) => (
+              <li><a class="card" href={e.demoHref ?? `/docs/${e.slug}`}><span class="card-title">{e.title}</span></a></li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <p class="bench-link">
+        <a href="/kitchen-sink">Test bench</a> — everything on one page ·
+        <a href="/control-room">Control room</a> — drift checks
+      </p>
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+.MapPage {
+  padding-block: 4rem;
+  background-color: var(--color-surface-page);
+
+  & .content {
+    /* placed in the main area by the .grid-container > * default */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  & .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: 1.25rem;
+    inline-size: 100%;
+  }
+
+  & .pillar {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    background-color: var(--color-surface-chrome);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  & .pillar-eyebrow {
+    margin: 0 0 -0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--color-text-secondary);
+
+    & [lang="ja"] { letter-spacing: 0; margin-inline-start: 0.25rem; }
+  }
+
+  & .pillar-note {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+  }
+
+  & .cards {
+    list-style: none;
+    margin: 0.25rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  & .card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 0.8rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border-subtle);
+    background-color: var(--color-surface-page);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+
+  & a.card:hover {
+    border-color: var(--color-interactive-primary);
+  }
+
+  & .card[data-unpublished] {
+    opacity: 0.6;
+  }
+
+  & .badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border-default);
+    color: var(--color-text-secondary);
+  }
+
+  /* the ground strip the pillars stand on */
+  & .ground {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+    gap: 1.25rem;
+    inline-size: 100%;
+    border-block-start: 3px solid var(--color-border-default);
+    padding-block-start: 1.5rem;
+  }
+
+  & .ground-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  & .kernel-list {
+    list-style: none;
+    margin: 0.25rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+
+    & code {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.4rem;
+      background-color: var(--color-surface-inset);
+      color: var(--color-text-primary);
+      font-size: 0.8rem;
+    }
+  }
+
+  & .bench-link {
+    margin: 0.5rem 0 0;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+
+    & a { color: var(--color-interactive-secondary-text); }
+  }
+}
+</style>

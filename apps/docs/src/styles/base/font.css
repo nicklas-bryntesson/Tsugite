@@ -1,0 +1,81 @@
+/* Heading: Fira Sans: subset - Core ~ 16kB */
+@font-face {
+  font-family: 'Fira Sans';
+  src:  url('/fonts/FiraSans/FiraSans-Heading-Core.woff') format('woff'),
+        url('/fonts/FiraSans/FiraSans-Heading-Core.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007E;
+}
+
+/* Heading: Fira Sans: subset - Extended ~ 9kB */
+@font-face {
+  font-family: 'Fira Sans';
+  src:  url('/fonts/FiraSans/FiraSans-Heading-Extended.woff') format('woff'),
+        url('/fonts/FiraSans/FiraSans-Heading-Extended.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+00A0-00FF, U+2013, U+2014, U+2018, U+2019, U+201C, U+201D, U+2026, U+20AC;
+}
+
+/* Body: Noto Serif Regular: subset ~ 9kB */
+@font-face {
+  font-family: 'Noto Serif';
+  src:  url('/fonts/NotoSerif/NotoSerif-Body-Regular-subset.woff') format('woff'),
+        url('/fonts/NotoSerif/NotoSerif-Body-Regular-subset.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Body: Noto Serif Italic: subset ~ 9kB */
+@font-face {
+  font-family: 'Noto Serif';
+  src:  url('/fonts/NotoSerif/NotoSerif-Body-Italic-subset.woff') format('woff'),
+        url('/fonts/NotoSerif/NotoSerif-Body-Italic-subset.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Body: Noto Serif Bold: subset ~ 9kB */
+@font-face {
+  font-family: 'Noto Serif';
+  src:  url('/fonts/NotoSerif/NotoSerif-Body-Bold-subset.woff') format('woff'),
+        url('/fonts/NotoSerif/NotoSerif-Body-Bold-subset.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Body: Noto Serif Bild Italic subset ~ 9kB */
+@font-face {
+  font-family: 'Noto Serif';
+  src:  url('/fonts/NotoSerif/NotoSerif-Body-Bold-Italic-subset.woff') format('woff'),
+        url('/fonts/NotoSerif/NotoSerif-Body-Bold-Italic-subset.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Display:  Abril Fatface Regular: subset ~ 9kB */
+@font-face {
+  font-family: 'Abril Fatface';
+  src:  url('/fonts/AbrilFatface/AbrilDisplay-subset.woff') format('woff'),
+        url('/fonts/AbrilFatface/AbrilDisplay-subset.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Labels / inputs: Inter Regular: subset */
+@font-face {
+  font-family: 'Inter';
+  src:  url('/fonts/Inter/InterUI-Regular-subset.woff') format('woff'),
+        url('/fonts/Inter/InterUI-Regular-subset.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

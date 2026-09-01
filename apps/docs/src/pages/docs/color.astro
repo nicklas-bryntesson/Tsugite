@@ -1,0 +1,213 @@
+---
+// /docs/color — Foundations: the color system, RENDERED FROM THE FACTORIES.
+// The page imports the same JS sources that generate the CSS, so it cannot
+// drift from the system. Authored values paint as literals (all four modes,
+// resolved at build); the "live now" column paints with var(token) and
+// shows what YOUR active mode actually resolves.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import Prose from "tsugite/components/Prose/Prose.astro";
+import { rawColorTokens } from "tsugite/theme-default/raw.color.tokens.js";
+import { semanticColorTokens } from "tsugite/theme-default/semantic.color.tokens.js";
+import { themeVoices, voiceMatrix } from "tsugite/theme-default/theme.voices.tokens.js";
+import { resolveValue } from "tsugite/engine/color-engine.js";
+import { oklch } from "culori";
+import { toSrgbHex } from "tsugite/engine/color-engine.js";
+
+const MODES = ["light", "dark", "light-contrast", "dark-contrast"] as const;
+
+/** Authored factory value → paintable literal (var pointers resolve via RAW). */
+function paintable(value: unknown): string | null {
+  const r = resolveValue(value);
+  const css: string = r.css;
+  const m = css.match(/^var\((--COLOR-[A-Z0-9]+)\)$/);
+  if (m) return rawColorTokens[m[1]] ?? null;
+  if (css.includes("var(") || css.includes("px")) return null; // shadow lists etc.
+  return css;
+}
+
+const raws = Object.entries(rawColorTokens).map(([name, literal]) => ({
+  name,
+  literal,
+  hex: toSrgbHex(oklch(literal)),
+}));
+
+const semantics = Object.entries(semanticColorTokens).map(([name, modes]) => ({
+  name,
+  cells: MODES.map((m) => paintable((modes as Record<string, unknown>)[m])),
+}));
+
+const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
+  (volumes as string[]).map((volume) => ({
+    voice,
+    volume,
+    cells: MODES.map((m) => ({
+      surface: paintable((themeVoices as any)[voice][volume].surface[m]),
+      text: paintable((themeVoices as any)[voice][volume].text[m]),
+    })),
+  })),
+);
+---
+
+<Layout title="Color">
+  <main class="Main ColorDoc grid-container">
+    <div class="content">
+      <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Foundations</nav>
+      <Heading element="h1" size="1" text="Color" />
+      <Prose variant="basic">
+        <p>
+          Rendered from the same sources that generate the CSS. The <strong>live now</strong>
+          column paints with <code>var(token)</code> and should match your active mode’s
+          column — if it doesn’t, something broke.
+        </p>
+      </Prose>
+
+      <Heading element="h2" size="3" text="RAW palette" />
+      <p class="note">Authored in oklch. Hex is the build-computed sRGB rendering.</p>
+      <ul class="raw-grid">
+        {raws.map((r) => (
+          <li class="raw-card">
+            <span class="raw-swatch" style={`background: ${r.literal}`}></span>
+            <code class="raw-name">{r.name.replace("--COLOR-", "")}</code>
+            <code class="raw-val">{r.literal}</code>
+            <code class="raw-val">{r.hex}</code>
+          </li>
+        ))}
+      </ul>
+
+      <Heading element="h2" size="3" text="Semantic roles" />
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>token</th>
+              {MODES.map((m) => <th>{m}</th>)}
+              <th>live now</th>
+            </tr>
+          </thead>
+          <tbody>
+            {semantics.map((row) => (
+              <tr>
+                <td><code>{row.name}</code></td>
+                {row.cells.map((c) =>
+                  c ? (
+                    <td><span class="cell-swatch" style={`background: ${c}`}></span></td>
+                  ) : (
+                    <td class="nonpaint">list</td>
+                  ),
+                )}
+                <td><span class="cell-swatch live" style={`background: var(${row.name})`}></span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <Heading element="h2" size="3" text="Voices × volumes" />
+      <p class="note">Surface + text per mode. The <a href="/control-room">control room</a> shows the living matrix.</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>voice × volume</th>{MODES.map((m) => <th>{m}</th>)}</tr>
+          </thead>
+          <tbody>
+            {voices.map((v) => (
+              <tr>
+                <td><code>{v.voice}</code> × <code>{v.volume}</code></td>
+                {v.cells.map((c) => (
+                  <td>
+                    <span class="voice-swatch" style={`background: ${c.surface}; color: ${c.text}`}>Aa</span>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+.ColorDoc {
+  padding-block: 3rem 4rem;
+  background-color: var(--color-surface-page);
+
+  & .content {
+    /* placed in the main area by the .grid-container > * default */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  & .doc-breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    & a { color: var(--color-interactive-secondary-text); }
+  }
+
+  & .note { margin: 0; color: var(--color-text-secondary); font-size: 0.9rem; }
+
+  & .raw-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(11rem, 100%), 1fr));
+    gap: 0.75rem;
+    inline-size: 100%;
+  }
+
+  & .raw-card {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.6rem;
+    padding: 0.6rem;
+    display: grid;
+    gap: 0.15rem;
+    background-color: var(--color-surface-chrome);
+  }
+
+  & .raw-swatch {
+    display: block;
+    block-size: 2.5rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  & .raw-name { font-weight: 600; font-size: 0.8rem; color: var(--color-text-primary); }
+  & .raw-val { font-size: 0.68rem; color: var(--color-text-secondary); overflow-wrap: anywhere; }
+
+  & .table-scroll { overflow-x: auto; inline-size: 100%; }
+
+  & table { border-collapse: collapse; font-size: 0.82rem; }
+  & th, & td {
+    text-align: start;
+    padding: 0.35rem 0.6rem;
+    border-block-end: 1px solid var(--color-border-subtle);
+    white-space: nowrap;
+  }
+  & th { color: var(--color-text-secondary); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  & td code { font-size: 0.78rem; }
+
+  & .cell-swatch {
+    display: inline-block;
+    inline-size: 2.4rem;
+    block-size: 1.4rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--color-border-subtle);
+  }
+  & .cell-swatch.live { outline: 2px solid var(--color-interactive-primary); outline-offset: 1px; }
+  & .nonpaint { color: var(--color-text-secondary); font-size: 0.72rem; }
+
+  & .voice-swatch {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 3rem;
+    block-size: 1.8rem;
+    border-radius: 0.35rem;
+    border: 1px solid var(--color-border-subtle);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+</style>

@@ -1,0 +1,28 @@
+---
+// Port of AiPoc Views/Shared/Partials/_Header.cshtml
+// The Umbraco navigation Block List is replaced by static links for now.
+// The ThemeSwitch is the site's live appearance control (ADR-0021): one
+// attached instance on every page, projecting data-appearance on <html>.
+import ThemeSwitch from "tsugite/components/ThemeSwitch/ThemeSwitch.astro";
+---
+
+<div class="Header grid-container">
+  <header>
+    <a href="/" class="SiteLogo">&lt;Tsugite/&gt;</a>
+
+    <div class="HeaderControls">
+      <nav class="MainNavigation">
+        <a href="/">Home</a>
+        <a href="/map">Map</a>
+      </nav>
+
+      <ThemeSwitch
+        id="header"
+        live={true}
+        legend="Colour theme"
+        name="ts-header"
+        inputIds={["ts-header-system", "ts-header-light", "ts-header-dark"]}
+      />
+    </div>
+  </header>
+</div>

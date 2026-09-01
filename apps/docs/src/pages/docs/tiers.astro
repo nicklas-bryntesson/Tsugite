@@ -1,0 +1,160 @@
+---
+// /docs/tiers — Foundations: the viewport tier ladder and the type ramp,
+// LIVE-RENDERED: every specimen and bar paints with var(token), so the page
+// shows exactly what the active tier resolves. Resize and watch the steps.
+// (Size tokens live in SCSS constants; live rendering is the truth here.)
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import Prose from "tsugite/components/Prose/Prose.astro";
+
+const typeRamp = [
+  ["--fontSize-display-1", "Display 1"],
+  ["--fontSize-display-2", "Display 2"],
+  ["--fontSize-display-3", "Display 3"],
+  ["--fontSize-h1", "Heading 1"],
+  ["--fontSize-h2", "Heading 2"],
+  ["--fontSize-h3", "Heading 3"],
+  ["--fontSize-h4", "Heading 4"],
+  ["--fontSize-h5", "Heading 5"],
+  ["--fontSize-h6", "Heading 6"],
+  ["--fontSize-body-large", "Body large"],
+  ["--fontSize-body", "Body"],
+  ["--fontSize-body-small", "Body small"],
+];
+
+const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl", "--size-2xl"];
+---
+
+<Layout title="Tiers">
+  <main class="Main TiersDoc grid-container">
+    <div class="content">
+      <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Foundations</nav>
+      <Heading element="h1" size="1" text="Tiers" />
+      <Prose variant="basic">
+        <p>
+          <strong>FLOOR · MOBILE · DESKTOP · WIDE</strong> — explicit stops, never fluid.
+          Everything below paints with <code>var(token)</code>. Resize the window and
+          watch the ladder step.
+        </p>
+      </Prose>
+
+      <Heading element="h2" size="3" text="Type ramp" />
+      <ul class="ramp">
+        {typeRamp.map(([token, label]) => (
+          <li class="specimen">
+            <code class="specimen-token">{token}</code>
+            <span class="specimen-text" style={`font-size: var(${token})`}>{label}</span>
+            <output class="specimen-value" data-measure={token}></output>
+          </li>
+        ))}
+      </ul>
+
+      <Heading element="h2" size="3" text="Size ramp + site offset" />
+      <ul class="bars">
+        {sizeRamp.map((token) => (
+          <li class="bar-row">
+            <code>{token}</code>
+            <span class="bar" style={`inline-size: var(${token})`}></span>
+            <output class="specimen-value" data-measure={token}></output>
+          </li>
+        ))}
+        <li class="bar-row">
+          <code>--site-offset</code>
+          <span class="bar" style="inline-size: var(--site-offset)"></span>
+          <output class="specimen-value" data-measure="--site-offset"></output>
+        </li>
+      </ul>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Read resolved px live + on resize, so tier steps show as numbers.
+  const measure = () => {
+    const cs = getComputedStyle(document.documentElement);
+    document.querySelectorAll<HTMLElement>("[data-measure]").forEach((out) => {
+      const token = out.dataset.measure!;
+      const probe = document.createElement("div");
+      probe.style.position = "absolute";
+      probe.style.inlineSize = `var(${token})`;
+      document.body.append(probe);
+      const px = probe.getBoundingClientRect().width;
+      probe.remove();
+      out.textContent = `${cs.getPropertyValue(token).trim()} → ${px.toFixed(0)}px`;
+    });
+  };
+  measure();
+  let raf = 0;
+  addEventListener("resize", () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(measure);
+  });
+</script>
+
+<style is:global>
+.TiersDoc {
+  padding-block: 3rem 4rem;
+  background-color: var(--color-surface-page);
+
+  & .content {
+    /* placed in the main area by the .grid-container > * default */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  & .doc-breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    & a { color: var(--color-interactive-secondary-text); }
+  }
+
+  & .ramp, & .bars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    inline-size: 100%;
+  }
+
+  & .specimen {
+    display: grid;
+    grid-template-columns: 12rem 1fr auto;
+    align-items: baseline;
+    gap: 1rem;
+    border-block-end: 1px solid var(--color-border-subtle);
+    padding-block-end: 0.5rem;
+  }
+  @media (max-width: 48rem) {
+    & .specimen { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+
+  & .specimen-token { font-size: 0.75rem; color: var(--color-text-secondary); }
+  & .specimen-text {
+    font-family: var(--fontFamily-heading);
+    font-weight: var(--fontWeight-heading);
+    color: var(--color-text-primary);
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  & .specimen-value { font-family: monospace; font-size: 0.75rem; color: var(--color-text-secondary); }
+
+  & .bar-row {
+    display: grid;
+    grid-template-columns: 12rem auto 1fr;
+    align-items: center;
+    gap: 1rem;
+
+    & code { font-size: 0.78rem; color: var(--color-text-secondary); }
+  }
+
+  & .bar {
+    display: block;
+    block-size: 1rem;
+    border-radius: 0.2rem;
+    background-color: var(--color-interactive-primary);
+  }
+}
+</style>

@@ -1,10 +1,136 @@
 ---
-// T1 probe: one component through the package boundary.
+// Home — what Tsugite is, told through the system itself: the hero is the
+// CoverComposition (primitives → composition → page), and the sections
+// below speak with the system's own voices (data-theme × data-prominence).
+import Layout from "../layouts/Layout.astro";
+import CoverComposition from "tsugite/components/CoverComposition/CoverComposition.astro";
 import Heading from "tsugite/components/Heading/Heading.astro";
+import Prose from "tsugite/components/Prose/Prose.astro";
+import LinkButton from "tsugite/components/Button/LinkButton.astro";
+
+const cover = {
+  title: "Tsugite",
+  preamble:
+    "A design-system reference built like joinery: pieces meet through contracts that fit exactly — and refuse what doesn't.",
+  videoSrc: "/media/multicolored-background.mp4",
+  poster: "/media/poster.webp",
+};
+
+const cta = [
+  { url: "/map", text: "Explore the map", emphasis: "primary", newTab: false },
+  { url: "/control-room", text: "Control room", emphasis: "secondary", newTab: false },
+];
+
+const principles = [
+  {
+    voice: "brand",
+    title: "Two attributes, not twenty props",
+    body: "A section says whose palette speaks and how loud — data-theme × data-prominence. Components never know which voice surrounds them: they read one ownership chain and fall back to sensible defaults. No prop explosion, ever.",
+    href: "/docs/color",
+    link: "See the color system",
+  },
+  {
+    voice: "neutral",
+    title: "Public-sector ready by construction",
+    body: "Light, dark and both contrast modes are generated tables, not afterthoughts — with WCAG contrast asserted at build time. Everything works without JavaScript, including the contrast modes.",
+    href: "/kitchen-sink",
+    link: "Browse the test bench",
+  },
+  {
+    voice: "accent",
+    title: "Defensive by default",
+    body: "The baseline works for everyone; every enhancement stands behind a closed support gate. Colors are authored once in oklch — the sRGB fallback is the same color, computed at build.",
+    href: "/control-room",
+    link: "Watch it resolve",
+  },
+];
 ---
-<html lang="en">
-  <head><title>Tsugite probe</title></head>
-  <body>
-    <Heading element="h1" size="1" text="Tsugite" />
-  </body>
-</html>
+
+<Layout title="Tsugite" template="home" preloadImage={cover.poster}>
+  <main class="Main grid-container Home">
+    <section class="Hero">
+      <CoverComposition
+        headingLevel="h1"
+        title={cover.title}
+        preamble={cover.preamble}
+        videoSrc={cover.videoSrc}
+        poster={cover.poster}
+        buttons={cta}
+      />
+    </section>
+
+    <section class="HomeIntro">
+      <p class="kanji-mark" lang="ja" aria-hidden="true">継手</p>
+      <Heading element="h2" size="2" text="Joints, not glue" />
+      <Prose variant="basic">
+        <p>
+          <strong>Tsugite</strong> (継手) are the joints of traditional Japanese carpentry:
+          two pieces meeting through geometry so precise that no nails are needed — and
+          a wrong assembly physically refuses to fit. This site documents a design system
+          built on the same idea. Small prepared pieces (<em>kigumi</em>) are arranged
+          into patterns (<em>kumiko</em>) on a shared ground sill (<em>dodai</em>), while
+          bracket clusters (<em>masugumi</em>) absorb motion and state. Every interface
+          is a contract; everything a contract doesn't allow simply doesn't exist.
+        </p>
+      </Prose>
+    </section>
+
+    <div class="HomePrinciples">
+      {principles.map((p) => (
+        <section class="principle" data-theme={p.voice} data-prominence="subtle">
+          <Heading element="h3" size="4" text={p.title} />
+          <p class="principle-body">{p.body}</p>
+          <LinkButton href={p.href} size="sm" emphasis="primary">{p.link}</LinkButton>
+        </section>
+      ))}
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+.Home {
+  & .HomeIntro {
+    padding-block: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-inline-size: 46rem;
+
+    & .kanji-mark {
+      margin: 0;
+      font-size: 2.5rem;
+      line-height: 1;
+      color: var(--color-text-secondary);
+    }
+  }
+
+  & .HomePrinciples {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: 1.25rem;
+    inline-size: 100%;
+    padding-block: 2rem 4rem;
+  }
+
+  /* The principle cards are theme donuts: the voice supplies every color
+     through the channels; this CSS only arranges and consumes with chain
+     fallbacks. */
+  & .principle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    background-color: var(--theme-surface, var(--color-surface-inset));
+    color: var(--theme-text, var(--color-text-primary));
+
+    & .principle-body {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--theme-textMuted, var(--color-text-secondary));
+      flex: 1;
+    }
+  }
+}
+</style>

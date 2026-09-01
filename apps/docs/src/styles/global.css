@@ -1,0 +1,95 @@
+/* Global CSS entry — mirrors AiPoc ClientApp/css/style.css import order.
+   Component CSS (04_ui) is co-located with each component in src/components/
+   and imported from the component's frontmatter. Skipped for now: Forms, Wheel,
+   DateField, DateTimeField, TimeField, CoverComposition, CTABlock, CircleDiagram. */
+
+@import "tsugite/styles/base/reset.css";
+@import "./base/font.css";
+
+/* --ui-* — the reference-components theming seam (ADR-0018) + the color-scheme
+   platform line (ADR-0021). Copied verbatim; mapped onto our own color system
+   in a later pass. */
+@import "tsugite/styles/ui-tokens.css";
+
+/* Color artifacts — GENERATED from src/lib/tokens/ (ADR-0003, T7).
+   Regenerate with `npm run tokens`. Raw palette first (registrations +
+   support branches), then the appearance-switched semantic tables. */
+@import "tsugite/styles/tokens/color/color.raw.generated.css";
+@import "tsugite/styles/tokens/color/color.appearance.generated.css";
+@import "tsugite/styles/tokens/color/color.themes.generated.css";
+
+@import "tsugite/styles/utils/index.css";
+
+@import "./ui/Tables.css";
+
+@import "./layout/Layout.css";
+@import "./templates/kitchenSink.css";
+
+
+/* TODO: rebuild rteTestimonialBlock and rteQuoteBlock as pattern components */
+.rteTestimonialBlock,
+.rteQuoteBlock {
+  margin-block: 1rem 2rem;
+  border: 1px solid var(--color-border-default);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.ScreenReaderText {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(100%);
+  border: 0;
+}
+
+/* Animations */
+@keyframes active-interaction-pulse {
+  from { box-shadow: 0 0 0 0 var(--color-border-subtle); }
+  to   { box-shadow: 0 0 0 0.6em transparent; }
+}
+
+@media (max-width: 94.98rem) {
+  .Main.Home {
+    --_paddingBlock: 0;
+
+    & .Hero {
+      grid-column: 1/-1;
+    }
+  }
+}
+
+@media (min-width: 95rem) {
+  .Main.Home {
+    --_paddingBlock: var(--size-lg);
+
+    & .Hero {
+      grid-column: main;
+
+    }
+  }
+}
+
+
+.link-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-lg);
+}
+
+.SiteLogo {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-family: monospace;
+}
+
+/* Kanji accents (the Tsugite vocabulary): our webfont subsets carry no CJK,
+   so Japanese runs are tagged lang="ja" and resolve through the platform's
+   Japanese faces — correct glyph variants, never tofu. */
+[lang="ja"] {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI",
+    "Yu Gothic", "Noto Sans JP", sans-serif;
+}
