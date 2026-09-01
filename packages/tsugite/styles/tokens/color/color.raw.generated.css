@@ -4,364 +4,452 @@
    the same rendering a browser applies on an sRGB display.
    Regenerate: npm run tokens */
 
-@property --COLOR-N00 {
+@property --COLOR-SUMI-00 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(100% 0 0);
+  initial-value: oklch(100% 0 74);
 }
 
-@property --COLOR-N05 {
+@property --COLOR-SUMI-05 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(98.5% 0.005 257.46);
+  initial-value: oklch(98.5% 0.004 74);
 }
 
-@property --COLOR-N10 {
+@property --COLOR-SUMI-10 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(0.97 0.01 257.46);
+  initial-value: oklch(97% 0.007 74);
 }
 
-@property --COLOR-N15 {
+@property --COLOR-SUMI-15 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(95% 0.015 257.46);
+  initial-value: oklch(95% 0.010 74);
 }
 
-@property --COLOR-N20 {
+@property --COLOR-SUMI-20 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(93% 0.02 257.46);
+  initial-value: oklch(93% 0.013 74);
 }
 
-@property --COLOR-N25 {
+@property --COLOR-SUMI-25 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(89% 0.025 257.46);
+  initial-value: oklch(89% 0.016 74);
 }
 
-@property --COLOR-N30 {
+@property --COLOR-SUMI-30 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(85% 0.03 257.46);
+  initial-value: oklch(85% 0.018 74);
 }
 
-@property --COLOR-N35 {
+@property --COLOR-SUMI-35 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(80% 0.035 257.46);
+  initial-value: oklch(80% 0.019 74);
 }
 
-@property --COLOR-N40 {
+@property --COLOR-SUMI-40 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(75% 0.04 257.46);
+  initial-value: oklch(75% 0.020 74);
 }
 
-@property --COLOR-N45 {
+@property --COLOR-SUMI-45 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(70% 0.04 257.46);
+  initial-value: oklch(70% 0.020 74);
 }
 
-@property --COLOR-N50 {
+@property --COLOR-SUMI-50 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(65% 0.04 257.46);
+  initial-value: oklch(65% 0.020 74);
 }
 
-@property --COLOR-N55 {
+@property --COLOR-SUMI-55 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(58.97% 0.0359 257.46);
+  initial-value: oklch(58.97% 0.019 74);
 }
 
-@property --COLOR-N60 {
+@property --COLOR-SUMI-60 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(52.94% 0.0318 257.46);
+  initial-value: oklch(52.94% 0.018 74);
 }
 
-@property --COLOR-N65 {
+@property --COLOR-SUMI-65 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(46.91% 0.0277 257.46);
+  initial-value: oklch(46.91% 0.017 74);
 }
 
-@property --COLOR-N70 {
+@property --COLOR-SUMI-70 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(40.88% 0.0236 257.46);
+  initial-value: oklch(40.88% 0.016 74);
 }
 
-@property --COLOR-N75 {
+@property --COLOR-SUMI-75 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(34.85% 0.0194 257.46);
+  initial-value: oklch(34.85% 0.015 74);
 }
 
-@property --COLOR-N80 {
+@property --COLOR-SUMI-80 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(28.82% 0.0153 257.46);
+  initial-value: oklch(28.82% 0.014 74);
 }
 
-@property --COLOR-N85 {
+@property --COLOR-SUMI-85 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(22.79% 0.0112 257.46);
+  initial-value: oklch(22.79% 0.013 74);
 }
 
-@property --COLOR-N90 {
+@property --COLOR-SUMI-90 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(16.76% 0.0071 257.46);
+  initial-value: oklch(16.76% 0.011 74);
 }
 
-@property --COLOR-N95 {
+@property --COLOR-SUMI-95 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(11.24% 0.0087 257.46);
+  initial-value: oklch(11.24% 0.010 74);
 }
 
-@property --COLOR-B05 {
+@property --COLOR-AI-05 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(96.63% 0.0144 264.5);
+  initial-value: oklch(96.63% 0.014 258);
 }
 
-@property --COLOR-B10 {
+@property --COLOR-AI-10 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(91.11% 0.0439 253.6);
+  initial-value: oklch(91.11% 0.035 256);
 }
 
-@property --COLOR-B20 {
+@property --COLOR-AI-20 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(83.67% 0.08296 253.6937);
+  initial-value: oklch(83.67% 0.065 254);
 }
 
-@property --COLOR-B30 {
+@property --COLOR-AI-30 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(74.76% 0.1321 254.77);
+  initial-value: oklch(74.76% 0.098 256);
 }
 
-@property --COLOR-B40 {
+@property --COLOR-AI-40 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(67.38% 0.1748 256);
+  initial-value: oklch(67.38% 0.125 258);
 }
 
-@property --COLOR-B50 {
+@property --COLOR-AI-50 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(61.48% 0.2103 257.24);
+  initial-value: oklch(61.48% 0.145 260);
 }
 
-@property --COLOR-B60 {
+@property --COLOR-AI-60 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(46.65% 0.1873 258.22);
+  initial-value: oklch(46.65% 0.135 262);
 }
 
-@property --COLOR-B70 {
+@property --COLOR-AI-70 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(38.13% 0.132 258.15);
+  initial-value: oklch(38.13% 0.115 263);
 }
 
-@property --COLOR-B80 {
+@property --COLOR-AI-80 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(27.26% 0.0925 257.49);
+  initial-value: oklch(27.26% 0.085 264);
 }
 
-@property --COLOR-B90 {
+@property --COLOR-AI-90 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(18.34% 0.0645 256.77);
+  initial-value: oklch(18.34% 0.060 264);
 }
 
-@property --COLOR-B95 {
+@property --COLOR-AI-95 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(11.28% 0.043 258.66);
+  initial-value: oklch(11.28% 0.040 265);
 }
 
-@property --COLOR-R50 {
+@property --COLOR-HINOKI-05 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(67.92% 0.23 19.06);
+  initial-value: oklch(97% 0.020 77);
 }
 
-@property --COLOR-G50 {
+@property --COLOR-HINOKI-20 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(70% 0.18 158.7);
+  initial-value: oklch(90% 0.060 70);
 }
 
-@property --COLOR-Y80 {
+@property --COLOR-HINOKI-40 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(91.76% 0.16 95.72);
+  initial-value: oklch(79% 0.096 64);
 }
 
-@property --COLOR-PI10 {
+@property --COLOR-HINOKI-60 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(96.03% 0.0291 334.38);
+  initial-value: oklch(62% 0.098 57);
 }
 
-@property --COLOR-PI25 {
+@property --COLOR-HINOKI-80 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(88.25% 0.091 335.35);
+  initial-value: oklch(42% 0.078 52);
 }
 
-@property --COLOR-PI50 {
+@property --COLOR-HINOKI-95 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(67.13% 0.2851 343.06);
+  initial-value: oklch(23% 0.048 48);
 }
 
-@property --COLOR-PI70 {
+@property --COLOR-YU-05 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(34.2% 0.146752 342.809);
+  initial-value: oklch(96.5% 0.016 205);
 }
 
-@property --COLOR-PI85 {
+@property --COLOR-YU-10 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(24.24% 0.1048 341.09);
+  initial-value: oklch(93% 0.028 204);
 }
 
-@property --COLOR-YE05 {
+@property --COLOR-YU-25 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(97.39% 0.0437 95.85);
+  initial-value: oklch(86% 0.055 203);
 }
 
-@property --COLOR-YE20 {
+@property --COLOR-YU-50 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(93.82% 0.104 96.09);
+  initial-value: oklch(66% 0.095 206);
 }
 
-@property --COLOR-YE50 {
+@property --COLOR-YU-70 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(86.92% 0.1765 91.17);
+  initial-value: oklch(45% 0.070 209);
 }
 
-@property --COLOR-YE70 {
+@property --COLOR-YU-85 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(44.61% 0.0913 92.51);
+  initial-value: oklch(27% 0.042 212);
 }
 
-@property --COLOR-YE95 {
+@property --COLOR-KAKI-10 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(24.96% 0.0513 95.71);
+  initial-value: oklch(93% 0.032 40);
+}
+
+@property --COLOR-KAKI-30 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(80% 0.115 38);
+}
+
+@property --COLOR-KAKI-50 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(58% 0.190 32);
+}
+
+@property --COLOR-KAKI-80 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(41% 0.145 30);
+}
+
+@property --COLOR-MATCHA-10 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(94% 0.040 148);
+}
+
+@property --COLOR-MATCHA-30 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(80% 0.090 150);
+}
+
+@property --COLOR-MATCHA-50 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(55% 0.105 148);
+}
+
+@property --COLOR-MATCHA-80 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(40% 0.080 150);
+}
+
+@property --COLOR-KOHAKU-10 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(96% 0.045 88);
+}
+
+@property --COLOR-KOHAKU-30 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(88% 0.115 85);
+}
+
+@property --COLOR-KOHAKU-50 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(78% 0.145 78);
+}
+
+@property --COLOR-KOHAKU-80 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(45% 0.095 70);
 }
 
 @supports not (color: oklch(1 0 0)) {
   :root {
-    --COLOR-N00: #ffffff;
-    --COLOR-N05: #f8fafe;
-    --COLOR-N10: #f1f5fc;
-    --COLOR-N15: #e8eff9;
-    --COLOR-N20: #e0e9f6;
-    --COLOR-N25: #d1dcec;
-    --COLOR-N30: #c2cfe2;
-    --COLOR-N35: #b0bfd5;
-    --COLOR-N40: #9eafc8;
-    --COLOR-N45: #8fa0b8;
-    --COLOR-N50: #8090a8;
-    --COLOR-N55: #707e93;
-    --COLOR-N60: #606d7e;
-    --COLOR-N65: #515b6a;
-    --COLOR-N70: #424b57;
-    --COLOR-N75: #343b44;
-    --COLOR-N80: #262b33;
-    --COLOR-N85: #191d22;
-    --COLOR-N90: #0d0f12;
-    --COLOR-N95: #030507;
-    --COLOR-B05: #eff4fe;
-    --COLOR-B10: #cee4ff;
-    --COLOR-B20: #a4cdff;
-    --COLOR-B30: #71b0ff;
-    --COLOR-B40: #4496ff;
-    --COLOR-B50: #157fff;
-    --COLOR-B60: #0053b9;
-    --COLOR-B70: #093f87;
-    --COLOR-B80: #032553;
-    --COLOR-B90: #00112e;
-    --COLOR-B95: #000414;
-    --COLOR-R50: #ff5062;
-    --COLOR-G50: #00bc78;
-    --COLOR-Y80: #ffe373;
-    --COLOR-PI10: #ffebfa;
-    --COLOR-PI25: #ffc2f0;
-    --COLOR-PI50: #ff0ac2;
-    --COLOR-PI70: #66004c;
-    --COLOR-PI85: #3d002e;
-    --COLOR-YE05: #fff7d6;
-    --COLOR-YE20: #ffeb99;
-    --COLOR-YE50: #ffce0a;
-    --COLOR-YE70: #665200;
-    --COLOR-YE95: #292100;
+    --COLOR-SUMI-00: #ffffff;
+    --COLOR-SUMI-05: #fcfaf7;
+    --COLOR-SUMI-10: #f8f4f0;
+    --COLOR-SUMI-15: #f3eee7;
+    --COLOR-SUMI-20: #ede7df;
+    --COLOR-SUMI-25: #e1d9cf;
+    --COLOR-SUMI-30: #d5ccc1;
+    --COLOR-SUMI-35: #c5bcb1;
+    --COLOR-SUMI-40: #b6aca0;
+    --COLOR-SUMI-45: #a69d91;
+    --COLOR-SUMI-50: #978e82;
+    --COLOR-SUMI-55: #847c71;
+    --COLOR-SUMI-60: #726a60;
+    --COLOR-SUMI-65: #605950;
+    --COLOR-SUMI-70: #4f4941;
+    --COLOR-SUMI-75: #3f3932;
+    --COLOR-SUMI-80: #2f2a23;
+    --COLOR-SUMI-85: #201c16;
+    --COLOR-SUMI-90: #120e0a;
+    --COLOR-SUMI-95: #060402;
+    --COLOR-AI-05: #eef4fe;
+    --COLOR-AI-10: #d3e3f9;
+    --COLOR-AI-20: #adccf4;
+    --COLOR-AI-30: #84b0eb;
+    --COLOR-AI-40: #6497e2;
+    --COLOR-AI-50: #4e83db;
+    --COLOR-AI-60: #2d56a4;
+    --COLOR-AI-70: #203f7f;
+    --COLOR-AI-80: #112450;
+    --COLOR-AI-90: #05102c;
+    --COLOR-AI-95: #010413;
+    --COLOR-HINOKI-05: #fdf4e7;
+    --COLOR-HINOKI-20: #f8d8b4;
+    --COLOR-HINOKI-40: #e6ae78;
+    --COLOR-HINOKI-60: #b37648;
+    --COLOR-HINOKI-80: #6e4022;
+    --COLOR-HINOKI-95: #2f1507;
+    --COLOR-YU-05: #e8f7f9;
+    --COLOR-YU-10: #d3eef0;
+    --COLOR-YU-25: #a7dce1;
+    --COLOR-YU-50: #3aa3af;
+    --COLOR-YU-70: #16606a;
+    --COLOR-YU-85: #062c32;
+    --COLOR-KAKI-10: #fce1d8;
+    --COLOR-KAKI-30: #fea387;
+    --COLOR-KAKI-50: #d33e25;
+    --COLOR-KAKI-80: #881c11;
+    --COLOR-MATCHA-10: #daf3dc;
+    --COLOR-MATCHA-30: #94cf9f;
+    --COLOR-MATCHA-50: #42824d;
+    --COLOR-MATCHA-80: #235430;
+    --COLOR-KOHAKU-10: #fef1d0;
+    --COLOR-KOHAKU-30: #fad27b;
+    --COLOR-KOHAKU-50: #eaaa36;
+    --COLOR-KOHAKU-80: #764a05;
   }
 }
 
 @supports (color: oklch(1 0 0)) {
   :root {
-    --COLOR-N00: oklch(100% 0 0);
-    --COLOR-N05: oklch(98.5% 0.005 257.46);
-    --COLOR-N10: oklch(0.97 0.01 257.46);
-    --COLOR-N15: oklch(95% 0.015 257.46);
-    --COLOR-N20: oklch(93% 0.02 257.46);
-    --COLOR-N25: oklch(89% 0.025 257.46);
-    --COLOR-N30: oklch(85% 0.03 257.46);
-    --COLOR-N35: oklch(80% 0.035 257.46);
-    --COLOR-N40: oklch(75% 0.04 257.46);
-    --COLOR-N45: oklch(70% 0.04 257.46);
-    --COLOR-N50: oklch(65% 0.04 257.46);
-    --COLOR-N55: oklch(58.97% 0.0359 257.46);
-    --COLOR-N60: oklch(52.94% 0.0318 257.46);
-    --COLOR-N65: oklch(46.91% 0.0277 257.46);
-    --COLOR-N70: oklch(40.88% 0.0236 257.46);
-    --COLOR-N75: oklch(34.85% 0.0194 257.46);
-    --COLOR-N80: oklch(28.82% 0.0153 257.46);
-    --COLOR-N85: oklch(22.79% 0.0112 257.46);
-    --COLOR-N90: oklch(16.76% 0.0071 257.46);
-    --COLOR-N95: oklch(11.24% 0.0087 257.46);
-    --COLOR-B05: oklch(96.63% 0.0144 264.5);
-    --COLOR-B10: oklch(91.11% 0.0439 253.6);
-    --COLOR-B20: oklch(83.67% 0.08296 253.6937);
-    --COLOR-B30: oklch(74.76% 0.1321 254.77);
-    --COLOR-B40: oklch(67.38% 0.1748 256);
-    --COLOR-B50: oklch(61.48% 0.2103 257.24);
-    --COLOR-B60: oklch(46.65% 0.1873 258.22);
-    --COLOR-B70: oklch(38.13% 0.132 258.15);
-    --COLOR-B80: oklch(27.26% 0.0925 257.49);
-    --COLOR-B90: oklch(18.34% 0.0645 256.77);
-    --COLOR-B95: oklch(11.28% 0.043 258.66);
-    --COLOR-R50: oklch(67.92% 0.23 19.06);
-    --COLOR-G50: oklch(70% 0.18 158.7);
-    --COLOR-Y80: oklch(91.76% 0.16 95.72);
-    --COLOR-PI10: oklch(96.03% 0.0291 334.38);
-    --COLOR-PI25: oklch(88.25% 0.091 335.35);
-    --COLOR-PI50: oklch(67.13% 0.2851 343.06);
-    --COLOR-PI70: oklch(34.2% 0.146752 342.809);
-    --COLOR-PI85: oklch(24.24% 0.1048 341.09);
-    --COLOR-YE05: oklch(97.39% 0.0437 95.85);
-    --COLOR-YE20: oklch(93.82% 0.104 96.09);
-    --COLOR-YE50: oklch(86.92% 0.1765 91.17);
-    --COLOR-YE70: oklch(44.61% 0.0913 92.51);
-    --COLOR-YE95: oklch(24.96% 0.0513 95.71);
+    --COLOR-SUMI-00: oklch(100% 0 74);
+    --COLOR-SUMI-05: oklch(98.5% 0.004 74);
+    --COLOR-SUMI-10: oklch(97% 0.007 74);
+    --COLOR-SUMI-15: oklch(95% 0.010 74);
+    --COLOR-SUMI-20: oklch(93% 0.013 74);
+    --COLOR-SUMI-25: oklch(89% 0.016 74);
+    --COLOR-SUMI-30: oklch(85% 0.018 74);
+    --COLOR-SUMI-35: oklch(80% 0.019 74);
+    --COLOR-SUMI-40: oklch(75% 0.020 74);
+    --COLOR-SUMI-45: oklch(70% 0.020 74);
+    --COLOR-SUMI-50: oklch(65% 0.020 74);
+    --COLOR-SUMI-55: oklch(58.97% 0.019 74);
+    --COLOR-SUMI-60: oklch(52.94% 0.018 74);
+    --COLOR-SUMI-65: oklch(46.91% 0.017 74);
+    --COLOR-SUMI-70: oklch(40.88% 0.016 74);
+    --COLOR-SUMI-75: oklch(34.85% 0.015 74);
+    --COLOR-SUMI-80: oklch(28.82% 0.014 74);
+    --COLOR-SUMI-85: oklch(22.79% 0.013 74);
+    --COLOR-SUMI-90: oklch(16.76% 0.011 74);
+    --COLOR-SUMI-95: oklch(11.24% 0.010 74);
+    --COLOR-AI-05: oklch(96.63% 0.014 258);
+    --COLOR-AI-10: oklch(91.11% 0.035 256);
+    --COLOR-AI-20: oklch(83.67% 0.065 254);
+    --COLOR-AI-30: oklch(74.76% 0.098 256);
+    --COLOR-AI-40: oklch(67.38% 0.125 258);
+    --COLOR-AI-50: oklch(61.48% 0.145 260);
+    --COLOR-AI-60: oklch(46.65% 0.135 262);
+    --COLOR-AI-70: oklch(38.13% 0.115 263);
+    --COLOR-AI-80: oklch(27.26% 0.085 264);
+    --COLOR-AI-90: oklch(18.34% 0.060 264);
+    --COLOR-AI-95: oklch(11.28% 0.040 265);
+    --COLOR-HINOKI-05: oklch(97% 0.020 77);
+    --COLOR-HINOKI-20: oklch(90% 0.060 70);
+    --COLOR-HINOKI-40: oklch(79% 0.096 64);
+    --COLOR-HINOKI-60: oklch(62% 0.098 57);
+    --COLOR-HINOKI-80: oklch(42% 0.078 52);
+    --COLOR-HINOKI-95: oklch(23% 0.048 48);
+    --COLOR-YU-05: oklch(96.5% 0.016 205);
+    --COLOR-YU-10: oklch(93% 0.028 204);
+    --COLOR-YU-25: oklch(86% 0.055 203);
+    --COLOR-YU-50: oklch(66% 0.095 206);
+    --COLOR-YU-70: oklch(45% 0.070 209);
+    --COLOR-YU-85: oklch(27% 0.042 212);
+    --COLOR-KAKI-10: oklch(93% 0.032 40);
+    --COLOR-KAKI-30: oklch(80% 0.115 38);
+    --COLOR-KAKI-50: oklch(58% 0.190 32);
+    --COLOR-KAKI-80: oklch(41% 0.145 30);
+    --COLOR-MATCHA-10: oklch(94% 0.040 148);
+    --COLOR-MATCHA-30: oklch(80% 0.090 150);
+    --COLOR-MATCHA-50: oklch(55% 0.105 148);
+    --COLOR-MATCHA-80: oklch(40% 0.080 150);
+    --COLOR-KOHAKU-10: oklch(96% 0.045 88);
+    --COLOR-KOHAKU-30: oklch(88% 0.115 85);
+    --COLOR-KOHAKU-50: oklch(78% 0.145 78);
+    --COLOR-KOHAKU-80: oklch(45% 0.095 70);
   }
 }

@@ -28,6 +28,7 @@ export const uiSeamTokens = {
   // State — shared by field-invalid and Notice
   "--ui-destructive": "var(--color-feedback-error)",
   "--ui-warning": "var(--color-feedback-warning)",
+  "--ui-warning-foreground": "var(--color-feedback-onWarning)",
   "--ui-success": "var(--color-feedback-success)",
   "--ui-info": "var(--color-feedback-info)",
 

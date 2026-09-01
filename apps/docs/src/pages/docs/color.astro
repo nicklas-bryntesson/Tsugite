@@ -7,7 +7,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/components/Heading/Heading.astro";
 import Prose from "tsugite/components/Prose/Prose.astro";
-import { rawColorTokens } from "tsugite/theme-default/raw.color.tokens.js";
+import { rawColorTokens, rawRefName } from "tsugite/theme-default/raw.color.tokens.js";
 import { semanticColorTokens } from "tsugite/theme-default/semantic.color.tokens.js";
 import { themeVoices, voiceMatrix } from "tsugite/theme-default/theme.voices.tokens.js";
 import { resolveValue } from "tsugite/engine/color-engine.js";
@@ -20,8 +20,8 @@ const MODES = ["light", "dark", "light-contrast", "dark-contrast"] as const;
 function paintable(value: unknown): string | null {
   const r = resolveValue(value);
   const css: string = r.css;
-  const m = css.match(/^var\((--COLOR-[A-Z0-9]+)\)$/);
-  if (m) return rawColorTokens[m[1]] ?? null;
+  const name = rawRefName(css);
+  if (name) return rawColorTokens[name];
   if (css.includes("var(") || css.includes("px")) return null; // shadow lists etc.
   return css;
 }
