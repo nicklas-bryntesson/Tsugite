@@ -1,0 +1,294 @@
+---
+// Port of AiPoc Views/Shared/Partials/KitchenSink/_Components.cshtml
+// Umbraco.Media() lookups are replaced by ImageMetadata imports.
+import Heading from "../components/Heading/Heading.astro";
+import Card from "../components/Card/Card.astro";
+import Picture from "../components/Picture/Picture.astro";
+import Teaser from "../components/Teaser/Teaser.astro";
+
+import img1 from "../../assets/media/amal-s.jpg";
+import img2 from "../../assets/media/david-becker.jpg";
+import img3 from "../../assets/media/jean-philippe.jpg";
+
+const frames = [
+  { frame: "bordered", label: "bordered (default)" },
+  { frame: "elevated", label: "elevated" },
+  { frame: "bare", label: "bare" },
+];
+
+const allImages = [
+  { img: img1, label: "img1 — amal-s" },
+  { img: img2, label: "img2 — david-becker" },
+  { img: img3, label: "img3 — jean-philippe" },
+];
+---
+
+{/* ═══════════════════════════════════════════
+    CARD
+    ═══════════════════════════════════════════ */}
+
+<section class="KitchenSink-section">
+  <Heading text="Card" element="h2" size="2" />
+
+  {/* — Border ——————————————————————————————— */}
+  <Heading text="Border" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+    <Card border={false} padding="md">
+      <Heading element="h4" text="No border" />
+      <p>border="false" (default)</p>
+    </Card>
+    <Card border={true} padding="md">
+      <Heading element="h4" text="Bordered" />
+      <p>border="true"</p>
+    </Card>
+  </div>
+
+  {/* — Elevation ————————————————————————————— */}
+  <Heading text="Elevation" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:2rem; flex-wrap:wrap; padding:1rem;">
+    {
+      ["sm", "md", "lg"].map((elevation) => (
+        <Card elevation={elevation} padding="md">
+          <Heading element="h4" text={`Elevation ${elevation}`} />
+          <p>elevation="{elevation}"</p>
+        </Card>
+      ))
+    }
+  </div>
+
+  {/* — Padding ——————————————————————————————— */}
+  <Heading text="Padding" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start;">
+    <Card border={true} padding="none">
+      <Heading element="h4" text="None" />
+      <p>padding="none"</p>
+    </Card>
+    <Card border={true} padding="sm">
+      <Heading element="h4" text="Small" />
+      <p>padding="sm"</p>
+    </Card>
+    <Card border={true} padding="md">
+      <Heading element="h4" text="Medium" />
+      <p>padding="md" (default)</p>
+    </Card>
+    <Card border={true} padding="lg">
+      <Heading element="h4" text="Large" />
+      <p>padding="lg"</p>
+    </Card>
+  </div>
+
+  {/* — Combined ——————————————————————————————— */}
+  <Heading text="Combined" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:2rem; flex-wrap:wrap; padding:1rem;">
+    <Card border={true} elevation="sm" padding="lg">
+      <Heading element="h4" text="Border + elevation" />
+      <p>border="true" elevation="sm" padding="lg"</p>
+    </Card>
+    <Card elevation="md" padding="lg" element="div">
+      <Heading element="h4" text="Floating card" />
+      <p>elevation="md" padding="lg" element="div"</p>
+    </Card>
+  </div>
+</section>
+
+{/* ═══════════════════════════════════════════
+    MEDIA — HERO
+    ═══════════════════════════════════════════ */}
+
+<section class="KitchenSink-section">
+  <Heading text="Media — Hero" element="h2" size="2" />
+  <p>preset="hero" — single picture, HTML art direction, 4 breakpoint crops, loading="eager"</p>
+
+  <Picture preset="hero" image={img1} alt="Hero test — amal-s unsplash" />
+</section>
+
+{/* ═══════════════════════════════════════════
+    TEASER
+    ═══════════════════════════════════════════ */}
+
+<section class="KitchenSink-section">
+  <Heading text="Teaser" element="h2" size="2" />
+  <p>
+    Composable content card. CQ-driven: flow-vertical below 25rem, flow-horizontal above. Card
+    wraps the article — frame axis controls the Card variant.
+  </p>
+
+  {/* — Frame axis ——————————————————————————————— */}
+  <Heading text="Frame axis" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
+    {
+      frames.map(({ frame, label }) => (
+        <div style="width:22rem; display:flex; flex-direction:column; gap:0.5rem;">
+          <Heading element="h4" variant="body" size="sm" text={label} />
+          <Teaser
+            frame={frame}
+            image={img2}
+            alt="Sample image"
+            heading="Post title"
+            href="#"
+            excerpt="Short excerpt giving a taste of the content."
+          >
+            <time datetime="2025-01-15">15 January 2025</time>
+          </Teaser>
+        </div>
+      ))
+    }
+  </div>
+
+  {/* — Without image ————————————————————————————— */}
+  <Heading text="Without image" element="h3" variant="body" size="lg" />
+  <div style="width:22rem;">
+    <Teaser
+      heading="Text-only teaser"
+      href="#"
+      excerpt="No image prop passed — MediaContainer is not rendered."
+    />
+  </div>
+
+  {/* — CQ switching —————————————————————————————— */}
+  <Heading text="CQ switching — drag to resize" element="h3" variant="body" size="lg" />
+  <p style="font-size:0.875rem;">Below 25rem → flow-vertical. Above 25rem → flow-horizontal.</p>
+  <div style="display:flex; flex-direction:column; gap:1rem;">
+    <div>
+      <Heading element="h4" variant="body" size="sm" text="stretched link" />
+      <div
+        style="resize:horizontal; overflow:auto; min-width:24rem; max-width:100%; border:1px dashed var(--color-border-default); padding:0.5rem;"
+      >
+        <Teaser
+          image={img1}
+          alt="Sample image"
+          heading="Resize to see layout switch"
+          href="#"
+          excerpt="Drag the handle to cross the 25rem threshold."
+        />
+      </div>
+    </div>
+    <div>
+      <Heading element="h4" variant="body" size="sm" text="button=true" />
+      <div
+        style="resize:horizontal; overflow:auto; min-width:24rem; max-width:100%; border:1px dashed var(--color-border-default); padding:0.5rem;"
+      >
+        <Teaser
+          button={true}
+          image={img2}
+          alt="Sample image"
+          heading="Button stays bottom-left at any width"
+          href="#"
+          excerpt="Drag the handle to cross the 25rem threshold."
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* — Button axis ———————————————————————————————— */}
+  <Heading text="Button axis" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
+    <div style="width:22rem; display:flex; flex-direction:column; gap:0.5rem;">
+      <Heading element="h4" variant="body" size="sm" text="button=false — stretched link (default)" />
+      <Teaser
+        image={img3}
+        alt="Sample image"
+        heading="Entire card is clickable"
+        href="#"
+        excerpt="Teaser-link::after covers the full card area."
+      />
+    </div>
+    <div style="width:22rem; display:flex; flex-direction:column; gap:0.5rem;">
+      <Heading element="h4" variant="body" size="sm" text="button=true — default label" />
+      <Teaser
+        button={true}
+        image={img3}
+        alt="Sample image"
+        heading="Heading is not a link"
+        href="#"
+        excerpt={'button-label defaults to "Read more" with sr-only context.'}
+      />
+    </div>
+    <div style="width:22rem; display:flex; flex-direction:column; gap:0.5rem;">
+      <Heading element="h4" variant="body" size="sm" text="button=true — custom label" />
+      <Teaser
+        button={true}
+        button-label="Read the post"
+        image={img1}
+        alt="Sample image"
+        heading="Custom button label"
+        href="#"
+        excerpt="Pass button-label to override the default."
+      />
+    </div>
+    <div style="width:22rem; display:flex; flex-direction:column; gap:0.5rem;">
+      <Heading element="h4" variant="body" size="sm" text="button=true — no image" />
+      <Teaser
+        button={true}
+        heading="Text and button, no image"
+        href="#"
+        excerpt="Image prop omitted — MediaContainer not rendered."
+      />
+    </div>
+    <div style="width:22rem; display:flex; flex-direction:column; gap:0.5rem;">
+      <Heading element="h4" variant="body" size="sm" text="button=true — no excerpt" />
+      <Teaser button={true} image={img2} alt="Sample image" heading="Heading and button only" href="#" />
+    </div>
+  </div>
+
+  {/* — Escape hatch ——————————————————————————————— */}
+  <Heading text="Escape hatch — custom child slot" element="h3" variant="body" size="lg" />
+  <p style="font-size:0.875rem;">
+    No href, no button prop. Caller owns the child slot entirely.
+  </p>
+  <div style="width:22rem;">
+    <Teaser image={img1} alt="Sample image" heading="Custom slot content">
+      <p style="font-size:0.875rem; margin-block-end:0.75rem;">
+        Arbitrary child content — use sparingly, only when the prop API cannot express what you
+        need.
+      </p>
+      <a class="Button" href="#" data-emphasis="secondary" data-size="sm" data-pill="false">
+        <span class="Button-text">Custom action</span>
+      </a>
+    </Teaser>
+  </div>
+
+  {/* — Guard / error state ————————————————————————— */}
+  <Heading text="Guard — misconfiguration" element="h3" variant="body" size="lg" />
+  <p style="font-size:0.875rem;">
+    button=true without href — visible error in dev, silently suppressed in prod.
+  </p>
+  <div style="width:22rem;">
+    <Teaser
+      button={true}
+      image={img2}
+      alt="Sample image"
+      heading="This teaser is misconfigured"
+      excerpt="button=true is set but href is missing."
+    />
+  </div>
+</section>
+
+{/* ═══════════════════════════════════════════
+    MEDIA — TEASER
+    ═══════════════════════════════════════════ */}
+
+<section class="KitchenSink-section">
+  <Heading text="Media — Teaser" element="h2" size="2" />
+  <p>
+    preset="teaser" — two pictures (StackedSources + HorizontalSources), CSS/container-query
+    driven. Both render; visibility controlled by consuming component.
+  </p>
+
+  <Picture preset="teaser" image={img2} alt="Teaser test — david-becker unsplash" />
+
+  {/* — All three images side by side ——————————— */}
+  <Heading text="All media items" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+    {
+      allImages.map(({ img, label }) => (
+        <Card border={true} padding="none" style="width:16rem;">
+          <Picture preset="teaser" image={img} alt={label} />
+          <div style="padding:var(--size-sm);">
+            <Heading element="h4" variant="body" size="sm" text={label} />
+          </div>
+        </Card>
+      ))
+    }
+  </div>
+</section>

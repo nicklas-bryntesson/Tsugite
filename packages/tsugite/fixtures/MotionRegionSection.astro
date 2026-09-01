@@ -1,0 +1,105 @@
+---
+// Port of reference-components MotionRegion.html. Video assets come from the
+// same public poc-assets CDN the reference kitchensink uses.
+import Heading from "../components/Heading/Heading.astro";
+import MotionRegion from "../components/MotionRegion/MotionRegion.astro";
+
+const POC = "https://nicklas-bryntesson.github.io/poc-assets/";
+---
+
+<section class="KitchenSink-section" id="MotionRegion">
+  <Heading text="MotionRegion" element="h2" size="2" />
+
+  <p>
+    Governs decorative motion for accessibility and performance. The animated backend is authored
+    content that obeys <code>data-motion</code>; below it is a CSS animation gated with zero JS.
+    Toggle the control, enable your OS "reduce motion" setting, or scroll a region out of view to
+    see the policy react.
+  </p>
+
+  <style is:global>
+    /* Demo layout: our KitchenSink-section is a flex column with
+       align-items:flex-start, which collapses a background-only region to zero
+       width (the reference kitchensink is plain flow). Sizing is the demo
+       context's job, not the component's. */
+    #MotionRegion .MotionRegion {
+      inline-size: min(48rem, 100%);
+    }
+
+    /* Demo backend: an authored CSS animation that obeys the region's data-motion.
+       This gate is the ENTIRE integration for a CSS backend — no JavaScript. */
+    .demo-animation {
+      block-size: 12rem;
+      background: linear-gradient(120deg, #6a5acd, #ff6b6b, #4ecdc4, #6a5acd);
+      background-size: 300% 300%;
+      animation: motionRegionDemo 6s ease infinite;
+    }
+
+    .MotionRegion[data-motion="paused"] .demo-animation {
+      animation-play-state: paused;
+    }
+
+    @keyframes motionRegionDemo {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .MotionRegion video {
+      display: block;
+      inline-size: 100%;
+      block-size: 12rem;
+      object-fit: cover;
+    }
+  </style>
+
+  {/* ─── Live demo (e2e target): CSS-animated backend, autostart ───────── */}
+  <Heading text="Live demo — CSS-animated backend (autostart)" element="h3" variant="body" size="lg" />
+  <MotionRegion
+    id="motion-region-live"
+    autoplay="policy"
+    playText="Play background animation"
+    pauseText="Pause background animation"
+    playingText="Background animation playing"
+    pausedText="Background animation paused"
+  >
+    <div class="demo-animation" role="presentation"></div>
+  </MotionRegion>
+
+  {/* ─── Autoplay off — waits for the user ─────────────────────────────── */}
+  <Heading text="Autoplay off — waits for the user" element="h3" variant="body" size="lg" />
+  <MotionRegion
+    id="motion-region-off"
+    autoplay="off"
+    playText="Play background animation"
+    pauseText="Pause background animation"
+    playingText="Background animation playing"
+    pausedText="Background animation paused"
+  >
+    <div class="demo-animation" role="presentation"></div>
+  </MotionRegion>
+
+  {/* ─── Video backend ─────────────────────────────────────────────────── */}
+  <Heading text="Video backend (preload none until policy plays)" element="h3" variant="body" size="lg" />
+  <MotionRegion
+    id="motion-region-video"
+    autoplay="policy"
+    playText="Play background video"
+    pauseText="Pause background video"
+    playingText="Background video playing"
+    pausedText="Background video paused"
+  >
+    <div class="media-container" role="presentation">
+      <video
+        loop
+        muted
+        playsinline
+        preload="none"
+        poster={`${POC}video-src/multicolored-background-1280x720.jpg`}
+      >
+        <source src={`${POC}video-src/multicolored-background-1280x720.webm`} type="video/webm" />
+        <source src={`${POC}video-src/multicolored-background-1280x720.mp4`} type="video/mp4" />
+      </video>
+    </div>
+  </MotionRegion>
+</section>

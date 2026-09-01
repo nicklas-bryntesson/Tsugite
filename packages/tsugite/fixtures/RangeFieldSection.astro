@@ -1,0 +1,149 @@
+---
+// Port of reference-components RangeField.html — states mirror
+// RangeField.generate.ts one to one.
+import Heading from "../components/Heading/Heading.astro";
+import RangeField from "../components/RangeField/RangeField.astro";
+---
+
+<section class="KitchenSink-section" id="RangeField">
+  <Heading text="RangeField" element="h2" size="2" />
+
+  {/* Interaction states */}
+  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <p>
+    A range <strong>always carries a value</strong>, so the rows are <em>at minimum</em> and
+    <em>partially filled</em> rather than the family's usual empty/filled pair.
+  </p>
+  <table class="state-table">
+    <thead>
+      <tr>
+        <th scope="col">State</th>
+        <th scope="col">default</th>
+        <th scope="col">hover</th>
+        <th scope="col">focus</th>
+        <th scope="col">active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">at minimum</th>
+        <td><RangeField id="rf-min-default" label="Volume" value="0" /></td>
+        <td><RangeField id="rf-min-hover" label="Volume" value="0" data-test-state="hover" /></td>
+        <td><RangeField id="rf-min-focus" label="Volume" value="0" data-test-state="focus" /></td>
+        <td><RangeField id="rf-min-active" label="Volume" value="0" data-test-state="active" /></td>
+      </tr>
+      <tr>
+        <th scope="row">partially filled</th>
+        <td><RangeField id="rf-mid-default" label="Volume" value="50" /></td>
+        <td><RangeField id="rf-mid-hover" label="Volume" value="50" data-test-state="hover" /></td>
+        <td><RangeField id="rf-mid-focus" label="Volume" value="50" data-test-state="focus" /></td>
+        <td><RangeField id="rf-mid-active" label="Volume" value="50" data-test-state="active" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Disabled */}
+  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">at minimum</th>
+        <td><RangeField id="rf-disabled-min" label="Volume" value="0" disabled={true} /></td>
+      </tr>
+      <tr>
+        <th scope="row">partially filled</th>
+        <td><RangeField id="rf-disabled-mid" label="Volume" value="50" disabled={true} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Invalid */}
+  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">out of policy, with a hint</th>
+        <td>
+          <RangeField
+            id="rf-invalid-min"
+            label="Volume"
+            value="0"
+            invalid={true}
+            describedby="rf-invalid-min-hint"
+            hint="Pick at least 10 %."
+            hintId="rf-invalid-min-hint"
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">out of policy</th>
+        <td><RangeField id="rf-invalid-mid" label="Volume" value="50" invalid={true} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Variants */}
+  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">stepped (step matches tick values)</th>
+        <td><RangeField id="rf-variant-stepped" rootId="rangefield-stepped" label="Volume (steps of 25)" step="25" value="75" /></td>
+      </tr>
+      <tr>
+        <th scope="row">resized (thumb 2em, track 0.75em)</th>
+        <td><RangeField id="rf-variant-resized" rootId="rangefield-resized" label="Volume (larger thumb)" value="50" style="--_rf-thumb: 2em; --_rf-track: 0.75em" /></td>
+      </tr>
+      <tr>
+        <th scope="row">scales with text (font-size only)</th>
+        <td><RangeField id="rf-variant-text-scaled" rootId="rangefield-text-scaled" label="Volume (font-size: 1.5rem)" value="50" style="font-size: 1.5rem" /></td>
+      </tr>
+      <tr>
+        <th scope="row">vertical, min at the bottom (default)</th>
+        <td><RangeField id="rf-variant-vertical" rootId="rangefield-vertical" label="Volume (vertical)" value="50" orientation="vertical" /></td>
+      </tr>
+      <tr>
+        <th scope="row">vertical, min at the top</th>
+        <td><RangeField id="rf-variant-vertical-top" rootId="rangefield-vertical-top" label="Depth (min at top)" value="50" orientation="vertical" minAnchor="top" /></td>
+      </tr>
+      <tr>
+        <th scope="row">datalist present, no marks drawn</th>
+        <td>
+          <RangeField id="rf-variant-datalist" rootId="rangefield-datalist" label="Volume (datalist, no marks drawn)" step="25" value="50" list="rf-variant-datalist-ticks" />
+          <datalist id="rf-variant-datalist-ticks">
+            <option value="0"></option><option value="25"></option><option value="50"></option>
+            <option value="75"></option><option value="100"></option>
+          </datalist>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Live demo */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <div>
+    <RangeField id="rf-live" rootId="rangefield-live" label="Volume" value="50" />
+  </div>
+
+  {/* Native reference */}
+  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <p>
+    The browser's own track, thumb and <code>&lt;datalist&gt;</code> tick marks. Compare the marks
+    here with the variant above, which has the same <code>&lt;datalist&gt;</code> and draws none.
+  </p>
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">unstyled range with datalist</th>
+        <td>
+          <label for="rf-native">Volume</label>
+          <input type="range" id="rf-native" name="rf-native" min="0" max="100" step="25" value="50" list="rf-native-ticks" />
+          <datalist id="rf-native-ticks">
+            <option value="0"></option><option value="25"></option><option value="50"></option>
+            <option value="75"></option><option value="100"></option>
+          </datalist>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

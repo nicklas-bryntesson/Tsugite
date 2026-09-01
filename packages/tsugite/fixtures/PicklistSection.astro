@@ -1,0 +1,195 @@
+---
+// Port of reference-components Picklist.html.
+import Heading from "../components/Heading/Heading.astro";
+import Picklist from "../components/Picklist/Picklist.astro";
+import PicklistOption from "../components/Picklist/PicklistOption.astro";
+import ChoiceGroup from "../components/ChoiceGroup/ChoiceGroup.astro";
+import ChoiceField from "../components/ChoiceField/ChoiceField.astro";
+import Notice from "../components/Notice/Notice.astro";
+
+const STATES = ["default", "hover", "focus", "active"] as const;
+---
+
+<section class="KitchenSink-section" id="Picklist">
+  <Heading text="Picklist" element="h2" size="2" />
+
+  {/* ── 1. Interaction states ─────────────────────────────────────────── */}
+  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+
+  {
+    STATES.map((state) => {
+      const p = `pl-s${state[0]}`;
+      return (
+        <>
+          <Heading text={state[0].toUpperCase() + state.slice(1)} element="h4" variant="body" size="md" />
+          <Picklist
+            id={`state-${state}`}
+            legend={`Interaction state: ${state}`}
+            legendPlacement="hidden"
+            data-test-state={state === "default" ? undefined : state}
+          >
+            <PicklistOption type="checkbox" id={`${p}-1`} name={`${p}-1`} label="Unselected" />
+            <PicklistOption type="checkbox" id={`${p}-2`} name={`${p}-2`} label="Selected" checked={true} />
+          </Picklist>
+        </>
+      );
+    })
+  }
+
+  <Heading text="Segmented · default / hover / focus / active" element="h4" variant="body" size="md" />
+  {
+    STATES.map((state) => {
+      const p = `pl-ss${state[0]}`;
+      return (
+        <Picklist
+          id={`state-seg-${state}`}
+          legend={`Segmented state: ${state}`}
+          legendPlacement="hidden"
+          segmented={true}
+          data-test-state={state === "default" ? undefined : state}
+        >
+          <PicklistOption type="radio" id={`${p}-1`} name={p} label="Selected" checked={true} />
+          <PicklistOption type="radio" id={`${p}-2`} name={p} label="Unselected" />
+          <PicklistOption type="radio" id={`${p}-3`} name={p} label="Third" />
+        </Picklist>
+      );
+    })
+  }
+
+  {/* ── 2. Disabled ───────────────────────────────────────────────────── */}
+  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <Picklist id="disabled-single" legend="One chip disabled">
+    <PicklistOption type="checkbox" id="pl-d-1" name="pl-d-1" label="Available" checked={true} />
+    <PicklistOption type="checkbox" id="pl-d-2" name="pl-d-2" label="Sold out" disabled={true} />
+    <PicklistOption type="checkbox" id="pl-d-3" name="pl-d-3" label="Locked in" checked={true} disabled={true} />
+  </Picklist>
+
+  <Picklist id="disabled-group" legend="Whole group disabled (fieldset cascade)" disabled={true}>
+    <PicklistOption type="radio" id="pl-dg-1" name="pl-dg" label="Thai" checked={true} />
+    <PicklistOption type="radio" id="pl-dg-2" name="pl-dg" label="Italian" />
+  </Picklist>
+
+  {/* ── 3. Invalid — group error as a Notice inside a live region ──────── */}
+  <Heading text="Invalid (group error)" element="h3" variant="body" size="lg" />
+  <Picklist id="invalid" legend="Dietary needs" invalid={true} describedby="pl-err-text">
+    <PicklistOption type="checkbox" id="pl-e-1" name="pl-e-1" label="Vegetarian" required={true} invalid={true} />
+    <PicklistOption type="checkbox" id="pl-e-2" name="pl-e-2" label="Vegan" required={true} invalid={true} />
+    <PicklistOption type="checkbox" id="pl-e-3" name="pl-e-3" label="Gluten free" required={true} invalid={true} />
+    <div slot="error" class="notice-region" role="alert" aria-live="assertive">
+      <Notice variant="error">
+        <p id="pl-err-text">Pick at least one option to continue.</p>
+      </Notice>
+    </div>
+  </Picklist>
+
+  {/* ── 4. Variants ───────────────────────────────────────────────────── */}
+  <Heading text="Variants" element="h3" variant="body" size="lg" />
+
+  <Heading text="Single-select (radio core)" element="h4" variant="body" size="md" />
+  <Picklist id="single" legend="Cuisine">
+    <PicklistOption type="radio" id="pl-s-1" name="pl-cuisine" label="Thai" checked={true} />
+    <PicklistOption type="radio" id="pl-s-2" name="pl-cuisine" label="Italian" />
+    <PicklistOption type="radio" id="pl-s-3" name="pl-cuisine" label="Japanese" />
+    <PicklistOption type="radio" id="pl-s-4" name="pl-cuisine" label="Mexican" />
+  </Picklist>
+
+  <Heading text="Multi-select (checkbox core)" element="h4" variant="body" size="md" />
+  <Picklist id="multi" legend="Amenities">
+    <PicklistOption type="checkbox" id="pl-m-1" name="pl-m-1" label="Wi-Fi" checked={true} />
+    <PicklistOption type="checkbox" id="pl-m-2" name="pl-m-2" label="Parking" />
+    <PicklistOption type="checkbox" id="pl-m-3" name="pl-m-3" label="Breakfast" checked={true} />
+    <PicklistOption type="checkbox" id="pl-m-4" name="pl-m-4" label="Pool" />
+  </Picklist>
+
+  <Heading text="Removable (checkbox core only)" element="h4" variant="body" size="md" />
+  <Picklist
+    id="removable"
+    legend="Applied filters"
+    describedby="pl-r-hint"
+    hint="Selected chips show a × — activating it removes the selection."
+    hintId="pl-r-hint"
+  >
+    <PicklistOption type="checkbox" id="pl-r-1" name="pl-r-1" label="Under 500 kr" checked={true} removable={true} />
+    <PicklistOption type="checkbox" id="pl-r-2" name="pl-r-2" label="In stock" checked={true} removable={true} />
+    <PicklistOption type="checkbox" id="pl-r-3" name="pl-r-3" label="Free delivery" removable={true} />
+  </Picklist>
+
+  <Heading text="Legend beside" element="h4" variant="body" size="md" />
+  <Picklist id="beside" legend="Size" legendPlacement="beside">
+    <PicklistOption type="radio" id="pl-b-1" name="pl-size" label="S" />
+    <PicklistOption type="radio" id="pl-b-2" name="pl-size" label="M" checked={true} />
+    <PicklistOption type="radio" id="pl-b-3" name="pl-size" label="L" />
+    <PicklistOption type="radio" id="pl-b-4" name="pl-size" label="XL" />
+  </Picklist>
+
+  <Heading text="Legend hidden (SR-only name)" element="h4" variant="body" size="md" />
+  <Picklist id="hidden" legend="Sort order" legendPlacement="hidden">
+    <PicklistOption type="radio" id="pl-h-1" name="pl-sort" label="Newest" checked={true} />
+    <PicklistOption type="radio" id="pl-h-2" name="pl-sort" label="Price" />
+    <PicklistOption type="radio" id="pl-h-3" name="pl-sort" label="Rating" />
+  </Picklist>
+
+  <Heading text="Long set (wraps to multiple rows)" element="h4" variant="body" size="md" />
+  <Picklist id="wrap" legend="Tags">
+    <PicklistOption type="checkbox" id="pl-w-1" name="pl-w-1" label="Accessibility" checked={true} />
+    <PicklistOption type="checkbox" id="pl-w-2" name="pl-w-2" label="Design systems" />
+    <PicklistOption type="checkbox" id="pl-w-3" name="pl-w-3" label="Typography" />
+    <PicklistOption type="checkbox" id="pl-w-4" name="pl-w-4" label="Performance" checked={true} />
+    <PicklistOption type="checkbox" id="pl-w-5" name="pl-w-5" label="Testing" />
+    <PicklistOption type="checkbox" id="pl-w-6" name="pl-w-6" label="Documentation" />
+    <PicklistOption type="checkbox" id="pl-w-7" name="pl-w-7" label="Progressive enhancement" />
+  </Picklist>
+
+  <Heading text="Segmented (horizontal)" element="h4" variant="body" size="md" />
+  <Picklist id="segmented" legend="Text alignment" segmented={true}>
+    <PicklistOption type="radio" id="pl-sg-1" name="pl-align" label="Left" checked={true} />
+    <PicklistOption type="radio" id="pl-sg-2" name="pl-align" label="Center" />
+    <PicklistOption type="radio" id="pl-sg-3" name="pl-align" label="Right" />
+    <PicklistOption type="radio" id="pl-sg-4" name="pl-align" label="Justify" />
+  </Picklist>
+
+  <Heading text="Segmented with a rectangular radius (token override)" element="h4" variant="body" size="md" />
+  <Picklist id="segmented-rect" legend="Density" segmented={true} style="--_pl-chip-radius: 0.25rem">
+    <PicklistOption type="radio" id="pl-sr-1" name="pl-density" label="Comfortable" />
+    <PicklistOption type="radio" id="pl-sr-2" name="pl-density" label="Cozy" checked={true} />
+    <PicklistOption type="radio" id="pl-sr-3" name="pl-density" label="Compact" />
+  </Picklist>
+
+  <Heading text="Vertical (gapped — chips hug their text)" element="h4" variant="body" size="md" />
+  <Picklist id="vertical" legend="Delivery window" orientation="vertical">
+    <PicklistOption type="checkbox" id="pl-v-1" name="pl-v-1" label="Morning" checked={true} />
+    <PicklistOption type="checkbox" id="pl-v-2" name="pl-v-2" label="Afternoon" />
+    <PicklistOption type="checkbox" id="pl-v-3" name="pl-v-3" label="Evening" />
+  </Picklist>
+
+  <Heading text="Vertical + segmented" element="h4" variant="body" size="md" />
+  <Picklist id="vertical-segmented" legend="Sort direction" orientation="vertical" segmented={true}>
+    <PicklistOption type="radio" id="pl-vs-1" name="pl-sortdir" label="Newest first" checked={true} />
+    <PicklistOption type="radio" id="pl-vs-2" name="pl-sortdir" label="Oldest first" />
+    <PicklistOption type="radio" id="pl-vs-3" name="pl-sortdir" label="Recently updated" />
+  </Picklist>
+
+  {/* ── 5. Live demo ──────────────────────────────────────────────────── */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Picklist
+    id="live"
+    legend="Toppings"
+    describedby="pl-live-hint"
+    hint="Pick as many as you like — Tab into the set, then Space to toggle."
+    hintId="pl-live-hint"
+  >
+    <PicklistOption type="checkbox" id="pl-l-1" name="pl-l-1" label="Mozzarella" />
+    <PicklistOption type="checkbox" id="pl-l-2" name="pl-l-2" label="Basil" checked={true} />
+    <PicklistOption type="checkbox" id="pl-l-3" name="pl-l-3" label="Olives" />
+    <PicklistOption type="checkbox" id="pl-l-4" name="pl-l-4" label="Chili" />
+  </Picklist>
+
+  {/* ── 6. Reference — the same options as a plain ChoiceGroup ─────────── */}
+  <Heading text="Reference: the same options as a ChoiceGroup" element="h3" variant="body" size="lg" />
+  <ChoiceGroup legend="Toppings (ChoiceGroup)" data-id="reference">
+    <ChoiceField type="checkbox" id="pl-ref-1" name="pl-ref-1" label="Mozzarella" />
+    <ChoiceField type="checkbox" id="pl-ref-2" name="pl-ref-2" label="Basil" checked={true} />
+    <ChoiceField type="checkbox" id="pl-ref-3" name="pl-ref-3" label="Olives" />
+    <ChoiceField type="checkbox" id="pl-ref-4" name="pl-ref-4" label="Chili" />
+  </ChoiceGroup>
+</section>

@@ -1,0 +1,126 @@
+---
+// The donut-scope matrix (ADR-0006): every allowed voice × volume
+// combination renders the same contract set — text roles, border,
+// primary/secondary buttons — so drift in any theme table is impossible
+// to miss, in all four appearance modes. The forbidden combination
+// (inverse × subtle) is shown AS forbidden.
+import Heading from "../components/Heading/Heading.astro";
+import LinkButton from "../components/Button/LinkButton.astro";
+import { voiceMatrix, VOLUMES } from "../theme-default/theme.voices.tokens.js";
+
+const cells = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
+  VOLUMES.map((volume) => ({ voice, volume, allowed: volumes.includes(volume) })),
+);
+---
+
+<section class="KitchenSink-section" id="Themes">
+  <Heading text="Themes" element="h2" size="2" />
+
+  <p class="prose">
+    <code>data-theme</code> carries <em>whose palette speaks</em>, <code>data-prominence</code>
+    carries <em>how loud</em> (absence = primary). Every allowed cell renders the same set —
+    drift in any theme table shows here first.
+  </p>
+
+  <div class="themes-matrix">
+    {cells.map(({ voice, volume, allowed }) =>
+      allowed ? (
+        <div class="theme-cell" data-theme={voice} data-prominence={volume}>
+          <p class="cell-label"><code>{voice}</code> × <code>{volume}</code></p>
+          <p class="cell-text">Text</p>
+          <p class="cell-muted">Muted</p>
+          <div class="cell-border">border</div>
+          <div class="cell-buttons">
+            <LinkButton href="#Themes" size="sm" emphasis="primary">Primary</LinkButton>
+            <LinkButton href="#Themes" size="sm" emphasis="secondary">Secondary</LinkButton>
+          </div>
+        </div>
+      ) : (
+        <div class="theme-cell" data-forbidden>
+          <p class="cell-label"><code>{voice}</code> × <code>{volume}</code></p>
+          <p class="cell-muted">Not defined — this combination doesn’t exist.</p>
+        </div>
+      ),
+    )}
+  </div>
+
+  {/* Nested volume change: same voice, quieter — prominence without theme. */}
+  <Heading text="Nested volume" element="h3" variant="body" size="lg" />
+  <div class="theme-cell" data-theme="brand">
+    <p class="cell-label"><code>brand</code> (default = primary)</p>
+    <p class="cell-text">Full voice</p>
+    <div class="theme-cell nested" data-prominence="subtle">
+      <p class="cell-label"><code>data-prominence="subtle"</code> — no voice of its own</p>
+      <p class="cell-text">Same voice, quieter</p>
+      <div class="cell-buttons">
+        <LinkButton href="#Themes" size="sm" emphasis="primary">Primary</LinkButton>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+/* Control-room chrome only — the COLORS come exclusively from the channels,
+   consumed with chain fallbacks. A cell without a voice must degrade to the
+   semantic defaults, never to invalid-at-computed-value. */
+.themes-matrix {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+  gap: 1rem;
+  align-items: start;
+  /* The section is a flex column with align-items:flex-start — without an
+     explicit inline-size the grid shrinks to one column (the MotionRegion
+     demo lesson). */
+  inline-size: 100%;
+}
+
+.theme-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: var(--theme-surface, var(--color-surface-inset));
+  color: var(--theme-text, var(--color-text-primary));
+
+  & .cell-label {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--theme-textMuted, var(--color-text-secondary));
+  }
+
+  & .cell-text {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  & .cell-muted {
+    margin: 0;
+    color: var(--theme-textMuted, var(--color-text-secondary));
+  }
+
+  & .cell-border {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid var(--theme-border, var(--color-border-default));
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  & .cell-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &[data-forbidden] {
+    background-color: transparent;
+    border: 1px dashed var(--color-border-default);
+    color: var(--color-text-secondary);
+  }
+
+  &.nested {
+    inline-size: 100%;
+  }
+}
+</style>

@@ -1,0 +1,144 @@
+---
+// Port of reference-components DateTimeField.html — states mirror
+// DateTimeField.generate.ts one to one.
+import Heading from "../components/Heading/Heading.astro";
+import DateTimeField from "../components/DateTimeField/DateTimeField.astro";
+---
+
+<section class="KitchenSink-section" id="DateTimeField">
+  <Heading text="DateTimeField" element="h2" size="2" />
+
+  {/* Interaction states */}
+  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <thead>
+      <tr>
+        <th scope="col">State</th>
+        <th scope="col">default</th>
+        <th scope="col">hover</th>
+        <th scope="col">focus</th>
+        <th scope="col">active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><DateTimeField id="dtf-default" /></td>
+        <td><DateTimeField id="dtf-default-hover" data-test-state="hover" /></td>
+        <td><DateTimeField id="dtf-default-focus" data-test-state="focus" /></td>
+        <td><DateTimeField id="dtf-default-active" data-test-state="active" /></td>
+      </tr>
+      <tr>
+        <th scope="row">filled</th>
+        <td><DateTimeField id="dtf-filled" value="2026-05-27T14:35" /></td>
+        <td><DateTimeField id="dtf-filled-hover" value="2026-05-27T14:35" data-test-state="hover" /></td>
+        <td><DateTimeField id="dtf-filled-focus" value="2026-05-27T14:35" data-test-state="focus" /></td>
+        <td><DateTimeField id="dtf-filled-active" value="2026-05-27T14:35" data-test-state="active" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Disabled */}
+  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><DateTimeField id="dtf-disabled-empty" disabled={true} /></td>
+      </tr>
+      <tr>
+        <th scope="row">filled</th>
+        <td><DateTimeField id="dtf-disabled-filled" value="2026-05-27T14:35" disabled={true} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Invalid */}
+  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><DateTimeField id="dtf-invalid-empty" invalid={true} /></td>
+      </tr>
+      <tr>
+        <th scope="row">filled</th>
+        <td><DateTimeField id="dtf-invalid-filled" value="2026-05-27T14:35" invalid={true} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* With seconds */}
+  <Heading text="With seconds" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">step 30</th>
+        <td><DateTimeField id="dtf-with-seconds" value="2026-05-27T14:35:00" step="30" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Localization */}
+  <Heading text="Localization" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">en (12h)</th>
+        <td><DateTimeField id="dtf-12h" value="2026-05-27T14:35" locale="en" label="Date and time (en — 12h)" /></td>
+      </tr>
+      <tr>
+        <th scope="row">sv-SE</th>
+        <td><DateTimeField id="dtf-sv" value="2026-05-27T14:35" locale="sv-SE" label="Datum och tid" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Live demo */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <div>
+    <DateTimeField id="meeting-datetime" label="Meeting date and time" />
+  </div>
+
+  {/* Native reference */}
+  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">default</th>
+        <td>
+          <label for="dtf-native-default">Date and time</label>
+          <input type="datetime-local" id="dtf-native-default" name="dtf-native-default" min="1900-01-01T00:00" max="2100-12-31T23:59" value="2026-05-27T14:35" />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">seconds</th>
+        <td>
+          <label for="dtf-native-seconds">Date and time (seconds)</label>
+          <input type="datetime-local" id="dtf-native-seconds" name="dtf-native-seconds" step="1" value="2026-05-27T14:35:30" />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">15-min step</th>
+        <td>
+          <label for="dtf-native-step">Date and time (15-min step)</label>
+          <input type="datetime-local" id="dtf-native-step" name="dtf-native-step" step="900" value="2026-05-27T14:30" />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">lang en-US</th>
+        <td>
+          <label for="dtf-native-lang-en">Date and time (lang="en-US")</label>
+          <input type="datetime-local" id="dtf-native-lang-en" name="dtf-native-lang-en" lang="en-US" value="2026-05-27T14:35" />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">disabled</th>
+        <td>
+          <label for="dtf-native-disabled">Date and time</label>
+          <input type="datetime-local" id="dtf-native-disabled" name="dtf-native-disabled" value="2026-05-27T14:35" disabled />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

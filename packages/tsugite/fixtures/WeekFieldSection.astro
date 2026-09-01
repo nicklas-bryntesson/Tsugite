@@ -1,0 +1,131 @@
+---
+// Port of reference-components WeekField.html — states mirror
+// WeekField.generate.ts StateDefinition[] one to one.
+import Heading from "../components/Heading/Heading.astro";
+import WeekField from "../components/WeekField/WeekField.astro";
+---
+
+<section class="KitchenSink-section" id="WeekField">
+  <Heading text="WeekField" element="h2" size="2" />
+
+  {/* Interaction states */}
+  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <thead>
+      <tr>
+        <th scope="col">State</th>
+        <th scope="col">default</th>
+        <th scope="col">hover</th>
+        <th scope="col">focus</th>
+        <th scope="col">active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><WeekField id="wf-empty-default" label="Week" /></td>
+        <td><WeekField id="wf-empty-hover" label="Week" data-test-state="hover" /></td>
+        <td><WeekField id="wf-empty-focus" label="Week" data-test-state="focus" /></td>
+        <td><WeekField id="wf-empty-active" label="Week" data-test-state="active" /></td>
+      </tr>
+      <tr>
+        <th scope="row">filled</th>
+        <td><WeekField id="wf-filled-default" label="Week" value="2026-W27" /></td>
+        <td><WeekField id="wf-filled-hover" label="Week" value="2026-W27" data-test-state="hover" /></td>
+        <td><WeekField id="wf-filled-focus" label="Week" value="2026-W27" data-test-state="focus" /></td>
+        <td><WeekField id="wf-filled-active" label="Week" value="2026-W27" data-test-state="active" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Disabled */}
+  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><WeekField id="wf-disabled-empty" label="Week" disabled={true} /></td>
+      </tr>
+      <tr>
+        <th scope="row">filled</th>
+        <td><WeekField id="wf-disabled-filled" label="Week" value="2026-W27" disabled={true} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Invalid */}
+  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">required + empty</th>
+        <td>
+          <WeekField
+            id="wf-invalid-empty"
+            label="Week"
+            labelSuffix={'<span aria-hidden="true">*</span>'}
+            invalid={true}
+            required={true}
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">out of range</th>
+        <td><WeekField id="wf-invalid-filled" label="Week" value="2020-W01" invalid={true} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Variants */}
+  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">with min/max</th>
+        <td><WeekField id="wf-with-range" label="Week" value="2026-W27" min="2026-W10" max="2026-W40" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Live demo */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <div>
+    <WeekField id="meeting-week" label="Meeting week" />
+  </div>
+
+  {/* Localization: week naming + language */}
+  <Heading text="Localization" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">en-GB</th>
+        <td><WeekField id="wf-locale-en-gb" label="Week (en-GB)" locale="en-GB" value="2026-W27" /></td>
+      </tr>
+      <tr>
+        <th scope="row">sv-SE</th>
+        <td><WeekField id="wf-locale-sv-se" label="Week (sv-SE)" locale="sv-SE" value="2026-W27" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Native reference */}
+  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">default</th>
+        <td>
+          <label for="wf-native-default">Week</label>
+          <input type="week" id="wf-native-default" name="wf-native-default" />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">disabled</th>
+        <td>
+          <label for="wf-native-disabled">Week</label>
+          <input type="week" id="wf-native-disabled" name="wf-native-disabled" value="2026-W27" disabled />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

@@ -1,0 +1,168 @@
+---
+// Port of reference-components AffixField.html — states mirror
+// AffixField.generate.ts one to one.
+import Heading from "../components/Heading/Heading.astro";
+import AffixField from "../components/AffixField/AffixField.astro";
+
+const money = { prefix: { text: "$" }, suffix: { text: "USD" } };
+const decimal = { inputmode: "decimal" };
+---
+
+<section class="KitchenSink-section" id="AffixField">
+  <Heading text="AffixField" element="h2" size="2" />
+
+  {/* Interaction states */}
+  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <thead>
+      <tr>
+        <th scope="col">State</th>
+        <th scope="col">default</th>
+        <th scope="col">hover</th>
+        <th scope="col">focus</th>
+        <th scope="col">active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><AffixField id="af-empty-default" label="Amount" input={decimal} {...money} /></td>
+        <td><AffixField id="af-empty-hover" label="Amount" root={{ "data-test-state": "hover" }} input={decimal} {...money} /></td>
+        <td><AffixField id="af-empty-focus" label="Amount" root={{ "data-test-state": "focus" }} input={decimal} {...money} /></td>
+        <td><AffixField id="af-empty-active" label="Amount" root={{ "data-test-state": "active" }} input={decimal} {...money} /></td>
+      </tr>
+      <tr>
+        <th scope="row">filled</th>
+        <td><AffixField id="af-filled-default" label="Amount" input={{ ...decimal, value: "100" }} {...money} /></td>
+        <td><AffixField id="af-filled-hover" label="Amount" root={{ "data-test-state": "hover" }} input={{ ...decimal, value: "100" }} {...money} /></td>
+        <td><AffixField id="af-filled-focus" label="Amount" root={{ "data-test-state": "focus" }} input={{ ...decimal, value: "100" }} {...money} /></td>
+        <td><AffixField id="af-filled-active" label="Amount" root={{ "data-test-state": "active" }} input={{ ...decimal, value: "100" }} {...money} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Disabled */}
+  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><AffixField id="af-disabled-empty" label="Amount" root={{ "data-disabled": "true" }} input={{ ...decimal, disabled: "disabled" }} {...money} /></td>
+      </tr>
+      <tr>
+        <th scope="row">filled</th>
+        <td><AffixField id="af-disabled-filled" label="Amount" root={{ "data-disabled": "true" }} input={{ ...decimal, value: "100", disabled: "disabled" }} {...money} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Invalid */}
+  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">required + empty</th>
+        <td>
+          <AffixField
+            id="af-invalid-empty"
+            label={'Amount <span aria-hidden="true">*</span>'}
+            root={{ "data-invalid": "true" }}
+            input={{ ...decimal, required: "required", "aria-invalid": "true" }}
+            {...money}
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">out of policy</th>
+        <td><AffixField id="af-invalid-filled" label="Amount" root={{ "data-invalid": "true" }} input={{ ...decimal, value: "-1", "aria-invalid": "true" }} {...money} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Variants */}
+  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">bare — JS gap-fills presence</th>
+        <td><AffixField id="af-variant-bare" rootId="affixfield-bare" label="Amount" input={decimal} {...money} bare={true} /></td>
+      </tr>
+      <tr>
+        <th scope="row">fully authored (chars + describedby)</th>
+        <td>
+          <AffixField
+            id="af-variant-authored"
+            rootId="affixfield-authored"
+            label="Amount"
+            root={{ style: "--_af-prefix-chars: 1; --_af-suffix-chars: 3" }}
+            input={{ ...decimal, "aria-describedby": "af-variant-authored-prefix af-variant-authored-suffix" }}
+            prefix={{ text: "$", attrs: { id: "af-variant-authored-prefix" } }}
+            suffix={{ text: "USD", attrs: { id: "af-variant-authored-suffix" } }}
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">unit in the label — affix aria-hidden</th>
+        <td>
+          <AffixField
+            id="af-variant-unit-in-label"
+            rootId="affixfield-unit-in-label"
+            label="Number of hours"
+            input={{ inputmode: "numeric" }}
+            suffix={{ text: "hours", attrs: { "aria-hidden": "true" } }}
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">type=number</th>
+        <td><AffixField id="af-variant-number" rootId="affixfield-number" label="Amount (number)" input={{ type: "number", value: "100" }} {...money} /></td>
+      </tr>
+      <tr>
+        <th scope="row">with external hint</th>
+        <td>
+          <AffixField
+            id="af-variant-describedby"
+            rootId="affixfield-describedby"
+            label="Price"
+            input={{ ...decimal, "aria-describedby": "af-variant-describedby-hint" }}
+            suffix={{ text: "USD" }}
+            hint={{ id: "af-variant-describedby-hint", text: "Excluding VAT." }}
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">sized to content (4 chars, end-aligned)</th>
+        <td>
+          <AffixField
+            id="af-variant-sized"
+            rootId="affixfield-sized"
+            label="Number of hours"
+            root={{ "data-input-characters": "4", "data-align": "end" }}
+            input={{ type: "number", value: "40" }}
+            suffix={{ text: "hours" }}
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Live demo */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <div>
+    <AffixField id="af-live" rootId="affixfield-live" label="Amount" input={decimal} {...money} />
+  </div>
+
+  {/* Native reference */}
+  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">type=number</th>
+        <td>
+          <label for="af-native-number">Amount</label>
+          <input type="number" id="af-native-number" name="af-native-number" value="100" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

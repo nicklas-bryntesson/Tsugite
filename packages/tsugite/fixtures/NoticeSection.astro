@@ -1,0 +1,95 @@
+---
+// Port of reference-components src/partials/components/Notice/Notice.html
+// The section id="Notice" is the conformance suite's scope selector.
+import Heading from "../components/Heading/Heading.astro";
+import Notice from "../components/Notice/Notice.astro";
+---
+
+<section class="KitchenSink-section" id="Notice">
+  <Heading text="Notice" element="h2" size="2" />
+
+  {/* Variants — one accent token per severity; icon carries meaning alongside colour */}
+  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <div style="display:flex; flex-direction:column; gap:1.5rem; max-inline-size:50rem;">
+    <Notice variant="error" title="Validation error">
+      <p>Please fill in all required fields before continuing.</p>
+    </Notice>
+
+    <Notice variant="warning" title="Almost out of space">
+      <p>You have used 90% of your storage quota.</p>
+    </Notice>
+
+    <Notice variant="success" title="Saved">
+      <p>Your changes have been saved.</p>
+    </Notice>
+
+    <Notice variant="info" title="Heads up">
+      <p>Maintenance is scheduled for Sunday at 02:00 UTC.</p>
+    </Notice>
+
+    <Notice variant="neutral" title="Reminder">
+      <p>Your trial ends in three days.</p>
+    </Notice>
+  </div>
+
+  {/* data-border — adds a full border in the accent (icon) colour */}
+  <Heading text={'Border (data-border="true")'} element="h3" variant="body" size="lg" />
+  <Notice variant="error" border={true} title="Validation error">
+    <p>A full border in the accent colour.</p>
+  </Notice>
+
+  {/* data-emphasis — the "styled" hook: a thick leading accent bar */}
+  <Heading text={'Styled (data-emphasis="true")'} element="h3" variant="body" size="lg" />
+  <Notice variant="info" emphasis={true} title="Heads up" style="margin-block-start:1rem;">
+    <p>A thick leading accent bar — the richest look.</p>
+  </Notice>
+
+  {/* Enriched — both toggles on */}
+  <Heading text="Enriched (border + emphasis)" element="h3" variant="body" size="lg" />
+  <Notice variant="success" border={true} emphasis={true} title="Saved" style="margin-block-start:1rem;">
+    <p>Border and leading bar together — the most decorated Notice.</p>
+  </Notice>
+
+  {/* No icon — data-icon="false" collapses the icon column */}
+  <Heading text="No icon" element="h3" variant="body" size="lg" />
+  <Notice variant="info" icon={false} title="Text only">
+    <p>The icon column collapses when <code>data-icon="false"</code>.</p>
+  </Notice>
+
+  {/* No title — body only */}
+  <Heading text="No title" element="h3" variant="body" size="lg" />
+  <Notice variant="success" style="margin-block-start:1rem;">
+    <p>A single-line confirmation with no heading.</p>
+  </Notice>
+
+  {/* Single line — no title, icon centred with the one line of text */}
+  <Heading text="Single line" element="h3" variant="body" size="lg" />
+  <Notice variant="error">
+    <p>Please fill in all required fields before continuing.</p>
+  </Notice>
+
+  {/* Long content — wraps inside the content column */}
+  <Heading text="Long content" element="h3" variant="body" size="lg" />
+  <Notice variant="warning" title="Long message" style="margin-block-start:1rem;">
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+      labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+    </p>
+  </Notice>
+
+  {/* Live-region pattern — the ANNOUNCER. In real use the region is present and
+      EMPTY at load; the consumer swaps a Notice into it (clear → next frame → set).
+      Shown here already populated to illustrate the structure. */}
+  <Heading text="Live-region pattern (announcer)" element="h3" variant="body" size="lg" />
+  <div
+    class="notice-region"
+    role="alert"
+    aria-live="assertive"
+    data-id="region"
+    style="max-inline-size:50rem;"
+  >
+    <Notice variant="error" title="Validation error">
+      <p>Please fill in all required fields.</p>
+    </Notice>
+  </div>
+</section>

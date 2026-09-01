@@ -1,0 +1,178 @@
+---
+// Port of reference-components FileUpload.html — states and item/seed helpers
+// mirror FileUpload.generate.ts one to one.
+import Heading from "../components/Heading/Heading.astro";
+import FileUpload from "../components/FileUpload/FileUpload.astro";
+
+// ── Item HTML helpers — multiple mode (<li>) ─────────────────────────────────
+const validItem = (name: string, size: string, id = "static-1") =>
+  `\n    <li class="item" data-status="valid" data-entry-id="${id}">
+      <span class="item-name">${name}</span>
+      <span class="item-size">${size}</span>
+      <button type="button" class="item-remove" aria-label="Remove ${name}">&#215;</button>
+    </li>`;
+
+const invalidTypeItem = (name: string, size: string) =>
+  `\n    <li class="item" data-status="invalid-type" data-entry-id="static-2">
+      <span class="item-name">${name}</span>
+      <span class="item-size">${size}</span>
+      <span class="item-error" role="alert">File type not allowed</span>
+      <button type="button" class="item-remove" aria-label="Remove ${name}">&#215;</button>
+    </li>`;
+
+const serverItem = (name: string, size: string, ref: string) =>
+  `\n    <li class="item" data-status="valid" data-source="server" data-entry-id="static-server">
+      <span class="item-name">${name}</span>
+      <span class="item-size">${size}</span>
+      <button type="button" class="item-remove" aria-label="Remove ${name}">&#215;</button>
+      <input type="hidden" name="uploaded-ref" value="${ref}">
+    </li>`;
+
+// ── Item HTML helpers — single mode (inline spans in selected) ───────────────
+const validSingleFile = (name: string, size: string) =>
+  `\n    <span class="item-name">${name}</span>
+    <span class="item-size">${size}</span>
+    <button type="button" class="item-remove" aria-label="Remove ${name}">&#215;</button>`;
+
+const invalidTypeSingleFile = (name: string, size: string) =>
+  `\n    <span class="item-name">${name}</span>
+    <span class="item-size">${size}</span>
+    <span class="item-error" role="alert">File type not allowed</span>
+    <button type="button" class="item-remove" aria-label="Remove ${name}">&#215;</button>`;
+
+const invalidSizeSingleFile = (name: string, size: string) =>
+  `\n    <span class="item-name">${name}</span>
+    <span class="item-size">${size}</span>
+    <span class="item-error" role="alert">File exceeds maximum size</span>
+    <button type="button" class="item-remove" aria-label="Remove ${name}">&#215;</button>`;
+
+// ── data-initial-files payloads ──────────────────────────────────────────────
+const seedReport = '[{"name":"report.pdf","size":200000,"type":"application/pdf"}]';
+const seedInvalidType = '[{"name":"image.exe","size":14000,"type":"application/x-msdownload"}]';
+const seedInvalidSize = '[{"name":"video.mp4","size":48000000,"type":"video/mp4"}]';
+const seedMixed =
+  '[{"name":"report.pdf","size":200000,"type":"application/pdf"},{"name":"image.exe","size":14000,"type":"application/x-msdownload"}]';
+const seedServer = '[{"name":"contract.pdf","size":200000,"type":"application/pdf","ref":"abc123"}]';
+---
+
+<section class="KitchenSink-section" id="FileUpload">
+  <Heading text="FileUpload" element="h2" size="2" />
+
+  {/* Interaction states */}
+  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <thead>
+      <tr>
+        <th scope="col">State</th>
+        <th scope="col">default</th>
+        <th scope="col">hover</th>
+        <th scope="col">focus</th>
+        <th scope="col">active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><FileUpload id="fu-empty" label="File" /></td>
+        <td><FileUpload id="fu-empty-hover" label="File" root={{ "data-test-state": "hover" }} /></td>
+        <td><FileUpload id="fu-empty-focus" label="File" root={{ "data-test-state": "focus" }} /></td>
+        <td><FileUpload id="fu-empty-active" label="File" root={{ "data-test-state": "active" }} /></td>
+      </tr>
+      <tr>
+        <th scope="row">with files</th>
+        <td><FileUpload id="fu-with-files" label="File" root={{ "data-has-files": "true" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
+        <td><FileUpload id="fu-with-files-hover" label="File" root={{ "data-has-files": "true", "data-test-state": "hover" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
+        <td><FileUpload id="fu-with-files-focus" label="File" root={{ "data-has-files": "true", "data-test-state": "focus" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
+        <td><FileUpload id="fu-with-files-active" label="File" root={{ "data-has-files": "true", "data-test-state": "active" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Disabled */}
+  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><FileUpload id="fu-disabled-empty" label="File" root={{ "data-disabled": "true", "aria-disabled": "true" }} input={{ disabled: "disabled" }} triggerDisabled={true} /></td>
+      </tr>
+      <tr>
+        <th scope="row">with files</th>
+        <td><FileUpload id="fu-disabled-with-files" label="File" root={{ "data-disabled": "true", "aria-disabled": "true", "data-has-files": "true" }} input={{ disabled: "disabled" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} triggerDisabled={true} initialFiles={seedReport} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Validation */}
+  <Heading text="Validation" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">invalid type</th>
+        <td><FileUpload id="fu-invalid-type" label="File" root={{ "data-has-files": "true", "data-has-errors": "true" }} input={{ accept: ".pdf" }} itemsHtml={invalidTypeSingleFile("image.exe", "14 KB")} initialFiles={seedInvalidType} /></td>
+      </tr>
+      <tr>
+        <th scope="row">invalid size</th>
+        <td><FileUpload id="fu-invalid-size" label="File" root={{ "data-has-files": "true", "data-has-errors": "true", "data-max-size": "5mb" }} itemsHtml={invalidSizeSingleFile("video.mp4", "48 MB")} initialFiles={seedInvalidSize} /></td>
+      </tr>
+      <tr>
+        <th scope="row">mixed valid + invalid</th>
+        <td><FileUpload id="fu-invalid-mixed" label="File" root={{ "data-has-files": "true", "data-has-errors": "true" }} input={{ accept: ".pdf", multiple: "multiple" }} isMultiple={true} itemsHtml={validItem("report.pdf", "200 KB", "static-1") + invalidTypeItem("image.exe", "14 KB")} initialFiles={seedMixed} /></td>
+      </tr>
+      <tr>
+        <th scope="row">required + empty</th>
+        <td><FileUpload id="fu-required-empty" label="File" root={{ "data-required": "true" }} input={{ required: "required" }} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Variants */}
+  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">multiple</th>
+        <td><FileUpload id="fu-multiple" label="Files" root={{ "data-has-files": "true" }} input={{ multiple: "multiple" }} isMultiple={true} itemsHtml={validItem("doc1.pdf", "200 KB", "static-1") + validItem("doc2.pdf", "350 KB", "static-2")} triggerText="Add files" /></td>
+      </tr>
+      <tr>
+        <th scope="row">drop zone</th>
+        <td><FileUpload id="fu-drop-zone" label="File" root={{ "data-drop-zone": "true" }} /></td>
+      </tr>
+      <tr>
+        <th scope="row">drop zone, dragging over</th>
+        <td><FileUpload id="fu-drop-zone-dragging" label="File" root={{ "data-drop-zone": "true", "data-dragging-over": "true" }} /></td>
+      </tr>
+      <tr>
+        <th scope="row">server-seeded files</th>
+        <td><FileUpload id="fu-server-files" label="CV" root={{ "data-has-files": "true" }} input={{ multiple: "multiple" }} isMultiple={true} itemsHtml={serverItem("contract.pdf", "200 KB", "abc123")} initialFiles={seedServer} triggerText="Add files" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Live demo */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <div>
+    <FileUpload id="fu-live" label="Upload files" input={{ multiple: "multiple" }} isMultiple={true} triggerText="Add files" />
+  </div>
+
+  {/* Native reference */}
+  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">single</th>
+        <td>
+          <label for="fu-native-single">File</label>
+          <input type="file" id="fu-native-single" name="fu-native-single" />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">multiple</th>
+        <td>
+          <label for="fu-native-multiple">Files</label>
+          <input type="file" id="fu-native-multiple" name="fu-native-multiple" multiple />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

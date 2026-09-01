@@ -1,0 +1,83 @@
+---
+// Port of reference-components ChoiceGroup.html — section id, data-id hooks
+// and element ids are conformance-suite selectors.
+import Heading from "../components/Heading/Heading.astro";
+import ChoiceGroup from "../components/ChoiceGroup/ChoiceGroup.astro";
+import ChoiceField from "../components/ChoiceField/ChoiceField.astro";
+import Notice from "../components/Notice/Notice.astro";
+---
+
+<section class="KitchenSink-section" id="ChoiceGroup">
+  <Heading text="ChoiceGroup" element="h2" size="2" />
+
+  {/* Legend: above (default) — radios (single-select via shared name) */}
+  <Heading text="Legend above (default) · radios" element="h3" variant="body" size="lg" />
+  <ChoiceGroup legend="Shipping speed" data-id="above">
+    <ChoiceField type="radio" id="cg-a-1" name="cg-above" label="Standard" checked={true} />
+    <ChoiceField type="radio" id="cg-a-2" name="cg-above" label="Express" />
+    <ChoiceField type="radio" id="cg-a-3" name="cg-above" label="Overnight" />
+  </ChoiceGroup>
+
+  {/* Legend: beside — grid, legend left / options right */}
+  <Heading text="Legend beside · checkboxes" element="h3" variant="body" size="lg" />
+  <ChoiceGroup legend="Notifications" legendPlacement="beside" data-id="beside">
+    <ChoiceField type="checkbox" id="cg-b-1" name="cg-b-1" label="Email" checked={true} />
+    <ChoiceField type="checkbox" id="cg-b-2" name="cg-b-2" label="SMS" />
+    <ChoiceField type="checkbox" id="cg-b-3" name="cg-b-3" label="Push" />
+  </ChoiceGroup>
+
+  {/* Legend: hidden — visually gone, still the SR group name */}
+  <Heading text="Legend hidden (SR-only name)" element="h3" variant="body" size="lg" />
+  <ChoiceGroup legend="Payment method" legendPlacement="hidden" data-id="hidden">
+    <ChoiceField type="radio" id="cg-h-1" name="cg-hidden" label="Card" checked={true} />
+    <ChoiceField type="radio" id="cg-h-2" name="cg-hidden" label="Invoice" />
+  </ChoiceGroup>
+
+  {/* Orientation: horizontal — fields flow in a row and wrap */}
+  <Heading text="Orientation horizontal" element="h3" variant="body" size="lg" />
+  <ChoiceGroup legend="Flavor profile (choose any)" orientation="horizontal" data-id="horizontal">
+    <ChoiceField type="checkbox" id="cg-hz-1" name="cg-hz-1" label="Floral" />
+    <ChoiceField type="checkbox" id="cg-hz-2" name="cg-hz-2" label="Peachy" checked={true} />
+    <ChoiceField type="checkbox" id="cg-hz-3" name="cg-hz-3" label="Citrus" />
+    <ChoiceField type="checkbox" id="cg-hz-4" name="cg-hz-4" label="Piney" />
+  </ChoiceGroup>
+
+  {/* With hint — group description read after the legend (aria-describedby) */}
+  <Heading text="With hint" element="h3" variant="body" size="lg" />
+  <ChoiceGroup
+    legend="Account type"
+    hint="Choose the plan that fits your team. You can change this later."
+    hintId="cg-hint-text"
+    describedby="cg-hint-text"
+    data-id="hint"
+  >
+    <ChoiceField type="radio" id="cg-hint-1" name="cg-hint" label="Personal" checked={true} />
+    <ChoiceField type="radio" id="cg-hint-2" name="cg-hint" label="Team" />
+    <ChoiceField type="radio" id="cg-hint-3" name="cg-hint" label="Enterprise" />
+  </ChoiceGroup>
+
+  {/* Invalid — the group error is a Notice inside a persistent live region. */}
+  <Heading text="Invalid (group error)" element="h3" variant="body" size="lg" />
+  <ChoiceGroup legend="Terms" invalid={true} describedby="cg-err-text" data-id="invalid">
+    <ChoiceField type="checkbox" id="cg-err-1" name="cg-err-1" label="I accept the terms" required={true} invalid={true} />
+    <div slot="error" class="notice-region" role="alert" aria-live="assertive">
+      <Notice variant="error">
+        <p id="cg-err-text">You must accept the terms to continue.</p>
+      </Notice>
+    </div>
+  </ChoiceGroup>
+
+  {/* Live demo */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <ChoiceGroup
+    legend="Contact preference"
+    hint="How should we reach you?"
+    hintId="cg-live-hint"
+    describedby="cg-live-hint"
+    data-id="live"
+  >
+    <ChoiceField type="radio" id="cg-live-1" name="cg-live" label="Email" checked={true} />
+    <ChoiceField type="radio" id="cg-live-2" name="cg-live" label="Phone" />
+    <ChoiceField type="radio" id="cg-live-3" name="cg-live" label="Post" />
+  </ChoiceGroup>
+</section>

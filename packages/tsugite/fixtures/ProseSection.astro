@@ -1,0 +1,118 @@
+---
+// Port of AiPoc Views/Shared/Partials/KitchenSink/_Prose.cshtml
+import Heading from "../components/Heading/Heading.astro";
+import Prose from "../components/Prose/Prose.astro";
+import Card from "../components/Card/Card.astro";
+
+const sizes = ["sm", "md", "lg"];
+---
+
+{/* ═══════════════════════════════════════════
+    PROSE
+    ═══════════════════════════════════════════ */}
+
+<section class="KitchenSink-section">
+  <Heading text="Prose" element="h2" size="2" />
+  <p>
+    Scoped typography container for uncontrolled markup. All selectors use :where() — block
+    components inside override naturally.
+  </p>
+
+  {/* — variant="basic" ——————————————————————————— */}
+  <Heading text="basic — p only" element="h3" variant="body" size="lg" />
+  <Prose variant="basic" size="md">
+    <p>
+      This is a basic prose block. Only paragraphs — no headings, lists, or inline formatting.
+      Intended for excerpts, summaries, and constrained text areas.
+    </p>
+    <p>Second paragraph. Last child has no bottom margin.</p>
+  </Prose>
+
+  {/* — variant="default" ——————————————————————————— */}
+  <Heading text="default — full prose" element="h3" variant="body" size="lg" />
+  <Prose variant="default" size="md">
+    <h2>Heading level 2</h2>
+    <p>
+      Standard prose content with <strong>bold text</strong>, <em>italic text</em>,
+      <strong><em>bold italic</em></strong>, and <a href="#">a link</a>. Paragraph spacing uses
+      <code>margin-block-end: 1em</code>.
+    </p>
+    <h3>Heading level 3</h3>
+    <p>Followed by a list:</p>
+    <ul>
+      <li>First item</li>
+      <li>Second item with more text to show line wrapping behaviour across multiple lines</li>
+      <li>Third item</li>
+    </ul>
+    <ol>
+      <li>Ordered first</li>
+      <li>Ordered second</li>
+    </ol>
+    <blockquote>
+      <p>A blockquote with a left border and reduced opacity. Good for pull quotes inside body content.</p>
+    </blockquote>
+    <p>Inline <code>code snippet</code> sits within a paragraph.</p>
+  </Prose>
+
+  {/* — variant="rich" ——————————————————————————— */}
+  <Heading text="rich — extended" element="h3" variant="body" size="lg" />
+  <Prose variant="rich" size="md">
+    <h2>Rich prose adds tables, figures, pre, hr</h2>
+    <p>Everything from default, plus extended elements.</p>
+    <pre><code>{`// code block
+const greeting = "hello";
+console.log(greeting);`}</code></pre>
+    <table>
+      <thead>
+        <tr><th>Variant</th><th>Elements allowed</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>basic</td><td>p</td></tr>
+        <tr><td>default</td><td>p, h1–h6, ul, ol, a, strong, em, code, blockquote</td></tr>
+        <tr><td>rich</td><td>all of default + pre, table, figure, hr</td></tr>
+      </tbody>
+    </table>
+    <hr />
+    <figure>
+      <img src="https://placehold.co/800x450" alt="Placeholder" style="width:100%;" />
+      <figcaption>A figure with a caption inside rich prose.</figcaption>
+    </figure>
+  </Prose>
+
+  {/* — size variants ——————————————————————————— */}
+  <Heading text="Size axis" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-start;">
+    {
+      sizes.map((size) => (
+        <Card border={true} padding="md" style="flex:1; min-width:16rem;">
+          <Heading element="h4" variant="body" size="sm" text={`size="${size}"`} />
+          <Prose variant="default" size={size}>
+            <p>
+              Body text at <strong>{size}</strong> size. The quick brown fox jumps over the lazy
+              dog.
+            </p>
+            <ul>
+              <li>List item one</li>
+              <li>List item two</li>
+            </ul>
+          </Prose>
+        </Card>
+      ))
+    }
+  </div>
+
+  <div>
+    <p>
+      This file verifies: Regular (400), Italic (400), SemiBold (600), SemiBold Italic (600
+      italic), Latin‑1 coverage, punctuation, fractions, currency, and spacing characters.
+    </p>
+
+    <h2>Body</h2>
+
+    <h2>Italic</h2>
+
+    <h2>Bold</h2>
+
+    <h2>Bold Italic</h2>
+  </div>
+</section>

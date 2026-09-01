@@ -1,0 +1,312 @@
+---
+// Port of reference-components RangeScale.html — the state data below mirrors
+// RangeScale.generate.ts StateDefinition[] one to one.
+import Heading from "../components/Heading/Heading.astro";
+import RangeScale from "../components/RangeScale/RangeScale.astro";
+
+const min = { min: "0", max: "100", step: "1", value: "0" };
+const mid = { min: "0", max: "100", step: "1", value: "50" };
+const stepped25 = { min: "0", max: "100", step: "25", value: "50" };
+const pct = { suffix: "%", initial: "50 %" };
+const pct0 = { suffix: "%", initial: "0 %" };
+
+const quarters: [number, string][] = [
+  [0, "0"], [0.25, "25"], [0.5, "50"], [0.75, "75"], [1, "100"],
+];
+---
+
+<section class="KitchenSink-section" id="RangeScale">
+  <Heading text="RangeScale" element="h2" size="2" />
+
+  {/* Interaction states */}
+  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <thead>
+      <tr>
+        <th scope="col">State</th>
+        <th scope="col">default</th>
+        <th scope="col">hover</th>
+        <th scope="col">focus</th>
+        <th scope="col">active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">at minimum</th>
+        <td><RangeScale id="rs-min-default" label="Volume" input={min} output={pct0} /></td>
+        <td><RangeScale id="rs-min-hover" label="Volume" input={{ ...min, "data-test-state": "hover" }} output={pct0} /></td>
+        <td><RangeScale id="rs-min-focus" label="Volume" input={{ ...min, "data-test-state": "focus" }} output={pct0} /></td>
+        <td><RangeScale id="rs-min-active" label="Volume" input={{ ...min, "data-test-state": "active" }} output={pct0} /></td>
+      </tr>
+      <tr>
+        <th scope="row">partially filled</th>
+        <td><RangeScale id="rs-mid-default" label="Volume" input={mid} output={pct} /></td>
+        <td><RangeScale id="rs-mid-hover" label="Volume" input={{ ...mid, "data-test-state": "hover" }} output={pct} /></td>
+        <td><RangeScale id="rs-mid-focus" label="Volume" input={{ ...mid, "data-test-state": "focus" }} output={pct} /></td>
+        <td><RangeScale id="rs-mid-active" label="Volume" input={{ ...mid, "data-test-state": "active" }} output={pct} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Disabled */}
+  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">native disabled on the field</th>
+        <td><RangeScale id="rs-disabled" label="Volume" input={{ ...mid, disabled: "" }} output={pct} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Invalid */}
+  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">out of policy</th>
+        <td>
+          <RangeScale
+            id="rs-invalid"
+            label="Volume"
+            scale={{ "data-invalid": "true" }}
+            input={{ ...mid, "data-invalid": "true", "aria-invalid": "true" }}
+            output={pct}
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Lane model */}
+  <Heading text="Lane model — a documented choice" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row"><code>inset</code> (default) — box contains its own ink</th>
+        <td><RangeScale id="rs-lane-inset" rootId="rangescale-inset" label="Volume (lane: inset)" scale={{ "data-lane": "inset" }} input={mid} output={pct} /></td>
+      </tr>
+      <tr>
+        <th scope="row"><code>flush</code> — scale reaches the visible ends</th>
+        <td><RangeScale id="rs-lane-flush" rootId="rangescale-flush" label="Volume (lane: flush)" scale={{ "data-lane": "flush" }} input={mid} output={pct} /></td>
+      </tr>
+      <tr>
+        <th scope="row"><code>flush</code> at min — the thumb overhangs</th>
+        <td><RangeScale id="rs-lane-flush-min" label="At minimum" scale={{ "data-lane": "flush" }} input={min} output={pct0} /></td>
+      </tr>
+      <tr>
+        <th scope="row"><code>flush</code> at max — the thumb overhangs</th>
+        <td><RangeScale id="rs-lane-flush-max" label="At maximum" scale={{ "data-lane": "flush" }} input={{ ...mid, value: "100" }} output={{ suffix: "%", initial: "100 %" }} /></td>
+      </tr>
+      <tr>
+        <th scope="row">partial (<code>--_rs-inset: 0.25em</code>)</th>
+        <td><RangeScale id="rs-lane-partial" rootId="rangescale-partial" label="Volume (partial overhang)" scale={{ style: "--_rs-inset: 0.25em" }} input={mid} output={pct} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Ticks */}
+  <Heading text="Ticks" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row"><code>marks</code> — stops drawn, labels not rendered</th>
+        <td><RangeScale id="rs-ticks-marks" rootId="rangescale-ticks-marks" label="Volume (ticks: marks)" scale={{ "data-ticks": "marks" }} input={stepped25} output={pct} ticks={quarters} /></td>
+      </tr>
+      <tr>
+        <th scope="row"><code>labels</code> — same markup, one attribute changed</th>
+        <td><RangeScale id="rs-ticks-labels" rootId="rangescale-ticks-labels" label="Volume (ticks: labels)" scale={{ "data-ticks": "labels" }} input={stepped25} output={pct} ticks={quarters} /></td>
+      </tr>
+      <tr>
+        <th scope="row">labels on a <code>flush</code> lane — first and last stop land on the ends</th>
+        <td><RangeScale id="rs-ticks-flush" rootId="rangescale-ticks-flush" label="Volume (labels, flush lane)" scale={{ "data-ticks": "labels", "data-lane": "flush" }} input={stepped25} output={pct} ticks={quarters} /></td>
+      </tr>
+      <tr>
+        <th scope="row">uneven stops — one expression, no gradient period</th>
+        <td>
+          <RangeScale
+            id="rs-ticks-uneven"
+            rootId="rangescale-ticks-uneven"
+            label="Pressure (uneven stops)"
+            scale={{ "data-ticks": "labels" }}
+            input={{ min: "0", max: "100", step: "10", value: "40" }}
+            output={{ suffix: "bar", initial: "40 bar" }}
+            ticks={[[0, "0"], [0.1, "10"], [0.3, "30"], [0.7, "70"], [1, "100"]]}
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Variants */}
+  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">no readout (the <code>&lt;output&gt;</code>'s presence is the switch)</th>
+        <td><RangeScale id="rs-no-output" rootId="rangescale-no-output" label="Volume (no readout)" scale={{ "data-suffix": "%" }} input={mid} output={null} /></td>
+      </tr>
+      <tr>
+        <th scope="row">scales with text (<code>font-size</code> only)</th>
+        <td><RangeScale id="rs-text-scaled" rootId="rangescale-text-scaled" label="Volume (font-size: 1.5rem)" scale={{ style: "font-size: 1.5rem" }} input={mid} output={pct} /></td>
+      </tr>
+      <tr>
+        <th scope="row">RTL — the fill anchors right, with no extra rule</th>
+        <td>
+          <div dir="rtl">
+            <RangeScale id="rs-rtl" rootId="rangescale-rtl" label="الحجم" input={mid} output={pct} />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">vertical, min at the bottom (default)</th>
+        <td><RangeScale id="rs-vertical" rootId="rangescale-vertical" label="Volume (vertical)" scale={{ "data-orientation": "vertical" }} input={{ ...mid, "data-orientation": "vertical" }} output={null} /></td>
+      </tr>
+      <tr>
+        <th scope="row">vertical, min at the top</th>
+        <td><RangeScale id="rs-vertical-top" rootId="rangescale-vertical-top" label="Depth (min at top)" scale={{ "data-orientation": "vertical", "data-min": "top" }} input={{ ...mid, "data-orientation": "vertical", "data-min": "top" }} output={null} /></td>
+      </tr>
+      <tr>
+        <th scope="row">vertical, flush</th>
+        <td><RangeScale id="rs-vertical-flush" rootId="rangescale-vertical-flush" label="Volume (vertical, flush)" scale={{ "data-orientation": "vertical", "data-lane": "flush" }} input={{ ...mid, "data-orientation": "vertical" }} output={null} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Reference layer */}
+  <Heading text="Reference layer" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row"><code>region</code> — drag below 20 and it stops following</th>
+        <td>
+          <RangeScale
+            id="rs-ref-region"
+            rootId="rangescale-ref-region"
+            label="Data allowance"
+            scale={{ "data-reference": "region" }}
+            input={{ min: "0", max: "100", step: "1", value: "50" }}
+            output={{ suffix: "GB", initial: "50 GB" }}
+            reference={{ to: 0.2 }}
+            hint="Already used: 20 GB. Setting the limit below that stops all traffic."
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row"><code>region</code>, no fill — nothing to clamp against</th>
+        <td>
+          <RangeScale
+            id="rs-ref-region-nofill"
+            rootId="rangescale-ref-region-nofill"
+            label="Data allowance (no fill)"
+            scale={{ "data-reference": "region", "data-fill": "none" }}
+            input={{ min: "0", max: "100", step: "1", value: "50" }}
+            output={null}
+            reference={{ to: 0.2 }}
+            hint="Already used: 20 GB."
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row"><code>band</code> — a bracket above the lane by default</th>
+        <td>
+          <RangeScale
+            id="rs-ref-band"
+            rootId="rangescale-ref-band"
+            label="Loan amount"
+            scale={{ "data-reference": "band" }}
+            input={{ min: "0", max: "1000", step: "10", value: "400" }}
+            output={{ suffix: "tkr", initial: "400 tkr" }}
+            reference={{ from: 0.3, to: 0.5 }}
+            hint="Recommended level: 300–500 tkr."
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row"><code>band</code> + variant — colour-coded, drawn on the fill</th>
+        <td>
+          <RangeScale
+            id="rs-ref-band-variant"
+            rootId="rangescale-ref-band-variant"
+            label="Loan amount (colour-coded)"
+            scale={{ "data-reference": "band", "data-reference-variant": "warning" }}
+            input={{ min: "0", max: "1000", step: "10", value: "400" }}
+            output={{ suffix: "tkr", initial: "400 tkr" }}
+            reference={{ from: 0.3, to: 0.5 }}
+            hint="Above 500 tkr the interest rate increases."
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row"><code>band</code> forced <code>under</code> — why it is not the default</th>
+        <td>
+          <RangeScale
+            id="rs-ref-band-under"
+            rootId="rangescale-ref-band-under"
+            label="Band, forced under the fill"
+            scale={{ "data-reference": "band", "data-reference-layer": "under", "data-reference-variant": "info" }}
+            input={{ min: "0", max: "100", step: "5", value: "60" }}
+            output={null}
+            reference={{ from: 0.3, to: 0.5 }}
+            hint="Least legible exactly when the value covers it — which is why it is not the default."
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row"><code>marker</code> — a band of no width</th>
+        <td>
+          <RangeScale
+            id="rs-ref-marker"
+            rootId="rangescale-ref-marker"
+            label="Your bid"
+            scale={{ "data-reference": "marker", "data-reference-variant": "success" }}
+            input={{ min: "0", max: "100", step: "1", value: "35" }}
+            output={{ suffix: "%", initial: "35 %" }}
+            reference={{ from: 0.62, to: 0.62 }}
+            hint="Median bid in this area: 62 %."
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">band + ticks — same expression, neither knows the other</th>
+        <td>
+          <RangeScale
+            id="rs-ref-with-ticks"
+            rootId="rangescale-ref-with-ticks"
+            label="Pressure (band + ticks)"
+            scale={{ "data-reference": "band", "data-ticks": "labels", "data-reference-variant": "success", "data-lane": "flush" }}
+            input={{ min: "0", max: "100", step: "25", value: "50" }}
+            output={{ suffix: "bar", initial: "50 bar" }}
+            ticks={quarters}
+            reference={{ from: 0.25, to: 0.75 }}
+            hint="Safe operating band: 25–75 bar."
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Live demo */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <div>
+    <RangeScale id="rs-live" rootId="rangescale-live" label="Volume" input={mid} output={pct} />
+  </div>
+
+  {/* Native reference */}
+  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">unstyled range</th>
+        <td>
+          <label for="rs-native">Volume</label>
+          <input type="range" id="rs-native" name="rs-native" min="0" max="100" step="25" value="50" list="rs-native-ticks" />
+          <datalist id="rs-native-ticks">
+            <option value="0"></option><option value="25"></option><option value="50"></option>
+            <option value="75"></option><option value="100"></option>
+          </datalist>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

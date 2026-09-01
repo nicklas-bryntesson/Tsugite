@@ -1,0 +1,133 @@
+---
+// Port of AiPoc Views/Shared/Partials/KitchenSink/_Typography.cshtml
+import Heading from "../components/Heading/Heading.astro";
+import Prose from "../components/Prose/Prose.astro";
+
+const ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "span", "div"];
+const VIEWPORTS = [
+  { key: "desktop", caption: "Desktop" },
+  { key: "mobile", caption: "Mobile" },
+  { key: "floor", caption: "Floor (≤21.25rem)" },
+];
+
+const headingSizes = ["1", "2", "3", "4", "5", "6"];
+const displaySizes = ["1", "2", "3"];
+const bodySizes = ["lg", "md", "sm"];
+---
+
+{/* ═══════════════════════════════════════════
+    HEADING — variant: heading
+    ═══════════════════════════════════════════ */}
+
+<section class="component-map" style="--_colWidth: 10rem;">
+  <header>
+    <Heading element="h3" text="Heading" />
+    <Prose variant="basic" size="sm"><p>variant: heading, size: 1–6</p></Prose>
+  </header>
+
+  {
+    VIEWPORTS.map((vp) => (
+      <table data-test-viewport={vp.key}>
+        <caption>{vp.caption}</caption>
+        <thead>
+          <tr>
+            <th />
+            {ELEMENTS.map((el) => (
+              <th scope="col">{el}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {headingSizes.map((size) => (
+            <tr>
+              <th scope="row">size {size}</th>
+              {ELEMENTS.map((el) => (
+                <td>
+                  <Heading text={`h${size}`} element={el} variant="heading" size={size} />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ))
+  }
+</section>
+
+{/* ═══════════════════════════════════════════
+    HEADING — variant: display
+    ═══════════════════════════════════════════ */}
+
+<section class="component-map" style="--_colWidth: 10rem;">
+  <header>
+    <Heading element="h3" text="Display" />
+    <Prose variant="basic" size="sm"><p>variant: display, size: 1–3</p></Prose>
+  </header>
+
+  {
+    VIEWPORTS.map((vp) => (
+      <table data-test-viewport={vp.key}>
+        <caption>{vp.caption}</caption>
+        <thead>
+          <tr>
+            <th />
+            {ELEMENTS.map((el) => (
+              <th scope="col">{el}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {displaySizes.map((size) => (
+            <tr>
+              <th scope="row">size {size}</th>
+              {ELEMENTS.map((el) => (
+                <td>
+                  <Heading text={`d${size}`} element={el} variant="display" size={size} />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ))
+  }
+</section>
+
+{/* ═══════════════════════════════════════════
+    HEADING — variant: body
+    ═══════════════════════════════════════════ */}
+
+<section class="component-map" style="--_colWidth: 10rem;">
+  <header>
+    <Heading element="h3" text="Body" />
+    <Prose variant="basic" size="sm"><p>variant: body, size: sm–lg</p></Prose>
+  </header>
+
+  {
+    VIEWPORTS.map((vp) => (
+      <table data-test-viewport={vp.key}>
+        <caption>{vp.caption}</caption>
+        <thead>
+          <tr>
+            <th />
+            {ELEMENTS.map((el) => (
+              <th scope="col">{el}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {bodySizes.map((size) => (
+            <tr>
+              <th scope="row">{size}</th>
+              {ELEMENTS.map((el) => (
+                <td>
+                  <Heading text={size} element={el} variant="body" size={size} />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ))
+  }
+</section>

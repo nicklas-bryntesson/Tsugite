@@ -1,0 +1,133 @@
+---
+// Port of reference-components ThemeSwitch.html — live demo (the only
+// attached instance), inert state rows, disabled cascade, and the resolved
+// state readout (wired by the script below, mirrored from the reference
+// kitchensink's script.js).
+import Heading from "../components/Heading/Heading.astro";
+import ThemeSwitch from "../components/ThemeSwitch/ThemeSwitch.astro";
+---
+
+<section class="KitchenSink-section" id="ThemeSwitch">
+  <Heading text="ThemeSwitch" element="h2" size="2" />
+
+  <p class="prose">
+    Resolves a colour-scheme preference against the OS signal and reflects the answer on
+    <code>&lt;html&gt;</code> as <code>data-appearance</code>. <strong>System</strong> projects no
+    attribute at all — its absence is the state, and <code>color-scheme: light dark</code> already
+    delegates to the OS. Only the live demo below is attached; the state rows are inert copies, so
+    they cannot re-theme the page.
+  </p>
+
+  {/* ── 1. Live demo — the only attached instance ──────────────────────── */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <ThemeSwitch
+    id="live"
+    live={true}
+    legend="Colour theme"
+    name="ts-appearance"
+    inputIds={["ts-system", "ts-light", "ts-dark"]}
+  />
+
+  {/* ── 2. Interaction states — inert copies ───────────────────────────── */}
+  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+
+  <Heading text="Default" element="h4" variant="body" size="md" />
+  <ThemeSwitch
+    id="state-default"
+    legend="Interaction state: default"
+    name="ts-sd"
+    inputIds={["ts-sd-1", "ts-sd-2", "ts-sd-3"]}
+  />
+
+  <Heading text="Hover" element="h4" variant="body" size="md" />
+  <ThemeSwitch
+    id="state-hover"
+    legend="Interaction state: hover"
+    name="ts-sh"
+    inputIds={["ts-sh-1", "ts-sh-2", "ts-sh-3"]}
+    data-test-state="hover"
+  />
+
+  <Heading text="Focus" element="h4" variant="body" size="md" />
+  <ThemeSwitch
+    id="state-focus"
+    legend="Interaction state: focus"
+    name="ts-sf"
+    inputIds={["ts-sf-1", "ts-sf-2", "ts-sf-3"]}
+    data-test-state="focus"
+  />
+
+  <Heading text="Active" element="h4" variant="body" size="md" />
+  <ThemeSwitch
+    id="state-active"
+    legend="Interaction state: active"
+    name="ts-sa"
+    inputIds={["ts-sa-1", "ts-sa-2", "ts-sa-3"]}
+    data-test-state="active"
+  />
+
+  {/* ── 3. Disabled — the <fieldset disabled> cascade ─────────────────── */}
+  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <ThemeSwitch
+    id="disabled"
+    legend="Colour theme (unavailable)"
+    name="ts-dis"
+    inputIds={["ts-dis-1", "ts-dis-2", "ts-dis-3"]}
+    disabled={true}
+  />
+
+  {/* ── 4. Resolved state — the state machine, legible without DevTools ── */}
+  <Heading text="Resolved state" element="h3" variant="body" size="lg" />
+  <table class="state-table" id="ThemeSwitch-readout">
+    <tbody>
+      <tr><th scope="row">preference</th><td data-readout="preference">—</td></tr>
+      <tr><th scope="row">appearance</th><td data-readout="appearance">—</td></tr>
+      <tr><th scope="row">prefers-color-scheme: dark</th><td data-readout="prefers-dark">—</td></tr>
+      <tr><th scope="row">&lt;html data-appearance&gt;</th><td data-readout="attribute">—</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<script>
+  // Kitchensink-only: mirror ThemeSwitch's resolved state into its readout
+  // table — the worked example of the `theme-change` event (a host keeps
+  // something else in step with the appearance).
+  import ThemeSwitch from "../components/ThemeSwitch/ThemeSwitch";
+
+  const table = document.querySelector("#ThemeSwitch-readout");
+  const live = document.querySelector('.ThemeSwitch[data-component="ThemeSwitch"]');
+  if (table && live) {
+    const cell = (name: string) => table.querySelector(`[data-readout="${name}"]`)!;
+    const render = ({ preference, appearance }: { preference: string; appearance: string }) => {
+      cell("preference").textContent = preference;
+      cell("appearance").textContent = appearance;
+      cell("prefers-dark").textContent = String(
+        window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false,
+      );
+      cell("attribute").textContent =
+        document.documentElement.getAttribute("data-appearance") ?? "(absent — follows the OS)";
+    };
+    live.addEventListener("theme-change", (e) => render((e as CustomEvent).detail));
+    // The component projects (and dispatches) during attach, before this
+    // listener existed, so paint the initial state once by hand.
+    const stored = window.localStorage?.getItem(ThemeSwitch.STORAGE_KEY);
+    const preference = stored && ["light", "dark"].includes(stored) ? stored : "system";
+    render({
+      preference,
+      appearance:
+        preference === "system"
+          ? window.matchMedia?.("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light"
+          : preference,
+    });
+    window.matchMedia?.("(prefers-color-scheme: dark)").addEventListener("change", () => {
+      render({
+        preference: cell("preference").textContent ?? "system",
+        appearance:
+          document.documentElement.getAttribute("data-appearance") ??
+          (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"),
+      });
+    });
+  }
+</script>

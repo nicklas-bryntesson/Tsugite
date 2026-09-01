@@ -1,0 +1,199 @@
+---
+// Port of AiPoc Views/Shared/Partials/KitchenSink/_Button.cshtml
+import Heading from "../components/Heading/Heading.astro";
+import Prose from "../components/Prose/Prose.astro";
+import LinkButton from "../components/Button/LinkButton.astro";
+import ActionButton from "../components/Button/ActionButton.astro";
+
+const EMPHASES = ["primary", "secondary"] as const;
+const SIZES = ["lg", "md", "sm"] as const;
+const STATES = ["hover", "active", "focus"] as const;
+const INTENTS = ["neutral", "destructive", "success"] as const;
+const VIEWPORTS = [
+  { key: "desktop", caption: "Desktop" },
+  { key: "mobile", caption: "Mobile" },
+  { key: "floor", caption: "Floor (≤21.25rem)" },
+];
+
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+---
+
+{/* ═══════════════════════════════════════════
+    LINK BUTTON
+    ═══════════════════════════════════════════ */}
+
+{
+  EMPHASES.map((emphasis) => {
+    const label = capitalize(emphasis);
+    return (
+      <section class="component-map" style="--_colWidth: 14rem;">
+        <header>
+          <Heading element="h3" text={`Link Button — ${label}`} />
+          <Prose variant="basic" size="sm">
+            <p>emphasis: {emphasis}</p>
+          </Prose>
+        </header>
+
+        {VIEWPORTS.map((vp) => (
+          <table data-test-viewport={vp.key}>
+            <caption>{vp.caption}</caption>
+            <thead>
+              <tr>
+                <th />
+                <th scope="col">Default</th>
+                <th scope="col">Hover</th>
+                <th scope="col">Active</th>
+                <th scope="col">Focus</th>
+                <th scope="col">Disabled</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SIZES.map((size) => (
+                <>
+                  <tr>
+                    <th scope="row">{size}</th>
+                    <td>
+                      <LinkButton href="#" emphasis={emphasis} size={size}>{label}</LinkButton>
+                    </td>
+                    {STATES.map((state) => (
+                      <td>
+                        <LinkButton href="#" emphasis={emphasis} size={size} data-test-state={state}>{label}</LinkButton>
+                      </td>
+                    ))}
+                    <td>
+                      <LinkButton href="#" emphasis={emphasis} size={size} data-test-state="disabled">{label}</LinkButton>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">{size} pill</th>
+                    <td>
+                      <LinkButton href="#" emphasis={emphasis} size={size} pill={true}>{label}</LinkButton>
+                    </td>
+                    {STATES.map((state) => (
+                      <td>
+                        <LinkButton href="#" emphasis={emphasis} size={size} pill={true} data-test-state={state}>{label}</LinkButton>
+                      </td>
+                    ))}
+                    <td>
+                      <LinkButton href="#" emphasis={emphasis} size={size} pill={true} data-test-state="disabled">{label}</LinkButton>
+                    </td>
+                  </tr>
+                </>
+              ))}
+            </tbody>
+          </table>
+        ))}
+      </section>
+    );
+  })
+}
+
+{/* ═══════════════════════════════════════════
+    ACTION BUTTON
+    ═══════════════════════════════════════════ */}
+
+{
+  EMPHASES.map((emphasis) => {
+    const label = capitalize(emphasis);
+    return (
+      <section class="component-map" style="--_colWidth: 14rem;">
+        <header>
+          <Heading element="h3" text={`Action Button — ${label}`} />
+          <Prose variant="basic" size="sm">
+            <p>emphasis: {emphasis}</p>
+          </Prose>
+        </header>
+
+        {VIEWPORTS.map((vp) => (
+          <table data-test-viewport={vp.key}>
+            <caption>{vp.caption}</caption>
+            <thead>
+              <tr>
+                <th />
+                <th scope="col">Default</th>
+                <th scope="col">Hover</th>
+                <th scope="col">Active</th>
+                <th scope="col">Focus</th>
+                <th scope="col">Disabled</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SIZES.map((size) => (
+                <>
+                  <tr>
+                    <th scope="row">{size}</th>
+                    <td>
+                      <ActionButton emphasis={emphasis} size={size}>{label}</ActionButton>
+                    </td>
+                    {STATES.map((state) => (
+                      <td>
+                        <ActionButton emphasis={emphasis} size={size} data-test-state={state}>{label}</ActionButton>
+                      </td>
+                    ))}
+                    <td>
+                      <ActionButton emphasis={emphasis} size={size} disabled={true}>{label}</ActionButton>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">{size} pill</th>
+                    <td>
+                      <ActionButton emphasis={emphasis} size={size} pill={true}>{label}</ActionButton>
+                    </td>
+                    {STATES.map((state) => (
+                      <td>
+                        <ActionButton emphasis={emphasis} size={size} pill={true} data-test-state={state}>{label}</ActionButton>
+                      </td>
+                    ))}
+                    <td>
+                      <ActionButton emphasis={emphasis} size={size} pill={true} disabled={true}>{label}</ActionButton>
+                    </td>
+                  </tr>
+                </>
+              ))}
+            </tbody>
+          </table>
+        ))}
+      </section>
+    );
+  })
+}
+
+{/* Intent */}
+<section class="component-map" style="--_colWidth: 14rem;">
+  <header>
+    <Heading element="h3" text="Action Button — Intent" />
+    <Prose variant="basic" size="sm"><p>intent: neutral, destructive, success</p></Prose>
+  </header>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th scope="col">Default</th>
+        <th scope="col">Hover</th>
+        <th scope="col">Active</th>
+        <th scope="col">Focus</th>
+        <th scope="col">Disabled</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        INTENTS.map((intent) => (
+          <tr>
+            <th scope="row">{intent}</th>
+            <td>
+              <ActionButton intent={intent}>{intent}</ActionButton>
+            </td>
+            {STATES.map((state) => (
+              <td>
+                <ActionButton intent={intent} data-test-state={state}>{intent}</ActionButton>
+              </td>
+            ))}
+            <td>
+              <ActionButton intent={intent} disabled={true}>{intent}</ActionButton>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</section>

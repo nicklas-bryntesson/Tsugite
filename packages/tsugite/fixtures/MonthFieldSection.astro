@@ -1,0 +1,132 @@
+---
+// Port of reference-components MonthField.html — states authored directly
+// (the reference generates them from MonthField.generate.ts; the state list
+// below mirrors its StateDefinition[] one to one).
+import Heading from "../components/Heading/Heading.astro";
+import MonthField from "../components/MonthField/MonthField.astro";
+---
+
+<section class="KitchenSink-section" id="MonthField">
+  <Heading text="MonthField" element="h2" size="2" />
+
+  {/* Interaction states */}
+  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <thead>
+      <tr>
+        <th scope="col">State</th>
+        <th scope="col">default</th>
+        <th scope="col">hover</th>
+        <th scope="col">focus</th>
+        <th scope="col">active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><MonthField id="mf-empty-default" label="Month" /></td>
+        <td><MonthField id="mf-empty-hover" label="Month" data-test-state="hover" /></td>
+        <td><MonthField id="mf-empty-focus" label="Month" data-test-state="focus" /></td>
+        <td><MonthField id="mf-empty-active" label="Month" data-test-state="active" /></td>
+      </tr>
+      <tr>
+        <th scope="row">filled</th>
+        <td><MonthField id="mf-filled-default" label="Month" value="2026-06" /></td>
+        <td><MonthField id="mf-filled-hover" label="Month" value="2026-06" data-test-state="hover" /></td>
+        <td><MonthField id="mf-filled-focus" label="Month" value="2026-06" data-test-state="focus" /></td>
+        <td><MonthField id="mf-filled-active" label="Month" value="2026-06" data-test-state="active" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Disabled */}
+  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">empty</th>
+        <td><MonthField id="mf-disabled-empty" label="Month" disabled={true} /></td>
+      </tr>
+      <tr>
+        <th scope="row">filled</th>
+        <td><MonthField id="mf-disabled-filled" label="Month" value="2026-06" disabled={true} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Invalid */}
+  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">required + empty</th>
+        <td>
+          <MonthField
+            id="mf-invalid-empty"
+            label="Month"
+            labelSuffix={'<span aria-hidden="true">*</span>'}
+            invalid={true}
+            required={true}
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">out of range</th>
+        <td><MonthField id="mf-invalid-filled" label="Month" value="2020-01" invalid={true} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Variants */}
+  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">with min/max</th>
+        <td><MonthField id="mf-with-range" label="Month" value="2026-06" min="2026-03" max="2026-09" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Live demo */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <div>
+    <MonthField id="meeting-month" label="Meeting month" />
+  </div>
+
+  {/* Localization: month names + language */}
+  <Heading text="Localization" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">en-GB</th>
+        <td><MonthField id="mf-locale-en-gb" label="Month (en-GB)" locale="en-GB" value="2026-06" /></td>
+      </tr>
+      <tr>
+        <th scope="row">sv-SE</th>
+        <td><MonthField id="mf-locale-sv-se" label="Month (sv-SE)" locale="sv-SE" value="2026-06" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Native reference */}
+  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <th scope="row">default</th>
+        <td>
+          <label for="mf-native-default">Month</label>
+          <input type="month" id="mf-native-default" name="mf-native-default" />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">disabled</th>
+        <td>
+          <label for="mf-native-disabled">Month</label>
+          <input type="month" id="mf-native-disabled" name="mf-native-disabled" value="2026-06" disabled />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

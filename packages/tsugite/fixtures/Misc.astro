@@ -1,0 +1,24 @@
+---
+// Port of AiPoc Views/Shared/Partials/KitchenSink/_Misc.cshtml
+// The input-alignment groups are left out for now — inputs are skipped in this
+// stage and arrive later with the ReferenceComponents library.
+import Heading from "../components/Heading/Heading.astro";
+---
+
+<section class="KitchenSink-section">
+  <Heading text="Misc" element="h2" size="2" />
+
+  {/* ── Text alignment / baseline checks ── */}
+  <div class="KitchenSink-group">
+    <h3>Baseline alignment</h3>
+    <div class="text-alignment example-box">
+      <figure></figure>
+      <span class="above"></span>
+      <Heading text="A longer heading that breaks to two longer lines" element="h1" variant="display" size="1" />
+      <span class="below"></span>
+      <div class="text">
+        <p>Some text below the title</p>
+      </div>
+    </div>
+  </div>
+</section>

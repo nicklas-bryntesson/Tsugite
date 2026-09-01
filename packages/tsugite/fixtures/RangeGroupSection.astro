@@ -1,0 +1,137 @@
+---
+// Port of reference-components RangeGroup.html — states mirror
+// RangeGroup.generate.ts one to one.
+import Heading from "../components/Heading/Heading.astro";
+import RangeGroup from "../components/RangeGroup/RangeGroup.astro";
+
+const price = {
+  legend: "Price",
+  lowerLabel: "Lowest",
+  upperLabel: "Highest",
+  suffix: "tkr",
+  min: 0,
+  max: 1000,
+  step: 10,
+  lower: 200,
+  upper: 700,
+};
+---
+
+<section class="KitchenSink-section" id="RangeGroup">
+  <Heading text="RangeGroup" element="h2" size="2" />
+
+  {/* Interaction states */}
+  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <thead>
+      <tr>
+        <th scope="col">default</th>
+        <th scope="col">hover</th>
+        <th scope="col">focus</th>
+        <th scope="col">active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><RangeGroup id="rg-default" {...price} /></td>
+        <td><RangeGroup id="rg-hover" {...price} field={{ "data-test-state": "hover" }} /></td>
+        <td><RangeGroup id="rg-focus" {...price} field={{ "data-test-state": "focus" }} /></td>
+        <td><RangeGroup id="rg-active" {...price} field={{ "data-test-state": "active" }} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Disabled */}
+  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <td><RangeGroup id="rg-disabled" {...price} group={{ disabled: "disabled" }} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Invalid */}
+  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <td>
+          <RangeGroup
+            id="rg-invalid"
+            {...price}
+            scale={{ "data-invalid": "true" }}
+            field={{ "data-invalid": "true", "aria-invalid": "true" }}
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* When the two ends meet */}
+  <Heading text="When the two ends meet" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <td><RangeGroup id="rg-collided" rootId="rangegroup-collided" {...price} lower={500} upper={500} /></td>
+      </tr>
+      <tr>
+        <td><RangeGroup id="rg-at-min" {...price} lower={0} upper={0} /></td>
+      </tr>
+      <tr>
+        <td><RangeGroup id="rg-at-max" {...price} lower={1000} upper={1000} /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Variants */}
+  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <td><RangeGroup id="rg-lane-flush" rootId="rangegroup-flush" {...price} scale={{ "data-lane": "flush" }} /></td>
+      </tr>
+      <tr>
+        <td><RangeGroup id="rg-with-ticks" rootId="rangegroup-ticks" {...price} scale={{ "data-ticks": "labels", "data-lane": "flush" }} /></td>
+      </tr>
+      <tr>
+        <td>
+          <div dir="rtl">
+            <RangeGroup
+              id="rg-rtl"
+              rootId="rangegroup-rtl"
+              {...price}
+              legend="السعر"
+              lowerLabel="الأدنى"
+              upperLabel="الأعلى"
+            />
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  {/* Live demo */}
+  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <div>
+    <RangeGroup id="rg-live" rootId="rangegroup-live" {...price} />
+  </div>
+
+  {/* Native reference */}
+  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <table class="state-table">
+    <tbody>
+      <tr>
+        <td>
+          <fieldset>
+            <legend>Price</legend>
+            <label for="rg-native-lower">Lowest price</label>
+            <input type="number" id="rg-native-lower" name="rg-native-lower" min="0" max="1000" step="10" value="200" inputmode="numeric" />
+            <label for="rg-native-upper">Highest price</label>
+            <input type="number" id="rg-native-upper" name="rg-native-upper" min="0" max="1000" step="10" value="700" inputmode="numeric" />
+          </fieldset>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
