@@ -1,0 +1,311 @@
+---
+// Port of AiPoc TagHelpers/HeadingTagHelper.cs
+// Contract: .claude/contracts/tag-helpers.md — CSS class "Heading",
+// variants via data-* attributes, validation errors visible in dev only.
+
+const VALID_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6", "span", "div", "p"];
+const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
+const VALID_VARIANTS = ["heading", "display", "body"];
+
+const VALID_ELEMENTS_BY_VARIANT: Record<string, string[]> = {
+  heading: VALID_ELEMENTS,
+  display: VALID_ELEMENTS,
+  body: HEADING_ELEMENTS,
+};
+
+const VALID_SIZES_BY_VARIANT: Record<string, string[]> = {
+  heading: ["1", "2", "3", "4", "5", "6"],
+  display: ["1", "2", "3"],
+  body: ["lg", "md", "sm"],
+};
+
+const DEFAULT_SIZE_BY_VARIANT: Record<string, string> = {
+  display: "2",
+  body: "md",
+};
+
+const HEADING_ELEMENT_TO_SIZE: Record<string, string> = {
+  h1: "1", h2: "2", h3: "3", h4: "4", h5: "5", h6: "6",
+};
+
+const VALID_COLORS = ["primary", "dark", "light", "inherit"];
+const VALID_ALIGNS = ["left", "center", "right"];
+const VALID_WRAPS = ["balance", "pretty", "stable", "nowrap"];
+
+interface Props {
+  text?: string;
+  highlight?: string;
+  href?: string;
+  element?: string;
+  size?: string;
+  variant?: string;
+  color?: string;
+  align?: string;
+  wrap?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  text,
+  highlight,
+  href,
+  element: elementProp = "h2",
+  size: sizeProp,
+  variant: variantProp,
+  color,
+  align = "left",
+  wrap = "balance",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const isDev = import.meta.env.DEV;
+
+const escapeHtml = (s: string) =>
+  s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+function applyHighlight(t: string, h: string): string {
+  const words = h.split(",").map((w) => w.trim()).filter(Boolean);
+  if (words.length === 0) return escapeHtml(t);
+
+  const pattern = words
+    .sort((a, b) => b.length - a.length)
+    .map(escapeRegex)
+    .join("|");
+
+  const regex = new RegExp(`(${pattern})`, "i");
+  const parts = t.split(new RegExp(`(${pattern})`, "gi"));
+
+  return parts
+    .map((part) => (regex.test(part) ? `<mark>${escapeHtml(part)}</mark>` : escapeHtml(part)))
+    .join("");
+}
+
+// ── Guards ──────────────────────────────────────────
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const hasChildContent = childHtml.trim().length > 0;
+const hasText = !!text;
+const hasHref = !!href;
+
+let mode: "render" | "suppress" | "error" = "render";
+let errorMessage = "";
+
+if (!hasText && !hasChildContent) {
+  mode = "suppress";
+} else if ((hasText && hasChildContent) || (hasHref && hasChildContent) || (hasHref && !hasText)) {
+  mode = "error";
+  errorMessage = "invalid combination of text, href, and child content";
+}
+
+const element = VALID_ELEMENTS.includes(elementProp.toLowerCase())
+  ? elementProp.toLowerCase()
+  : "h2";
+const variant = VALID_VARIANTS.includes((variantProp ?? "").toLowerCase())
+  ? variantProp!.toLowerCase()
+  : "heading";
+
+if (mode === "render" && !VALID_ELEMENTS_BY_VARIANT[variant].includes(element)) {
+  mode = "error";
+  errorMessage = `variant "${variant}" does not allow element "${element}"`;
+}
+
+// ── Size ────────────────────────────────────────────
+
+function resolveSize(): string | undefined {
+  if (sizeProp && VALID_SIZES_BY_VARIANT[variant]?.includes(sizeProp.toLowerCase()))
+    return sizeProp.toLowerCase();
+  if (DEFAULT_SIZE_BY_VARIANT[variant]) return DEFAULT_SIZE_BY_VARIANT[variant];
+  if (variant === "heading") return HEADING_ELEMENT_TO_SIZE[element] ?? "2";
+  return undefined;
+}
+
+const resolvedSize = resolveSize();
+
+// ── Optional attributes ─────────────────────────────
+
+const colorAttr =
+  color && VALID_COLORS.includes(color.toLowerCase()) ? color.toLowerCase() : undefined;
+const alignAttr = VALID_ALIGNS.includes(align.toLowerCase()) ? align.toLowerCase() : undefined;
+const wrapAttr = VALID_WRAPS.includes(wrap.toLowerCase()) ? wrap.toLowerCase() : undefined;
+
+const cssClass = className && String(className).trim() ? `Heading ${className}` : "Heading";
+
+// ── Content ─────────────────────────────────────────
+
+let inner = "";
+if (mode === "render") {
+  if (hasChildContent) {
+    inner = childHtml;
+  } else {
+    const encoded = highlight ? applyHighlight(text!, highlight) : escapeHtml(text!);
+    inner = hasHref
+      ? `<a href="${escapeHtml(href!)}" class="heading-link">${encoded}</a>`
+      : `<span class="heading-text">${encoded}</span>`;
+  }
+}
+
+const Tag = element as "h2";
+---
+
+{
+  mode === "render" ? (
+    <Tag
+      class={cssClass}
+      data-variant={variant}
+      data-size={resolvedSize}
+      data-color={colorAttr}
+      data-align={alignAttr}
+      data-wrap={wrapAttr}
+      {...rest}
+      set:html={inner}
+    />
+  ) : mode === "error" && isDev ? (
+    <div style="color:red;" set:html={`<!-- app-heading: ${errorMessage} --><span>&times;</span>`} />
+  ) : null
+}
+
+<style is:global>
+/* =====================================================
+   HEADING COMPONENT
+===================================================== */
+
+.Heading {
+   --_color: ;
+
+   /* reset */
+   word-wrap: break-word;
+   overflow-wrap: break-word;
+   margin-block: 0;
+
+  /* ================================================
+     TEXT CONTAINER (Typography Engine)
+  ================================================= */
+
+   .heading-link,
+   .heading-text {
+    display: block;
+    font-size: var(--_fontSize);
+    line-height: var(--_lineHeight);
+
+    /* Inline children inherit metrics */
+    & :where(a, span, strong, em, b, i) {
+      font: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+    }
+  }
+
+  /* =====================================================
+     VARIANT LAYER (voice + baseline offset)
+  ===================================================== */
+
+  &[data-variant="heading"] {
+    --_lineHeight: var(--lineHeight-heading);
+    --_baselineOffset: var(--baseline-offset-heading);
+
+    font-family: var(--fontFamily-heading);
+    font-weight: var(--fontWeight-heading);
+    letter-spacing: var(--letterSpacing-heading);
+    font-feature-settings: var(--fontFeatureSettings-heading);
+
+    &[data-size="1"] { --_fontSize: var(--fontSize-h1); }
+    &[data-size="2"] { --_fontSize: var(--fontSize-h2); }
+    &[data-size="3"] { --_fontSize: var(--fontSize-h3); }
+    &[data-size="4"] { --_fontSize: var(--fontSize-h4); }
+    &[data-size="5"] { --_fontSize: var(--fontSize-h5); }
+    &[data-size="6"] { --_fontSize: var(--fontSize-h6); }
+  }
+
+  &[data-variant="display"] {
+    --_lineHeight: var(--lineHeight-display);
+    --_baselineOffset: var(--baseline-offset-display);
+
+    font-family: var(--fontFamily-display);
+    font-weight: var(--fontWeight-display);
+    letter-spacing: var(--letterSpacing-display);
+    font-feature-settings: var(--fontFeatureSettings-display);
+
+    &[data-size="1"] { --_fontSize: var(--fontSize-display-1); }
+    &[data-size="2"] { --_fontSize: var(--fontSize-display-2); }
+    &[data-size="3"] { --_fontSize: var(--fontSize-display-3); }
+  }
+
+  &[data-variant="body"] {
+    --_lineHeight: var(--lineHeight-body);
+    --_baselineOffset: var(--baseline-offset-body);
+
+    font-family: var(--fontFamily-body);
+    font-weight: var(--fontWeight-body);
+    letter-spacing: var(--letterSpacing-body);
+    font-feature-settings: var(--fontFeatureSettings-body);
+
+    &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-body); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); }
+  }
+
+  /* =====================================================
+     ALIGNMENT
+  ===================================================== */
+
+  &[data-align="left"]   { text-align: left; }
+  &[data-align="center"] { text-align: center; }
+  &[data-align="right"]  { text-align: right; }
+
+  /* =====================================================
+     WRAP STRATEGIES
+  ===================================================== */
+
+  &[data-wrap="balance"] { text-wrap: balance; }
+  &[data-wrap="pretty"]  { text-wrap: pretty; }
+  &[data-wrap="stable"]  { text-wrap: stable; }
+
+  /* =====================================================
+     FEATURE LAYER — TEXT TRIM
+     Completely isolated. Removable in one sweep.
+     Applies ONLY to the text container.
+  ===================================================== */
+  
+  /* Native trim branch */
+  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+     > .heading-link,
+     > .heading-text {
+      text-box-trim: trim-both;
+      text-box-edge: cap alphabetic;
+      margin-block: 0;
+    }
+  }
+  
+  /* Fallback branch */
+  @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
+     > .heading-link,
+     > .heading-text {
+         --_effectiveLineHeight: calc(var(--_fontSize) * var(--_lineHeight));
+         --_marginBlock: calc((var(--_fontSize) - var(--_effectiveLineHeight)) / 2);
+         --_marginBlockStart: calc(var(--_marginBlock) + var(--_baselineOffset, 0));
+         --_marginBlockEnd: calc(var(--_marginBlock) - var(--_baselineOffset, 0));
+   
+         margin-block-start: var(--_marginBlockStart);
+         margin-block-end: var(--_marginBlockEnd);
+      }
+   }
+}
+
+/* .Heading {
+   background-color: hotpink;
+   
+   .heading-link,
+   .heading-text {
+      background-color: rgba(255, 182, 193, 0.563);
+   }
+} */
+</style>

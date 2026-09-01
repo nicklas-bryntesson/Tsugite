@@ -1,0 +1,28 @@
+{
+  "name": "docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "tokens": "pnpm --filter tsugite tokens",
+    "predev": "pnpm run tokens",
+    "prebuild": "pnpm run tokens",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "astro": "7.2.9",
+    "tsugite": "workspace:*",
+    "cookie": "^2.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "axe-playwright": "^2.2.2",
+    "axe-core": "^4.13.0",
+    "sass": "^1.103.1",
+    "vitest": "^4.1.11"
+  }
+}
