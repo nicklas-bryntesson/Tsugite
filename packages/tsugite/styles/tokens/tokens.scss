@@ -1,0 +1,36 @@
+@use './color/color.constant.scss'              as color-constant;
+@use './typography/typography.constant.scss'    as type-constant;
+@use './base/size/size.constant.scss'           as size-constant; 
+@use './base/site/site.constant.scss'           as site-constant;
+@use './base/grid/grid.constant.scss'           as grid-constant;
+@use './color/color.semantic.scss'              as color-semantic;
+@use './typography/typography.semantic.scss'    as type-semantic;
+@use './base/size/size.semantic.scss'           as size-semantic;
+@use './base/site/site.semantic.scss'           as site-semantic;
+@use './base/grid/grid.semantic.scss'           as grid-semantic;
+
+@include color-constant.registrations;
+
+@supports not (color: oklch(1 0 0)) {
+    :root {
+        @include color-constant.base;
+    }
+}
+
+:root {
+    @include type-constant.tokens;
+    @include site-constant.tokens;
+    @include size-constant.tokens;   
+    @include grid-constant.tokens;
+    @include color-semantic.tokens;
+    @include type-semantic.tokens;
+    @include size-semantic.tokens;
+    @include site-semantic.tokens;  
+    @include grid-semantic.tokens;
+}
+
+@supports (color: oklch(1 0 0)) {
+    :root {
+        @include color-constant.oklch;
+    }
+}

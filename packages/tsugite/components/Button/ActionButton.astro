@@ -1,0 +1,73 @@
+---
+// Port of AiPoc TagHelpers/ActionButtonTagHelper.cs
+// Renders <button class="Button">. Supports intent for destructive/success states.
+import "./Button.css";
+import { sharedButtonAttributes, renderIcon } from "../../lib/buttonShared";
+
+interface Props {
+  "button-type"?: string;
+  disabled?: boolean;
+  emphasis?: string;
+  intent?: string;
+  pill?: boolean;
+  size?: string;
+  icon?: string;
+  "icon-position"?: string;
+  "aria-label"?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  "button-type": buttonType = "button",
+  disabled = false,
+  emphasis = "primary",
+  intent = "neutral",
+  pill = false,
+  size = "md",
+  icon,
+  "icon-position": iconPosition = "right",
+  "aria-label": ariaLabel,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const hasChildContent = childHtml.trim().length > 0;
+const hasIcon = !!icon;
+const hasAriaLabel = !!ariaLabel;
+
+const suppress = !hasChildContent && !hasIcon && !hasAriaLabel;
+
+const cssClass = className && String(className).trim() ? `Button ${className}` : "Button";
+
+const sharedAttrs = sharedButtonAttributes({
+  emphasis,
+  intent,
+  pill,
+  size,
+  icon,
+  iconPosition,
+  ariaLabel,
+});
+
+const iconOnly = hasIcon && !hasChildContent;
+
+let inner = "";
+if (hasChildContent) inner += `<span class="Button-text">${childHtml}</span>`;
+if (hasIcon) inner += renderIcon(icon!);
+---
+
+{
+  !suppress && (
+    <button
+      type={buttonType}
+      disabled={disabled ? "disabled" : undefined}
+      class={cssClass}
+      {...sharedAttrs}
+      data-icon-only={iconOnly ? "true" : undefined}
+      {...rest}
+      set:html={inner}
+    />
+  )
+}

@@ -1,0 +1,11 @@
+/* 
+* Complex 14 column grid with 12 centered columns in the middle and a fluid first and last column.
+*/
+
+/* Variable maps built in tokens/grid.constant & grid.semantic */
+
+.grid-breakout {
+    display: grid;
+    column-gap: var(--grid-breakout-gap);
+    grid-template-columns: var(--grid-breakout-columns);
+}

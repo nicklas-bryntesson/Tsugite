@@ -1,0 +1,201 @@
+@mixin tokens {
+    --fontFamily-heading: var(--FIRA-SANS);
+    --fontWeight-heading: var(--FIRA-SANS-600);
+    --lineHeight-heading: 1.1;
+    --letterSpacing-heading: normal;
+    --fontFeatureSettings-heading: normal;
+    --baseline-offset-heading: 1; /* for lineheight calcs (faux text trim) */
+
+    --fontFamily-display: var(--ABRIL-FATFACE);
+    --fontWeight-display: var(--ABRIL-FATFACE-400);
+    --lineHeight-display: 0.95;
+    --letterSpacing-display: -0.01em;
+    --fontFeatureSettings-display: normal;
+    --baseline-offset-display: 1;
+
+    --fontFamily-body: var(--NOTO-SERIF);
+    --fontWeight-body: var(--NOTOS-SERIF-400);
+    --fontWeight-body-bold: var(--NOTOS-SERIF-700);
+    --lineHeight-body: 1.5;
+    --letterSpacing-body: normal;
+    --fontFeatureSettings-body: normal;
+    --baseline-offset-body: 1; /* for lineheight calcs (faux text trim) */
+
+    --fontFamily-code: var(--MONOSPACE);
+    --fontWeight-code: var(--MONOSPACE-400);
+
+    --fontFamily-label: var(--INTER);
+    --fontWeight-label: var(--INTER-400);
+    --lineHeight-label: 1.3;
+    --letterSpacing-label: normal;
+    --fontFeatureSettings-label: normal;
+    --baseline-offset-label: 1;
+
+
+    @media (max-width: 21.24999rem) {
+        --fontSize-h1:              calc(var(--FONTSIZE-H1-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-h2:              calc(var(--FONTSIZE-H2-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-h3:              calc(var(--FONTSIZE-H3-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-h4:              calc(var(--FONTSIZE-H4-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-h5:              calc(var(--FONTSIZE-H5-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-h6:              calc(var(--FONTSIZE-H6-FLOOR) * var(--TYPE-SCALE, 1));
+
+        --fontSize-display-1:       calc(var(--FONTSIZE-DISPLAY-1-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-display-2:       calc(var(--FONTSIZE-DISPLAY-2-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-display-3:       calc(var(--FONTSIZE-DISPLAY-3-FLOOR) * var(--TYPE-SCALE, 1));
+
+        --fontSize-body-small:      calc(var(--FONTSIZE-BODY-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-body:            calc(var(--FONTSIZE-BODY-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-body-large:      calc(var(--FONTSIZE-BODY-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
+
+        --fontSize-label-small:     calc(var(--FONTSIZE-LABEL-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-label:           calc(var(--FONTSIZE-LABEL-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
+
+        --fontSize-code:            calc(var(--FONTSIZE-CODE-FLOOR) * var(--TYPE-SCALE, 1));
+    }
+
+    @media (min-width: 21.25rem) and (max-width: 48.74rem) {
+        --fontSize-h1:              calc(var(--FONTSIZE-H1-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-h2:              calc(var(--FONTSIZE-H2-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-h3:              calc(var(--FONTSIZE-H3-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-h4:              calc(var(--FONTSIZE-H4-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-h5:              calc(var(--FONTSIZE-H5-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-h6:              calc(var(--FONTSIZE-H6-MOBILE) * var(--TYPE-SCALE, 1));
+
+        --fontSize-display-1:       calc(var(--FONTSIZE-DISPLAY-1-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-display-2:       calc(var(--FONTSIZE-DISPLAY-2-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-display-3:       calc(var(--FONTSIZE-DISPLAY-3-MOBILE) * var(--TYPE-SCALE, 1));
+
+        --fontSize-body-small:      calc(var(--FONTSIZE-BODY-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-body:            calc(var(--FONTSIZE-BODY-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-body-large:      calc(var(--FONTSIZE-BODY-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
+        
+        --fontSize-label-small:     calc(var(--FONTSIZE-LABEL-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-label:           calc(var(--FONTSIZE-LABEL-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
+
+        --fontSize-code:            calc(var(--FONTSIZE-CODE-MOBILE) * var(--TYPE-SCALE, 1));
+    }
+
+    @media (min-width: 48.75rem) and (max-width: 89.99rem) {
+        --fontSize-h1:              calc(var(--FONTSIZE-H1-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-h2:              calc(var(--FONTSIZE-H2-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-h3:              calc(var(--FONTSIZE-H3-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-h4:              calc(var(--FONTSIZE-H4-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-h5:              calc(var(--FONTSIZE-H5-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-h6:              calc(var(--FONTSIZE-H6-DESKTOP) * var(--TYPE-SCALE, 1));
+
+        --fontSize-display-1:       calc(var(--FONTSIZE-DISPLAY-1-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-display-2:       calc(var(--FONTSIZE-DISPLAY-2-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-display-3:       calc(var(--FONTSIZE-DISPLAY-3-DESKTOP) * var(--TYPE-SCALE, 1));
+
+        --fontSize-body-small:      calc(var(--FONTSIZE-BODY-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-body:            calc(var(--FONTSIZE-BODY-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-body-large:      calc(var(--FONTSIZE-BODY-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
+
+        --fontSize-label-small:     calc(var(--FONTSIZE-LABEL-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-label:           calc(var(--FONTSIZE-LABEL-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
+
+        --fontSize-code:            calc(var(--FONTSIZE-CODE-DESKTOP) * var(--TYPE-SCALE, 1));
+    }
+
+    @media (min-width: 90rem) {
+        --fontSize-h1:              calc(var(--FONTSIZE-H1-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-h2:              calc(var(--FONTSIZE-H2-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-h3:              calc(var(--FONTSIZE-H3-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-h4:              calc(var(--FONTSIZE-H4-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-h5:              calc(var(--FONTSIZE-H5-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-h6:              calc(var(--FONTSIZE-H6-WIDE) * var(--TYPE-SCALE, 1));
+
+        --fontSize-display-1:       calc(var(--FONTSIZE-DISPLAY-1-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-display-2:       calc(var(--FONTSIZE-DISPLAY-2-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-display-3:       calc(var(--FONTSIZE-DISPLAY-3-WIDE) * var(--TYPE-SCALE, 1));
+
+        --fontSize-body-small:      calc(var(--FONTSIZE-BODY-SMALL-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-body:            calc(var(--FONTSIZE-BODY-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-body-large:      calc(var(--FONTSIZE-BODY-LARGE-WIDE) * var(--TYPE-SCALE, 1));
+
+        --fontSize-label-small:     calc(var(--FONTSIZE-LABEL-SMALL-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-label:           calc(var(--FONTSIZE-LABEL-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-WIDE) * var(--TYPE-SCALE, 1));
+
+        --fontSize-code:            calc(var(--FONTSIZE-CODE-WIDE) * var(--TYPE-SCALE, 1));
+    }
+}
+
+// ── Test viewport overrides ──────────────────────────────────────────────────
+// Forces mobile/desktop token values regardless of actual viewport.
+// Used in kitchen sink maps to show responsive sizes side-by-side.
+// Attribute selector (0,1,0) beats :root (0,0,1) — always wins via specificity.
+// Add tokens here as more components gain responsive sizing.
+
+[data-test-viewport="floor"] {
+    --fontSize-h1:              calc(var(--FONTSIZE-H1-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-h2:              calc(var(--FONTSIZE-H2-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-h3:              calc(var(--FONTSIZE-H3-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-h4:              calc(var(--FONTSIZE-H4-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-h5:              calc(var(--FONTSIZE-H5-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-h6:              calc(var(--FONTSIZE-H6-FLOOR) * var(--TYPE-SCALE, 1));
+
+    --fontSize-display-1:       calc(var(--FONTSIZE-DISPLAY-1-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-display-2:       calc(var(--FONTSIZE-DISPLAY-2-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-display-3:       calc(var(--FONTSIZE-DISPLAY-3-FLOOR) * var(--TYPE-SCALE, 1));
+
+    --fontSize-body-small:      calc(var(--FONTSIZE-BODY-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-body:            calc(var(--FONTSIZE-BODY-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-body-large:      calc(var(--FONTSIZE-BODY-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
+
+    --fontSize-label-small:     calc(var(--FONTSIZE-LABEL-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-label:           calc(var(--FONTSIZE-LABEL-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
+
+    --fontSize-code:            calc(var(--FONTSIZE-CODE-FLOOR) * var(--TYPE-SCALE, 1));
+}
+
+[data-test-viewport="mobile"] {
+    --fontSize-h1:              calc(var(--FONTSIZE-H1-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-h2:              calc(var(--FONTSIZE-H2-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-h3:              calc(var(--FONTSIZE-H3-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-h4:              calc(var(--FONTSIZE-H4-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-h5:              calc(var(--FONTSIZE-H5-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-h6:              calc(var(--FONTSIZE-H6-MOBILE) * var(--TYPE-SCALE, 1));
+
+    --fontSize-display-1:       calc(var(--FONTSIZE-DISPLAY-1-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-display-2:       calc(var(--FONTSIZE-DISPLAY-2-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-display-3:       calc(var(--FONTSIZE-DISPLAY-3-MOBILE) * var(--TYPE-SCALE, 1));
+
+    --fontSize-body-small:      calc(var(--FONTSIZE-BODY-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-body:            calc(var(--FONTSIZE-BODY-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-body-large:      calc(var(--FONTSIZE-BODY-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
+
+    --fontSize-label-small:     calc(var(--FONTSIZE-LABEL-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-label:           calc(var(--FONTSIZE-LABEL-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
+
+    --fontSize-code:            calc(var(--FONTSIZE-CODE-MOBILE) * var(--TYPE-SCALE, 1));
+}
+
+[data-test-viewport="desktop"] {
+    --fontSize-h1:              calc(var(--FONTSIZE-H1-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-h2:              calc(var(--FONTSIZE-H2-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-h3:              calc(var(--FONTSIZE-H3-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-h4:              calc(var(--FONTSIZE-H4-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-h5:              calc(var(--FONTSIZE-H5-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-h6:              calc(var(--FONTSIZE-H6-DESKTOP) * var(--TYPE-SCALE, 1));
+
+    --fontSize-display-1:       calc(var(--FONTSIZE-DISPLAY-1-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-display-2:       calc(var(--FONTSIZE-DISPLAY-2-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-display-3:       calc(var(--FONTSIZE-DISPLAY-3-DESKTOP) * var(--TYPE-SCALE, 1));
+
+    --fontSize-body-small:      calc(var(--FONTSIZE-BODY-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-body:            calc(var(--FONTSIZE-BODY-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-body-large:      calc(var(--FONTSIZE-BODY-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
+
+    --fontSize-label-small:     calc(var(--FONTSIZE-LABEL-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-label:           calc(var(--FONTSIZE-LABEL-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
+
+    --fontSize-code:            calc(var(--FONTSIZE-CODE-DESKTOP) * var(--TYPE-SCALE, 1));
+}

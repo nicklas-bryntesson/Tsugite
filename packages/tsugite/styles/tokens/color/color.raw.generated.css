@@ -1,0 +1,367 @@
+/* GENERATED — do not edit. Source: src/lib/tokens/raw.color.tokens.js
+   The RAW palette, authored in oklch. The sRGB branch is the CSS Color 4
+   gamut mapping (chroma clamped, L and H preserved) computed at build —
+   the same rendering a browser applies on an sRGB display.
+   Regenerate: npm run tokens */
+
+@property --COLOR-N00 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(100% 0 0);
+}
+
+@property --COLOR-N05 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(98.5% 0.005 257.46);
+}
+
+@property --COLOR-N10 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(0.97 0.01 257.46);
+}
+
+@property --COLOR-N15 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(95% 0.015 257.46);
+}
+
+@property --COLOR-N20 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(93% 0.02 257.46);
+}
+
+@property --COLOR-N25 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(89% 0.025 257.46);
+}
+
+@property --COLOR-N30 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(85% 0.03 257.46);
+}
+
+@property --COLOR-N35 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(80% 0.035 257.46);
+}
+
+@property --COLOR-N40 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(75% 0.04 257.46);
+}
+
+@property --COLOR-N45 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(70% 0.04 257.46);
+}
+
+@property --COLOR-N50 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(65% 0.04 257.46);
+}
+
+@property --COLOR-N55 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(58.97% 0.0359 257.46);
+}
+
+@property --COLOR-N60 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(52.94% 0.0318 257.46);
+}
+
+@property --COLOR-N65 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(46.91% 0.0277 257.46);
+}
+
+@property --COLOR-N70 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(40.88% 0.0236 257.46);
+}
+
+@property --COLOR-N75 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(34.85% 0.0194 257.46);
+}
+
+@property --COLOR-N80 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(28.82% 0.0153 257.46);
+}
+
+@property --COLOR-N85 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(22.79% 0.0112 257.46);
+}
+
+@property --COLOR-N90 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(16.76% 0.0071 257.46);
+}
+
+@property --COLOR-N95 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(11.24% 0.0087 257.46);
+}
+
+@property --COLOR-B05 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(96.63% 0.0144 264.5);
+}
+
+@property --COLOR-B10 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(91.11% 0.0439 253.6);
+}
+
+@property --COLOR-B20 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(83.67% 0.08296 253.6937);
+}
+
+@property --COLOR-B30 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(74.76% 0.1321 254.77);
+}
+
+@property --COLOR-B40 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(67.38% 0.1748 256);
+}
+
+@property --COLOR-B50 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(61.48% 0.2103 257.24);
+}
+
+@property --COLOR-B60 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(46.65% 0.1873 258.22);
+}
+
+@property --COLOR-B70 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(38.13% 0.132 258.15);
+}
+
+@property --COLOR-B80 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(27.26% 0.0925 257.49);
+}
+
+@property --COLOR-B90 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(18.34% 0.0645 256.77);
+}
+
+@property --COLOR-B95 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(11.28% 0.043 258.66);
+}
+
+@property --COLOR-R50 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(67.92% 0.23 19.06);
+}
+
+@property --COLOR-G50 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(70% 0.18 158.7);
+}
+
+@property --COLOR-Y80 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(91.76% 0.16 95.72);
+}
+
+@property --COLOR-PI10 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(96.03% 0.0291 334.38);
+}
+
+@property --COLOR-PI25 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(88.25% 0.091 335.35);
+}
+
+@property --COLOR-PI50 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(67.13% 0.2851 343.06);
+}
+
+@property --COLOR-PI70 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(34.2% 0.146752 342.809);
+}
+
+@property --COLOR-PI85 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(24.24% 0.1048 341.09);
+}
+
+@property --COLOR-YE05 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(97.39% 0.0437 95.85);
+}
+
+@property --COLOR-YE20 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(93.82% 0.104 96.09);
+}
+
+@property --COLOR-YE50 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(86.92% 0.1765 91.17);
+}
+
+@property --COLOR-YE70 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(44.61% 0.0913 92.51);
+}
+
+@property --COLOR-YE95 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: oklch(24.96% 0.0513 95.71);
+}
+
+@supports not (color: oklch(1 0 0)) {
+  :root {
+    --COLOR-N00: #ffffff;
+    --COLOR-N05: #f8fafe;
+    --COLOR-N10: #f1f5fc;
+    --COLOR-N15: #e8eff9;
+    --COLOR-N20: #e0e9f6;
+    --COLOR-N25: #d1dcec;
+    --COLOR-N30: #c2cfe2;
+    --COLOR-N35: #b0bfd5;
+    --COLOR-N40: #9eafc8;
+    --COLOR-N45: #8fa0b8;
+    --COLOR-N50: #8090a8;
+    --COLOR-N55: #707e93;
+    --COLOR-N60: #606d7e;
+    --COLOR-N65: #515b6a;
+    --COLOR-N70: #424b57;
+    --COLOR-N75: #343b44;
+    --COLOR-N80: #262b33;
+    --COLOR-N85: #191d22;
+    --COLOR-N90: #0d0f12;
+    --COLOR-N95: #030507;
+    --COLOR-B05: #eff4fe;
+    --COLOR-B10: #cee4ff;
+    --COLOR-B20: #a4cdff;
+    --COLOR-B30: #71b0ff;
+    --COLOR-B40: #4496ff;
+    --COLOR-B50: #157fff;
+    --COLOR-B60: #0053b9;
+    --COLOR-B70: #093f87;
+    --COLOR-B80: #032553;
+    --COLOR-B90: #00112e;
+    --COLOR-B95: #000414;
+    --COLOR-R50: #ff5062;
+    --COLOR-G50: #00bc78;
+    --COLOR-Y80: #ffe373;
+    --COLOR-PI10: #ffebfa;
+    --COLOR-PI25: #ffc2f0;
+    --COLOR-PI50: #ff0ac2;
+    --COLOR-PI70: #66004c;
+    --COLOR-PI85: #3d002e;
+    --COLOR-YE05: #fff7d6;
+    --COLOR-YE20: #ffeb99;
+    --COLOR-YE50: #ffce0a;
+    --COLOR-YE70: #665200;
+    --COLOR-YE95: #292100;
+  }
+}
+
+@supports (color: oklch(1 0 0)) {
+  :root {
+    --COLOR-N00: oklch(100% 0 0);
+    --COLOR-N05: oklch(98.5% 0.005 257.46);
+    --COLOR-N10: oklch(0.97 0.01 257.46);
+    --COLOR-N15: oklch(95% 0.015 257.46);
+    --COLOR-N20: oklch(93% 0.02 257.46);
+    --COLOR-N25: oklch(89% 0.025 257.46);
+    --COLOR-N30: oklch(85% 0.03 257.46);
+    --COLOR-N35: oklch(80% 0.035 257.46);
+    --COLOR-N40: oklch(75% 0.04 257.46);
+    --COLOR-N45: oklch(70% 0.04 257.46);
+    --COLOR-N50: oklch(65% 0.04 257.46);
+    --COLOR-N55: oklch(58.97% 0.0359 257.46);
+    --COLOR-N60: oklch(52.94% 0.0318 257.46);
+    --COLOR-N65: oklch(46.91% 0.0277 257.46);
+    --COLOR-N70: oklch(40.88% 0.0236 257.46);
+    --COLOR-N75: oklch(34.85% 0.0194 257.46);
+    --COLOR-N80: oklch(28.82% 0.0153 257.46);
+    --COLOR-N85: oklch(22.79% 0.0112 257.46);
+    --COLOR-N90: oklch(16.76% 0.0071 257.46);
+    --COLOR-N95: oklch(11.24% 0.0087 257.46);
+    --COLOR-B05: oklch(96.63% 0.0144 264.5);
+    --COLOR-B10: oklch(91.11% 0.0439 253.6);
+    --COLOR-B20: oklch(83.67% 0.08296 253.6937);
+    --COLOR-B30: oklch(74.76% 0.1321 254.77);
+    --COLOR-B40: oklch(67.38% 0.1748 256);
+    --COLOR-B50: oklch(61.48% 0.2103 257.24);
+    --COLOR-B60: oklch(46.65% 0.1873 258.22);
+    --COLOR-B70: oklch(38.13% 0.132 258.15);
+    --COLOR-B80: oklch(27.26% 0.0925 257.49);
+    --COLOR-B90: oklch(18.34% 0.0645 256.77);
+    --COLOR-B95: oklch(11.28% 0.043 258.66);
+    --COLOR-R50: oklch(67.92% 0.23 19.06);
+    --COLOR-G50: oklch(70% 0.18 158.7);
+    --COLOR-Y80: oklch(91.76% 0.16 95.72);
+    --COLOR-PI10: oklch(96.03% 0.0291 334.38);
+    --COLOR-PI25: oklch(88.25% 0.091 335.35);
+    --COLOR-PI50: oklch(67.13% 0.2851 343.06);
+    --COLOR-PI70: oklch(34.2% 0.146752 342.809);
+    --COLOR-PI85: oklch(24.24% 0.1048 341.09);
+    --COLOR-YE05: oklch(97.39% 0.0437 95.85);
+    --COLOR-YE20: oklch(93.82% 0.104 96.09);
+    --COLOR-YE50: oklch(86.92% 0.1765 91.17);
+    --COLOR-YE70: oklch(44.61% 0.0913 92.51);
+    --COLOR-YE95: oklch(24.96% 0.0513 95.71);
+  }
+}

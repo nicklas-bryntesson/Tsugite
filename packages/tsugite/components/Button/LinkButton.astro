@@ -1,0 +1,72 @@
+---
+// Port of AiPoc TagHelpers/LinkButtonTagHelper.cs
+// Renders <a class="Button">. No intent — links are always intent-neutral.
+import "./Button.css";
+import { sharedButtonAttributes, renderIcon } from "../../lib/buttonShared";
+
+interface Props {
+  href?: string;
+  target?: string;
+  emphasis?: string;
+  pill?: boolean;
+  size?: string;
+  icon?: string;
+  "icon-position"?: string;
+  "aria-label"?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  target,
+  emphasis = "primary",
+  pill = false,
+  size = "md",
+  icon,
+  "icon-position": iconPosition = "right",
+  "aria-label": ariaLabel,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const hasChildContent = childHtml.trim().length > 0;
+const hasIcon = !!icon;
+const hasAriaLabel = !!ariaLabel;
+
+const suppress = !hasChildContent && !hasIcon && !hasAriaLabel;
+
+const cssClass = className && String(className).trim() ? `Button ${className}` : "Button";
+
+const sharedAttrs = sharedButtonAttributes({
+  emphasis,
+  intent: null,
+  pill,
+  size,
+  icon,
+  iconPosition,
+  ariaLabel,
+});
+
+const iconOnly = hasIcon && !hasChildContent;
+
+let inner = "";
+if (hasChildContent) inner += `<span class="Button-text">${childHtml}</span>`;
+if (hasIcon) inner += renderIcon(icon!);
+---
+
+{
+  !suppress && (
+    <a
+      class={cssClass}
+      href={href || undefined}
+      target={target || undefined}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
+      {...sharedAttrs}
+      data-icon-only={iconOnly ? "true" : undefined}
+      {...rest}
+      set:html={inner}
+    />
+  )
+}

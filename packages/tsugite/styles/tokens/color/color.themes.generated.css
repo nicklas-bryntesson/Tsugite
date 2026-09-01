@@ -1,0 +1,861 @@
+/* GENERATED — do not edit. Source: src/lib/tokens/theme.voices.tokens.js
+
+   Theme voices (ADR-0006): data-theme carries the VOICE, data-prominence
+
+   the VOLUME. Channels and cells are DELIBERATELY unregistered (@property):
+
+   a voiceless channel must fail invalid-at-computed-value so the ownership
+
+   chain's semantic fallback answers — a registered initial-value would
+
+   hijack the chain.
+
+   Regenerate: npm run tokens */
+
+
+
+/* Channel wiring: [data-theme] defaults every channel to the primary
+
+   column; [data-prominence] re-aims. Order is the law: prominence blocks
+
+   come after and win on the same element. One block per volume stop —
+
+   no voice × volume combinatorics (ADR-0006 §3). */
+
+[data-theme] {
+  --theme-surface: var(--theme-cell-primary-surface);
+  --theme-text: var(--theme-cell-primary-text);
+  --theme-textMuted: var(--theme-cell-primary-textMuted);
+  --theme-border: var(--theme-cell-primary-border);
+  --theme-button-color-primary: var(--theme-cell-primary-buttonColorPrimary);
+  --theme-button-backgroundColor-primary: var(--theme-cell-primary-buttonBackgroundColorPrimary);
+  --theme-button-borderColor-primary: var(--theme-cell-primary-buttonBorderColorPrimary);
+  --theme-button-backgroundColor-primary-hover: var(--theme-cell-primary-buttonBackgroundColorPrimaryHover);
+  --theme-button-color-secondary: var(--theme-cell-primary-buttonColorSecondary);
+  --theme-button-borderColor-secondary: var(--theme-cell-primary-buttonBorderColorSecondary);
+  --theme-button-borderColor-secondary-hover: var(--theme-cell-primary-buttonBorderColorSecondaryHover);
+  --theme-button-backgroundColor-secondary-hover: var(--theme-cell-primary-buttonBackgroundColorSecondaryHover);
+}
+
+[data-prominence="primary"] {
+  --theme-surface: var(--theme-cell-primary-surface);
+  --theme-text: var(--theme-cell-primary-text);
+  --theme-textMuted: var(--theme-cell-primary-textMuted);
+  --theme-border: var(--theme-cell-primary-border);
+  --theme-button-color-primary: var(--theme-cell-primary-buttonColorPrimary);
+  --theme-button-backgroundColor-primary: var(--theme-cell-primary-buttonBackgroundColorPrimary);
+  --theme-button-borderColor-primary: var(--theme-cell-primary-buttonBorderColorPrimary);
+  --theme-button-backgroundColor-primary-hover: var(--theme-cell-primary-buttonBackgroundColorPrimaryHover);
+  --theme-button-color-secondary: var(--theme-cell-primary-buttonColorSecondary);
+  --theme-button-borderColor-secondary: var(--theme-cell-primary-buttonBorderColorSecondary);
+  --theme-button-borderColor-secondary-hover: var(--theme-cell-primary-buttonBorderColorSecondaryHover);
+  --theme-button-backgroundColor-secondary-hover: var(--theme-cell-primary-buttonBackgroundColorSecondaryHover);
+}
+
+[data-prominence="subtle"] {
+  --theme-surface: var(--theme-cell-subtle-surface);
+  --theme-text: var(--theme-cell-subtle-text);
+  --theme-textMuted: var(--theme-cell-subtle-textMuted);
+  --theme-border: var(--theme-cell-subtle-border);
+  --theme-button-color-primary: var(--theme-cell-subtle-buttonColorPrimary);
+  --theme-button-backgroundColor-primary: var(--theme-cell-subtle-buttonBackgroundColorPrimary);
+  --theme-button-borderColor-primary: var(--theme-cell-subtle-buttonBorderColorPrimary);
+  --theme-button-backgroundColor-primary-hover: var(--theme-cell-subtle-buttonBackgroundColorPrimaryHover);
+  --theme-button-color-secondary: var(--theme-cell-subtle-buttonColorSecondary);
+  --theme-button-borderColor-secondary: var(--theme-cell-subtle-buttonBorderColorSecondary);
+  --theme-button-borderColor-secondary-hover: var(--theme-cell-subtle-buttonBorderColorSecondaryHover);
+  --theme-button-backgroundColor-secondary-hover: var(--theme-cell-subtle-buttonBackgroundColorSecondaryHover);
+}
+
+
+
+/* Voice cells × appearance context (pinned attribute × OS contrast) */
+
+@media (prefers-contrast: no-preference) {
+  :root[data-appearance="light"] [data-theme="neutral"] {
+    --theme-cell-primary-surface: var(--COLOR-N10);
+    --theme-cell-primary-text: var(--COLOR-N90);
+    --theme-cell-primary-textMuted: var(--COLOR-N60);
+    --theme-cell-primary-border: var(--COLOR-N30);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-B80);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-B80);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B90);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-B80);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B30);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-B80);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-N20);
+    --theme-cell-subtle-surface: var(--COLOR-N05);
+    --theme-cell-subtle-text: var(--COLOR-N90);
+    --theme-cell-subtle-textMuted: var(--COLOR-N60);
+    --theme-cell-subtle-border: var(--COLOR-N20);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-B90);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-N15);
+  }
+
+  :root[data-appearance="light"] [data-theme="brand"] {
+    --theme-cell-primary-surface: var(--COLOR-B80);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-B10);
+    --theme-cell-primary-border: var(--COLOR-B60);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-B90);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B05);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B20);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-B05);
+    --theme-cell-subtle-text: var(--COLOR-N90);
+    --theme-cell-subtle-textMuted: var(--COLOR-N60);
+    --theme-cell-subtle-border: var(--COLOR-B20);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-B90);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-B10);
+  }
+
+  :root[data-appearance="light"] [data-theme="accent"] {
+    --theme-cell-primary-surface: var(--COLOR-PI70);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-PI25);
+    --theme-cell-primary-border: var(--COLOR-PI50);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-PI85);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-PI10);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-PI25);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-PI10);
+    --theme-cell-subtle-text: var(--COLOR-N90);
+    --theme-cell-subtle-textMuted: var(--COLOR-N60);
+    --theme-cell-subtle-border: var(--COLOR-PI25);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-PI70);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-PI70);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-PI85);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-PI70);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-PI50);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-PI70);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-PI25);
+  }
+
+  :root[data-appearance="light"] [data-theme="inverse"] {
+    --theme-cell-primary-surface: var(--COLOR-N90);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N25);
+    --theme-cell-primary-border: var(--COLOR-N70);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N80);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B05);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B20);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root[data-appearance="light"] [data-theme="neutral"] {
+    --theme-cell-primary-surface: var(--COLOR-N00);
+    --theme-cell-primary-text: var(--COLOR-N95);
+    --theme-cell-primary-textMuted: var(--COLOR-N95);
+    --theme-cell-primary-border: var(--COLOR-N95);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N95);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N00);
+    --theme-cell-subtle-text: var(--COLOR-N95);
+    --theme-cell-subtle-textMuted: var(--COLOR-N95);
+    --theme-cell-subtle-border: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root[data-appearance="light"] [data-theme="brand"] {
+    --theme-cell-primary-surface: var(--COLOR-B90);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N00);
+    --theme-cell-subtle-text: var(--COLOR-N95);
+    --theme-cell-subtle-textMuted: var(--COLOR-N95);
+    --theme-cell-subtle-border: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root[data-appearance="light"] [data-theme="accent"] {
+    --theme-cell-primary-surface: var(--COLOR-PI85);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N00);
+    --theme-cell-subtle-text: var(--COLOR-N95);
+    --theme-cell-subtle-textMuted: var(--COLOR-N95);
+    --theme-cell-subtle-border: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root[data-appearance="light"] [data-theme="inverse"] {
+    --theme-cell-primary-surface: var(--COLOR-N95);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+  }
+}
+
+@media (prefers-contrast: no-preference) {
+  :root[data-appearance="dark"] [data-theme="neutral"] {
+    --theme-cell-primary-surface: var(--COLOR-N80);
+    --theme-cell-primary-text: var(--COLOR-N05);
+    --theme-cell-primary-textMuted: var(--COLOR-N35);
+    --theme-cell-primary-border: var(--COLOR-N60);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-B30);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-B30);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B20);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-B20);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B60);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-B20);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-N75);
+    --theme-cell-subtle-surface: var(--COLOR-N85);
+    --theme-cell-subtle-text: var(--COLOR-N05);
+    --theme-cell-subtle-textMuted: var(--COLOR-N35);
+    --theme-cell-subtle-border: var(--COLOR-N70);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-B20);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-B20);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-B60);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-B20);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-N80);
+  }
+
+  :root[data-appearance="dark"] [data-theme="brand"] {
+    --theme-cell-primary-surface: var(--COLOR-B70);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-B10);
+    --theme-cell-primary-border: var(--COLOR-B30);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-B90);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B05);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B20);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-B90);
+    --theme-cell-subtle-text: var(--COLOR-N05);
+    --theme-cell-subtle-textMuted: var(--COLOR-B20);
+    --theme-cell-subtle-border: var(--COLOR-B70);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-B20);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-B20);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-B60);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-B20);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-B80);
+  }
+
+  :root[data-appearance="dark"] [data-theme="accent"] {
+    --theme-cell-primary-surface: var(--COLOR-PI70);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-PI25);
+    --theme-cell-primary-border: var(--COLOR-PI50);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-PI85);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-PI10);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-PI25);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-PI85);
+    --theme-cell-subtle-text: var(--COLOR-PI10);
+    --theme-cell-subtle-textMuted: var(--COLOR-PI25);
+    --theme-cell-subtle-border: var(--COLOR-PI70);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-PI85);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-PI25);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-PI25);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-PI10);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-PI25);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-PI50);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-PI25);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-PI70);
+  }
+
+  :root[data-appearance="dark"] [data-theme="inverse"] {
+    --theme-cell-primary-surface: var(--COLOR-N95);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N25);
+    --theme-cell-primary-border: var(--COLOR-N70);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N90);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B05);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B20);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root[data-appearance="dark"] [data-theme="neutral"] {
+    --theme-cell-primary-surface: var(--COLOR-N95);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N95);
+    --theme-cell-subtle-text: var(--COLOR-N00);
+    --theme-cell-subtle-textMuted: var(--COLOR-N00);
+    --theme-cell-subtle-border: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root[data-appearance="dark"] [data-theme="brand"] {
+    --theme-cell-primary-surface: var(--COLOR-B95);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N95);
+    --theme-cell-subtle-text: var(--COLOR-N00);
+    --theme-cell-subtle-textMuted: var(--COLOR-N00);
+    --theme-cell-subtle-border: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root[data-appearance="dark"] [data-theme="accent"] {
+    --theme-cell-primary-surface: var(--COLOR-PI85);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N95);
+    --theme-cell-subtle-text: var(--COLOR-N00);
+    --theme-cell-subtle-textMuted: var(--COLOR-N00);
+    --theme-cell-subtle-border: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root[data-appearance="dark"] [data-theme="inverse"] {
+    --theme-cell-primary-surface: var(--COLOR-N95);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+  }
+}
+
+
+
+/* No preference (attribute absent = follow the OS) */
+
+@media (prefers-color-scheme: light) and (prefers-contrast: no-preference) {
+  :root:not([data-appearance]) [data-theme="neutral"] {
+    --theme-cell-primary-surface: var(--COLOR-N10);
+    --theme-cell-primary-text: var(--COLOR-N90);
+    --theme-cell-primary-textMuted: var(--COLOR-N60);
+    --theme-cell-primary-border: var(--COLOR-N30);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-B80);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-B80);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B90);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-B80);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B30);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-B80);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-N20);
+    --theme-cell-subtle-surface: var(--COLOR-N05);
+    --theme-cell-subtle-text: var(--COLOR-N90);
+    --theme-cell-subtle-textMuted: var(--COLOR-N60);
+    --theme-cell-subtle-border: var(--COLOR-N20);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-B90);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-N15);
+  }
+
+  :root:not([data-appearance]) [data-theme="brand"] {
+    --theme-cell-primary-surface: var(--COLOR-B80);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-B10);
+    --theme-cell-primary-border: var(--COLOR-B60);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-B90);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B05);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B20);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-B05);
+    --theme-cell-subtle-text: var(--COLOR-N90);
+    --theme-cell-subtle-textMuted: var(--COLOR-N60);
+    --theme-cell-subtle-border: var(--COLOR-B20);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-B90);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-B80);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-B10);
+  }
+
+  :root:not([data-appearance]) [data-theme="accent"] {
+    --theme-cell-primary-surface: var(--COLOR-PI70);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-PI25);
+    --theme-cell-primary-border: var(--COLOR-PI50);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-PI85);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-PI10);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-PI25);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-PI10);
+    --theme-cell-subtle-text: var(--COLOR-N90);
+    --theme-cell-subtle-textMuted: var(--COLOR-N60);
+    --theme-cell-subtle-border: var(--COLOR-PI25);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-PI70);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-PI70);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-PI85);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-PI70);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-PI50);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-PI70);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-PI25);
+  }
+
+  :root:not([data-appearance]) [data-theme="inverse"] {
+    --theme-cell-primary-surface: var(--COLOR-N90);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N25);
+    --theme-cell-primary-border: var(--COLOR-N70);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N80);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B05);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B20);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+  }
+}
+
+@media (prefers-color-scheme: light) and (prefers-contrast: more) {
+  :root:not([data-appearance]) [data-theme="neutral"] {
+    --theme-cell-primary-surface: var(--COLOR-N00);
+    --theme-cell-primary-text: var(--COLOR-N95);
+    --theme-cell-primary-textMuted: var(--COLOR-N95);
+    --theme-cell-primary-border: var(--COLOR-N95);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N95);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N00);
+    --theme-cell-subtle-text: var(--COLOR-N95);
+    --theme-cell-subtle-textMuted: var(--COLOR-N95);
+    --theme-cell-subtle-border: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root:not([data-appearance]) [data-theme="brand"] {
+    --theme-cell-primary-surface: var(--COLOR-B90);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N00);
+    --theme-cell-subtle-text: var(--COLOR-N95);
+    --theme-cell-subtle-textMuted: var(--COLOR-N95);
+    --theme-cell-subtle-border: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root:not([data-appearance]) [data-theme="accent"] {
+    --theme-cell-primary-surface: var(--COLOR-PI85);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N00);
+    --theme-cell-subtle-text: var(--COLOR-N95);
+    --theme-cell-subtle-textMuted: var(--COLOR-N95);
+    --theme-cell-subtle-border: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root:not([data-appearance]) [data-theme="inverse"] {
+    --theme-cell-primary-surface: var(--COLOR-N95);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+  }
+}
+
+@media (prefers-color-scheme: dark) and (prefers-contrast: no-preference) {
+  :root:not([data-appearance]) [data-theme="neutral"] {
+    --theme-cell-primary-surface: var(--COLOR-N80);
+    --theme-cell-primary-text: var(--COLOR-N05);
+    --theme-cell-primary-textMuted: var(--COLOR-N35);
+    --theme-cell-primary-border: var(--COLOR-N60);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-B30);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-B30);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B20);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-B20);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B60);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-B20);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-N75);
+    --theme-cell-subtle-surface: var(--COLOR-N85);
+    --theme-cell-subtle-text: var(--COLOR-N05);
+    --theme-cell-subtle-textMuted: var(--COLOR-N35);
+    --theme-cell-subtle-border: var(--COLOR-N70);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-B20);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-B20);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-B60);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-B20);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-N80);
+  }
+
+  :root:not([data-appearance]) [data-theme="brand"] {
+    --theme-cell-primary-surface: var(--COLOR-B70);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-B10);
+    --theme-cell-primary-border: var(--COLOR-B30);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-B90);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B05);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B20);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-B90);
+    --theme-cell-subtle-text: var(--COLOR-N05);
+    --theme-cell-subtle-textMuted: var(--COLOR-B20);
+    --theme-cell-subtle-border: var(--COLOR-B70);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-B30);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-B20);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-B20);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-B60);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-B20);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-B80);
+  }
+
+  :root:not([data-appearance]) [data-theme="accent"] {
+    --theme-cell-primary-surface: var(--COLOR-PI70);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-PI25);
+    --theme-cell-primary-border: var(--COLOR-PI50);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-PI85);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-PI10);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-PI25);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-PI85);
+    --theme-cell-subtle-text: var(--COLOR-PI10);
+    --theme-cell-subtle-textMuted: var(--COLOR-PI25);
+    --theme-cell-subtle-border: var(--COLOR-PI70);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-PI85);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-PI25);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-PI25);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-PI10);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-PI25);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-PI50);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-PI25);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-PI70);
+  }
+
+  :root:not([data-appearance]) [data-theme="inverse"] {
+    --theme-cell-primary-surface: var(--COLOR-N95);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N25);
+    --theme-cell-primary-border: var(--COLOR-N70);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N90);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-B05);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-B20);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+  }
+}
+
+@media (prefers-color-scheme: dark) and (prefers-contrast: more) {
+  :root:not([data-appearance]) [data-theme="neutral"] {
+    --theme-cell-primary-surface: var(--COLOR-N95);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N95);
+    --theme-cell-subtle-text: var(--COLOR-N00);
+    --theme-cell-subtle-textMuted: var(--COLOR-N00);
+    --theme-cell-subtle-border: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root:not([data-appearance]) [data-theme="brand"] {
+    --theme-cell-primary-surface: var(--COLOR-B95);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N95);
+    --theme-cell-subtle-text: var(--COLOR-N00);
+    --theme-cell-subtle-textMuted: var(--COLOR-N00);
+    --theme-cell-subtle-border: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root:not([data-appearance]) [data-theme="accent"] {
+    --theme-cell-primary-surface: var(--COLOR-PI85);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+    --theme-cell-subtle-surface: var(--COLOR-N95);
+    --theme-cell-subtle-text: var(--COLOR-N00);
+    --theme-cell-subtle-textMuted: var(--COLOR-N00);
+    --theme-cell-subtle-border: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-subtle-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
+  }
+
+  :root:not([data-appearance]) [data-theme="inverse"] {
+    --theme-cell-primary-surface: var(--COLOR-N95);
+    --theme-cell-primary-text: var(--COLOR-N00);
+    --theme-cell-primary-textMuted: var(--COLOR-N00);
+    --theme-cell-primary-border: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorPrimary: var(--COLOR-N95);
+    --theme-cell-primary-buttonBackgroundColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorPrimary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorPrimaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondary: var(--COLOR-N00);
+    --theme-cell-primary-buttonBorderColorSecondaryHover: var(--COLOR-N00);
+    --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
+  }
+}
+

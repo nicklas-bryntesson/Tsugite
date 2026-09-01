@@ -1,0 +1,109 @@
+---
+// Port of reference-components MotionRegion — a decorative region whose motion
+// is governed for accessibility and performance (ADR-0010). The slot holds the
+// authored backend (CSS animation, video, …) which obeys data-motion; the
+// verbatim MotionRegion.ts projects policy + user intent onto the root.
+
+interface Props {
+  id: string;
+  /** "policy" (default) — play when the policy allows; "off" — wait for the user */
+  autoplay?: "policy" | "off";
+  playText: string;
+  pauseText: string;
+  playingText: string;
+  pausedText: string;
+  [key: string]: unknown;
+}
+
+const {
+  id,
+  autoplay = "policy",
+  playText,
+  pauseText,
+  playingText,
+  pausedText,
+  ...rest
+} = Astro.props;
+---
+
+<div
+  class="MotionRegion"
+  data-component="MotionRegion"
+  data-id={id}
+  data-autoplay={autoplay}
+  data-play-text={playText}
+  data-pause-text={pauseText}
+  data-playing-text={playingText}
+  data-paused-text={pausedText}
+  {...rest}
+>
+  <slot />
+</div>
+
+<script>
+  import MotionRegion from "./MotionRegion";
+  MotionRegion.attach();
+</script>
+
+<style is:global>
+/*
+ * MotionRegion — governs decorative motion (ADR-0010).
+ *
+ * This file styles the JS-injected pause/play control and gives the region a
+ * positioning context. It deliberately does NOT style the animated media: that
+ * is authored content that obeys `data-motion` in its own idiom — a CSS backend
+ * gates its own `animation-play-state` on `[data-motion="paused"]` (zero JS; see
+ * the kitchensink), the video adapter maps the attribute to play()/pause().
+ *
+ * Root carries root props only; the control is a flat, fully-qualified
+ * `.MotionRegion .control` rule (ADR-0019).
+ */
+
+.MotionRegion {
+  position: relative;
+}
+
+.MotionRegion .control {
+  --_size: 2.75rem;
+
+  position: absolute;
+  inset-block-start: 1rem;
+  inset-inline-end: 1rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  inline-size: var(--_size);
+  block-size: var(--_size);
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  /* A self-contained scrim so the control stays legible over any media,
+     light or dark — media contrast is unknowable, so the control owns its own. */
+  background: oklch(0 0 0 / 0.5);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.MotionRegion .control svg {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+/* The spoken state channel — visually hidden, never display:none (a hidden
+   live region does not announce). Standard clip recipe. */
+.MotionRegion .status {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.MotionRegion .control:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+</style>

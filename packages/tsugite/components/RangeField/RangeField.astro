@@ -1,0 +1,72 @@
+---
+// Port of reference-components RangeField — a styled native
+// <input type="range">. Markup + CSS only, no JS: native carries value,
+// keyboard and form participation. Vertical orientation and min-anchor via
+// data-* (ADR-0023: the range family splits three ways).
+import "./RangeField.css";
+
+interface Props {
+  id: string;
+  label: string;
+  /** data-id on the input (conformance-suite hook) */
+  rootId?: string;
+  min?: string;
+  max?: string;
+  step?: string;
+  value?: string;
+  disabled?: boolean;
+  /** visual invalid skin (adds data-invalid + aria-invalid) */
+  invalid?: boolean;
+  describedby?: string;
+  /** hint/error paragraph rendered after the input */
+  hint?: string;
+  hintId?: string;
+  orientation?: "vertical";
+  /** vertical only: which end is min ("top") */
+  minAnchor?: "top";
+  /** id of a sibling <datalist> */
+  list?: string;
+  [key: string]: unknown;
+}
+
+const {
+  id,
+  label,
+  rootId,
+  min = "0",
+  max = "100",
+  step = "1",
+  value,
+  disabled = false,
+  invalid = false,
+  describedby,
+  hint,
+  hintId,
+  orientation,
+  minAnchor,
+  list,
+  ...rest
+} = Astro.props;
+---
+
+<label for={id}>{label}</label>
+<input
+  class="RangeField"
+  type="range"
+  id={id}
+  name={id}
+  data-component="RangeField"
+  data-id={rootId}
+  min={min}
+  max={max}
+  step={step}
+  value={value}
+  disabled={disabled}
+  data-invalid={invalid ? "true" : undefined}
+  aria-invalid={invalid ? "true" : undefined}
+  aria-describedby={describedby}
+  data-orientation={orientation}
+  data-min={minAnchor}
+  list={list}
+  {...rest}
+/>{hint && <p id={hintId}>{hint}</p>}

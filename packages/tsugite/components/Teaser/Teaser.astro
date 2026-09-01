@@ -1,0 +1,358 @@
+---
+// Port of AiPoc TagHelpers/TeaserTagHelper.cs
+// Composable content card. Wraps its own Card frame — callers never set Card
+// props directly. Markup mirrors the TagHelper's StringBuilder output exactly.
+// Teaser renders raw Card/Heading/Prose/Button/Media markup. Importing the
+// components pulls in their style contracts (Astro includes an imported
+// component's CSS even when it is not rendered; none of these carry scripts).
+import "../Card/Card.astro";
+import "../Heading/Heading.astro";
+import "../Prose/Prose.astro";
+import "../Picture/Picture.astro";
+import "../Button/Button.css";
+import DevError from "../DevError/DevError.astro";
+import type { ImageMetadata } from "astro";
+import { PRESETS, buildFigureHtml } from "../../lib/media";
+import { escapeHtml } from "../../lib/buttonShared";
+
+const VALID_ELEMENTS = ["article", "div", "li", "section"];
+const VALID_FRAMES = ["bordered", "elevated", "bare"];
+
+interface Props {
+  image?: ImageMetadata | null;
+  alt?: string;
+  heading?: string;
+  href?: string;
+  excerpt?: string;
+  button?: boolean;
+  "button-label"?: string;
+  frame?: string;
+  element?: string;
+}
+
+const {
+  image = null,
+  alt,
+  heading,
+  href,
+  excerpt,
+  button = false,
+  "button-label": buttonLabel = "Read more",
+  frame: frameProp = "bordered",
+  element: elementProp = "article",
+} = Astro.props;
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const hasChildContent = childHtml.trim().length > 0;
+const hasExcerpt = !!excerpt?.trim();
+const hasHref = !!href?.trim();
+
+// ── Guards ──────────────────────────────────────────
+
+const invalid = button && !hasHref;
+
+const frame = VALID_FRAMES.includes(frameProp.toLowerCase()) ? frameProp.toLowerCase() : "bordered";
+const element = VALID_ELEMENTS.includes(elementProp.toLowerCase())
+  ? elementProp.toLowerCase()
+  : "article";
+
+const hasMedia = image != null;
+
+// ── Body ─────────────────────────────────────────────
+
+let inner = "";
+
+if (!invalid) {
+  inner += '<div class="LayoutContainer">';
+
+  // ── Media ─────────────────────────────────────────
+  if (hasMedia) {
+    inner += await buildFigureHtml({
+      image: image!,
+      preset: PRESETS["teaser"],
+      altText: alt ?? "",
+      figureClass: "MediaContainer",
+      pictureClass: "Media",
+    });
+  }
+
+  // ── Heading ───────────────────────────────────────
+  if (heading?.trim()) {
+    const encodedHeading = escapeHtml(heading);
+    const hasLink = hasHref && !button;
+
+    const headingContent = hasLink
+      ? `<a class="heading-link Teaser-link" href="${escapeHtml(href!)}">${encodedHeading}</a>`
+      : `<span class="heading-text">${encodedHeading}</span>`;
+
+    inner += `<h2 class="Heading" data-variant="heading" data-size="4" data-align="left" data-wrap="balance">${headingContent}</h2>`;
+  }
+
+  // ── Body ──────────────────────────────────────────
+  if (hasExcerpt || hasChildContent || button) {
+    inner += '<div class="ContentContainer">';
+
+    if (hasExcerpt) {
+      inner += `<div class="Prose" data-variant="basic" data-size="sm"><p>${escapeHtml(excerpt!)}</p></div>`;
+    }
+
+    if (hasChildContent) inner += childHtml;
+
+    if (button) {
+      const srOnly = heading?.trim()
+        ? `<span class="ScreenReaderText"> about ${escapeHtml(heading)}</span>`
+        : "";
+      inner +=
+        `<a class="Button" href="${escapeHtml(href!)}" data-emphasis="primary" data-size="sm" data-pill="false">` +
+        `<span class="Button-text">${escapeHtml(buttonLabel)}${srOnly}</span></a>`;
+    }
+
+    inner += "</div>"; // Teaser-body
+  }
+
+  inner += "</div>"; // LayoutContainer
+}
+
+const Tag = element as "article";
+
+// Card frame — Teaser owns the permitted Card combinations.
+const cardAttrs =
+  frame === "elevated" ? { "data-elevation": "sm" } : { "data-border": "true" };
+---
+
+{
+  invalid ? (
+    <DevError name="app-teaser" message={'button="true" requires href'} />
+  ) : frame !== "bare" ? (
+    <div class="Card" data-padding="none" {...cardAttrs}>
+      <Tag
+        class="Teaser"
+        data-button={button ? "true" : "false"}
+        data-media={hasMedia ? "true" : "false"}
+        set:html={inner}
+      />
+    </div>
+  ) : (
+    <Tag
+      class="Teaser"
+      data-button={button ? "true" : "false"}
+      data-media={hasMedia ? "true" : "false"}
+      set:html={inner}
+    />
+  )
+}
+
+<style is:global>
+/* ─────────────────────────────────────────────────────────────────
+   Teaser
+   Composable content card — image + heading + body slot.
+
+   Layout is always CQ-driven (flow-vertical → flow-horizontal at 25rem).
+   Locked layouts belong to a parent composition, not Teaser.
+
+   data-button axis:
+     false (default) — stretched link via Teaser-link::after
+     true            — no stretched link; CTA lives in child slot
+───────────────────────────────────────────────────────────────── */
+
+/* ── Invariants ───────────────────────────────────────────────── */
+
+.Teaser {
+    position: relative;  /* stretched link anchor */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    padding: var(--size-md);
+
+    & .LayoutContainer {
+        flex: 1;
+    }
+
+    & .MediaContainer {
+        border-radius: 0.3em;
+        overflow: hidden;
+
+        & .Media.StackedSources    { 
+            overflow: hidden;
+        }
+
+        & .Media.HorizontalSources { 
+            overflow: hidden;
+        }
+    }
+}
+
+
+/* ── Body ────────────────────────────────────────────────────── */
+
+.Teaser-body {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    flex:           1;
+
+    & time {
+        padding-block-start: var(--size-sm);
+        margin-block-start:  auto;
+    }
+}
+
+/* ── Stretched link ──────────────────────────────────────────── */
+
+.Teaser-link {
+    text-decoration: none;
+    color:           inherit;
+}
+
+.Teaser[data-button="false"] {
+    .Teaser-link {
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            cursor: pointer;
+        }
+    
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+} 
+
+/* ── Fallback — no container query support (~3% of browsers) ──── */
+
+@supports not (container-type: inline-size) {
+    .Teaser {
+
+        .LayoutContainer {
+            gap: var(--size-md);
+    
+            & .MediaContainer {
+                inline-size: 100%;
+                margin-block-end: var(--size-md);
+    
+                & .Media.StackedSources {
+                    display: block;
+    
+                    img {
+                        inline-size: 100%;
+                        block-size:  auto;
+                    }
+                }
+    
+                & .Media.HorizontalSources {
+                    display: none;
+                }
+            }
+    
+            & .ContentContainer {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--size-md);
+                margin-block-start: var(--size-md);
+            }
+        }
+    } 
+    
+}
+
+/* ── Container queries supported ─────────────────────────────── */
+
+@supports (container-type: inline-size) {
+    .Teaser {
+        --_minMediaSize: 12rem;
+        container-type: inline-size;
+
+        & .LayoutContainer {
+            display: grid;
+            column-gap: var(--size-md);
+
+            & .MediaContainer {
+                grid-area: media;
+            }
+
+            & .Heading     { 
+                grid-area: heading;
+                margin-block-end: var(--size-md)
+            }
+
+            & .ContentContainer { 
+                grid-area: body;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--size-md)
+            }
+        }
+    }
+
+    /* ── STATE A — flow-vertical (< 25rem) ─────────────────── */
+
+    @container (max-width: 24.999rem) {
+        .Teaser .LayoutContainer { 
+            grid-template-areas:
+                "media"
+                "heading"
+                "body"
+            ;
+
+            & .MediaContainer {
+                margin-block-end: var(--size-md);
+
+                & .Media.StackedSources    { 
+                    display: block;
+                }
+    
+                & .Media.HorizontalSources { 
+                    display: none;
+                }
+            }
+        }
+    }
+
+    /* ── STATE B — flow-horizontal (≥ 25rem) ───────────────── */
+
+    @container (min-width: 25rem) {
+        .Teaser .LayoutContainer {
+            grid-template-columns: minmax(var(--_minMediaSize), 1fr) 2fr;
+            grid-template-rows: auto auto 1fr;
+            grid-template-areas:
+                "media heading"
+                "media body"
+                "media body";
+            block-size:  100%;
+            align-items: stretch;
+
+            & .MediaContainer {
+                min-block-size: var(--_minMediaSize);
+
+                & .Media.StackedSources { display: none; }
+
+                & .Media.HorizontalSources {
+                    display: block;
+                    position: relative;
+                    aspect-ratio: 1 / 1;
+
+                    img {
+                        position: absolute;
+                        inset: 0;
+                        inline-size: 100%;
+                        block-size:  100%;
+                        object-fit:  cover;
+                    }
+                }
+            }
+
+            & .ContentContainer {
+
+                & .Button {
+                    margin-block-start: auto;
+                    margin-inline-start: auto;
+                }
+            }
+        }
+    }
+}
+</style>

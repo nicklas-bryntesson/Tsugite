@@ -1,0 +1,155 @@
+---
+// Port of AiPoc TagHelpers/CtaLinkButtonTagHelper.cs + CtaButtonHelper.cs
+// Special promotional link button with layered visual effects.
+import { escapeHtml } from "../../lib/buttonShared";
+
+const VALID_VARIANTS = ["glow"];
+
+interface Props {
+  variant?: string;
+  icon?: string;
+  href?: string;
+  target?: string;
+  "aria-label"?: string;
+  [key: string]: unknown;
+}
+
+const {
+  variant = "glow",
+  icon,
+  href,
+  target,
+  "aria-label": ariaLabel,
+  ...rest
+} = Astro.props;
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const hasChildContent = childHtml.trim().length > 0;
+const hasAriaLabel = !!ariaLabel;
+
+const suppress = !hasChildContent && !hasAriaLabel;
+
+const variantAttr = VALID_VARIANTS.includes(variant.toLowerCase())
+  ? variant.toLowerCase()
+  : undefined;
+
+// Inner content — mirrors CtaButtonHelper.RenderInnerContent
+const effectClass = `CtaButton-${variant.toLowerCase()}`;
+let inner = `<span class="${effectClass}" aria-hidden="true"></span>`;
+inner += `<span class="CtaButton-border" aria-hidden="true"></span>`;
+inner += `<span class="CtaButton-text">${childHtml}</span>`;
+if (icon) {
+  inner += `<svg class="CtaButton-icon" aria-hidden="true" focusable="false"><use href="#${escapeHtml(icon)}" /></svg>`;
+}
+---
+
+{
+  !suppress && (
+    <a
+      class="CtaButton"
+      href={href || undefined}
+      target={target || undefined}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
+      data-variant={variantAttr}
+      aria-label={ariaLabel || undefined}
+      {...rest}
+      set:html={inner}
+    />
+  )
+}
+
+<style is:global>
+:where(.CtaButton) {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "text";
+  align-items: center;
+  justify-items: center;
+
+  padding-block: var(--spacing-cta-block, 1rem);
+  padding-inline: var(--spacing-cta-inline, 2rem);
+  border-radius: 3em;
+
+  font-size: var(--fontSize-cta, 1.25rem);
+  font-family: var(--fontFamily-button);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+
+  cursor: pointer;
+  box-sizing: border-box;
+
+  /* Keyboard focus */
+  &:focus:not(:focus-visible) {
+    outline: 0;
+  }
+
+  &:focus-visible,
+  &[data-test-state="focus"] {
+    outline-width: 2px;
+    outline-style: solid;
+    outline-color: var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  &:disabled,
+  &[data-test-state="disabled"] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* ── Shared child layout ── */
+
+  & > .CtaButton-text {
+    grid-area: text;
+    position: relative;
+    z-index: 1;
+  }
+
+  & > .CtaButton-icon {
+    position: relative;
+    z-index: 1;
+    block-size: 1.25em;
+    inline-size: auto;
+    width: auto;
+  }
+
+  & > .CtaButton-border {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid currentColor;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  /* ── Variant: glow ── */
+
+  &[data-variant="glow"] {
+    background-color: var(--color-interactive-primary);
+    color: var(--color-interactive-onPrimary);
+
+    & > .CtaButton-glow {
+      position: absolute;
+      inset: -0.5rem;
+      border-radius: inherit;
+      background: radial-gradient(ellipse at center, var(--color-interactive-glow) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    &:hover > .CtaButton-glow,
+    &[data-test-state="hover"] > .CtaButton-glow {
+      opacity: 0.6;
+    }
+
+    &:active > .CtaButton-glow,
+    &[data-test-state="active"] > .CtaButton-glow {
+      opacity: 0.9;
+    }
+  }
+}
+</style>

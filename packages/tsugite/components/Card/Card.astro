@@ -1,0 +1,119 @@
+---
+// Port of AiPoc TagHelpers/CardHelper.cs (CardTagHelper)
+import DevError from "../DevError/DevError.astro";
+
+const VALID_ELEMENTS = ["article", "section", "li", "div"];
+const VALID_PADDINGS = ["none", "sm", "md", "lg"];
+const VALID_ELEVATIONS = ["none", "sm", "md", "lg"];
+
+// Project rules — add forbidden (border, elevation) pairs to enforce
+// design system constraints per project. See CardHelper.cs for examples.
+const FORBIDDEN_COMBINATIONS: Array<[boolean, string]> = [];
+
+interface Props {
+  element?: string;
+  padding?: string;
+  border?: boolean;
+  elevation?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  element: elementProp = "article",
+  padding = "md",
+  border = false,
+  elevation: elevationProp,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+
+let mode: "render" | "suppress" | "error" = "render";
+let errorMessage = "";
+
+const elevation = elevationProp?.toLowerCase() ?? "none";
+
+if (childHtml.trim().length === 0) {
+  mode = "suppress";
+} else if (!VALID_PADDINGS.includes(padding.toLowerCase())) {
+  mode = "error";
+  errorMessage = `invalid padding "${padding}" — expected none | sm | md | lg`;
+} else if (elevationProp != null && !VALID_ELEVATIONS.includes(elevation)) {
+  mode = "error";
+  errorMessage = `invalid elevation "${elevationProp}" — expected none | sm | md | lg`;
+} else if (FORBIDDEN_COMBINATIONS.some(([b, e]) => b === border && e === elevation)) {
+  mode = "error";
+  errorMessage = `border="${border}" with elevation="${elevation}" is not a permitted combination`;
+}
+
+const Tag = (
+  VALID_ELEMENTS.includes(elementProp.toLowerCase()) ? elementProp.toLowerCase() : "article"
+) as "article";
+
+const cssClass = className && String(className).trim() ? `Card ${className}` : "Card";
+---
+
+{
+  mode === "render" ? (
+    <Tag
+      class={cssClass}
+      data-border={border ? "true" : "false"}
+      data-padding={padding.toLowerCase()}
+      data-elevation={elevationProp != null ? elevation : undefined}
+      {...rest}
+      set:html={childHtml}
+    />
+  ) : mode === "error" ? (
+    <DevError name="app-card" message={errorMessage} />
+  ) : null
+}
+
+<style is:global>
+:where(.Card) {
+    --_gap:          var(--size-md);
+    --_borderRadius: 0.5rem; /* TODO: radius token */
+    --_borderColor:  var(--color-border-default);
+
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: var(--_gap);
+    border-radius: var(--_borderRadius);
+
+    /* ── Border ──────────────────────────────────────── */
+
+    &[data-border="true"] {
+        border: 1px solid var(--_borderColor);
+    }
+
+    /* ── Padding ─────────────────────────────────────── */
+
+    &[data-padding="none"],
+    &[data-padding="sm"],
+    &[data-padding="md"],
+    &[data-padding="lg"] {
+        padding: var(--_padding);
+    }
+
+    &[data-padding="none"] { --_padding: 0; }
+    &[data-padding="sm"]   { --_padding: var(--size-sm); }
+    &[data-padding="md"]   { --_padding: var(--size-md); }
+    &[data-padding="lg"]   { --_padding: var(--size-lg); }
+
+    /* ── Elevation ───────────────────────────────────── */
+
+    &[data-elevation="none"],
+    &[data-elevation="sm"],
+    &[data-elevation="md"],
+    &[data-elevation="lg"] {
+        box-shadow: var(--_shadow);
+    }
+
+    &[data-elevation="none"] { --_shadow: none; }
+    &[data-elevation="sm"]   { --_shadow: 0 1px 3px oklch(0 0 0 / 0.08), 0 1px 2px oklch(0 0 0 / 0.04); }
+    &[data-elevation="md"]   { --_shadow: 0 4px 12px oklch(0 0 0 / 0.08), 0 1px 3px oklch(0 0 0 / 0.05); }
+    &[data-elevation="lg"]   { --_shadow: 0 10px 24px oklch(0 0 0 / 0.1), 0 4px 8px oklch(0 0 0 / 0.06); }
+}
+</style>

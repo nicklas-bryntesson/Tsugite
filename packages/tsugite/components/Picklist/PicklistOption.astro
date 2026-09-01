@@ -1,0 +1,43 @@
+---
+// One Picklist chip — a native radio/checkbox + label. The removable form adds
+// a DECORATIVE aria-hidden × inside the label (checkbox core only: a native
+// radio cannot be unchecked by the user, so an × there would be a lie).
+// The svg must follow the text with NO whitespace — a text node "Wi-Fi " would
+// leave a trailing space in the accessible name.
+
+interface Props {
+  type: "checkbox" | "radio";
+  id: string;
+  name: string;
+  label: string;
+  checked?: boolean;
+  disabled?: boolean;
+  required?: boolean;
+  /** aria-invalid on the input */
+  invalid?: boolean;
+  /** show the deselect glyph (checkbox core only) */
+  removable?: boolean;
+}
+
+const {
+  type,
+  id,
+  name,
+  label,
+  checked = false,
+  disabled = false,
+  required = false,
+  invalid = false,
+  removable = false,
+} = Astro.props;
+---
+
+<span class="option"><input
+    type={type}
+    id={id}
+    name={name}
+    checked={checked}
+    disabled={disabled}
+    required={required}
+    aria-invalid={invalid ? "true" : undefined}
+  /><label for={id}>{label}{removable && <svg width="12" height="12" class="deselect" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 2 L10 10 M10 2 L2 10" stroke="currentColor" stroke-width="2" fill="none" /></svg>}</label></span>

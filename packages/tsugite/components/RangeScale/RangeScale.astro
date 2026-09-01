@@ -1,0 +1,87 @@
+---
+// Port of reference-components RangeScale — a visible scale (track, fill,
+// ticks, reference layer, readout) composed around a RangeField. This
+// component IS the canonical() function from RangeScale.generate.ts, expressed
+// as an Astro component: --_rs-p is server-rendered so first paint is correct
+// without JS; the verbatim RangeScale.ts keeps it live.
+import "../RangeField/RangeField.css";
+import "./RangeScale.css";
+
+interface Props {
+  /** input id (also the label's for= and the output's for=) */
+  id: string;
+  /** data-id on the scale — stable e2e/demo anchor */
+  rootId?: string;
+  label: string;
+  /** attributes on the .RangeScale root (data-lane, data-ticks, style, …) */
+  scale?: Record<string, string>;
+  /** attributes on the composed .RangeField */
+  input?: Record<string, string>;
+  /** readout — presence is the switch */
+  output?: { suffix?: string; initial?: string } | null;
+  /** stops as [normalised position, label] */
+  ticks?: [number, string][];
+  /** a second measurement on the lane that is NOT the value */
+  reference?: { from?: number; to: number };
+  /** hint text the reference's meaning lives in */
+  hint?: string;
+}
+
+const { id, rootId, label, scale = {}, input = {}, output = null, ticks, reference, hint } =
+  Astro.props;
+
+const min = Number(input.min ?? 0);
+const max = Number(input.max ?? 100);
+const value = Number(input.value ?? 0);
+const p = max === min ? 0 : (value - min) / (max - min);
+
+// The position MERGES into any authored style — an overwrite would silently
+// drop a state's own declarations.
+const { style: authored, ...scaleRest } = scale;
+const ref = reference ? `--_rs-ref-from: ${reference.from ?? 0}; --_rs-ref-to: ${reference.to}` : "";
+const style = [`--_rs-p: ${p}`, ref, authored].filter(Boolean).join("; ");
+
+const hintId = `${id}-hint`;
+const inputAttrs: Record<string, string> = {
+  ...(hint ? { "aria-describedby": hintId } : {}),
+  ...input,
+};
+---
+
+<label for={id}>{label}</label>
+<div class="RangeScale" data-component="RangeScale" data-id={rootId} {...scaleRest} style={style}>
+  <span class="track"></span>
+  <span class="fill"></span>
+  {reference && <span class="reference" />}
+  <input class="RangeField" type="range" id={id} name={id} {...inputAttrs} />
+  {
+    ticks && (
+      <span class="ticks" aria-hidden="true">
+        {ticks.map(([pos, tickLabel]) => (
+          <i style={`--p: ${pos}`}>
+            <span>{tickLabel}</span>
+          </i>
+        ))}
+      </span>
+    )
+  }
+  {
+    output && (
+      <output class="value" aria-live="off" for={id} data-suffix={output.suffix || undefined}>
+        <span class="digits">{input.value ?? "0"}</span>{output.suffix ? ` ${output.suffix}` : ""}
+      </output>
+    )
+  }
+  {
+    hint && (
+      <p class="hint" id={hintId}>
+        <span class="swatch" aria-hidden="true" />{hint}
+      </p>
+    )
+  }
+</div>
+
+<script>
+  import RangeScale from "./RangeScale";
+  RangeScale.attach();
+</script>

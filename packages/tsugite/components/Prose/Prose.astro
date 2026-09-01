@@ -1,0 +1,290 @@
+---
+// Port of AiPoc TagHelpers/ProseTagHelper.cs
+// The IHtmlContent `content` prop becomes a pre-rendered HTML string
+// (e.g. CMS RTE output); otherwise child content is used.
+import DevError from "../DevError/DevError.astro";
+
+const VALID_ELEMENTS = ["div", "section", "article", "aside", "footer"];
+const VALID_VARIANTS = ["basic", "default", "rich"];
+const VALID_SIZES = ["sm", "md", "lg"];
+
+interface Props {
+  element?: string;
+  variant?: string;
+  size?: string;
+  content?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  element: elementProp = "div",
+  variant = "default",
+  size = "md",
+  content,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const hasContent = content != null && content !== "";
+const hasChild = childHtml.trim().length > 0;
+
+let mode: "render" | "suppress" | "error" = "render";
+let errorMessage = "";
+
+if (!hasContent && !hasChild) {
+  mode = "suppress";
+} else if (!VALID_VARIANTS.includes(variant.toLowerCase())) {
+  mode = "error";
+  errorMessage = `invalid variant "${variant}" — expected basic | default | rich`;
+} else if (!VALID_SIZES.includes(size.toLowerCase())) {
+  mode = "error";
+  errorMessage = `invalid size "${size}" — expected sm | md | lg`;
+}
+
+const Tag = (
+  VALID_ELEMENTS.includes(elementProp.toLowerCase()) ? elementProp.toLowerCase() : "div"
+) as "div";
+
+const cssClass = className && String(className).trim() ? `Prose ${className}` : "Prose";
+const inner = hasContent ? content! : childHtml;
+---
+
+{
+  mode === "render" ? (
+    <Tag
+      class={cssClass}
+      data-variant={variant.toLowerCase()}
+      data-size={size.toLowerCase()}
+      {...rest}
+      set:html={inner}
+    />
+  ) : mode === "error" ? (
+    <DevError name="app-prose" message={errorMessage} />
+  ) : null
+}
+
+<style is:global>
+/* ─────────────────────────────────────────────────────────────────
+   Prose
+   Container for uncontrolled markup (RTE, markdown, CMS content).
+
+   All selectors use :where() — zero specificity.
+   Block components inside Prose override naturally via their own
+   class-based selectors without needing any resets here.
+───────────────────────────────────────────────────────────────── */
+
+/* ── Size ────────────────────────────────────────────────────── */
+
+:where(.Prose[data-size="sm"]),
+:where(.Prose[data-size="md"]),
+:where(.Prose[data-size="lg"]) {
+    font-size: var(--_fontSize); /* gate — only active when data-size is set */
+}
+
+:where(.Prose[data-size="sm"]) { --_fontSize: var(--fontSize-body-small); }
+:where(.Prose[data-size="md"]) { --_fontSize: var(--fontSize-body); }
+:where(.Prose[data-size="lg"]) { --_fontSize: var(--fontSize-body-large); }
+
+/* ── Basic + Default + Rich: paragraphs ─────────────────────── */
+
+:where(.Prose[data-variant="basic"]),
+:where(.Prose[data-variant="default"]),
+:where(.Prose[data-variant="rich"]) {
+    & p {
+        font-family:          var(--fontFamily-body);
+        font-weight:          var(--fontWeight-body);
+        line-height:          var(--lineHeight-body);
+        letter-spacing:       var(--letterSpacing-body);
+        font-feature-settings: var(--fontFeatureSettings-body);
+        font-size:            var(--_fontSize);
+        margin-block-end:     1em;
+    }
+
+    & p:last-child {
+        margin-block-end: 0;
+    }
+}
+
+/* ── Default + Rich: headings, lists, inline, links, code ────── */
+
+:where(.Prose[data-variant="default"]),
+:where(.Prose[data-variant="rich"]) {
+    /* Headings */
+    & :is(h1, h2, h3, h4, h5, h6) {
+        font-family:           var(--fontFamily-heading);
+        font-weight:           var(--fontWeight-heading);
+        line-height:           var(--lineHeight-heading);
+        letter-spacing:        var(--letterSpacing-heading);
+        font-feature-settings: var(--fontFeatureSettings-heading);
+        margin-block-start:    1.25em;
+        margin-block-end:      0.4em;
+    }
+
+    & :is(h1, h2, h3, h4, h5, h6):first-child {
+        margin-block-start: 0;
+    }
+
+    & h1 { font-size: var(--fontSize-h1); }
+    & h2 { font-size: var(--fontSize-h2); }
+    & h3 { font-size: var(--fontSize-h3); }
+    & h4 { font-size: var(--fontSize-h4); }
+    & h5 { font-size: var(--fontSize-h5); }
+    & h6 { font-size: var(--fontSize-h6); }
+
+    /* Lists */
+    & :is(ul, ol) {
+        font-family:           var(--fontFamily-body);
+        font-weight:           var(--fontWeight-body);
+        line-height:           var(--lineHeight-body);
+        letter-spacing:        var(--letterSpacing-body);
+        font-feature-settings: var(--fontFeatureSettings-body);
+        font-size:             var(--_fontSize);
+        margin-block-end:      1em;
+        padding-inline-start:  1.5em;
+    }
+
+    & li {
+        margin-block-end: 0.25em;
+    }
+
+    /* Inline */
+    & :is(em, i) {
+        font-style: italic;
+    }
+
+    & :is(strong, b) {
+        font-weight: var(--fontWeight-body-bold);
+    }
+
+    & :is(strong, b) :is(em, i),
+    & :is(em, i) :is(strong, b) {
+        font-style:  italic;
+        font-weight: var(--fontWeight-body-bold);
+    }
+
+    /* Links */
+    & a {
+        color:           currentColor;
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+
+    & a:hover {
+        text-decoration-thickness: 2px;
+    }
+
+    /* Inline code */
+    & code {
+        font-family: var(--fontFamily-code);
+        font-size:   0.875em;
+    }
+
+    /* Blockquote */
+    & blockquote {
+        margin-inline: 0;
+        padding-inline-start: 1em;
+        border-inline-start:  3px solid currentColor;
+        opacity: 0.7;
+    }
+}
+
+/* ── Rich only: tables, figures, hr ─────────────────────────── */
+
+:where(.Prose[data-variant="rich"]) {
+    /* Pre / code block */
+    & pre {
+        font-family:      var(--fontFamily-code);
+        font-size:        0.875em;
+        overflow-x:       auto;
+        padding:          1em;
+        border-radius:    0.35em;
+    }
+
+    & pre code {
+        font-size: 1em; /* reset — pre already scales */
+    }
+
+    /* Table */
+    & table {
+        width:           100%;
+        border-collapse: collapse;
+        font-size:       var(--_fontSize);
+    }
+
+    & :is(th, td) {
+        padding:       0.5em 0.75em;
+        border-bottom: 1px solid currentColor;
+        text-align:    start;
+    }
+
+    & th {
+        font-weight: var(--fontWeight-body-bold);
+    }
+
+    /* Figure */
+    & figure {
+        margin-inline: 0;
+    }
+
+    & figcaption {
+        font-size:    0.875em;
+        margin-block-start: 0.5em;
+        opacity:      0.7;
+    }
+
+    /* Rule */
+    & hr {
+        border:            none;
+        border-block-start: 1px solid currentColor;
+        margin-block:      2em;
+        opacity:           0.2;
+    }
+}
+
+
+/* =========================
+   PROSE SYSTEM
+   (moved from style.css — kept after Prose.css rules to preserve cascade order)
+   ========================= */
+
+.Prose > * {
+  margin: 0;
+}
+
+.Prose > * + * {
+  margin-block-start: var(--prose-flow, 1.5rem);
+}
+
+/* Typography */
+
+.Prose :where(p) {
+  line-height: 1.7;
+}
+
+.Prose :where(h2) {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.Prose :where(h3) {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.Prose :where(ul, ol) {
+  padding-inline-start: 1.25em;
+}
+
+.Prose :where(blockquote) {
+  padding-inline-start: 1rem;
+  border-inline-start: 3px solid currentColor;
+}
+
+.Prose blockquote > * + *,
+.Prose li > * + * {
+  margin-block-start: 0.75rem;
+}
+</style>

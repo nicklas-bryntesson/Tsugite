@@ -1,0 +1,406 @@
+---
+// Port of AiPoc Views/Shared/Partials/_CoverComposition.cshtml — the first
+// COMPOSITION in the system: media (video or image) + Heading + Prose +
+// LinkButtons assembled into a full-bleed hero. Layout states: STACKED below
+// 21.25rem, OVERLAY above (container query, viewport MQ fallback).
+// The video variant is progressively enhanced: <noscript> gets a native
+// controls video; CoverCompositionVideo.ts (verbatim AiPoc state machine)
+// governs autoplay by policy — reduced motion, visibility, save-data,
+// connection quality. The same concerns MotionRegion/motion-policy solve in
+// reference-components; candidates for unification in a later pass.
+import type { ImageMetadata } from "astro";
+import Heading from "../Heading/Heading.astro";
+import Prose from "../Prose/Prose.astro";
+import LinkButton from "../Button/LinkButton.astro";
+import Picture from "../Picture/Picture.astro";
+
+interface CtaButton {
+  url: string;
+  text: string;
+  emphasis?: string;
+  newTab?: boolean;
+}
+
+interface Props {
+  title: string;
+  preamble?: string;
+  /** semantic heading element — pages pass "h1" for the page hero */
+  headingLevel?: string;
+  /** video variant */
+  videoSrc?: string;
+  poster?: string;
+  /** image variant (used when videoSrc is absent) */
+  image?: ImageMetadata;
+  buttons?: CtaButton[];
+  playText?: string;
+  pauseText?: string;
+}
+
+const {
+  title,
+  preamble,
+  headingLevel = "h2",
+  videoSrc,
+  poster,
+  image,
+  buttons = [],
+  playText = "Play video",
+  pauseText = "Pause video",
+} = Astro.props;
+
+const isVideo = !!videoSrc;
+---
+
+{
+  isVideo ? (
+    <div
+      class="CoverComposition grid-container"
+      data-component="CoverCompositionVideo"
+      data-autoplay="policy"
+      data-play-text={playText}
+      data-pause-text={pauseText}
+    >
+      <div class="media-container" role="presentation">
+        <span class="overlay" />
+        <noscript>
+          <style>{`.enhancedVideo { display: none !important; }`}</style>
+          <video controls playsinline preload="metadata" poster={poster}>
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        </noscript>
+        <video class="enhancedVideo" playsinline preload="none" muted loop poster={poster}>
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      </div>
+
+      <div class="content-container" data-theme="inverse">
+        <div class="content">
+          <Heading element={headingLevel} variant="display" size="1" text={title} />
+          {preamble && (
+            <Prose variant="basic">
+              <p>{preamble}</p>
+            </Prose>
+          )}
+          {buttons.length > 0 && (
+            <div class="link-group">
+              {buttons.map(
+                (btn) =>
+                  btn.url && (
+                    <LinkButton
+                      href={btn.url}
+                      target={btn.newTab ? "_blank" : undefined}
+                      size="lg"
+                      emphasis={btn.emphasis}
+                    >
+                      {btn.text}
+                    </LinkButton>
+                  ),
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  ) : image ? (
+    <div class="CoverComposition">
+      <div class="media-container" role="presentation">
+        <Picture image={image} preset="hero" alt={title} loading="eager" />
+      </div>
+
+      <div class="content-container" data-theme="inverse">
+        {/* Upstream renders a class-less <div> here, but every layout rule in
+            CoverComposition.css targets .content — deliberate deviation. */}
+        <div class="content">
+          <Heading element={headingLevel} variant="display" size="1" text={title} />
+          {preamble && (
+            <Prose variant="basic">
+              <p>{preamble}</p>
+            </Prose>
+          )}
+          {buttons.length > 0 && (
+            <div class="link-group">
+              {buttons.map(
+                (btn) =>
+                  btn.url && (
+                    <LinkButton
+                      href={btn.url}
+                      target={btn.newTab ? "_blank" : undefined}
+                      emphasis={btn.emphasis}
+                    >
+                      {btn.text}
+                    </LinkButton>
+                  ),
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  ) : null
+}
+
+<script>
+  import CoverCompositionVideo from "./CoverCompositionVideo";
+  CoverCompositionVideo.attach();
+</script>
+
+<style is:global>
+/*
+ * CoverComposition — full-bleed hero with media background and content overlay.
+ *
+ * Layout states:
+ *   STACKED  (≤21.24999rem) — media above, content below, no overlay
+ *   OVERLAY  (>21.25rem)    — content sits on top of full-bleed media
+ *
+ * State detection: container query (preferred) + viewport MQ (fallback)
+ *
+ * Video variant: activated by data-component="CoverCompositionVideo" on .CoverComposition.
+ * JS injects .CoverComposition-videoControls / .CoverComposition-videoToggle into .CoverComposition-media.
+ */
+
+.CoverComposition {
+  position: relative;
+
+  & .media-container {
+    background-color: var(--color-surface-inset);
+    position: relative;
+
+    & .overlay {
+      background-color: var(--color-scrim-media);
+      inline-size: 100%;
+      block-size: 100%;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+  
+    & .video-controls {
+      position: absolute;
+      inset-block-start: 1rem;
+      inset-inline-end: 1rem;
+      z-index: 2;
+
+      & .video-toggle {
+        --_size: 2.75rem;
+    
+        display: grid;
+        place-items: center;
+        inline-size: var(--_size);
+        block-size: var(--_size);
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: white;
+        cursor: pointer;
+        backdrop-filter: blur(2px);
+          -webkit-tap-highlight-color: transparent;
+          -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    
+        &:focus-visible {
+          outline: 2px solid white;
+          outline-offset: 2px;
+        }
+    
+        & svg {
+          inline-size: 1.25rem;
+          block-size: 1.25rem;
+        }
+      }
+    }
+  }
+
+  & .content-container {
+    /* Tone donut (ADR-0005/0006): the markup carries data-theme="inverse",
+       so the GENERATED voice block supplies every claim channel — this CSS
+       only consumes. Cover never paints --theme-surface: the scrim is its
+       ground, which is exactly why the inverse voice is authored mode-stable.
+       The consumption fallback matters: without it an attribute-less render
+       would leave `color` invalid-at-computed-value (the Button-hover class
+       of bug), not merely unthemed. */
+    color: var(--theme-text, var(--color-text-primary));
+
+    display: grid;
+    column-gap: var(--grid-layout-gap);
+    grid-template-columns: var(--grid-layout-columns);
+    pointer-events: none;
+
+    & .content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-lg);
+      pointer-events: auto;
+
+      & .Prose {
+        max-inline-size: 50ch;
+      }
+
+      @media (max-width: 21.24999rem) {
+
+      }
+
+      @media (min-width: 21.25rem) {
+
+      }
+    }
+  }
+}
+
+/* ── STACKED — narrow screens ───────────────────────── */
+
+@media (max-width: 21.24999rem) {
+  .CoverComposition {
+    margin-block-start: var(--size-lg);
+    row-gap: var(--size-lg);
+
+    & .media-container {
+      grid-row: 1;
+
+      & img,
+      & video {
+        display: block;
+        inline-size: 100%;
+        block-size: auto;
+      }
+    }
+
+    & .content-container {
+      grid-row: 2;
+
+      & .content {
+
+      }
+    }
+  }
+}
+
+/* ── OVERLAY — viewport MQ fallback ─────────────────── */
+
+@supports not (container-type: inline-size) {
+  @media (min-width: 21.25rem) {
+    .CoverComposition {
+      & .media-container {
+        position: relative;
+        grid-column: 1 / -1;
+        grid-row: 1;
+        z-index: 1;
+
+        &::after {
+          position: absolute;
+          inset: 0;
+          content: "";
+        }
+
+        & img,
+        & video {
+          position: absolute;
+          inset: 0;
+          inline-size: 100%;
+          block-size: 100%;
+          object-fit: cover;
+        }
+      }
+
+      & .content-container {
+        position: relative;
+        grid-column: main;
+        grid-row: 1;
+        z-index: 2;
+        padding-block: 30vh;
+      }
+    }
+  }
+}
+
+/* ── OVERLAY — container query (preferred) ──────────── */
+
+@supports (container-type: inline-size) {
+  .CoverComposition {
+    container-type: inline-size;
+  }
+
+  @container (min-width: 21.25rem) {
+    .media-container {
+      position: relative;
+      grid-column: 1 / -1;
+      grid-row: 1;
+      z-index: 1;
+
+      &::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+      }
+
+      & img,
+      & video {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .content-container {
+      position: relative;
+      grid-row: 1;
+      z-index: 2;
+      padding-block: 30dvh;
+    }
+  }
+
+  @media (min-width: 21.25rem) {
+    .content-container {
+
+    }
+  }
+
+  /* 1col */
+  @media (max-width: 39.9375rem) {
+    .content-container {
+      & .content {
+        grid-column: 1/-1;
+      }
+    }
+  }
+  /* 4col */
+  @media (min-width: 40rem) and (max-width: 47.9375rem) {
+    .content-container {
+
+      & .content {
+        grid-column: 1/-1;
+      }
+    }
+  }
+    /* 8col */
+  @media (min-width: 48rem) and (max-width: 79.9375rem) {
+    .content-container {
+
+      & .content {
+        grid-column: 1/8;
+      }
+    }
+  }
+    /* 12col */
+  @media (min-width: 80rem) and (max-width: 94.937rem) {
+    .content-container { 
+
+      & .content {
+        grid-column: 1/9;
+      }
+    }
+  }
+
+  @media (min-width: 95rem) {
+    .content-container {
+      grid-column: 1/-1;
+
+      & .content {
+        grid-column: 2/9;
+        margin-inline-start: calc(var(--grid-layout-gap) * -1);
+      }
+    }
+  }
+}
+</style>

@@ -1,0 +1,432 @@
+/* GENERATED — do not edit. Source: src/lib/tokens/*.tokens.js
+
+   Regenerate: npm run tokens   (freshness guarded by tests/tokens.test.ts) */
+
+
+
+/* Type registrations — the third safety net: an invalid substitution
+
+   degrades to the initial value (precomputed sRGB) instead of killing
+
+   the consumer. */
+
+@property --color-surface-page {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(255, 255, 255);
+}
+
+@property --color-surface-chrome {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(241, 245, 252);
+}
+
+@property --color-surface-inset {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(224, 233, 246);
+}
+
+@property --color-text-primary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(13, 15, 18);
+}
+
+@property --color-text-secondary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(96, 109, 126);
+}
+
+@property --color-interactive-primary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(3, 37, 83);
+}
+
+@property --color-interactive-primary-hover {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(0, 17, 46);
+}
+
+@property --color-interactive-onPrimary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(255, 255, 255);
+}
+
+@property --color-interactive-secondary-text {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(3, 37, 83);
+}
+
+@property --color-interactive-secondary-border {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(113, 176, 255);
+}
+
+@property --color-interactive-secondary-hoverSurface {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(241, 245, 252);
+}
+
+@property --color-interactive-hoverRing {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(164, 205, 255, 0.6);
+}
+
+@property --color-focus-ring {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(21, 127, 255);
+}
+
+@property --color-interactive-glow {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(21, 127, 255);
+}
+
+@property --color-scrim-media {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(0, 17, 46, 0.55);
+}
+
+@property --color-disabled-text {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(66, 75, 87);
+}
+
+@property --color-disabled-surface {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(248, 250, 254);
+}
+
+@property --color-disabled-border {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(224, 233, 246);
+}
+
+@property --color-feedback-error {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(255, 80, 98);
+}
+
+@property --color-feedback-onError {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(255, 255, 255);
+}
+
+@property --color-feedback-success {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(0, 188, 120);
+}
+
+@property --color-feedback-warning {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(255, 227, 115);
+}
+
+@property --color-feedback-info {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(21, 127, 255);
+}
+
+@property --color-feedback-onSuccess {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(255, 255, 255);
+}
+
+@property --color-border-default {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(194, 207, 226);
+}
+
+@property --color-border-subtle {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(224, 233, 246);
+}
+
+
+
+/* User preference pinned (data-appearance from ThemeSwitch) × OS contrast */
+
+@media (prefers-contrast: no-preference) {
+  :root[data-appearance="light"] {
+    --color-surface-page: var(--COLOR-N00);
+    --color-surface-chrome: var(--COLOR-N10);
+    --color-surface-inset: var(--COLOR-N20);
+    --color-text-primary: var(--COLOR-N90);
+    --color-text-secondary: var(--COLOR-N60);
+    --color-interactive-primary: var(--COLOR-B80);
+    --color-interactive-primary-hover: var(--COLOR-B90);
+    --color-interactive-onPrimary: var(--COLOR-N00);
+    --color-interactive-secondary-text: var(--COLOR-B80);
+    --color-interactive-secondary-border: var(--COLOR-B30);
+    --color-interactive-secondary-hoverSurface: var(--COLOR-N10);
+    --color-interactive-hoverRing: rgba(164, 205, 255, 0.6);
+    --color-focus-ring: var(--COLOR-B50);
+    --color-interactive-glow: var(--COLOR-B50);
+    --color-scrim-media: rgba(0, 17, 46, 0.55);
+    --color-disabled-text: var(--COLOR-N70);
+    --color-disabled-surface: var(--COLOR-N05);
+    --color-disabled-border: var(--COLOR-N20);
+    --color-feedback-error: var(--COLOR-R50);
+    --color-feedback-onError: var(--COLOR-N00);
+    --color-feedback-success: var(--COLOR-G50);
+    --color-feedback-warning: var(--COLOR-Y80);
+    --color-feedback-info: var(--COLOR-B50);
+    --color-feedback-onSuccess: var(--COLOR-N00);
+    --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
+    --color-border-default: var(--COLOR-N30);
+    --color-border-subtle: var(--COLOR-N20);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root[data-appearance="light"] {
+    --color-surface-page: var(--COLOR-N00);
+    --color-surface-chrome: var(--COLOR-N00);
+    --color-surface-inset: var(--COLOR-N00);
+    --color-text-primary: var(--COLOR-N95);
+    --color-text-secondary: var(--COLOR-N95);
+    --color-interactive-primary: var(--COLOR-N95);
+    --color-interactive-primary-hover: var(--COLOR-N95);
+    --color-interactive-onPrimary: var(--COLOR-N00);
+    --color-interactive-secondary-text: var(--COLOR-N95);
+    --color-interactive-secondary-border: var(--COLOR-N95);
+    --color-interactive-secondary-hoverSurface: transparent;
+    --color-interactive-hoverRing: var(--COLOR-N95);
+    --color-focus-ring: var(--COLOR-N95);
+    --color-interactive-glow: transparent;
+    --color-scrim-media: rgba(3, 5, 7, 0.78);
+    --color-disabled-text: var(--COLOR-N70);
+    --color-disabled-surface: var(--COLOR-N05);
+    --color-disabled-border: var(--COLOR-N20);
+    --color-feedback-error: rgb(112, 47, 117);
+    --color-feedback-onError: var(--COLOR-N00);
+    --color-feedback-success: rgb(0, 74, 86);
+    --color-feedback-warning: rgb(152, 192, 98);
+    --color-feedback-info: var(--COLOR-B80);
+    --color-feedback-onSuccess: var(--COLOR-N00);
+    --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
+    --color-border-default: var(--COLOR-N95);
+    --color-border-subtle: var(--COLOR-N95);
+  }
+}
+
+@media (prefers-contrast: no-preference) {
+  :root[data-appearance="dark"] {
+    --color-surface-page: var(--COLOR-N90);
+    --color-surface-chrome: var(--COLOR-N85);
+    --color-surface-inset: var(--COLOR-N80);
+    --color-text-primary: var(--COLOR-N05);
+    --color-text-secondary: var(--COLOR-N35);
+    --color-interactive-primary: var(--COLOR-B30);
+    --color-interactive-primary-hover: var(--COLOR-B20);
+    --color-interactive-onPrimary: var(--COLOR-N95);
+    --color-interactive-secondary-text: var(--COLOR-B20);
+    --color-interactive-secondary-border: var(--COLOR-B60);
+    --color-interactive-secondary-hoverSurface: var(--COLOR-N80);
+    --color-interactive-hoverRing: rgba(0, 83, 185, 0.6);
+    --color-focus-ring: var(--COLOR-B30);
+    --color-interactive-glow: var(--COLOR-B40);
+    --color-scrim-media: rgba(3, 5, 7, 0.65);
+    --color-disabled-text: var(--COLOR-N40);
+    --color-disabled-surface: var(--COLOR-N85);
+    --color-disabled-border: var(--COLOR-N75);
+    --color-feedback-error: rgb(255, 162, 174);
+    --color-feedback-onError: var(--COLOR-N95);
+    --color-feedback-success: rgb(218, 196, 111);
+    --color-feedback-warning: rgb(255, 231, 208);
+    --color-feedback-info: rgb(178, 156, 252);
+    --color-feedback-onSuccess: var(--COLOR-N95);
+    --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
+    --color-border-default: var(--COLOR-N60);
+    --color-border-subtle: var(--COLOR-N70);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root[data-appearance="dark"] {
+    --color-surface-page: var(--COLOR-N95);
+    --color-surface-chrome: var(--COLOR-N95);
+    --color-surface-inset: var(--COLOR-N95);
+    --color-text-primary: var(--COLOR-N00);
+    --color-text-secondary: var(--COLOR-N00);
+    --color-interactive-primary: var(--COLOR-N00);
+    --color-interactive-primary-hover: var(--COLOR-N00);
+    --color-interactive-onPrimary: var(--COLOR-N95);
+    --color-interactive-secondary-text: var(--COLOR-N00);
+    --color-interactive-secondary-border: var(--COLOR-N00);
+    --color-interactive-secondary-hoverSurface: transparent;
+    --color-interactive-hoverRing: var(--COLOR-N00);
+    --color-focus-ring: var(--COLOR-N00);
+    --color-interactive-glow: transparent;
+    --color-scrim-media: rgba(3, 5, 7, 0.78);
+    --color-disabled-text: var(--COLOR-N40);
+    --color-disabled-surface: var(--COLOR-N85);
+    --color-disabled-border: var(--COLOR-N75);
+    --color-feedback-error: rgb(255, 186, 197);
+    --color-feedback-onError: var(--COLOR-N95);
+    --color-feedback-success: rgb(228, 197, 124);
+    --color-feedback-warning: rgb(255, 236, 224);
+    --color-feedback-info: rgb(212, 174, 244);
+    --color-feedback-onSuccess: var(--COLOR-N95);
+    --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
+    --color-border-default: var(--COLOR-N00);
+    --color-border-subtle: var(--COLOR-N00);
+  }
+}
+
+
+
+/* No preference (attribute absent = follow the OS) — works without JS */
+
+@media (prefers-color-scheme: light) and (prefers-contrast: no-preference) {
+  :root:not([data-appearance]) {
+    --color-surface-page: var(--COLOR-N00);
+    --color-surface-chrome: var(--COLOR-N10);
+    --color-surface-inset: var(--COLOR-N20);
+    --color-text-primary: var(--COLOR-N90);
+    --color-text-secondary: var(--COLOR-N60);
+    --color-interactive-primary: var(--COLOR-B80);
+    --color-interactive-primary-hover: var(--COLOR-B90);
+    --color-interactive-onPrimary: var(--COLOR-N00);
+    --color-interactive-secondary-text: var(--COLOR-B80);
+    --color-interactive-secondary-border: var(--COLOR-B30);
+    --color-interactive-secondary-hoverSurface: var(--COLOR-N10);
+    --color-interactive-hoverRing: rgba(164, 205, 255, 0.6);
+    --color-focus-ring: var(--COLOR-B50);
+    --color-interactive-glow: var(--COLOR-B50);
+    --color-scrim-media: rgba(0, 17, 46, 0.55);
+    --color-disabled-text: var(--COLOR-N70);
+    --color-disabled-surface: var(--COLOR-N05);
+    --color-disabled-border: var(--COLOR-N20);
+    --color-feedback-error: var(--COLOR-R50);
+    --color-feedback-onError: var(--COLOR-N00);
+    --color-feedback-success: var(--COLOR-G50);
+    --color-feedback-warning: var(--COLOR-Y80);
+    --color-feedback-info: var(--COLOR-B50);
+    --color-feedback-onSuccess: var(--COLOR-N00);
+    --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
+    --color-border-default: var(--COLOR-N30);
+    --color-border-subtle: var(--COLOR-N20);
+  }
+}
+
+@media (prefers-color-scheme: light) and (prefers-contrast: more) {
+  :root:not([data-appearance]) {
+    --color-surface-page: var(--COLOR-N00);
+    --color-surface-chrome: var(--COLOR-N00);
+    --color-surface-inset: var(--COLOR-N00);
+    --color-text-primary: var(--COLOR-N95);
+    --color-text-secondary: var(--COLOR-N95);
+    --color-interactive-primary: var(--COLOR-N95);
+    --color-interactive-primary-hover: var(--COLOR-N95);
+    --color-interactive-onPrimary: var(--COLOR-N00);
+    --color-interactive-secondary-text: var(--COLOR-N95);
+    --color-interactive-secondary-border: var(--COLOR-N95);
+    --color-interactive-secondary-hoverSurface: transparent;
+    --color-interactive-hoverRing: var(--COLOR-N95);
+    --color-focus-ring: var(--COLOR-N95);
+    --color-interactive-glow: transparent;
+    --color-scrim-media: rgba(3, 5, 7, 0.78);
+    --color-disabled-text: var(--COLOR-N70);
+    --color-disabled-surface: var(--COLOR-N05);
+    --color-disabled-border: var(--COLOR-N20);
+    --color-feedback-error: rgb(112, 47, 117);
+    --color-feedback-onError: var(--COLOR-N00);
+    --color-feedback-success: rgb(0, 74, 86);
+    --color-feedback-warning: rgb(152, 192, 98);
+    --color-feedback-info: var(--COLOR-B80);
+    --color-feedback-onSuccess: var(--COLOR-N00);
+    --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
+    --color-border-default: var(--COLOR-N95);
+    --color-border-subtle: var(--COLOR-N95);
+  }
+}
+
+@media (prefers-color-scheme: dark) and (prefers-contrast: no-preference) {
+  :root:not([data-appearance]) {
+    --color-surface-page: var(--COLOR-N90);
+    --color-surface-chrome: var(--COLOR-N85);
+    --color-surface-inset: var(--COLOR-N80);
+    --color-text-primary: var(--COLOR-N05);
+    --color-text-secondary: var(--COLOR-N35);
+    --color-interactive-primary: var(--COLOR-B30);
+    --color-interactive-primary-hover: var(--COLOR-B20);
+    --color-interactive-onPrimary: var(--COLOR-N95);
+    --color-interactive-secondary-text: var(--COLOR-B20);
+    --color-interactive-secondary-border: var(--COLOR-B60);
+    --color-interactive-secondary-hoverSurface: var(--COLOR-N80);
+    --color-interactive-hoverRing: rgba(0, 83, 185, 0.6);
+    --color-focus-ring: var(--COLOR-B30);
+    --color-interactive-glow: var(--COLOR-B40);
+    --color-scrim-media: rgba(3, 5, 7, 0.65);
+    --color-disabled-text: var(--COLOR-N40);
+    --color-disabled-surface: var(--COLOR-N85);
+    --color-disabled-border: var(--COLOR-N75);
+    --color-feedback-error: rgb(255, 162, 174);
+    --color-feedback-onError: var(--COLOR-N95);
+    --color-feedback-success: rgb(218, 196, 111);
+    --color-feedback-warning: rgb(255, 231, 208);
+    --color-feedback-info: rgb(178, 156, 252);
+    --color-feedback-onSuccess: var(--COLOR-N95);
+    --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
+    --color-border-default: var(--COLOR-N60);
+    --color-border-subtle: var(--COLOR-N70);
+  }
+}
+
+@media (prefers-color-scheme: dark) and (prefers-contrast: more) {
+  :root:not([data-appearance]) {
+    --color-surface-page: var(--COLOR-N95);
+    --color-surface-chrome: var(--COLOR-N95);
+    --color-surface-inset: var(--COLOR-N95);
+    --color-text-primary: var(--COLOR-N00);
+    --color-text-secondary: var(--COLOR-N00);
+    --color-interactive-primary: var(--COLOR-N00);
+    --color-interactive-primary-hover: var(--COLOR-N00);
+    --color-interactive-onPrimary: var(--COLOR-N95);
+    --color-interactive-secondary-text: var(--COLOR-N00);
+    --color-interactive-secondary-border: var(--COLOR-N00);
+    --color-interactive-secondary-hoverSurface: transparent;
+    --color-interactive-hoverRing: var(--COLOR-N00);
+    --color-focus-ring: var(--COLOR-N00);
+    --color-interactive-glow: transparent;
+    --color-scrim-media: rgba(3, 5, 7, 0.78);
+    --color-disabled-text: var(--COLOR-N40);
+    --color-disabled-surface: var(--COLOR-N85);
+    --color-disabled-border: var(--COLOR-N75);
+    --color-feedback-error: rgb(255, 186, 197);
+    --color-feedback-onError: var(--COLOR-N95);
+    --color-feedback-success: rgb(228, 197, 124);
+    --color-feedback-warning: rgb(255, 236, 224);
+    --color-feedback-info: rgb(212, 174, 244);
+    --color-feedback-onSuccess: var(--COLOR-N95);
+    --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
+    --color-border-default: var(--COLOR-N00);
+    --color-border-subtle: var(--COLOR-N00);
+  }
+}
+

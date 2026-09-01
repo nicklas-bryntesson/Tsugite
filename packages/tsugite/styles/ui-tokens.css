@@ -1,0 +1,32 @@
+/* GENERATED — do not edit. Source: src/lib/tokens/seam.ui.tokens.js
+   The --ui-* seam (reference-components' design surface, ADR-0002) as
+   appearance-free pointers into the semantic layer (ADR-0004).
+   Regenerate: npm run tokens */
+
+:root {
+  /* Platform line (ref-lib ADR-0021): makes system colours, form controls
+     and UA chrome follow light/dark. The single most expensive line to lose. */
+  color-scheme: light dark;
+
+  --ui-surface: var(--color-surface-page);
+  --ui-surface-foreground: var(--color-text-primary);
+  --ui-surface-padding: 0.75rem;
+  --ui-radius: 0.75rem;
+  --ui-shadow: var(--color-shadow-popup);
+  --ui-border: var(--color-border-subtle);
+  --ui-ring: var(--color-focus-ring);
+  --ui-primary: var(--color-interactive-primary);
+  --ui-primary-foreground: var(--color-interactive-onPrimary);
+  --ui-muted-foreground: var(--color-text-secondary);
+  --ui-hover: var(--color-interactive-secondary-hoverSurface);
+  --ui-destructive: var(--color-feedback-error);
+  --ui-warning: var(--color-feedback-warning);
+  --ui-success: var(--color-feedback-success);
+  --ui-info: var(--color-feedback-info);
+  --SITE--PADDING: var(--site-offset);
+}
+
+/* An explicit user choice pins the scheme; absence means "follow the OS".
+   These two rules are the entire projection surface (ref-lib ADR-0021). */
+:root[data-appearance="light"] { color-scheme: light; }
+:root[data-appearance="dark"]  { color-scheme: dark; }
