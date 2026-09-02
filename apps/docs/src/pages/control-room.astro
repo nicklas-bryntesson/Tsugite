@@ -10,6 +10,7 @@
 //   3. Baseline trim — the heading text-trim check (shared with the bench).
 //   4. The donut matrix — voices × volumes (shared with the bench).
 import Layout from "../layouts/Layout.astro";
+import ResolutionPanel from "../components/ResolutionPanel/ResolutionPanel.astro";
 import Heading from "tsugite/components/Heading/Heading.astro";
 import Prose from "tsugite/components/Prose/Prose.astro";
 import AffixField from "tsugite/components/AffixField/AffixField.astro";
@@ -21,7 +22,7 @@ import ThemesSection from "tsugite/fixtures/ThemesSection.astro";
 const buttonSizes = ["sm", "md", "lg"];
 ---
 
-<Layout title="Control room" resolutionBar={true}>
+<Layout title="Control room">
   <main class="Main ControlRoom grid-container">
     <div class="content">
       <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Control room</nav>
@@ -36,14 +37,7 @@ const buttonSizes = ["sm", "md", "lg"];
           What this browser and display actually resolve. Drag the window to another
           monitor and watch the gamut row follow.
         </p>
-        <ul class="resolution-list">
-          <li><span class="res-name">display gamut</span> <output class="res-value" data-probe="gamut"></output></li>
-          <li><span class="res-name">oklch</span> <output class="res-value" data-probe="oklch"></output></li>
-          <li><span class="res-name">@property</span> <output class="res-value" data-probe="property"></output></li>
-          <li><span class="res-name">color-mix</span> <output class="res-value" data-probe="colormix"></output></li>
-          <li><span class="res-name">container queries</span> <output class="res-value" data-probe="cq"></output></li>
-          <li><span class="res-name">text-box-trim</span> <output class="res-value" data-probe="textboxtrim"></output></li>
-        </ul>
+        <ResolutionPanel />
         <div class="gamut-pair">
           <span class="gamut-swatch" style="background: oklch(67.13% 0.2851 343.06)"></span>
           <span class="gamut-swatch" style="background: #ff0ac2"></span>
@@ -81,37 +75,6 @@ const buttonSizes = ["sm", "md", "lg"];
   </main>
 </Layout>
 
-<script>
-  // Resolution probes: live answers per support gate. The gamut probe stays
-  // subscribed so dragging the window between displays updates the row.
-  const set = (probe: string, value: string, active: boolean) => {
-    const out = document.querySelector<HTMLElement>(`[data-probe="${probe}"]`);
-    if (!out) return;
-    out.textContent = value;
-    out.dataset.active = String(active);
-  };
-
-  const gamuts: Array<[string, MediaQueryList]> = [
-    ["rec2020", matchMedia("(color-gamut: rec2020)")],
-    ["p3", matchMedia("(color-gamut: p3)")],
-    ["srgb", matchMedia("(color-gamut: srgb)")],
-  ];
-  const readGamut = () => {
-    const hit = gamuts.find(([, mq]) => mq.matches);
-    set("gamut", hit ? hit[0] : "unknown", !!hit && hit[0] !== "srgb");
-  };
-  readGamut();
-  for (const [, mq] of gamuts) mq.addEventListener("change", readGamut);
-
-  const supports = (probe: string, ok: boolean) =>
-    set(probe, ok ? "supported" : "fallback branch", ok);
-  supports("oklch", CSS.supports("color", "oklch(1 0 0)"));
-  supports("property", typeof CSSPropertyRule !== "undefined");
-  supports("colormix", CSS.supports("color", "color-mix(in oklch, red, blue)"));
-  supports("cq", CSS.supports("container-type: inline-size"));
-  supports("textboxtrim", CSS.supports("text-box-trim", "trim-both"));
-</script>
-
 <style is:global>
 .ControlRoom {
   padding-block: 3rem 4rem;
@@ -131,48 +94,6 @@ const buttonSizes = ["sm", "md", "lg"];
   }
 
   & .note { margin: 0; color: var(--color-text-secondary); font-size: 0.9rem; }
-
-  & .resolution-list {
-    list-style: none;
-    margin: 0.5rem 0 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
-    gap: 0.5rem;
-    inline-size: 100%;
-  }
-
-  & .resolution-list li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.5rem 0.8rem;
-    border: 1px solid var(--color-border-subtle);
-    border-radius: 0.5rem;
-  }
-
-  & .res-name { font-size: 0.85rem; color: var(--color-text-secondary); }
-
-  & .res-value {
-    font-family: monospace;
-    font-size: 0.8rem;
-    color: var(--color-text-primary);
-
-    /* active-branch marker is a decorative dot — small green TEXT on the
-       page ground fails AA (2.4:1), a finding this page's own axe twin
-       caught on first light */
-    &[data-active="true"]::before {
-      content: "";
-      display: inline-block;
-      inline-size: 0.5rem;
-      block-size: 0.5rem;
-      border-radius: 50%;
-      background-color: var(--color-feedback-success);
-      margin-inline-end: 0.4rem;
-      vertical-align: 0.05em;
-    }
-  }
 
   & .gamut-pair {
     display: flex;
