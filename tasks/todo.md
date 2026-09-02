@@ -19,13 +19,13 @@ Plan: [plan.md](plan.md) · Baseline census: 118 raw hits / 30 files (2026-09-02
 ### ✅ Checkpoint 2 — package census: 11 raw hits remain, ALL class A (5 mechanical trims, 4 Prose em-mechanism, 2 test stimuli); 226 vitest + 414 e2e green
 
 ## Phase 3 — Docs app sweep
-- [ ] **T7** App base styles (font.css, global, Layout, Tables, kitchenSink)
-- [ ] **T8** App pages (map, control-room, docs/*, index)
+- [x] **T7** App base styles — body font joins the ramp (was system-ui); tables breathe
+- [x] **T8** Pages — the nine-stop micro-size zoo quantized to label/label-small; kanji mark on the display bundle; inline code relative (Prose mechanism); tracked-caps manner allowlisted pending Eyebrow
 
 ## Phase 4 — The gate
-- [ ] **T9** Census-as-test with explicit class-A allowlist (drift fails the build)
+- [x] **T9** `apps/docs/tests/typography-gate.test.ts` — declaration-level census (line-based grep undercounted!), explicit allowlist WITH counts; break-tested: an injected 0.8rem fails the build
 
-### ⛔ Checkpoint 3 — full census 0, all green, parking lot recorded
+### ✅ Checkpoint 3 — census 0 outside the argued allowlist in both workspaces; 226+414+8 tests green; parking lot recorded (`tasks/parking-lot.md`)
 
 ## Parked (own scopes, not this sweep)
 - Typography components *inside* the ref-comps field family — feasibility study; evidence = T1's class-D field rows
