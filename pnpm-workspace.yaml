@@ -1,3 +1,12 @@
 packages:
   - "packages/*"
   - "apps/*"
+
+# pnpm's supply-chain gate: build scripts run only for approved packages.
+# Without this list a cold install (e.g. Vercel) fails with
+# ERR_PNPM_IGNORED_BUILDS. Approve deliberately — additions here are a
+# review point, not a convenience.
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - esbuild
+  - sharp

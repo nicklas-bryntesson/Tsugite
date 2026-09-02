@@ -3,6 +3,7 @@
 // Sections are added task by task; inputs (Form/DateField/DateTimeField/TimeField)
 // are intentionally left out — they arrive later from the ReferenceComponents library.
 import Layout from "../layouts/Layout.astro";
+import ResolutionPanel from "../components/ResolutionPanel/ResolutionPanel.astro";
 import Heading from "tsugite/components/Heading/Heading.astro";
 import Prose from "tsugite/components/Prose/Prose.astro";
 import Typography from "tsugite/fixtures/Typography.astro";
@@ -43,6 +44,7 @@ const pageIntro = "Component showcase — all variants and states.";
       <Prose variant="basic" size="md">
         <p>{pageIntro}</p>
       </Prose>
+      <ResolutionPanel />
     </div>
 
     <div class="scroll-container">
