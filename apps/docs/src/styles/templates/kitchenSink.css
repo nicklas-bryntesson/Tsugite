@@ -194,8 +194,8 @@
         & > caption,
         & > thead > tr > th,
         & > tbody > tr > th {
-            font-family: monospace;
-            font-weight: normal;
+            font-family: var(--fontFamily-code);
+            font-weight: var(--fontWeight-code);
             text-transform: lowercase;
             inline-size: var(--_labelWidth);
         }

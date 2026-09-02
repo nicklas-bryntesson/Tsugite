@@ -40,7 +40,7 @@
     & tbody td {
       font-family: var(--fontFamily-body);
       font-weight: var(--fontWeight-body);
-      font-size: 1rem;
+      font-size: var(--fontSize-body);
     }
 
     & caption,
@@ -48,7 +48,7 @@
     & tfoot td {
       font-family: var(--fontFamily-heading);
       font-weight: var(--fontWeight-heading);
-      font-size: 1rem;
+      font-size: var(--fontSize-body);
     }
   }
 
