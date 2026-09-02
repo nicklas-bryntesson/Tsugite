@@ -334,7 +334,7 @@ const {
   box-shadow: var(--_wf-popup-shadow);
   z-index: 100;
   padding: var(--ui-surface-padding);
-  font-size: 1rem;
+  font-size: var(--ui-font-size);
 }
 .WeekField[data-direction="bottom"] .popup {
   top: var(--_wf-popup-gap);
@@ -357,7 +357,7 @@ const {
   cursor: pointer;
   padding: 0.25rem 0.5rem;
   border-radius: 2px;
-  font-size: 1rem;
+  font-size: var(--ui-font-size);
   line-height: 1;
 }
 .WeekField .popup .calendar-header button:focus-visible {
@@ -365,7 +365,7 @@ const {
   outline-offset: 2px;
 }
 .WeekField .popup .calendar-header .calendar-month-year {
-  font-weight: bold;
+  font-weight: var(--ui-font-weight-strong);
   flex: 1;
   text-align: center;
 }
@@ -380,12 +380,12 @@ const {
   padding: 0;
   padding-block-end: 0.25rem;
   text-align: center;
-  font-weight: normal;
+  font-weight: var(--ui-font-weight);
   color: var(--_wf-popup-color-muted);
   min-inline-size: 2rem;
 }
 .WeekField .popup .calendar-grid th.week-number-head {
-  font-weight: bold;
+  font-weight: var(--ui-font-weight-strong);
 }
 .WeekField .popup .calendar-grid td {
   border: 0;
@@ -395,12 +395,12 @@ const {
   font-variant-numeric: tabular-nums;
 }
 .WeekField .popup .calendar-grid td.week-number-cell {
-  font-weight: bold;
+  font-weight: var(--ui-font-weight-strong);
   color: var(--_wf-popup-color-muted);
   border-inline-end: 1px solid var(--_wf-popup-border-color);
 }
 .WeekField .popup .calendar-grid td[data-today="true"] {
-  font-weight: bold;
+  font-weight: var(--ui-font-weight-strong);
   text-decoration: underline;
 }
 .WeekField .popup .calendar-grid td[data-outside-month="true"] {
