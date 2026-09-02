@@ -3,14 +3,20 @@
 // Contract: .claude/contracts/tag-helpers.md — CSS class "Heading",
 // variants via data-* attributes, validation errors visible in dev only.
 
-const VALID_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6", "span", "div", "p"];
+// legend/figcaption join the farm (typography family matrix, CP1
+// 2026-09-02): they carry no props of their own — the direct-child
+// placement constraint is the parent's business, and the root IS the
+// element, so a level-1 legend can speak heading and a figcaption can
+// speak display. Elements WITH own contracts (label: for/id/aria) get
+// own components instead.
+const VALID_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6", "span", "div", "p", "legend", "figcaption"];
 const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
 const VALID_VARIANTS = ["heading", "display", "body"];
 
 const VALID_ELEMENTS_BY_VARIANT: Record<string, string[]> = {
   heading: VALID_ELEMENTS,
   display: VALID_ELEMENTS,
-  body: HEADING_ELEMENTS,
+  body: [...HEADING_ELEMENTS, "legend", "figcaption"],
 };
 
 const VALID_SIZES_BY_VARIANT: Record<string, string[]> = {

@@ -1,0 +1,216 @@
+---
+// Text — authored single-run UI text (the missing family member next to
+// Heading and Prose; tasks/notes-typography-components.md).
+//
+// The family rule: one door per look. Text owns the QUIET voices (body,
+// label) on plain text elements; Heading owns the LOUD voices (heading,
+// display). Prose is the donut for flowing content nobody authors
+// element by element. The litmus: do you author the element? → family
+// component. A flow you don't control? → Prose.
+//
+// Same two-axis machine as Heading: element (technical) × variant
+// (visual voice) × size — every value resolved through the typography
+// role bundles, never raw.
+
+const VALID_ELEMENTS = ["p", "span", "div"];
+const VALID_VARIANTS = ["body", "label"];
+
+const VALID_SIZES = ["sm", "md", "lg"];
+const DEFAULT_SIZE = "md";
+
+const VALID_ALIGNS = ["left", "center", "right"];
+const VALID_WRAPS = ["balance", "pretty", "stable", "nowrap"];
+
+interface Props {
+  text?: string;
+  element?: string;
+  variant?: string;
+  size?: string;
+  align?: string;
+  wrap?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  text,
+  element: elementProp = "p",
+  variant: variantProp,
+  size: sizeProp,
+  align = "left",
+  wrap = "pretty",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const isDev = import.meta.env.DEV;
+
+const escapeHtml = (s: string) =>
+  s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+// ── Guards ──────────────────────────────────────────
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const hasChildContent = childHtml.trim().length > 0;
+const hasText = !!text;
+
+let mode: "render" | "suppress" | "error" = "render";
+let errorMessage = "";
+
+if (!hasText && !hasChildContent) {
+  mode = "suppress";
+} else if (hasText && hasChildContent) {
+  mode = "error";
+  errorMessage = "use text OR child content, not both";
+}
+
+const element = VALID_ELEMENTS.includes(elementProp.toLowerCase())
+  ? elementProp.toLowerCase()
+  : "p";
+const variant = VALID_VARIANTS.includes((variantProp ?? "").toLowerCase())
+  ? variantProp!.toLowerCase()
+  : "body";
+const size = sizeProp && VALID_SIZES.includes(sizeProp.toLowerCase())
+  ? sizeProp.toLowerCase()
+  : DEFAULT_SIZE;
+
+const alignAttr = VALID_ALIGNS.includes(align.toLowerCase()) ? align.toLowerCase() : undefined;
+const wrapAttr = VALID_WRAPS.includes(wrap.toLowerCase()) ? wrap.toLowerCase() : undefined;
+
+const cssClass = className && String(className).trim() ? `Text ${className}` : "Text";
+
+const inner =
+  mode === "render"
+    ? hasChildContent
+      ? childHtml
+      : `<span class="text-content">${escapeHtml(text!)}</span>`
+    : "";
+
+const Tag = element as "p";
+---
+
+{
+  mode === "render" ? (
+    <Tag
+      class={cssClass}
+      data-variant={variant}
+      data-size={size}
+      data-align={alignAttr}
+      data-wrap={wrapAttr}
+      {...rest}
+      set:html={inner}
+    />
+  ) : mode === "error" && isDev ? (
+    <div style="color:red;" set:html={`<!-- Text: ${errorMessage} --><span>&times;</span>`} />
+  ) : null
+}
+
+<style is:global>
+/* =====================================================
+   TEXT COMPONENT — the quiet voices (body, label)
+===================================================== */
+
+.Text {
+  /* reset */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin-block: 0;
+
+  /* ================================================
+     TEXT CONTAINER (Typography Engine)
+  ================================================= */
+
+  .text-content {
+    display: block;
+    font-size: var(--_fontSize);
+    line-height: var(--_lineHeight);
+
+    /* Inline children inherit metrics */
+    & :where(a, span, strong, em, b, i) {
+      font: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+    }
+  }
+
+  /* =====================================================
+     VARIANT LAYER (voice + baseline offset)
+  ===================================================== */
+
+  &[data-variant="body"] {
+    --_lineHeight: var(--lineHeight-body);
+    --_baselineOffset: var(--baseline-offset-body);
+
+    font-family: var(--fontFamily-body);
+    font-weight: var(--fontWeight-body);
+    letter-spacing: var(--letterSpacing-body);
+    font-feature-settings: var(--fontFeatureSettings-body);
+
+    &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-body); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); }
+  }
+
+  &[data-variant="label"] {
+    --_lineHeight: var(--lineHeight-label);
+    --_baselineOffset: var(--baseline-offset-label);
+
+    font-family: var(--fontFamily-label);
+    font-weight: var(--fontWeight-label);
+    letter-spacing: var(--letterSpacing-label);
+    font-feature-settings: var(--fontFeatureSettings-label);
+
+    &[data-size="sm"] { --_fontSize: var(--fontSize-label-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-label); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-label-large); }
+  }
+
+  /* =====================================================
+     ALIGNMENT
+  ===================================================== */
+
+  &[data-align="left"]   { text-align: left; }
+  &[data-align="center"] { text-align: center; }
+  &[data-align="right"]  { text-align: right; }
+
+  /* =====================================================
+     WRAP STRATEGIES
+  ===================================================== */
+
+  &[data-wrap="balance"] { text-wrap: balance; }
+  &[data-wrap="pretty"]  { text-wrap: pretty; }
+  &[data-wrap="stable"]  { text-wrap: stable; }
+
+  /* =====================================================
+     FEATURE LAYER — TEXT TRIM
+     Same gates as Heading. Removable in one sweep.
+  ===================================================== */
+
+  /* Native trim branch */
+  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+    > .text-content {
+      text-box-trim: trim-both;
+      text-box-edge: cap alphabetic;
+      margin-block: 0;
+    }
+  }
+
+  /* Fallback branch */
+  @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
+    > .text-content {
+      --_effectiveLineHeight: calc(var(--_fontSize) * var(--_lineHeight));
+      --_marginBlock: calc((var(--_fontSize) - var(--_effectiveLineHeight)) / 2);
+      --_marginBlockStart: calc(var(--_marginBlock) + var(--_baselineOffset, 0));
+      --_marginBlockEnd: calc(var(--_marginBlock) - var(--_baselineOffset, 0));
+
+      margin-block-start: var(--_marginBlockStart);
+      margin-block-end: var(--_marginBlockEnd);
+    }
+  }
+}
+</style>

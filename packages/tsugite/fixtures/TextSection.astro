@@ -1,0 +1,59 @@
+---
+// Text — the quiet voices (body, label) on authored elements.
+// Same contract-map pattern as Typography: every variant × size renders,
+// so drift in the label/body bundles shows here first.
+import Heading from "../components/Heading/Heading.astro";
+import Prose from "../components/Prose/Prose.astro";
+import Text from "../components/Text/Text.astro";
+
+const sizes = ["lg", "md", "sm"];
+const ELEMENTS = ["p", "span", "div"];
+const VARIANTS = ["body", "label"];
+---
+
+<section class="KitchenSink-section" id="Text">
+  <Heading text="Text" element="h2" size="2" />
+
+  <Prose variant="basic">
+    <p>
+      Authored single-run UI text. Text owns the quiet voices (body,
+      label); Heading owns the loud ones. The litmus: do you author the
+      element? → family component. A flow you don't control? → Prose.
+    </p>
+  </Prose>
+
+  {
+    VARIANTS.map((variant) => (
+      <section class="component-map">
+        <header>
+          <Heading element="h3" text={`variant: ${variant}`} />
+          <Prose variant="basic" size="sm">
+            <p>{variant === "body" ? "the body bundle — Noto Serif" : "the label bundle — Inter"} · p / span / div · size lg–sm</p>
+          </Prose>
+        </header>
+        <table>
+          <thead>
+            <tr>
+              <th />
+              {ELEMENTS.map((el) => (
+                <th scope="col">{el}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {sizes.map((size) => (
+              <tr>
+                <th scope="row">size {size}</th>
+                {ELEMENTS.map((el) => (
+                  <td>
+                    <Text element={el} variant={variant} size={size} text={`${variant} ${size}`} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    ))
+  }
+</section>
