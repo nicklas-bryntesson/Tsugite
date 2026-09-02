@@ -160,7 +160,7 @@ const fieldAttrs = { min: String(min), max: String(max), step: String(step), ...
 
 .RangeGroup .roles [data-readout] {
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  font-weight: var(--ui-font-weight-strong);
   color: var(--_rg-readout-color);
   /* A number plus a unit is its own bidi run; isolating it keeps it from
      reordering the text around it in a mixed-direction document. */

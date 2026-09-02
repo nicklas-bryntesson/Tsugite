@@ -138,7 +138,7 @@ toggle-tip .popup {
   background-color: var(--_tt-surface-color);
   color: var(--_tt-text-color);
   font: inherit;
-  font-size: 1rem;
+  font-size: var(--ui-font-size);
   box-shadow: var(--ui-shadow);
 }
 
@@ -163,7 +163,7 @@ toggle-tip .popup[aria-hidden="false"] {
 /* ── Title ─────────────────────────────────────────────────────── */
 toggle-tip .title {
   display: block;
-  font-weight: bold;
+  font-weight: var(--ui-font-weight-strong);
   margin-block-end: 1rem;
   padding-block-end: 1rem;
   border-block-end: 1px solid var(--_tt-border-color);
