@@ -134,8 +134,9 @@ const pillarNotes: Record<string, string> = {
 
   & .pillar-eyebrow {
     margin: 0 0 -0.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: var(--fontSize-label-small);
+    font-weight: var(--fontWeight-body-bold);
+    /* tracked manner stays raw pending the Eyebrow primitive (map G2) */
     letter-spacing: 0.1em;
     color: var(--color-text-secondary);
 
@@ -144,7 +145,7 @@ const pillarNotes: Record<string, string> = {
 
   & .pillar-note {
     margin: 0;
-    font-size: 0.85rem;
+    font-size: var(--fontSize-label-small);
     color: var(--color-text-secondary);
   }
 
@@ -168,7 +169,7 @@ const pillarNotes: Record<string, string> = {
     background-color: var(--color-surface-page);
     color: var(--color-text-primary);
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: var(--fontSize-label);
   }
 
   & a.card:hover {
@@ -180,8 +181,9 @@ const pillarNotes: Record<string, string> = {
   }
 
   & .badge {
-    font-size: 0.68rem;
-    font-weight: 600;
+    font-size: var(--fontSize-label-small);
+    font-weight: var(--fontWeight-body-bold);
+    /* tracked-caps manner stays raw pending the Eyebrow/pill primitives */
     letter-spacing: 0.08em;
     text-transform: uppercase;
     padding: 0.15rem 0.5rem;
@@ -220,13 +222,13 @@ const pillarNotes: Record<string, string> = {
       border-radius: 0.4rem;
       background-color: var(--color-surface-inset);
       color: var(--color-text-primary);
-      font-size: 0.8rem;
+      font-size: var(--fontSize-code);
     }
   }
 
   & .bench-link {
     margin: 0.5rem 0 0;
-    font-size: 0.9rem;
+    font-size: var(--fontSize-label);
     color: var(--color-text-secondary);
 
     & a { color: var(--color-interactive-secondary-text); }

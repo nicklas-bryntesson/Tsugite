@@ -88,12 +88,12 @@ const buttonSizes = ["sm", "md", "lg"];
   }
 
   & .doc-breadcrumb {
-    font-size: 0.85rem;
+    font-size: var(--fontSize-label-small);
     color: var(--color-text-secondary);
     & a { color: var(--color-interactive-secondary-text); }
   }
 
-  & .note { margin: 0; color: var(--color-text-secondary); font-size: 0.9rem; }
+  & .note { margin: 0; color: var(--color-text-secondary); font-size: var(--fontSize-label); }
 
   & .gamut-pair {
     display: flex;
@@ -114,8 +114,9 @@ const buttonSizes = ["sm", "md", "lg"];
 
   & .guide-label {
     margin: 1rem 0 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: var(--fontSize-label-small);
+    font-weight: var(--fontWeight-body-bold);
+    /* tracked-caps manner stays raw pending the Eyebrow primitive */
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-text-secondary);

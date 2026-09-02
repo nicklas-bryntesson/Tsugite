@@ -104,7 +104,7 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
   }
 
   & .doc-breadcrumb {
-    font-size: 0.85rem;
+    font-size: var(--fontSize-label-small);
     color: var(--color-text-secondary);
     & a { color: var(--color-interactive-secondary-text); }
   }
@@ -131,15 +131,15 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
     & .specimen { grid-template-columns: 1fr; gap: 0.2rem; }
   }
 
-  & .specimen-token { font-size: 0.75rem; color: var(--color-text-secondary); }
+  & .specimen-token { font-size: var(--fontSize-label-small); color: var(--color-text-secondary); }
   & .specimen-text {
     font-family: var(--fontFamily-heading);
     font-weight: var(--fontWeight-heading);
     color: var(--color-text-primary);
-    line-height: 1.1;
+    line-height: var(--lineHeight-heading);
     white-space: nowrap;
   }
-  & .specimen-value { font-family: monospace; font-size: 0.75rem; color: var(--color-text-secondary); }
+  & .specimen-value { font-family: var(--fontFamily-code); font-size: var(--fontSize-label-small); color: var(--color-text-secondary); }
 
   & .bar-row {
     display: grid;
@@ -147,7 +147,7 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
     align-items: center;
     gap: 1rem;
 
-    & code { font-size: 0.78rem; color: var(--color-text-secondary); }
+    & code { font-size: 0.875em; /* inline code scales relatively — the Prose mechanism */ color: var(--color-text-secondary); }
   }
 
   & .bar {
