@@ -9,14 +9,14 @@ Plan: [plan.md](plan.md) · Baseline census: 118 raw hits / 30 files (2026-09-02
 ### ⛔ Checkpoint 1 — human review of map + gap proposals (vocabulary decisions live here)
 
 ## Phase 1 — Tools
-- [ ] **T3** Fill approved gaps only (one tool per commit, doctrine-compliant)
+- [x] **T3** Text component (PR #5) — body+label voices, one door per look; Heading's farm gains legend/figcaption
 
 ## Phase 2 — Package sweep (bottom-up)
-- [ ] **T4** Prose + Heading (the tools themselves: 12 hits)
-- [ ] **T5** Field family via the seam split (~32 hits; upstream feedback logged)
-- [ ] **T6** Remaining components + fixtures + styles/base (package census → 0)
+- [x] **T4** Prose adopts the ramp (F3/F4); Heading's two hits were class A
+- [x] **T5** Field family via four new seam pointers (--ui-font-size/-small, --ui-font-weight/-strong); 414/414 e2e green, zero adaptations
+- [x] **T6** Fixtures use Text / tokens; reset names --lineHeight-body
 
-### ⛔ Checkpoint 2 — package clean: census 0 (minus allowlist), 226 vitest + 403 e2e green
+### ✅ Checkpoint 2 — package census: 11 raw hits remain, ALL class A (5 mechanical trims, 4 Prose em-mechanism, 2 test stimuli); 226 vitest + 414 e2e green
 
 ## Phase 3 — Docs app sweep
 - [ ] **T7** App base styles (font.css, global, Layout, Tables, kitchenSink)

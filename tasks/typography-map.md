@@ -164,6 +164,24 @@ get logged upstream (INTAKE §7).
   allowlisted one-off; becomes `--fontFamily-ja` the day Japanese text
   spreads beyond the logo.
 
+## Sweep log (Phase 2, 2026-09-02)
+
+- Package swept: census 11 remaining, all class A. 226 vitest + 414 e2e
+  green with **zero test adaptations** (the bold→body-bold swap was
+  value-identical at 700; suites held through the size breathing).
+- **New finding (parked):** CtaLinkButton reads ghost tokens —
+  `--fontSize-cta` and `--fontFamily-button` don't exist in the semantic
+  layer, so its defensive fallbacks are the actual values (ADR-0008
+  violation outside the census regex). Needs a role decision (is CTA
+  label-voice at a bigger stop, or its own voice?).
+- **Upstream feedback (INTAKE §7), for reference-components:** the field
+  family's raw font-size/weight values became one-line substitutions
+  against four new seam tokens (--ui-font-size, --ui-font-size-small,
+  --ui-font-weight, --ui-font-weight-strong). Upstream should consider
+  adopting typography seam tokens so ports need no substitutions at all;
+  also: whether the label role wants an own strong weight stop instead
+  of borrowing body-bold.
+
 ## Gaps (T2) — roles without a reachable tool
 
 Family model per `notes-typography-components.md`: per-element components
