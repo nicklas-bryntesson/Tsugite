@@ -260,18 +260,25 @@ const inner = hasContent ? content! : childHtml;
 /* Typography */
 
 .Prose :where(p) {
-  line-height: 1.7;
+  line-height: var(--lineHeight-body);
+}
+
+/* Headings inside the flow speak the heading role — the whole bundle,
+   so a prose h2 and a <Heading size="2"> are the same voice. */
+.Prose :where(h2, h3) {
+  font-family: var(--fontFamily-heading);
+  font-weight: var(--fontWeight-heading);
+  line-height: var(--lineHeight-heading);
+  letter-spacing: var(--letterSpacing-heading);
+  font-feature-settings: var(--fontFeatureSettings-heading);
 }
 
 .Prose :where(h2) {
-  font-size: 1.75rem;
-  font-weight: 600;
-  line-height: 1.2;
+  font-size: var(--fontSize-h2);
 }
 
 .Prose :where(h3) {
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: var(--fontSize-h3);
 }
 
 .Prose :where(ul, ol) {
