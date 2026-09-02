@@ -5,6 +5,7 @@ import "../styles/global.css";
 import Header from "../components/Header/Header.astro";
 import Footer from "../components/Footer/Footer.astro";
 import SvgSprite from "../components/SvgSprite/SvgSprite.astro";
+import ResolutionBar from "../components/ResolutionBar/ResolutionBar.astro";
 
 interface Props {
   title?: string;
@@ -12,9 +13,11 @@ interface Props {
   template?: string;
   /** Mirrors _Layout.cshtml's HeroPosterUrl preload for hero media */
   preloadImage?: string;
+  /** Opt-in live readout strip: resolved appearance/contrast/tier/width + type-scale spoof */
+  resolutionBar?: boolean;
 }
 
-const { title = "Tsugite", template, preloadImage } = Astro.props;
+const { title = "Tsugite", template, preloadImage, resolutionBar = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -43,6 +46,8 @@ const { title = "Tsugite", template, preloadImage } = Astro.props;
   <body>
     <div id="App" class="Layout" data-template={template}>
       <Header />
+
+      {resolutionBar && <ResolutionBar />}
 
       <slot />
 
