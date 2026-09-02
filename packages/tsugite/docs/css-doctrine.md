@@ -77,7 +77,23 @@ The cascade is used intentionally, never as an escape hatch.
 - ❌ Conflict resolution, specificity wars, overriding component rules
   downstream.
 
-## 5. The inspector test
+## 5. Progressive enhancement — gated, happy path last, deletable (ADR-0009)
+
+Defensive design applied to front-end structure: guards first, the
+happy path last, authored as the end state.
+
+- Enhancement is gated with `@supports`. Branches are bounded and
+  self-contained — values never bleed between them. The support axis is
+  an axis like every other (§1).
+- Fallbacks are guards written to die. A fallback branch or a compile
+  polyfill is allowed only if removal is a no-op for the supported set
+  — by construction, or proven by running the conformance suites with
+  the mechanism disabled (the deletion-readiness check).
+- When a feature crosses the support threshold, the fallback branch,
+  its gate, or the polyfill package is deleted wholesale. The surviving
+  modern branch is never edited by the deletion.
+
+## 6. The inspector test
 
 Inspecting any element must show exactly one active rule per property —
 no strikethrough noise — and the resolution must read unambiguously:
