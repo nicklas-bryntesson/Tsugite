@@ -86,13 +86,13 @@ const cells = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
 
   & .cell-label {
     margin: 0;
-    font-size: 0.75rem;
+    font-size: var(--fontSize-label-small);
     color: var(--theme-textMuted, var(--color-text-secondary));
   }
 
   & .cell-text {
     margin: 0;
-    font-weight: 600;
+    font-weight: var(--fontWeight-body-bold);
   }
 
   & .cell-muted {
@@ -104,7 +104,7 @@ const cells = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     padding: 0.375rem 0.75rem;
     border: 1px solid var(--theme-border, var(--color-border-default));
     border-radius: 0.5rem;
-    font-size: 0.875rem;
+    font-size: var(--fontSize-label);
   }
 
   & .cell-buttons {
