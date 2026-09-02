@@ -33,6 +33,12 @@ Decide which side of the seam you are on before changing anything.
    `packages/tsugite/styles/ui-tokens.css`). Author tokens in
    `packages/tsugite/theme-default/*.tokens.js`, regenerate with
    `pnpm tokens`. Enforced by a PreToolUse hook.
+5. **Git flow.** All work happens on branches (`feat/`, `fix/`,
+   `chore/`, `docs/`); nothing is committed directly to `main` —
+   changes reach it through pull requests. Never force-push, never
+   rewrite pushed history, stage explicitly (no `git add -A`/`.`).
+   The commit/PR routine lives in the `git-flow` skill. Commits to
+   `main` and force-pushes are blocked by a PreToolUse hook.
 
 ## When to read what
 
