@@ -12,13 +12,37 @@
 
 export const TIERS = ["floor", "mobile", "desktop", "wide"];
 
-/** RAW families and weights — the rebrand surface. */
+/** RAW families and weights — the rebrand surface.
+
+    metrics are the typeface's geometry as em fractions (ascent above /
+    descent below the baseline, capHeight above it), the constants the
+    faux-trim math needs to emulate text-box-edge: cap alphabetic: the
+    em box is ascent+descent (NOT 1!), the cap gap is ascent−capHeight.
+    Values below were probed via canvas TextMetrics (Chromium's reading
+    of the font tables); the step-2 plan is to read them exactly from
+    the woff2 files at build. A family without metrics refuses to
+    build. */
 export const typeFamilies = {
-  "--FIRA-SANS": "'Fira Sans', system-ui, sans-serif",
-  "--NOTO-SERIF": "'Noto Serif', georgia, serif",
-  "--ABRIL-FATFACE": "'Abril Fatface', georgia, serif",
-  "--INTER": "'Inter', system-ui, sans-serif",
-  "--MONOSPACE": "monospace",
+  "--FIRA-SANS": {
+    stack: "'Fira Sans', system-ui, sans-serif",
+    metrics: { ascent: 0.93, capHeight: 0.692, descent: 0.26 },
+  },
+  "--NOTO-SERIF": {
+    stack: "'Noto Serif', georgia, serif",
+    metrics: { ascent: 1.07, capHeight: 0.714, descent: 0.29 },
+  },
+  "--ABRIL-FATFACE": {
+    stack: "'Abril Fatface', georgia, serif",
+    metrics: { ascent: 1.06, capHeight: 0.7, descent: 0.29 },
+  },
+  "--INTER": {
+    stack: "'Inter', system-ui, sans-serif",
+    metrics: { ascent: 0.97, capHeight: 0.728, descent: 0.24 },
+  },
+  "--MONOSPACE": {
+    stack: "monospace",
+    metrics: { ascent: 0.8, capHeight: 0.7, descent: 0.2 },
+  },
 };
 
 export const typeWeights = {

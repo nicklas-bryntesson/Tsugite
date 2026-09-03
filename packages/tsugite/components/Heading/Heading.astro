@@ -220,6 +220,9 @@ const Tag = element as "h2";
   &[data-variant="heading"] {
     --_lineHeight: var(--lineHeight-heading);
     --_baselineOffset: var(--baseline-offset-heading);
+    --_emBox: var(--fontEmBox-heading);
+    --_capGap: var(--fontCapGap-heading);
+    --_descent: var(--fontDescent-heading);
 
     font-family: var(--fontFamily-heading);
     font-weight: var(--fontWeight-heading);
@@ -237,6 +240,9 @@ const Tag = element as "h2";
   &[data-variant="display"] {
     --_lineHeight: var(--lineHeight-display);
     --_baselineOffset: var(--baseline-offset-display);
+    --_emBox: var(--fontEmBox-display);
+    --_capGap: var(--fontCapGap-display);
+    --_descent: var(--fontDescent-display);
 
     font-family: var(--fontFamily-display);
     font-weight: var(--fontWeight-display);
@@ -251,6 +257,9 @@ const Tag = element as "h2";
   &[data-variant="body"] {
     --_lineHeight: var(--lineHeight-body);
     --_baselineOffset: var(--baseline-offset-body);
+    --_emBox: var(--fontEmBox-body);
+    --_capGap: var(--fontCapGap-body);
+    --_descent: var(--fontDescent-body);
 
     font-family: var(--fontFamily-body);
     font-weight: var(--fontWeight-body);
@@ -298,10 +307,13 @@ const Tag = element as "h2";
   @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
      &[data-run="block"] > .heading-link,
      &[data-run="block"] > .heading-text {
-         --_effectiveLineHeight: calc(var(--_fontSize) * var(--_lineHeight));
-         --_marginBlock: calc((var(--_fontSize) - var(--_effectiveLineHeight)) / 2);
-         --_marginBlockStart: calc(var(--_marginBlock) + (var(--_baselineOffset, 0) * var(--_fontSize)));
-         --_marginBlockEnd: calc(var(--_marginBlock) - (var(--_baselineOffset, 0) * var(--_fontSize)));
+         /* Emulates text-box-edge: cap alphabetic. The line box's content
+            area is the REAL em box (ascent+descent — 1.19-1.36em for our
+            faces, never 1), so the shave is half of (emBox - lineHeight)
+            plus the cap gap above / the descent below. baselineOffset stays
+            as the artistic nudge on top (factor x font size). */
+         --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
+         --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
    
          margin-block-start: var(--_marginBlockStart);
          margin-block-end: var(--_marginBlockEnd);

@@ -25,7 +25,7 @@ describe("the typography tables", () => {
 
   it("a tier-mapped metric emits per tier (and in the bench overrides), never in :root", () => {
     const tables = {
-      families: { "--SYNTH": "'Synth', sans-serif" },
+      families: { "--SYNTH": { stack: "'Synth', sans-serif", metrics: { ascent: 0.9, capHeight: 0.7, descent: 0.2 } } },
       weights: { "--SYNTH-400": "400" },
       sizes: { probe: { floor: "1rem", mobile: "1rem", desktop: "1rem", wide: "1rem" } },
       voices: {
@@ -52,7 +52,7 @@ describe("the typography tables", () => {
 
   it("a partial tier map is refused (the refusal rule)", () => {
     const tables = {
-      families: { "--SYNTH": "x" },
+      families: { "--SYNTH": { stack: "x", metrics: { ascent: 0.9, capHeight: 0.7, descent: 0.2 } } },
       weights: { "--SYNTH-400": "400" },
       sizes: {},
       voices: {
@@ -71,7 +71,7 @@ describe("the typography tables", () => {
 
   it("the unit laws: line-height unitless, baseline offset a length", () => {
     const base = {
-      families: { "--SYNTH": "x" },
+      families: { "--SYNTH": { stack: "x", metrics: { ascent: 0.9, capHeight: 0.7, descent: 0.2 } } },
       weights: { "--SYNTH-400": "400" },
       sizes: {},
     };
