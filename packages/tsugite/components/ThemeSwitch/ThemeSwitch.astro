@@ -130,8 +130,10 @@ const [systemId, lightId, darkId] = inputIds;
  * control whose arity is fixed at three by its own contract. The equal 40px
  * segments are what make `translate: 100%` exact rather than approximate.
  *
- * Root carries tokens + root props only; every part is a flat, fully-qualified
- * `.ThemeSwitch <part>` rule below (ADR-0019).
+ * One root, one tree (ADR-0010): the root carries tokens + root props; parts,
+ * states and the media gates are nested rules. Source order is the cascade
+ * order — the forced-colors block stays last because it overrides `color`
+ * and `opacity` on selectors of equal specificity above it.
  */
 
 .ThemeSwitch {
@@ -154,144 +156,144 @@ const [systemId, lightId, darkId] = inputIds;
   padding: 0;
   min-inline-size: 0;
   inline-size: fit-content;
-}
 
-/* The group's only intrinsic name, kept for screen readers and clipped visually:
-   three icons need a name, and a <legend> is the one that needs no id plumbing. */
-.ThemeSwitch > legend,
-.ThemeSwitch .visually-hidden {
-  position: absolute;
-  inline-size: 1px;
-  block-size: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* .options is the track: the positioning context for both the clipped inputs and
-   the sliding indicator, and the flex row the segments sit in. */
-.ThemeSwitch .options {
-  position: relative;
-  display: flex;
-  gap: 0;                                          /* segmented: the segments touch */
-  padding: var(--_ts-padding);
-  border: 1px solid var(--_ts-border-color);
-  border-radius: var(--_ts-radius);
-  background-color: var(--_ts-bg);
-  isolation: isolate;                              /* keep the indicator's z-index local */
-}
-
-/* sr-clipped but STILL FOCUSABLE — never display:none / visibility:hidden. */
-.ThemeSwitch .options input {
-  position: absolute;
-  inline-size: 1px;
-  block-size: 1px;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* The label is the segment. Equal, square and icon-only, which is what makes the
-   indicator's translate steps exact. */
-.ThemeSwitch .options input + label {
-  position: relative;
-  z-index: 1;                                      /* above the indicator */
-  display: grid;
-  place-items: center;
-  inline-size: var(--_ts-size);
-  block-size: var(--_ts-size);
-  border-radius: var(--_ts-radius);
-  color: var(--_ts-fg);
-  cursor: pointer;
-  user-select: none;
-  transition: color var(--_ts-transition);
-}
-
-.ThemeSwitch .options .icon {
-  inline-size: var(--_ts-icon-size);
-  block-size: var(--_ts-icon-size);
-  display: block;                                  /* kill the inline descender gap */
-}
-
-/* Selected — the label only carries the foreground; the fill is the indicator. */
-.ThemeSwitch .options input:checked + label {
-  color: var(--_ts-selected-fg);
-}
-
-/* ── The sliding indicator ─────────────────────────────────────────────────
-   One rule per segment index. Three segments, three rules, and the cap is the
-   contract rather than a limitation. `translate` (not `transform`) so the
-   property that animates is the property that is set — mixing the two leaves the
-   initial position outside the transition. */
-.ThemeSwitch .options .indicator {
-  position: absolute;
-  z-index: 0;
-  inset-block-start: var(--_ts-padding);
-  inset-inline-start: var(--_ts-padding);
-  inline-size: var(--_ts-size);
-  block-size: var(--_ts-size);
-  border-radius: var(--_ts-radius);
-  background-color: var(--_ts-selected-bg);
-  translate: 0;
-  transition: translate var(--_ts-transition);
-  pointer-events: none;
-}
-
-.ThemeSwitch .options input:nth-of-type(2):checked ~ .indicator { translate: 100%; }
-.ThemeSwitch .options input:nth-of-type(3):checked ~ .indicator { translate: 200%; }
-
-/* A moving indicator is decorative motion. The reference implementation this is
-   modelled on had no reduced-motion guard at all on its 250ms slide. */
-@media (prefers-reduced-motion: reduce) {
-  .ThemeSwitch .options .indicator,
-  .ThemeSwitch .options input + label { transition: none; }
-}
-
-/* ── Interaction states (real pseudo-class + data-test-state pairs) ────── */
-.ThemeSwitch .options input:not(:checked):hover + label,
-.ThemeSwitch[data-test-state="hover"] .options input:not(:checked) + label {
-  background-color: var(--_ts-bg-hover);
-}
-
-/* Focus — INSET, for the same reason as Picklist: a selected segment sits on the
-   indicator's fill and flips `color`, so an outward currentColor ring would be
-   drawn on the page behind the control, where it can vanish. Inset, the ring
-   always lands on the surface directly beneath it. */
-.ThemeSwitch .options input:focus-visible + label,
-.ThemeSwitch[data-test-state="focus"] .options input + label {
-  outline: 2px solid;
-  outline-offset: -3px;
-}
-
-.ThemeSwitch .options input:not(:checked):active + label,
-.ThemeSwitch[data-test-state="active"] .options input:not(:checked) + label {
-  background-color: var(--_ts-bg-hover);
-}
-
-/* disabled — family convention: dim, don't recolour. Covers the <fieldset
-   disabled> cascade too. */
-.ThemeSwitch .options input:disabled + label {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* Windows High Contrast / forced-colors: the indicator is an author-painted div,
-   so the platform draws no selection — redraw it from system colours. The focus
-   ring needs no override: it is inset currentColor, which resolves to
-   HighlightText on a selected segment and CanvasText on an unselected one.
-   Do not delete this block when porting. */
-@media (forced-colors: active) {
-  .ThemeSwitch .options .indicator {
-    background-color: Highlight;
-    forced-color-adjust: none;
+  /* The group's only intrinsic name, kept for screen readers and clipped visually:
+     three icons need a name, and a <legend> is the one that needs no id plumbing. */
+  & > legend,
+  & .visually-hidden {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
-  .ThemeSwitch .options input:checked + label { color: HighlightText; }
-  .ThemeSwitch .options input:disabled + label { color: GrayText; opacity: 1; }
+
+  /* .options is the track: the positioning context for both the clipped inputs and
+     the sliding indicator, and the flex row the segments sit in. */
+  & .options {
+    position: relative;
+    display: flex;
+    gap: 0;                                        /* segmented: the segments touch */
+    padding: var(--_ts-padding);
+    border: 1px solid var(--_ts-border-color);
+    border-radius: var(--_ts-radius);
+    background-color: var(--_ts-bg);
+    isolation: isolate;                            /* keep the indicator's z-index local */
+
+    /* sr-clipped but STILL FOCUSABLE — never display:none / visibility:hidden. */
+    & input {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* The label is the segment. Equal, square and icon-only, which is what makes the
+       indicator's translate steps exact. */
+    & input + label {
+      position: relative;
+      z-index: 1;                                  /* above the indicator */
+      display: grid;
+      place-items: center;
+      inline-size: var(--_ts-size);
+      block-size: var(--_ts-size);
+      border-radius: var(--_ts-radius);
+      color: var(--_ts-fg);
+      cursor: pointer;
+      user-select: none;
+      transition: color var(--_ts-transition);
+    }
+
+    & .icon {
+      inline-size: var(--_ts-icon-size);
+      block-size: var(--_ts-icon-size);
+      display: block;                              /* kill the inline descender gap */
+    }
+
+    /* Selected — the label only carries the foreground; the fill is the indicator. */
+    & input:checked + label {
+      color: var(--_ts-selected-fg);
+    }
+
+    /* ── The sliding indicator ───────────────────────────────────────────────
+       One rule per segment index. Three segments, three rules, and the cap is the
+       contract rather than a limitation. `translate` (not `transform`) so the
+       property that animates is the property that is set — mixing the two leaves the
+       initial position outside the transition. */
+    & .indicator {
+      position: absolute;
+      z-index: 0;
+      inset-block-start: var(--_ts-padding);
+      inset-inline-start: var(--_ts-padding);
+      inline-size: var(--_ts-size);
+      block-size: var(--_ts-size);
+      border-radius: var(--_ts-radius);
+      background-color: var(--_ts-selected-bg);
+      translate: 0;
+      transition: translate var(--_ts-transition);
+      pointer-events: none;
+    }
+
+    & input:nth-of-type(2):checked ~ .indicator { translate: 100%; }
+    & input:nth-of-type(3):checked ~ .indicator { translate: 200%; }
+  }
+
+  /* A moving indicator is decorative motion. The reference implementation this is
+     modelled on had no reduced-motion guard at all on its 250ms slide. */
+  @media (prefers-reduced-motion: reduce) {
+    & .options .indicator,
+    & .options input + label { transition: none; }
+  }
+
+  /* ── Interaction states (real pseudo-class + data-test-state pairs) ────── */
+  & .options input:not(:checked):hover + label,
+  &[data-test-state="hover"] .options input:not(:checked) + label {
+    background-color: var(--_ts-bg-hover);
+  }
+
+  /* Focus — INSET, for the same reason as Picklist: a selected segment sits on the
+     indicator's fill and flips `color`, so an outward currentColor ring would be
+     drawn on the page behind the control, where it can vanish. Inset, the ring
+     always lands on the surface directly beneath it. */
+  & .options input:focus-visible + label,
+  &[data-test-state="focus"] .options input + label {
+    outline: 2px solid;
+    outline-offset: -3px;
+  }
+
+  & .options input:not(:checked):active + label,
+  &[data-test-state="active"] .options input:not(:checked) + label {
+    background-color: var(--_ts-bg-hover);
+  }
+
+  /* disabled — family convention: dim, don't recolour. Covers the <fieldset
+     disabled> cascade too. */
+  & .options input:disabled + label {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* Windows High Contrast / forced-colors: the indicator is an author-painted div,
+     so the platform draws no selection — redraw it from system colours. The focus
+     ring needs no override: it is inset currentColor, which resolves to
+     HighlightText on a selected segment and CanvasText on an unselected one.
+     Do not delete this block when porting. */
+  @media (forced-colors: active) {
+    & .options .indicator {
+      background-color: Highlight;
+      forced-color-adjust: none;
+    }
+    & .options input:checked + label { color: HighlightText; }
+    & .options input:disabled + label { color: GrayText; opacity: 1; }
+  }
 }
 </style>
