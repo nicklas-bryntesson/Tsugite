@@ -23,6 +23,52 @@ describe("the typography tables", () => {
     expect(artifact).toBe(generateTypographyStylesheet());
   });
 
+  it("a tier-mapped metric emits per tier (and in the bench overrides), never in :root", () => {
+    const tables = {
+      families: { "--SYNTH": "'Synth', sans-serif" },
+      weights: { "--SYNTH-400": "400" },
+      sizes: { probe: { floor: "1rem", mobile: "1rem", desktop: "1rem", wide: "1rem" } },
+      voices: {
+        probe: {
+          family: "--SYNTH",
+          weights: { default: "--SYNTH-400" },
+          lineHeight: "1.4",
+          letterSpacing: { floor: "0", mobile: "-0.005em", desktop: "-0.01em", wide: "-0.01em" },
+          featureSettings: "normal",
+          baselineOffset: "1",
+        },
+      },
+    };
+    const css = generateTypographyStylesheet(tables);
+    // the scalar stays in :root, the tiered metric never appears there
+    const root = css.slice(0, css.indexOf("@media"));
+    expect(root).toContain("--lineHeight-probe: 1.4;");
+    expect(root).not.toContain("--letterSpacing-probe");
+    // one emission per tier block + one per bench override (floor/mobile/desktop)
+    expect(css.match(/--letterSpacing-probe: -0\.01em;/g)?.length).toBe(3); // desktop + wide + bench desktop
+    expect(css.match(/--letterSpacing-probe: 0;/g)?.length).toBe(2); // floor + bench floor
+    expect(css.match(/--letterSpacing-probe: -0\.005em;/g)?.length).toBe(2); // mobile + bench mobile
+  });
+
+  it("a partial tier map is refused (the refusal rule)", () => {
+    const tables = {
+      families: { "--SYNTH": "x" },
+      weights: { "--SYNTH-400": "400" },
+      sizes: {},
+      voices: {
+        probe: {
+          family: "--SYNTH",
+          weights: { default: "--SYNTH-400" },
+          lineHeight: { floor: "1.5", mobile: "1.4" }, // desktop + wide missing
+          letterSpacing: "normal",
+          featureSettings: "normal",
+          baselineOffset: "1",
+        },
+      },
+    };
+    expect(() => validateTypography(tables)).toThrow(/probe\/lineHeight is missing the desktop tier/);
+  });
+
   it("every voice the family speaks has a bundle and a complete ramp", () => {
     for (const [component, member] of Object.entries(FAMILY)) {
       for (const voice of Object.keys(member.voices)) {
