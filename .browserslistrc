@@ -1,0 +1,11 @@
+# The support contract — the one place the browser target is stated (ADR-0010).
+# Read by Lightning CSS (via apps/docs/astro.config.mjs) to decide what is
+# lowered — nesting, prefixes, modern syntax — and by the CSS nesting gate test.
+#
+# `defaults` = "> 0.5%, last 2 versions, Firefox ESR, not dead". Its long tail
+# is Chrome 109 (the Windows 7/8 pin), which is exactly the ~8% nesting gap
+# caniuse reports for Sweden (2026-09). A Sweden-only query (">0.5% in SE,
+# last 2 versions") resolves to Chrome 120+ and would declare nesting native
+# today — the gate test would then call deletion day. Changing this line is a
+# threshold decision (ADR-0009), not a convenience.
+defaults
