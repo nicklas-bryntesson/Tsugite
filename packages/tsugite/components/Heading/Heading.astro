@@ -138,7 +138,9 @@ const cssClass = className && String(className).trim() ? `Heading ${className}` 
 let inner = "";
 if (mode === "render") {
   if (hasChildContent) {
-    inner = childHtml;
+    // Run engine law (a): child content passes through the same engine
+    // container as prop text — no path bypasses size/leading/trim.
+    inner = `<span class="heading-text">${childHtml}</span>`;
   } else {
     const encoded = highlight ? applyHighlight(text!, highlight) : escapeHtml(text!);
     inner = hasHref
@@ -146,6 +148,9 @@ if (mode === "render") {
       : `<span class="heading-text">${encoded}</span>`;
   }
 }
+
+// Run engine law (c): a span is an inline run; block runs own their trim.
+const runMode = element === "span" ? "inline" : "block";
 
 const Tag = element as "h2";
 ---
@@ -156,6 +161,7 @@ const Tag = element as "h2";
       class={cssClass}
       data-variant={variant}
       data-size={resolvedSize}
+      data-run={runMode}
       data-color={colorAttr}
       data-align={alignAttr}
       data-wrap={wrapAttr}
@@ -186,16 +192,25 @@ const Tag = element as "h2";
 
    .heading-link,
    .heading-text {
-    display: block;
     font-size: var(--_fontSize);
     line-height: var(--_lineHeight);
 
-    /* Inline children inherit metrics */
-    & :where(a, span, strong, em, b, i) {
+    /* Law (d) — voice sovereignty: an UNVOICED inline element inherits
+       (and in the loud voices that includes strong/em — partial bolding
+       of a heading is drift, deliberately flattened); a voiced child
+       (data-variant) — and everything inside it — owns its own bundle. */
+    & :where(a, span, strong, em, b, i):where(:not([data-variant], [data-variant] *)) {
       font: inherit;
       line-height: inherit;
       letter-spacing: inherit;
     }
+  }
+
+  /* Law (c) — block runs own their display; inline runs (span) keep
+     the UA's inline flow. */
+  &[data-run="block"] > .heading-link,
+  &[data-run="block"] > .heading-text {
+    display: block;
   }
 
   /* =====================================================
@@ -269,20 +284,20 @@ const Tag = element as "h2";
      Applies ONLY to the text container.
   ===================================================== */
   
-  /* Native trim branch */
+  /* Native trim branch — law (c): trim is a block concept */
   @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-     > .heading-link,
-     > .heading-text {
+     &[data-run="block"] > .heading-link,
+     &[data-run="block"] > .heading-text {
       text-box-trim: trim-both;
       text-box-edge: cap alphabetic;
       margin-block: 0;
     }
   }
-  
+
   /* Fallback branch */
   @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
-     > .heading-link,
-     > .heading-text {
+     &[data-run="block"] > .heading-link,
+     &[data-run="block"] > .heading-text {
          --_effectiveLineHeight: calc(var(--_fontSize) * var(--_lineHeight));
          --_marginBlock: calc((var(--_fontSize) - var(--_effectiveLineHeight)) / 2);
          --_marginBlockStart: calc(var(--_marginBlock) + var(--_baselineOffset, 0));

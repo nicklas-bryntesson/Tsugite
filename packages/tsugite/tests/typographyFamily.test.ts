@@ -22,6 +22,16 @@ describe("the typography family contract", () => {
     }
   });
 
+  it("the plaintext contract cannot carry emphasis", () => {
+    for (const [component, member] of Object.entries(FAMILY)) {
+      if (member.input === "plaintext") {
+        expect(member.emphasis, `${component}: markup is unrepresentable in plaintext`).toBe("none");
+      } else {
+        expect(member.emphasis, `${component}: authored input must declare its emphasis law`).not.toBe("none");
+      }
+    }
+  });
+
   it("the door law: one component per (voice × element × input)", () => {
     const doors = new Map<string, string>();
     for (const [component, member] of Object.entries(FAMILY)) {

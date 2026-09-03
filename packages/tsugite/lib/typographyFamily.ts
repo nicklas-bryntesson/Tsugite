@@ -24,9 +24,24 @@ export const VOICE_SIZES: Record<string, readonly string[]> = {
 const HEADING_SHAPED = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
 const HEADING_FARM = [...HEADING_SHAPED, "span", "div", "p", "legend", "figcaption"] as const;
 
+// The run engine laws (enforced in the components' shared engine CSS):
+//   (a) child content passes through the engine container — no path
+//       bypasses size/leading/trim
+//   (b) inline emphasis (the `emphasis` field): quiet voices keep the
+//       semantics (strong → the F2 strong-weight convention, em italic);
+//       loud voices flatten — partial bolding of a heading is drift
+//   (c) run mode follows element shape: span = inline run (flows on the
+//       line, no trim — trim is a block concept), all else = block run
+//   (d) voice sovereignty: an unvoiced inline element inherits the run's
+//       metrics; a voiced child (data-variant) owns its own bundle —
+//       nearest voice wins by inheritance, never by specificity
+
 export interface FamilyMember {
   /** The input contract this component accepts. */
   input: "authored" | "plaintext";
+  /** Law (b): how inline strong/em behave inside this component's runs.
+      "none" = markup is unrepresentable (the plaintext contract). */
+  emphasis: "semantic" | "flattened" | "none";
   /** voice → elements that may speak it through this component. */
   voices: Record<string, readonly string[]>;
 }
@@ -34,6 +49,7 @@ export interface FamilyMember {
 export const FAMILY: Record<string, FamilyMember> = {
   Heading: {
     input: "authored",
+    emphasis: "flattened",
     voices: {
       heading: HEADING_FARM,
       display: HEADING_FARM,
@@ -44,6 +60,7 @@ export const FAMILY: Record<string, FamilyMember> = {
   },
   Text: {
     input: "authored",
+    emphasis: "semantic",
     voices: {
       body: ["p", "span", "div"],
       label: ["p", "span", "div"],
@@ -51,6 +68,7 @@ export const FAMILY: Record<string, FamilyMember> = {
   },
   TextBlock: {
     input: "plaintext",
+    emphasis: "none",
     voices: {
       preamble: ["p", "div"],
       body: ["p", "div"],
