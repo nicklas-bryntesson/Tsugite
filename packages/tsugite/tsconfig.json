@@ -1,0 +1,9 @@
+{
+  "extends": "astro/tsconfigs/base",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["env.d.ts", "**/*"],
+  "exclude": ["node_modules", "test-results"]
+}
