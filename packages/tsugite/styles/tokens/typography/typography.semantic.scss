@@ -31,6 +31,15 @@
     --fontFeatureSettings-label: normal;
     --baseline-offset-label: 1;
 
+    /* The standfirst voice: body's family at ingress metrics — big text
+       at body's 1.5 goes airy, so the preamble owns a tighter leading. */
+    --fontFamily-preamble: var(--NOTO-SERIF);
+    --fontWeight-preamble: var(--NOTOS-SERIF-400);
+    --lineHeight-preamble: 1.35;
+    --letterSpacing-preamble: normal;
+    --fontFeatureSettings-preamble: normal;
+    --baseline-offset-preamble: 1;
+
 
     @media (max-width: 21.24999rem) {
         --fontSize-h1:              calc(var(--FONTSIZE-H1-FLOOR) * var(--TYPE-SCALE, 1));
@@ -51,6 +60,10 @@
         --fontSize-label-small:     calc(var(--FONTSIZE-LABEL-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
         --fontSize-label:           calc(var(--FONTSIZE-LABEL-FLOOR) * var(--TYPE-SCALE, 1));
         --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
+
+        --fontSize-preamble-small:  calc(var(--FONTSIZE-PREAMBLE-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-preamble:        calc(var(--FONTSIZE-PREAMBLE-FLOOR) * var(--TYPE-SCALE, 1));
+        --fontSize-preamble-large:  calc(var(--FONTSIZE-PREAMBLE-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
 
         --fontSize-code:            calc(var(--FONTSIZE-CODE-FLOOR) * var(--TYPE-SCALE, 1));
     }
@@ -75,6 +88,10 @@
         --fontSize-label:           calc(var(--FONTSIZE-LABEL-MOBILE) * var(--TYPE-SCALE, 1));
         --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
 
+        --fontSize-preamble-small:  calc(var(--FONTSIZE-PREAMBLE-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-preamble:        calc(var(--FONTSIZE-PREAMBLE-MOBILE) * var(--TYPE-SCALE, 1));
+        --fontSize-preamble-large:  calc(var(--FONTSIZE-PREAMBLE-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
+
         --fontSize-code:            calc(var(--FONTSIZE-CODE-MOBILE) * var(--TYPE-SCALE, 1));
     }
 
@@ -98,6 +115,10 @@
         --fontSize-label:           calc(var(--FONTSIZE-LABEL-DESKTOP) * var(--TYPE-SCALE, 1));
         --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
 
+        --fontSize-preamble-small:  calc(var(--FONTSIZE-PREAMBLE-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-preamble:        calc(var(--FONTSIZE-PREAMBLE-DESKTOP) * var(--TYPE-SCALE, 1));
+        --fontSize-preamble-large:  calc(var(--FONTSIZE-PREAMBLE-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
+
         --fontSize-code:            calc(var(--FONTSIZE-CODE-DESKTOP) * var(--TYPE-SCALE, 1));
     }
 
@@ -120,6 +141,10 @@
         --fontSize-label-small:     calc(var(--FONTSIZE-LABEL-SMALL-WIDE) * var(--TYPE-SCALE, 1));
         --fontSize-label:           calc(var(--FONTSIZE-LABEL-WIDE) * var(--TYPE-SCALE, 1));
         --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-WIDE) * var(--TYPE-SCALE, 1));
+
+        --fontSize-preamble-small:  calc(var(--FONTSIZE-PREAMBLE-SMALL-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-preamble:        calc(var(--FONTSIZE-PREAMBLE-WIDE) * var(--TYPE-SCALE, 1));
+        --fontSize-preamble-large:  calc(var(--FONTSIZE-PREAMBLE-LARGE-WIDE) * var(--TYPE-SCALE, 1));
 
         --fontSize-code:            calc(var(--FONTSIZE-CODE-WIDE) * var(--TYPE-SCALE, 1));
     }
@@ -151,6 +176,10 @@
     --fontSize-label:           calc(var(--FONTSIZE-LABEL-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
 
+    --fontSize-preamble-small:  calc(var(--FONTSIZE-PREAMBLE-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-preamble:        calc(var(--FONTSIZE-PREAMBLE-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-preamble-large:  calc(var(--FONTSIZE-PREAMBLE-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
+
     --fontSize-code:            calc(var(--FONTSIZE-CODE-FLOOR) * var(--TYPE-SCALE, 1));
 }
 
@@ -174,6 +203,10 @@
     --fontSize-label:           calc(var(--FONTSIZE-LABEL-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
 
+    --fontSize-preamble-small:  calc(var(--FONTSIZE-PREAMBLE-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-preamble:        calc(var(--FONTSIZE-PREAMBLE-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-preamble-large:  calc(var(--FONTSIZE-PREAMBLE-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
+
     --fontSize-code:            calc(var(--FONTSIZE-CODE-MOBILE) * var(--TYPE-SCALE, 1));
 }
 
@@ -196,6 +229,10 @@
     --fontSize-label-small:     calc(var(--FONTSIZE-LABEL-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-label:           calc(var(--FONTSIZE-LABEL-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-label-large:     calc(var(--FONTSIZE-LABEL-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
+
+    --fontSize-preamble-small:  calc(var(--FONTSIZE-PREAMBLE-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-preamble:        calc(var(--FONTSIZE-PREAMBLE-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-preamble-large:  calc(var(--FONTSIZE-PREAMBLE-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
 
     --fontSize-code:            calc(var(--FONTSIZE-CODE-DESKTOP) * var(--TYPE-SCALE, 1));
 }

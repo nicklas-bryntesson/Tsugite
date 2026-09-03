@@ -22,6 +22,46 @@ const VARIANTS = ["body", "label"];
     </p>
   </Prose>
 
+  <section class="component-map">
+    <header>
+      <Heading element="h3" text="runs and chaining (the run engine laws)" />
+      <Prose variant="basic" size="sm">
+        <p>
+          One voice + inline emphasis · two voices chained on one line (a
+          block host and an inline run) · voice sovereignty (an unvoiced
+          span inherits, a voiced child owns its bundle).
+        </p>
+      </Prose>
+    </header>
+    <table>
+      <tbody>
+        <tr>
+          <th scope="row">inline emphasis</th>
+          <td>
+            <Text size="lg"><strong>Upptäckt ett fel?</strong> Kontakta oss.</Text>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">two-voice chain</th>
+          <td>
+            <Text element="p" variant="body" size="lg">
+              <Text element="span" variant="label" size="lg" text="Upptäckt ett fel?" /> Kontakta oss.
+            </Text>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">sovereignty</th>
+          <td>
+            <Text element="p" variant="body" size="md">
+              An unvoiced <span>span inherits the run</span>; a voiced child
+              <Text element="span" variant="label" size="md" text=" owns its own bundle" />.
+            </Text>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
   {
     VARIANTS.map((variant) => (
       <section class="component-map">

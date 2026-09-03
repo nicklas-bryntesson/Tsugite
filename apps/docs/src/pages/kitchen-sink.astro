@@ -8,6 +8,8 @@ import Heading from "tsugite/components/Heading/Heading.astro";
 import Prose from "tsugite/components/Prose/Prose.astro";
 import Typography from "tsugite/fixtures/Typography.astro";
 import TextSection from "tsugite/fixtures/TextSection.astro";
+import TextBlockSection from "tsugite/fixtures/TextBlockSection.astro";
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
 import Buttons from "tsugite/fixtures/Buttons.astro";
 import CtaButtonSection from "tsugite/fixtures/CtaButtonSection.astro";
 import Components from "tsugite/fixtures/Components.astro";
@@ -42,15 +44,14 @@ const pageIntro = "Component showcase — all variants and states.";
   <main class="Main grid-container KitchenSink">
     <div class="page-header">
       <Heading text={pageTitle} element="h1" size="1" variant="display" />
-      <Prose variant="basic" size="md">
-        <p>{pageIntro}</p>
-      </Prose>
+      <TextBlock text={pageIntro} />
       <ResolutionPanel />
     </div>
 
     <div class="scroll-container">
       <Typography />
       <TextSection />
+      <TextBlockSection />
       <ThemesSection />
       <Buttons />
       <CtaButtonSection />

@@ -3,27 +3,15 @@
 // Contract: .claude/contracts/tag-helpers.md — CSS class "Heading",
 // variants via data-* attributes, validation errors visible in dev only.
 
-// legend/figcaption join the farm (typography family matrix, CP1
-// 2026-09-02): they carry no props of their own — the direct-child
-// placement constraint is the parent's business, and the root IS the
-// element, so a level-1 legend can speak heading and a figcaption can
-// speak display. Elements WITH own contracts (label: for/id/aria) get
-// own components instead.
-const VALID_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6", "span", "div", "p", "legend", "figcaption"];
-const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
-const VALID_VARIANTS = ["heading", "display", "body"];
+// Element farms and voices come from the family contract — the door law
+// (one component per voice × element × input) is enforced by
+// tests/typographyFamily.test.ts, never re-declared here.
+import { FAMILY, VOICE_SIZES } from "../../lib/typographyFamily.ts";
 
-const VALID_ELEMENTS_BY_VARIANT: Record<string, string[]> = {
-  heading: VALID_ELEMENTS,
-  display: VALID_ELEMENTS,
-  body: [...HEADING_ELEMENTS, "legend", "figcaption"],
-};
-
-const VALID_SIZES_BY_VARIANT: Record<string, string[]> = {
-  heading: ["1", "2", "3", "4", "5", "6"],
-  display: ["1", "2", "3"],
-  body: ["lg", "md", "sm"],
-};
+const VALID_ELEMENTS_BY_VARIANT = FAMILY.Heading.voices;
+const VALID_ELEMENTS = [...new Set(Object.values(VALID_ELEMENTS_BY_VARIANT).flat())];
+const VALID_VARIANTS = Object.keys(VALID_ELEMENTS_BY_VARIANT);
+const VALID_SIZES_BY_VARIANT = VOICE_SIZES;
 
 const DEFAULT_SIZE_BY_VARIANT: Record<string, string> = {
   display: "2",
@@ -150,7 +138,9 @@ const cssClass = className && String(className).trim() ? `Heading ${className}` 
 let inner = "";
 if (mode === "render") {
   if (hasChildContent) {
-    inner = childHtml;
+    // Run engine law (a): child content passes through the same engine
+    // container as prop text — no path bypasses size/leading/trim.
+    inner = `<span class="heading-text">${childHtml}</span>`;
   } else {
     const encoded = highlight ? applyHighlight(text!, highlight) : escapeHtml(text!);
     inner = hasHref
@@ -158,6 +148,9 @@ if (mode === "render") {
       : `<span class="heading-text">${encoded}</span>`;
   }
 }
+
+// Run engine law (c): a span is an inline run; block runs own their trim.
+const runMode = element === "span" ? "inline" : "block";
 
 const Tag = element as "h2";
 ---
@@ -168,6 +161,7 @@ const Tag = element as "h2";
       class={cssClass}
       data-variant={variant}
       data-size={resolvedSize}
+      data-run={runMode}
       data-color={colorAttr}
       data-align={alignAttr}
       data-wrap={wrapAttr}
@@ -198,16 +192,25 @@ const Tag = element as "h2";
 
    .heading-link,
    .heading-text {
-    display: block;
     font-size: var(--_fontSize);
     line-height: var(--_lineHeight);
 
-    /* Inline children inherit metrics */
-    & :where(a, span, strong, em, b, i) {
+    /* Law (d) — voice sovereignty: an UNVOICED inline element inherits
+       (and in the loud voices that includes strong/em — partial bolding
+       of a heading is drift, deliberately flattened); a voiced child
+       (data-variant) — and everything inside it — owns its own bundle. */
+    & :where(a, span, strong, em, b, i):where(:not([data-variant], [data-variant] *)) {
       font: inherit;
       line-height: inherit;
       letter-spacing: inherit;
     }
+  }
+
+  /* Law (c) — block runs own their display; inline runs (span) keep
+     the UA's inline flow. */
+  &[data-run="block"] > .heading-link,
+  &[data-run="block"] > .heading-text {
+    display: block;
   }
 
   /* =====================================================
@@ -281,20 +284,20 @@ const Tag = element as "h2";
      Applies ONLY to the text container.
   ===================================================== */
   
-  /* Native trim branch */
+  /* Native trim branch — law (c): trim is a block concept */
   @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-     > .heading-link,
-     > .heading-text {
+     &[data-run="block"] > .heading-link,
+     &[data-run="block"] > .heading-text {
       text-box-trim: trim-both;
       text-box-edge: cap alphabetic;
       margin-block: 0;
     }
   }
-  
+
   /* Fallback branch */
   @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
-     > .heading-link,
-     > .heading-text {
+     &[data-run="block"] > .heading-link,
+     &[data-run="block"] > .heading-text {
          --_effectiveLineHeight: calc(var(--_fontSize) * var(--_lineHeight));
          --_marginBlock: calc((var(--_fontSize) - var(--_effectiveLineHeight)) / 2);
          --_marginBlockStart: calc(var(--_marginBlock) + var(--_baselineOffset, 0));

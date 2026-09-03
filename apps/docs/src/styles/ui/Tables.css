@@ -40,7 +40,13 @@
     & tbody td {
       font-family: var(--fontFamily-body);
       font-weight: var(--fontWeight-body);
-      font-size: var(--fontSize-body);
+      /* BENCH ANCHOR — deliberately tier-independent (gate-allowlisted):
+         these cells host embedded component demos whose em-based
+         geometry the conformance suites measure. A breathing context
+         here re-scales the instruments (found when the sweep briefly
+         put --fontSize-body on it and the Range geometry suites went
+         red: marks 6px → 7.5px at desktop). */
+      font-size: 1rem;
     }
 
     & caption,
@@ -48,7 +54,8 @@
     & tfoot td {
       font-family: var(--fontFamily-heading);
       font-weight: var(--fontWeight-heading);
-      font-size: var(--fontSize-body);
+      /* Same bench anchor as tbody td. */
+      font-size: 1rem;
     }
   }
 

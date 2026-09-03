@@ -1,5 +1,13 @@
 # Notes: the typography component family (input to T2 / Checkpoint 1)
 
+> **Update 2026-09-03:** the family matrix is now CODE —
+> `packages/tsugite/lib/typographyFamily.ts` declares voices × elements ×
+> input shape per component, and `tests/typographyFamily.test.ts`
+> enforces the door law (one component per voice × element × input).
+> Shipped since this note was first written: `Text` (body/label),
+> `TextBlock` (the textarea contract: preamble/body, text-prop only,
+> pre-line), and the `preamble` voice as role five in the token grammar.
+
 Direction sketched by Nicklas 2026-09-02, during sweep planning. Not
 decided — this feeds the gap analysis and the Checkpoint 1 vocabulary
 decisions.

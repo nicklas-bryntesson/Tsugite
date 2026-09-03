@@ -12,7 +12,7 @@
 import Layout from "../layouts/Layout.astro";
 import ResolutionPanel from "../components/ResolutionPanel/ResolutionPanel.astro";
 import Heading from "tsugite/components/Heading/Heading.astro";
-import Prose from "tsugite/components/Prose/Prose.astro";
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
 import AffixField from "tsugite/components/AffixField/AffixField.astro";
 import LinkButton from "tsugite/components/Button/LinkButton.astro";
 import ActionButton from "tsugite/components/Button/ActionButton.astro";
@@ -27,9 +27,7 @@ const buttonSizes = ["sm", "md", "lg"];
     <div class="content">
       <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Control room</nav>
       <Heading element="h1" size="1" text="Control room" />
-      <Prose variant="basic">
-        <p>Where drift shows before it ships. Every control has a mechanical twin in the e2e suite.</p>
-      </Prose>
+      <TextBlock text="Where drift shows before it ships. Every control has a mechanical twin in the e2e suite." />
 
       <section class="KitchenSink-section" id="Resolution">
         <Heading element="h2" size="2" text="Resolution" />

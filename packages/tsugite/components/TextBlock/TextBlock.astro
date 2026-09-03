@@ -1,24 +1,21 @@
 ---
-// Text — authored single-run UI text (the missing family member next to
-// Heading and Prose; tasks/notes-typography-components.md).
+// TextBlock — the textarea contract (lib/typographyFamily.ts).
 //
-// The family rule: one door per look. Text owns the QUIET voices (body,
-// label) on plain text elements; Heading owns the LOUD voices (heading,
-// display). Prose is the donut for flowing content nobody authors
-// element by element. The litmus: do you author the element? → family
-// component. A flow you don't control? → Prose.
+// Third input shape in the family: not a flow you don't control (Prose),
+// not an authored single run (Text), but a PLAIN MULTILINE STRING the
+// way a CMS textarea delivers it. The contract is enforced by
+// construction: only the `text` prop is accepted (escaped), child
+// content is a dev-visible error — sub-typography is unrepresentable —
+// and line breaks are honored via white-space: pre-line.
 //
-// Same two-axis machine as Heading: element (technical) × variant
-// (visual voice) × size — every value resolved through the typography
-// role bundles, never raw.
+// Voices: preamble (the standfirst, default) and body. One door per
+// look: a single-run body text is Text's job, a body-voiced BLOCK from
+// a plain field is this one's.
 
-// Element farms and voices come from the family contract — the door law
-// is enforced by tests/typographyFamily.test.ts, never re-declared here.
 import { FAMILY, VOICE_SIZES } from "../../lib/typographyFamily.ts";
 
-const VOICES = FAMILY.Text.voices;
-const VALID_ELEMENTS = [...new Set(Object.values(VOICES).flat())];
-const VALID_VARIANTS = Object.keys(VOICES);
+const VOICES = FAMILY.TextBlock.voices;
+const DEFAULT_VARIANT = "preamble";
 const DEFAULT_SIZE = "md";
 
 const VALID_ALIGNS = ["left", "center", "right"];
@@ -56,28 +53,27 @@ const escapeHtml = (s: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
-// ── Guards ──────────────────────────────────────────
+// ── Guards — the plaintext contract ─────────────────
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
 const hasChildContent = childHtml.trim().length > 0;
-const hasText = !!text;
 
 let mode: "render" | "suppress" | "error" = "render";
 let errorMessage = "";
 
-if (!hasText && !hasChildContent) {
-  mode = "suppress";
-} else if (hasText && hasChildContent) {
+if (hasChildContent) {
   mode = "error";
-  errorMessage = "use text OR child content, not both";
+  errorMessage = "TextBlock takes plain text only (the textarea contract) — use the text prop, never child content";
+} else if (!text) {
+  mode = "suppress";
 }
 
-const element = VALID_ELEMENTS.includes(elementProp.toLowerCase())
+const variant = Object.keys(VOICES).includes((variantProp ?? "").toLowerCase())
+  ? variantProp!.toLowerCase()
+  : DEFAULT_VARIANT;
+const element = VOICES[variant].includes(elementProp.toLowerCase())
   ? elementProp.toLowerCase()
   : "p";
-const variant = VALID_VARIANTS.includes((variantProp ?? "").toLowerCase())
-  ? variantProp!.toLowerCase()
-  : "body";
 const size = sizeProp && VOICE_SIZES[variant].includes(sizeProp.toLowerCase())
   ? sizeProp.toLowerCase()
   : DEFAULT_SIZE;
@@ -85,19 +81,9 @@ const size = sizeProp && VOICE_SIZES[variant].includes(sizeProp.toLowerCase())
 const alignAttr = VALID_ALIGNS.includes(align.toLowerCase()) ? align.toLowerCase() : undefined;
 const wrapAttr = VALID_WRAPS.includes(wrap.toLowerCase()) ? wrap.toLowerCase() : undefined;
 
-const cssClass = className && String(className).trim() ? `Text ${className}` : "Text";
+const cssClass = className && String(className).trim() ? `TextBlock ${className}` : "TextBlock";
 
-// Run engine law (a): child content passes through the same engine
-// container as prop text — no path bypasses size/leading/trim.
-const inner =
-  mode === "render"
-    ? `<span class="text-content">${hasChildContent ? childHtml : escapeHtml(text!)}</span>`
-    : "";
-
-// Run engine law (c): the element shape decides the engine mode — a span
-// is an inline run (flows on the line, trim is the line host's business),
-// everything else is a block run that owns its trim.
-const runMode = element === "span" ? "inline" : "block";
+const inner = mode === "render" ? `<span class="textblock-content">${escapeHtml(text!)}</span>` : "";
 
 const Tag = element as "p";
 ---
@@ -108,23 +94,23 @@ const Tag = element as "p";
       class={cssClass}
       data-variant={variant}
       data-size={size}
-      data-run={runMode}
+      data-run="block"
       data-align={alignAttr}
       data-wrap={wrapAttr}
       {...rest}
       set:html={inner}
     />
   ) : mode === "error" && isDev ? (
-    <div style="color:red;" set:html={`<!-- Text: ${errorMessage} --><span>&times;</span>`} />
+    <div style="color:red;" set:html={`<!-- TextBlock: ${errorMessage} --><span>&times;</span>`} />
   ) : null
 }
 
 <style is:global>
 /* =====================================================
-   TEXT COMPONENT — the quiet voices (body, label)
+   TEXTBLOCK COMPONENT — plain multiline text (textarea contract)
 ===================================================== */
 
-.Text {
+.TextBlock {
   /* reset */
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -134,39 +120,32 @@ const Tag = element as "p";
      TEXT CONTAINER (Typography Engine)
   ================================================= */
 
-  .text-content {
+  .textblock-content {
+    display: block;
     font-size: var(--_fontSize);
     line-height: var(--_lineHeight);
-
-    /* Law (d) — voice sovereignty: an UNVOICED inline element inherits
-       the run's metrics; a voiced child (data-variant) — and everything
-       inside it — owns its own bundle. The whole voiced subtree is
-       exempt, at zero added specificity: nearest voice wins by
-       inheritance, never by specificity. */
-    & :where(a, span, strong, em, b, i):where(:not([data-variant], [data-variant] *)) {
-      font: inherit;
-      line-height: inherit;
-      letter-spacing: inherit;
-    }
-
-    /* Law (b) — inline emphasis keeps its semantics in the quiet
-       voices: strong takes the role convention's strong weight (F2:
-       body-bold, no new stop), em stays italic. The loud voices
-       (Heading) deliberately flatten instead. */
-    & :where(strong, b):where(:not([data-variant] *)) { font-weight: var(--fontWeight-body-bold); }
-    & :where(em, i):where(:not([data-variant] *)) { font-style: italic; }
-  }
-
-  /* Law (c) — the engine mode is gated on the run shape: block runs own
-     their display; inline runs keep the UA's inline flow (absence is
-     the contract). */
-  &[data-run="block"] > .text-content {
-    display: block;
+    /* the contract: line breaks from the plain field are honored,
+       runs of spaces collapse */
+    white-space: pre-line;
   }
 
   /* =====================================================
      VARIANT LAYER (voice + baseline offset)
   ===================================================== */
+
+  &[data-variant="preamble"] {
+    --_lineHeight: var(--lineHeight-preamble);
+    --_baselineOffset: var(--baseline-offset-preamble);
+
+    font-family: var(--fontFamily-preamble);
+    font-weight: var(--fontWeight-preamble);
+    letter-spacing: var(--letterSpacing-preamble);
+    font-feature-settings: var(--fontFeatureSettings-preamble);
+
+    &[data-size="sm"] { --_fontSize: var(--fontSize-preamble-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-preamble); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-preamble-large); }
+  }
 
   &[data-variant="body"] {
     --_lineHeight: var(--lineHeight-body);
@@ -180,20 +159,6 @@ const Tag = element as "p";
     &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); }
     &[data-size="md"] { --_fontSize: var(--fontSize-body); }
     &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); }
-  }
-
-  &[data-variant="label"] {
-    --_lineHeight: var(--lineHeight-label);
-    --_baselineOffset: var(--baseline-offset-label);
-
-    font-family: var(--fontFamily-label);
-    font-weight: var(--fontWeight-label);
-    letter-spacing: var(--letterSpacing-label);
-    font-feature-settings: var(--fontFeatureSettings-label);
-
-    &[data-size="sm"] { --_fontSize: var(--fontSize-label-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-label); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-label-large); }
   }
 
   /* =====================================================
@@ -214,14 +179,12 @@ const Tag = element as "p";
 
   /* =====================================================
      FEATURE LAYER — TEXT TRIM
-     Same gates as Heading. Removable in one sweep.
-     Law (c): trim is a block concept — inline runs sit on a shared
-     line whose metrics the host and the browser's baseline negotiate.
+     Same gates as Heading/Text. Removable in one sweep.
   ===================================================== */
 
   /* Native trim branch */
   @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-    &[data-run="block"] > .text-content {
+    > .textblock-content {
       text-box-trim: trim-both;
       text-box-edge: cap alphabetic;
       margin-block: 0;
@@ -230,7 +193,7 @@ const Tag = element as "p";
 
   /* Fallback branch */
   @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
-    &[data-run="block"] > .text-content {
+    > .textblock-content {
       --_effectiveLineHeight: calc(var(--_fontSize) * var(--_lineHeight));
       --_marginBlock: calc((var(--_fontSize) - var(--_effectiveLineHeight)) / 2);
       --_marginBlockStart: calc(var(--_marginBlock) + var(--_baselineOffset, 0));
