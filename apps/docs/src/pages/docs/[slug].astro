@@ -61,7 +61,7 @@ const Section = entry.section ? sections[entry.section] : undefined;
   }
 
   & .doc-breadcrumb {
-    font-size: 0.85rem;
+    font-size: var(--fontSize-label-small);
     color: var(--color-text-secondary);
 
     & a { color: var(--color-interactive-secondary-text); }
@@ -77,7 +77,7 @@ const Section = entry.section ? sections[entry.section] : undefined;
   }
 
   & .chip {
-    font-size: 0.75rem;
+    font-size: var(--fontSize-label-small);
     padding: 0.25rem 0.65rem;
     border-radius: 999px;
     border: 1px solid var(--color-border-subtle);
@@ -88,7 +88,7 @@ const Section = entry.section ? sections[entry.section] : undefined;
       border-color: var(--color-interactive-primary);
       color: var(--color-text-primary);
     }
-    & code { font-size: 0.72rem; }
+    & code { font-size: 0.875em; /* inline code scales relatively — the Prose mechanism */ }
   }
 
   & .doc-note { color: var(--color-text-secondary); }

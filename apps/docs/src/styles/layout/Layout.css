@@ -1,5 +1,5 @@
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--fontFamily-body);
   background-color: var(--color-surface-chrome);
   color: var(--color-text-primary);
 }

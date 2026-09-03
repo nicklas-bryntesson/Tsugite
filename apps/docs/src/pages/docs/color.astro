@@ -141,12 +141,12 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
   }
 
   & .doc-breadcrumb {
-    font-size: 0.85rem;
+    font-size: var(--fontSize-label-small);
     color: var(--color-text-secondary);
     & a { color: var(--color-interactive-secondary-text); }
   }
 
-  & .note { margin: 0; color: var(--color-text-secondary); font-size: 0.9rem; }
+  & .note { margin: 0; color: var(--color-text-secondary); font-size: var(--fontSize-label); }
 
   & .raw-grid {
     list-style: none;
@@ -174,20 +174,22 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     border: 1px solid var(--color-border-subtle);
   }
 
-  & .raw-name { font-weight: 600; font-size: 0.8rem; color: var(--color-text-primary); }
-  & .raw-val { font-size: 0.68rem; color: var(--color-text-secondary); overflow-wrap: anywhere; }
+  & .raw-name { font-weight: var(--fontWeight-body-bold); font-size: var(--fontSize-label-small); color: var(--color-text-primary); }
+  & .raw-val { font-size: var(--fontSize-label-small); color: var(--color-text-secondary); overflow-wrap: anywhere; }
 
   & .table-scroll { overflow-x: auto; inline-size: 100%; }
 
-  & table { border-collapse: collapse; font-size: 0.82rem; }
+  & table { border-collapse: collapse; font-size: var(--fontSize-label); }
   & th, & td {
     text-align: start;
     padding: 0.35rem 0.6rem;
     border-block-end: 1px solid var(--color-border-subtle);
     white-space: nowrap;
   }
-  & th { color: var(--color-text-secondary); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
-  & td code { font-size: 0.78rem; }
+  /* th tracked-caps manner stays raw pending the Eyebrow primitive; inline
+     code scales relatively — the Prose mechanism */
+  & th { color: var(--color-text-secondary); font-weight: var(--fontWeight-body-bold); font-size: var(--fontSize-label-small); text-transform: uppercase; letter-spacing: 0.08em; }
+  & td code { font-size: 0.875em; }
 
   & .cell-swatch {
     display: inline-block;
@@ -197,7 +199,7 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     border: 1px solid var(--color-border-subtle);
   }
   & .cell-swatch.live { outline: 2px solid var(--color-interactive-primary); outline-offset: 1px; }
-  & .nonpaint { color: var(--color-text-secondary); font-size: 0.72rem; }
+  & .nonpaint { color: var(--color-text-secondary); font-size: var(--fontSize-label-small); }
 
   & .voice-swatch {
     display: inline-grid;
@@ -206,8 +208,8 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     block-size: 1.8rem;
     border-radius: 0.35rem;
     border: 1px solid var(--color-border-subtle);
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: var(--fontSize-label-small);
+    font-weight: var(--fontWeight-body-bold);
   }
 }
 </style>

@@ -83,7 +83,7 @@
 .SiteLogo {
   color: var(--color-text-secondary);
   text-decoration: none;
-  font-family: monospace;
+  font-family: var(--fontFamily-code);
 }
 
 /* Kanji accents (the Tsugite vocabulary): our webfont subsets carry no CJK,
