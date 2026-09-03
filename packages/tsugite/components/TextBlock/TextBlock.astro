@@ -136,6 +136,9 @@ const Tag = element as "p";
   &[data-variant="preamble"] {
     --_lineHeight: var(--lineHeight-preamble);
     --_baselineOffset: var(--baseline-offset-preamble);
+    --_emBox: var(--fontEmBox-preamble);
+    --_capGap: var(--fontCapGap-preamble);
+    --_descent: var(--fontDescent-preamble);
 
     font-family: var(--fontFamily-preamble);
     font-weight: var(--fontWeight-preamble);
@@ -150,6 +153,9 @@ const Tag = element as "p";
   &[data-variant="body"] {
     --_lineHeight: var(--lineHeight-body);
     --_baselineOffset: var(--baseline-offset-body);
+    --_emBox: var(--fontEmBox-body);
+    --_capGap: var(--fontCapGap-body);
+    --_descent: var(--fontDescent-body);
 
     font-family: var(--fontFamily-body);
     font-weight: var(--fontWeight-body);
@@ -194,10 +200,13 @@ const Tag = element as "p";
   /* Fallback branch */
   @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
     > .textblock-content {
-      --_effectiveLineHeight: calc(var(--_fontSize) * var(--_lineHeight));
-      --_marginBlock: calc((var(--_fontSize) - var(--_effectiveLineHeight)) / 2);
-      --_marginBlockStart: calc(var(--_marginBlock) + (var(--_baselineOffset, 0) * var(--_fontSize)));
-      --_marginBlockEnd: calc(var(--_marginBlock) - (var(--_baselineOffset, 0) * var(--_fontSize)));
+      /* Emulates text-box-edge: cap alphabetic. The line box's content
+         area is the REAL em box (ascent+descent — 1.19-1.36em for our
+         faces, never 1), so the shave is half of (emBox - lineHeight)
+         plus the cap gap above / the descent below. baselineOffset stays
+         as the artistic nudge on top (factor x font size). */
+      --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
+      --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
 
       margin-block-start: var(--_marginBlockStart);
       margin-block-end: var(--_marginBlockEnd);

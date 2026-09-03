@@ -371,6 +371,17 @@ export function validateTypography(tables = TYPE_TABLES) {
     }
   };
 
+  // Family entries carry the typeface's geometry — the faux-trim math
+  // is only as true as these numbers, so their absence refuses to build.
+  for (const [name, fam] of Object.entries(families)) {
+    if (!fam?.stack) problems.push(`family ${name} is missing its stack`);
+    for (const m of ["ascent", "capHeight", "descent"]) {
+      const v = fam?.metrics?.[m];
+      if (v === undefined) problems.push(`family ${name} is missing metrics.${m}`);
+      else if (!/^\d*\.?\d+$/.test(String(v))) problems.push(`family ${name}: metrics.${m} "${v}" must be a unitless em fraction`);
+    }
+  }
+
   for (const [voice, def] of Object.entries(voices)) {
     if (!families[def.family]) problems.push(`${voice}: unknown family ${def.family}`);
     for (const [stop, w] of Object.entries(def.weights ?? {})) {
@@ -428,6 +439,16 @@ export function generateTypographyStylesheet(tables = TYPE_TABLES) {
         for (const m of BLOCK_METRICS) {
           if (!isTierMap(def[m])) lines.push(`  ${METRIC_TOKEN[m](voice)}: ${def[m]};`);
         }
+        // The typeface geometry the faux-trim math needs (emulating
+        // text-box-edge: cap alphabetic): the REAL em box, the gap
+        // between ascent and cap, and the descent — em fractions from
+        // the voice's family.
+        const { ascent, capHeight, descent } = families[def.family].metrics;
+        lines.push(
+          `  --fontEmBox-${voice}: ${+(ascent + descent).toFixed(4)};`,
+          `  --fontCapGap-${voice}: ${+(ascent - capHeight).toFixed(4)};`,
+          `  --fontDescent-${voice}: ${descent};`,
+        );
       }
       return lines.join("\n");
     })
@@ -471,7 +492,7 @@ export function generateTypographyStylesheet(tables = TYPE_TABLES) {
     ":root {",
     "  --TYPE-SCALE: 1;",
     "",
-    ...Object.entries(families).map(([n, v]) => `  ${n}: ${v};`),
+    ...Object.entries(families).map(([n, v]) => `  ${n}: ${v.stack};`),
     "",
     ...Object.entries(weights).map(([n, v]) => `  ${n}: ${v};`),
     "",

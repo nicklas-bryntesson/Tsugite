@@ -103,6 +103,9 @@
   --letterSpacing-heading: normal;
   --fontFeatureSettings-heading: normal;
   --baseline-offset-heading: 0;
+  --fontEmBox-heading: 1.19;
+  --fontCapGap-heading: 0.238;
+  --fontDescent-heading: 0.26;
 
   --fontFamily-display: var(--ABRIL-FATFACE);
   --fontWeight-display: var(--ABRIL-FATFACE-400);
@@ -110,6 +113,9 @@
   --letterSpacing-display: -0.01em;
   --fontFeatureSettings-display: normal;
   --baseline-offset-display: 0;
+  --fontEmBox-display: 1.35;
+  --fontCapGap-display: 0.36;
+  --fontDescent-display: 0.29;
 
   --fontFamily-body: var(--NOTO-SERIF);
   --fontWeight-body: var(--NOTOS-SERIF-400);
@@ -118,6 +124,9 @@
   --letterSpacing-body: normal;
   --fontFeatureSettings-body: normal;
   --baseline-offset-body: 0;
+  --fontEmBox-body: 1.36;
+  --fontCapGap-body: 0.356;
+  --fontDescent-body: 0.29;
 
   --fontFamily-code: var(--MONOSPACE);
   --fontWeight-code: var(--MONOSPACE-400);
@@ -128,6 +137,9 @@
   --letterSpacing-label: normal;
   --fontFeatureSettings-label: normal;
   --baseline-offset-label: 0;
+  --fontEmBox-label: 1.21;
+  --fontCapGap-label: 0.242;
+  --fontDescent-label: 0.24;
 
   --fontFamily-preamble: var(--NOTO-SERIF);
   --fontWeight-preamble: var(--NOTOS-SERIF-400);
@@ -135,6 +147,9 @@
   --letterSpacing-preamble: normal;
   --fontFeatureSettings-preamble: normal;
   --baseline-offset-preamble: 0;
+  --fontEmBox-preamble: 1.36;
+  --fontCapGap-preamble: 0.356;
+  --fontDescent-preamble: 0.29;
 }
 
 @media (max-width: 21.24999rem) {
