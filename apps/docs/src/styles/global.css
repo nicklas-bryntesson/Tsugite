@@ -18,6 +18,11 @@
 @import "tsugite/styles/tokens/color/color.appearance.generated.css";
 @import "tsugite/styles/tokens/color/color.themes.generated.css";
 
+/* Typography — GENERATED from theme-default/typography.tokens.js
+   (ADR-0003 extended to type): RAW families/weights/stops, voice
+   bundles, tier ramps, test-viewport overrides. */
+@import "tsugite/styles/tokens/typography/typography.generated.css";
+
 @import "tsugite/styles/utils/index.css";
 
 @import "./ui/Tables.css";

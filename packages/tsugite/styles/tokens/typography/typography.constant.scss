@@ -1,123 +1,14 @@
+// RETIRED. The typography map is single-sourced in
+// theme-default/typography.tokens.js and emitted as
+// typography.generated.css (RAW families/weights/size stops, voice
+// bundles, tier ramps, test-viewport overrides) by `npm run tokens`.
+//
+// The hand-maintained tables that lived here required eight manual
+// insertion points per new voice, with nothing refusing an incomplete
+// one — the factory derives everything from one source and
+// validateTypography() refuses incompleteness. The empty mixin keeps
+// tokens.scss's include structure valid, mirroring color.constant.scss's
+// retirement.
+
 @mixin tokens {
-    --TYPE-SCALE: 1;
-
-    // Typography constants go here.
-    --FIRA-SANS: 'Fira Sans', system-ui, sans-serif;
-    --NOTO-SERIF: 'Noto Serif', georgia, serif;
-    --ABRIL-FATFACE: 'Abril Fatface', georgia, serif;
-    --INTER: 'Inter', system-ui, sans-serif;
-    
-    --MONOSPACE: monospace;
-    
-    --FIRA-SANS-600: 600;
-    --NOTOS-SERIF-400: 400;
-    --NOTOS-SERIF-700: 700;
-    --ABRIL-FATFACE-400: 400;
-    --INTER-400: 400;
-    
-    --MONOSPACE-400: 400;
-
-    /* FLOOR — the guaranteed-to-hold scale: explicit stops nothing may shrink past.
-       Bounded below 21.25rem (the same threshold CoverComposition
-       switches stacked/overlay on). Explicit stops per token — no scale math. */
-    --FONTSIZE-H1-FLOOR: 2rem;
-    --FONTSIZE-H2-FLOOR: 1.75rem;
-    --FONTSIZE-H3-FLOOR: 1.5rem;
-    --FONTSIZE-H4-FLOOR: 1.25rem;
-    --FONTSIZE-H5-FLOOR: 1.0625rem;
-    --FONTSIZE-H6-FLOOR: 1rem;
-
-    --FONTSIZE-DISPLAY-1-FLOOR: 2.25rem;
-    --FONTSIZE-DISPLAY-2-FLOOR: 2rem;
-    --FONTSIZE-DISPLAY-3-FLOOR: 1.75rem;
-
-    --FONTSIZE-BODY-FLOOR: 1rem;
-    --FONTSIZE-BODY-SMALL-FLOOR: 0.75rem;
-    --FONTSIZE-BODY-LARGE-FLOOR: 1.25rem;
-
-    --FONTSIZE-CODE-FLOOR: 0.75rem;
-
-    --FONTSIZE-LABEL-SMALL-FLOOR: 0.75rem;
-    --FONTSIZE-LABEL-FLOOR: 0.9375rem;
-    --FONTSIZE-LABEL-LARGE-FLOOR: 1.0625rem;
-
-    /* PREAMBLE — the standfirst voice: every stop ≥ body-large on its
-       tier, or it is no preamble. */
-    --FONTSIZE-PREAMBLE-SMALL-FLOOR: 1.125rem;
-    --FONTSIZE-PREAMBLE-FLOOR: 1.25rem;
-    --FONTSIZE-PREAMBLE-LARGE-FLOOR: 1.375rem;
-
-    --FONTSIZE-H1-MOBILE: 2.5rem;
-    --FONTSIZE-H2-MOBILE: 2.25rem;
-    --FONTSIZE-H3-MOBILE: 1.75rem;
-    --FONTSIZE-H4-MOBILE: 1.375rem;
-    --FONTSIZE-H5-MOBILE: 1.125rem;
-    --FONTSIZE-H6-MOBILE: 1rem;
-
-    --FONTSIZE-H1-DESKTOP: 3.5rem;
-    --FONTSIZE-H2-DESKTOP: 2.5rem;
-    --FONTSIZE-H3-DESKTOP: 2rem;
-    --FONTSIZE-H4-DESKTOP: 1.5rem;
-    --FONTSIZE-H5-DESKTOP: 1.25rem;
-    --FONTSIZE-H6-DESKTOP: 1.125rem;
-
-    /* 1 is the largest... */
-    --FONTSIZE-DISPLAY-1-MOBILE: 3.5rem;
-    --FONTSIZE-DISPLAY-2-MOBILE: 3rem;
-    --FONTSIZE-DISPLAY-3-MOBILE: 2.5rem;
-
-    --FONTSIZE-DISPLAY-1-DESKTOP: 4rem;
-    --FONTSIZE-DISPLAY-2-DESKTOP: 3.5rem;
-    --FONTSIZE-DISPLAY-3-DESKTOP: 3rem;
-
-    --FONTSIZE-BODY-MOBILE: 1.125rem;
-    --FONTSIZE-BODY-SMALL-MOBILE: 0.75rem;
-    --FONTSIZE-BODY-LARGE-MOBILE: 1.5rem;
-
-    --FONTSIZE-BODY-DESKTOP: 1.25rem;
-    --FONTSIZE-BODY-SMALL-DESKTOP: 1rem;
-    --FONTSIZE-BODY-LARGE-DESKTOP: 1.75rem;
-
-    --FONTSIZE-CODE-MOBILE: 0.75rem;
-    --FONTSIZE-CODE-DESKTOP: 1rem;
-
-    --FONTSIZE-LABEL-SMALL-MOBILE: 0.75rem;
-    --FONTSIZE-LABEL-SMALL-DESKTOP: 0.85rem;
-    --FONTSIZE-LABEL-MOBILE: 1rem;
-    --FONTSIZE-LABEL-DESKTOP: 1.125rem;
-    --FONTSIZE-LABEL-LARGE-MOBILE: 1.25rem;
-    --FONTSIZE-LABEL-LARGE-DESKTOP: 1.375rem;
-
-    --FONTSIZE-PREAMBLE-SMALL-MOBILE: 1.25rem;
-    --FONTSIZE-PREAMBLE-SMALL-DESKTOP: 1.375rem;
-    --FONTSIZE-PREAMBLE-MOBILE: 1.5rem;
-    --FONTSIZE-PREAMBLE-DESKTOP: 1.625rem;
-    --FONTSIZE-PREAMBLE-LARGE-MOBILE: 1.625rem;
-    --FONTSIZE-PREAMBLE-LARGE-DESKTOP: 1.875rem;
-
-    /* WIDE — explicitly equal to DESKTOP: type stops growing (ADR-0001). */
-    --FONTSIZE-H1-WIDE: 3.5rem;
-    --FONTSIZE-H2-WIDE: 2.5rem;
-    --FONTSIZE-H3-WIDE: 2rem;
-    --FONTSIZE-H4-WIDE: 1.5rem;
-    --FONTSIZE-H5-WIDE: 1.25rem;
-    --FONTSIZE-H6-WIDE: 1.125rem;
-
-    --FONTSIZE-DISPLAY-1-WIDE: 4rem;
-    --FONTSIZE-DISPLAY-2-WIDE: 3.5rem;
-    --FONTSIZE-DISPLAY-3-WIDE: 3rem;
-
-    --FONTSIZE-BODY-WIDE: 1.25rem;
-    --FONTSIZE-BODY-SMALL-WIDE: 1rem;
-    --FONTSIZE-BODY-LARGE-WIDE: 1.75rem;
-
-    --FONTSIZE-CODE-WIDE: 1rem;
-
-    --FONTSIZE-LABEL-SMALL-WIDE: 0.85rem;
-    --FONTSIZE-LABEL-WIDE: 1.125rem;
-    --FONTSIZE-LABEL-LARGE-WIDE: 1.375rem;
-
-    --FONTSIZE-PREAMBLE-SMALL-WIDE: 1.375rem;
-    --FONTSIZE-PREAMBLE-WIDE: 1.625rem;
-    --FONTSIZE-PREAMBLE-LARGE-WIDE: 1.875rem;
 }
