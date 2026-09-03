@@ -1,0 +1,60 @@
+---
+// TextBlock — the textarea contract: plain multiline text, line breaks
+// honored, sub-markup unrepresentable. The multiline specimen is the
+// proof: its \n characters survive as line breaks (pre-line).
+import Heading from "../components/Heading/Heading.astro";
+import Prose from "../components/Prose/Prose.astro";
+import TextBlock from "../components/TextBlock/TextBlock.astro";
+
+const sizes = ["lg", "md", "sm"];
+const multiline =
+  "First line, straight from a CMS textarea.\nSecond line — the break above is a \\n, not markup.\nThird line proves pre-line holds.";
+---
+
+<section class="KitchenSink-section" id="TextBlock">
+  <Heading text="TextBlock" element="h2" size="2" />
+
+  <Prose variant="basic">
+    <p>
+      The third input shape: not a flow (Prose), not an authored run
+      (Text) — a plain multiline string the way a textarea delivers it.
+      Only the <code>text</code> prop is accepted; child content is a
+      dev-visible error, so sub-typography cannot be authored.
+    </p>
+  </Prose>
+
+  <section class="component-map">
+    <header>
+      <Heading element="h3" text="variant: preamble" />
+      <Prose variant="basic" size="sm"><p>the standfirst voice — own leading (1.35) · size lg–sm</p></Prose>
+    </header>
+    <table>
+      <thead>
+        <tr><th /><th scope="col">p</th></tr>
+      </thead>
+      <tbody>
+        {sizes.map((size) => (
+          <tr>
+            <th scope="row">size {size}</th>
+            <td><TextBlock size={size} text={`The preamble ${size} — a standfirst that earns its own voice.`} /></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="component-map">
+    <header>
+      <Heading element="h3" text="the multiline contract" />
+      <Prose variant="basic" size="sm"><p>line breaks respected, spaces collapse — variant body</p></Prose>
+    </header>
+    <table>
+      <tbody>
+        <tr>
+          <th scope="row">pre-line</th>
+          <td><TextBlock variant="body" text={multiline} /></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</section>

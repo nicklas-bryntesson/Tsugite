@@ -37,6 +37,7 @@ export const manifest: ManifestEntry[] = [
   // ── Primitives ──────────────────────────────────────────────────────────────
   { slug: "heading", title: "Heading", pillar: "primitive", origin: "aipoc", section: "Typography", published: true },
   { slug: "text", title: "Text", pillar: "primitive", origin: "own", section: "TextSection", published: true },
+  { slug: "text-block", title: "TextBlock", pillar: "primitive", origin: "own", section: "TextBlockSection", published: true },
   { slug: "prose", title: "Prose", pillar: "primitive", origin: "aipoc", section: "ProseSection", published: true },
   { slug: "button", title: "Button", pillar: "primitive", origin: "aipoc", section: "Buttons", adrs: ["0005", "0006"], published: true },
   { slug: "cta-button", title: "CtaButton", pillar: "primitive", origin: "aipoc", section: "CtaButtonSection", published: true },

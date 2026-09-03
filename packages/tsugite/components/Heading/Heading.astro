@@ -3,27 +3,15 @@
 // Contract: .claude/contracts/tag-helpers.md — CSS class "Heading",
 // variants via data-* attributes, validation errors visible in dev only.
 
-// legend/figcaption join the farm (typography family matrix, CP1
-// 2026-09-02): they carry no props of their own — the direct-child
-// placement constraint is the parent's business, and the root IS the
-// element, so a level-1 legend can speak heading and a figcaption can
-// speak display. Elements WITH own contracts (label: for/id/aria) get
-// own components instead.
-const VALID_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6", "span", "div", "p", "legend", "figcaption"];
-const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
-const VALID_VARIANTS = ["heading", "display", "body"];
+// Element farms and voices come from the family contract — the door law
+// (one component per voice × element × input) is enforced by
+// tests/typographyFamily.test.ts, never re-declared here.
+import { FAMILY, VOICE_SIZES } from "../../lib/typographyFamily.ts";
 
-const VALID_ELEMENTS_BY_VARIANT: Record<string, string[]> = {
-  heading: VALID_ELEMENTS,
-  display: VALID_ELEMENTS,
-  body: [...HEADING_ELEMENTS, "legend", "figcaption"],
-};
-
-const VALID_SIZES_BY_VARIANT: Record<string, string[]> = {
-  heading: ["1", "2", "3", "4", "5", "6"],
-  display: ["1", "2", "3"],
-  body: ["lg", "md", "sm"],
-};
+const VALID_ELEMENTS_BY_VARIANT = FAMILY.Heading.voices;
+const VALID_ELEMENTS = [...new Set(Object.values(VALID_ELEMENTS_BY_VARIANT).flat())];
+const VALID_VARIANTS = Object.keys(VALID_ELEMENTS_BY_VARIANT);
+const VALID_SIZES_BY_VARIANT = VOICE_SIZES;
 
 const DEFAULT_SIZE_BY_VARIANT: Record<string, string> = {
   display: "2",
