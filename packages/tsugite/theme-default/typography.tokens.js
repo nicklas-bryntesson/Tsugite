@@ -43,7 +43,12 @@ export const typeWeights = {
 
     A tier map carries EVERY tier or the build refuses. Components
     consume the same semantic token either way — responsiveness is a
-    supplier decision, invisible at the seam. */
+    supplier decision, invisible at the seam.
+
+    baselineOffset is the sitting-in-the-box knob: a PURE FACTOR the
+    trim engine multiplies by the element's font size (0 = the typeface
+    sits perfectly, 0.03 = massage 3% of the em box). Calibrate per
+    typeface against the native trim branch in the control room. */
 export const typeVoices = {
   heading: {
     family: "--FIRA-SANS",
@@ -51,7 +56,7 @@ export const typeVoices = {
     lineHeight: "1.1",
     letterSpacing: "normal",
     featureSettings: "normal",
-    baselineOffset: "1px",
+    baselineOffset: "0",
   },
   display: {
     family: "--ABRIL-FATFACE",
@@ -59,7 +64,7 @@ export const typeVoices = {
     lineHeight: "0.95",
     letterSpacing: "-0.01em",
     featureSettings: "normal",
-    baselineOffset: "1px",
+    baselineOffset: "0",
   },
   body: {
     family: "--NOTO-SERIF",
@@ -67,7 +72,7 @@ export const typeVoices = {
     lineHeight: "1.5",
     letterSpacing: "normal",
     featureSettings: "normal",
-    baselineOffset: "1px",
+    baselineOffset: "0",
   },
   code: {
     family: "--MONOSPACE",
@@ -80,7 +85,7 @@ export const typeVoices = {
     lineHeight: "1.3",
     letterSpacing: "normal",
     featureSettings: "normal",
-    baselineOffset: "1px",
+    baselineOffset: "0",
   },
   preamble: {
     // The standfirst voice: body's family at ingress metrics — big text
@@ -90,7 +95,7 @@ export const typeVoices = {
     lineHeight: "1.35",
     letterSpacing: "normal",
     featureSettings: "normal",
-    baselineOffset: "1px",
+    baselineOffset: "0",
   },
 };
 

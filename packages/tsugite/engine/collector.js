@@ -352,8 +352,10 @@ export function validateTypography(tables = TYPE_TABLES) {
   const UNIT_LAWS = {
     // multiplied by --_fontSize → must stay a unitless ratio
     lineHeight: { test: (v) => /^\d*\.?\d+$/.test(v), law: "must be a unitless ratio (it multiplies a length)" },
-    // added to a length → must BE a length (or zero)
-    baselineOffset: { test: (v) => /^(0|-?\d*\.?\d+(px|em|rem))$/.test(v), law: "must be a length or 0 (it adds to a margin)" },
+    // the sitting-in-the-box knob: a pure factor the engine multiplies
+    // by the element's font size — 0 is neutral, 0.03 nudges 3% of the
+    // em box. A unit here would make calc(<length> × <length>) invalid.
+    baselineOffset: { test: (v) => /^-?\d*\.?\d+$/.test(v), law: "must be a unitless factor (the engine multiplies it by the font size)" },
   };
 
   const checkUnits = (owner, metric, value) => {

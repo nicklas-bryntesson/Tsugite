@@ -35,7 +35,7 @@ describe("the typography tables", () => {
           lineHeight: "1.4",
           letterSpacing: { floor: "0", mobile: "-0.005em", desktop: "-0.01em", wide: "-0.01em" },
           featureSettings: "normal",
-          baselineOffset: "1px",
+          baselineOffset: "0",
         },
       },
     };
@@ -83,7 +83,7 @@ describe("the typography tables", () => {
           lineHeight: "1.4",
           letterSpacing: "normal",
           featureSettings: "normal",
-          baselineOffset: "1px",
+          baselineOffset: "0.03",
           ...overrides,
         },
       },
@@ -91,9 +91,9 @@ describe("the typography tables", () => {
     });
     // a line-height with a unit would invalidate calc(<length> × <length>)
     expect(() => validateTypography(voice({ lineHeight: "1.2em" }))).toThrow(/unitless ratio/);
-    // a unitless baseline offset makes calc(<length> + <number>) IACVT —
-    // the browser silently zeroes the fallback trim margins
-    expect(() => validateTypography(voice({ baselineOffset: "1" }))).toThrow(/length or 0/);
+    // the baseline offset is a pure factor (× font size); a unit would
+    // invalidate the multiplication the engine performs
+    expect(() => validateTypography(voice({ baselineOffset: "1px" }))).toThrow(/unitless factor/);
     // tiered values obey the same laws per tier
     expect(() =>
       validateTypography(voice({ lineHeight: { floor: "1.5", mobile: "1.4", desktop: "1.3em", wide: "1.3" } })),
