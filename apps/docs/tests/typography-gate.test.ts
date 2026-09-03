@@ -46,6 +46,12 @@ const ALLOWLIST: Record<string, Record<string, number>> = {
     "line-height: 1cap": 2,
     "text-transform: lowercase": 1,
   },
+  "apps/docs/src/styles/ui/Tables.css": {
+    // bench anchor: table cells host embedded component demos whose
+    // em-based geometry the conformance suites measure — the context
+    // must not breathe with the tier
+    "font-size: 1rem": 2,
+  },
   "apps/docs/src/pages/map.astro": {
     "letter-spacing: 0.1em": 1,
     "letter-spacing: 0.08em": 1,

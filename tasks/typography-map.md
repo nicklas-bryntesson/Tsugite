@@ -164,6 +164,18 @@ get logged upstream (INTAKE §7).
   allowlisted one-off; becomes `--fontFamily-ja` the day Japanese text
   spreads beyond the logo.
 
+## Sweep log — correction (2026-09-03)
+
+- **Tables.css td font-size was a BENCH ANCHOR, misclassified B.** The
+  T7 swap to `--fontSize-body` let the breathing ramp reach INTO
+  embedded component demos through table-cell inheritance — the Range
+  geometry suites (em-based marks) went red at desktop (6px → 7.5px).
+  Reverted to an anchored `1rem` with an argued gate-allowlist entry:
+  cells that host component demos are instruments and must not breathe.
+  Found because the run-engine branch ran the full e2e net; PR #7 only
+  ran docs tests — lesson: any change under `apps/docs/src/styles` that
+  tables/fixtures inherit needs the package e2e run too.
+
 ## Sweep log (Phase 2, 2026-09-02)
 
 - Package swept: census 11 remaining, all class A. 226 vitest + 414 e2e
