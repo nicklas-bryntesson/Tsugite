@@ -87,12 +87,17 @@ const wrapAttr = VALID_WRAPS.includes(wrap.toLowerCase()) ? wrap.toLowerCase() :
 
 const cssClass = className && String(className).trim() ? `Text ${className}` : "Text";
 
+// Run engine law (a): child content passes through the same engine
+// container as prop text — no path bypasses size/leading/trim.
 const inner =
   mode === "render"
-    ? hasChildContent
-      ? childHtml
-      : `<span class="text-content">${escapeHtml(text!)}</span>`
+    ? `<span class="text-content">${hasChildContent ? childHtml : escapeHtml(text!)}</span>`
     : "";
+
+// Run engine law (c): the element shape decides the engine mode — a span
+// is an inline run (flows on the line, trim is the line host's business),
+// everything else is a block run that owns its trim.
+const runMode = element === "span" ? "inline" : "block";
 
 const Tag = element as "p";
 ---
@@ -103,6 +108,7 @@ const Tag = element as "p";
       class={cssClass}
       data-variant={variant}
       data-size={size}
+      data-run={runMode}
       data-align={alignAttr}
       data-wrap={wrapAttr}
       {...rest}
@@ -129,16 +135,33 @@ const Tag = element as "p";
   ================================================= */
 
   .text-content {
-    display: block;
     font-size: var(--_fontSize);
     line-height: var(--_lineHeight);
 
-    /* Inline children inherit metrics */
-    & :where(a, span, strong, em, b, i) {
+    /* Law (d) — voice sovereignty: an UNVOICED inline element inherits
+       the run's metrics; a voiced child (data-variant) — and everything
+       inside it — owns its own bundle. The whole voiced subtree is
+       exempt, at zero added specificity: nearest voice wins by
+       inheritance, never by specificity. */
+    & :where(a, span, strong, em, b, i):where(:not([data-variant], [data-variant] *)) {
       font: inherit;
       line-height: inherit;
       letter-spacing: inherit;
     }
+
+    /* Law (b) — inline emphasis keeps its semantics in the quiet
+       voices: strong takes the role convention's strong weight (F2:
+       body-bold, no new stop), em stays italic. The loud voices
+       (Heading) deliberately flatten instead. */
+    & :where(strong, b):where(:not([data-variant] *)) { font-weight: var(--fontWeight-body-bold); }
+    & :where(em, i):where(:not([data-variant] *)) { font-style: italic; }
+  }
+
+  /* Law (c) — the engine mode is gated on the run shape: block runs own
+     their display; inline runs keep the UA's inline flow (absence is
+     the contract). */
+  &[data-run="block"] > .text-content {
+    display: block;
   }
 
   /* =====================================================
@@ -192,11 +215,13 @@ const Tag = element as "p";
   /* =====================================================
      FEATURE LAYER — TEXT TRIM
      Same gates as Heading. Removable in one sweep.
+     Law (c): trim is a block concept — inline runs sit on a shared
+     line whose metrics the host and the browser's baseline negotiate.
   ===================================================== */
 
   /* Native trim branch */
   @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-    > .text-content {
+    &[data-run="block"] > .text-content {
       text-box-trim: trim-both;
       text-box-edge: cap alphabetic;
       margin-block: 0;
@@ -205,7 +230,7 @@ const Tag = element as "p";
 
   /* Fallback branch */
   @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
-    > .text-content {
+    &[data-run="block"] > .text-content {
       --_effectiveLineHeight: calc(var(--_fontSize) * var(--_lineHeight));
       --_marginBlock: calc((var(--_fontSize) - var(--_effectiveLineHeight)) / 2);
       --_marginBlockStart: calc(var(--_marginBlock) + var(--_baselineOffset, 0));

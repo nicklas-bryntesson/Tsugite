@@ -60,10 +60,11 @@ describe("Heading", () => {
     expect(html).toContain("<mark>AiPoc</mark>");
   });
 
-  it("renders slot content without .heading-text wrapper", async () => {
+  it("wraps slot content in the engine container (run engine law a)", async () => {
+    // The old contract rendered children bare, which bypassed the
+    // typography engine (no size/leading/trim). No path skips the engine.
     const html = await render({}, { default: "Rich <em>content</em>" });
-    expect(html).toContain("Rich <em>content</em>");
-    expect(html).not.toContain("heading-text");
+    expect(html).toContain('<span class="heading-text">Rich <em>content</em></span>');
   });
 
   it("renders nothing when no text and no child content", async () => {
