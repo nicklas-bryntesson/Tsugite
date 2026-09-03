@@ -307,47 +307,87 @@ export function generateThemesStylesheet() {
 
 // ── 4. Typography (ADR-0003 extended to type) ─────────────────────────────────
 
-/** The refusal rule for type: every voice complete, every ramp complete.
-    Incomplete tables are a build error, never a silent metric bug. */
-export function validateTypography() {
-  const problems = [];
-  const BLOCK_METRICS = ["lineHeight", "letterSpacing", "featureSettings", "baselineOffset"];
+const TYPE_TABLES = {
+  voices: typeVoices,
+  sizes: typeSizes,
+  families: typeFamilies,
+  weights: typeWeights,
+};
 
-  for (const [voice, def] of Object.entries(typeVoices)) {
-    if (!typeFamilies[def.family]) problems.push(`${voice}: unknown family ${def.family}`);
+const BLOCK_METRICS = ["lineHeight", "letterSpacing", "featureSettings", "baselineOffset"];
+
+const METRIC_TOKEN = {
+  lineHeight: (voice) => `--lineHeight-${voice}`,
+  letterSpacing: (voice) => `--letterSpacing-${voice}`,
+  featureSettings: (voice) => `--fontFeatureSettings-${voice}`,
+  baselineOffset: (voice) => `--baseline-offset-${voice}`,
+};
+
+/** A bundle metric is a scalar (one value for all tiers) or a tier map
+    (the designer's per-range twist: tracking that tightens as the tier
+    grows, leading that relaxes on FLOOR). Same shape as the size ramps. */
+const isTierMap = (v) => typeof v === "object" && v !== null;
+
+/** The refusal rule for type: every voice complete, every ramp complete —
+    and a tiered metric carries EVERY tier or none. Incomplete tables are
+    a build error, never a silent metric bug. */
+export function validateTypography(tables = TYPE_TABLES) {
+  const { voices, sizes, families, weights } = tables;
+  const problems = [];
+
+  const checkTierMap = (owner, map) => {
+    for (const t of TIERS) {
+      if (!(t in map)) problems.push(`${owner} is missing the ${t} tier`);
+    }
+    for (const t of Object.keys(map)) {
+      if (!TIERS.includes(t)) problems.push(`${owner} has unknown tier "${t}"`);
+    }
+  };
+
+  for (const [voice, def] of Object.entries(voices)) {
+    if (!families[def.family]) problems.push(`${voice}: unknown family ${def.family}`);
     for (const [stop, w] of Object.entries(def.weights ?? {})) {
-      if (!typeWeights[w]) problems.push(`${voice}/weights.${stop}: unknown weight ${w}`);
+      if (!weights[w]) problems.push(`${voice}/weights.${stop}: unknown weight ${w}`);
     }
     if (!def.weights?.default) problems.push(`${voice} is missing weights.default`);
     if (!def.inline) {
       for (const m of BLOCK_METRICS) {
-        if (!(m in def)) problems.push(`${voice} is missing ${m} (a block voice carries the full bundle)`);
+        if (!(m in def)) {
+          problems.push(`${voice} is missing ${m} (a block voice carries the full bundle)`);
+        } else if (isTierMap(def[m])) {
+          checkTierMap(`${voice}/${m}`, def[m]);
+        }
       }
     }
   }
 
-  for (const [name, tiers] of Object.entries(typeSizes)) {
-    for (const t of TIERS) {
-      if (!tiers[t]) problems.push(`fontSize ${name} is missing the ${t} tier`);
-    }
-    for (const t of Object.keys(tiers)) {
-      if (!TIERS.includes(t)) problems.push(`fontSize ${name} has unknown tier "${t}"`);
-    }
+  for (const [name, tiers] of Object.entries(sizes)) {
+    checkTierMap(`fontSize ${name}`, tiers);
   }
 
   if (problems.length) throw new Error(`The typography table is incomplete:\n${problems.join("\n")}`);
 }
 
-export function generateTypographyStylesheet() {
-  validateTypography();
+export function generateTypographyStylesheet(tables = TYPE_TABLES) {
+  validateTypography(tables);
+  const { voices, sizes, families, weights } = tables;
 
   const rawSizeName = (name, tier) => `--FONTSIZE-${name.toUpperCase()}-${tier.toUpperCase()}`;
 
-  const rawConstants = Object.entries(typeSizes)
+  const rawConstants = Object.entries(sizes)
     .flatMap(([name, tiers]) => TIERS.map((t) => `  ${rawSizeName(name, t)}: ${tiers[t]};`))
     .join("\n");
 
-  const bundles = Object.entries(typeVoices)
+  // Scalar metrics live once in :root; tier-mapped metrics move into the
+  // tier blocks below (the semantic token NAME is the seam — components
+  // consume var(--letterSpacing-x) either way and never know which).
+  const tieredMetrics = Object.entries(voices).flatMap(([voice, def]) =>
+    def.inline
+      ? []
+      : BLOCK_METRICS.filter((m) => isTierMap(def[m])).map((m) => ({ voice, metric: m, values: def[m] })),
+  );
+
+  const bundles = Object.entries(voices)
     .map(([voice, def]) => {
       const lines = [
         `  --fontFamily-${voice}: var(${def.family});`,
@@ -357,21 +397,23 @@ export function generateTypographyStylesheet() {
           .map(([stop, w]) => `  --fontWeight-${voice}-${stop}: var(${w});`),
       ];
       if (!def.inline) {
-        lines.push(
-          `  --lineHeight-${voice}: ${def.lineHeight};`,
-          `  --letterSpacing-${voice}: ${def.letterSpacing};`,
-          `  --fontFeatureSettings-${voice}: ${def.featureSettings};`,
-          `  --baseline-offset-${voice}: ${def.baselineOffset};`,
-        );
+        for (const m of BLOCK_METRICS) {
+          if (!isTierMap(def[m])) lines.push(`  ${METRIC_TOKEN[m](voice)}: ${def[m]};`);
+        }
       }
       return lines.join("\n");
     })
     .join("\n\n");
 
   const semanticSizes = (tier, indent) =>
-    Object.keys(typeSizes)
-      .map((name) => `${indent}--fontSize-${name}: calc(var(${rawSizeName(name, tier)}) * var(--TYPE-SCALE, 1));`)
-      .join("\n");
+    [
+      ...Object.keys(sizes).map(
+        (name) => `${indent}--fontSize-${name}: calc(var(${rawSizeName(name, tier)}) * var(--TYPE-SCALE, 1));`,
+      ),
+      ...tieredMetrics.map(
+        ({ voice, metric, values }) => `${indent}${METRIC_TOKEN[metric](voice)}: ${values[tier]};`,
+      ),
+    ].join("\n");
 
   const TIER_MEDIA = {
     floor: "(max-width: 21.24999rem)",
@@ -401,9 +443,9 @@ export function generateTypographyStylesheet() {
     ":root {",
     "  --TYPE-SCALE: 1;",
     "",
-    ...Object.entries(typeFamilies).map(([n, v]) => `  ${n}: ${v};`),
+    ...Object.entries(families).map(([n, v]) => `  ${n}: ${v};`),
     "",
-    ...Object.entries(typeWeights).map(([n, v]) => `  ${n}: ${v};`),
+    ...Object.entries(weights).map(([n, v]) => `  ${n}: ${v};`),
     "",
     rawConstants,
     "",

@@ -31,7 +31,19 @@ export const typeWeights = {
 };
 
 /** The voices — complete role bundles. A voice with `inline: true`
-    (code) carries no block metrics: it rides the run it sits in. */
+    (code) carries no block metrics: it rides the run it sits in.
+
+    Every block metric (lineHeight, letterSpacing, featureSettings,
+    baselineOffset) is a scalar OR a tier map — the designer's
+    per-range twist, same shape as the size ramps:
+
+      letterSpacing: "-0.01em"                       // one value, all tiers
+      letterSpacing: { floor: "0", mobile: "-0.005em",
+                       desktop: "-0.01em", wide: "-0.01em" }
+
+    A tier map carries EVERY tier or the build refuses. Components
+    consume the same semantic token either way — responsiveness is a
+    supplier decision, invisible at the seam. */
 export const typeVoices = {
   heading: {
     family: "--FIRA-SANS",
