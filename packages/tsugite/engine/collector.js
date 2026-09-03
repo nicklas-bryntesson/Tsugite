@@ -329,8 +329,9 @@ const METRIC_TOKEN = {
 const isTierMap = (v) => typeof v === "object" && v !== null;
 
 /** The refusal rule for type: every voice complete, every ramp complete —
-    and a tiered metric carries EVERY tier or none. Incomplete tables are
-    a build error, never a silent metric bug. */
+    a tiered metric carries EVERY tier or none, and the units obey the
+    trim engine's arithmetic. Incomplete tables are a build error, never
+    a silent metric bug. */
 export function validateTypography(tables = TYPE_TABLES) {
   const { voices, sizes, families, weights } = tables;
   const problems = [];
@@ -344,6 +345,30 @@ export function validateTypography(tables = TYPE_TABLES) {
     }
   };
 
+  // The unit laws — what the trim engine's calc() arithmetic demands.
+  // calc(<length> × <number>) is valid; calc(<length> × <length>) is not,
+  // and calc(<length> + <number>) fails invalid-at-computed-value,
+  // silently zeroing the fallback margins (found by browser probe).
+  const UNIT_LAWS = {
+    // multiplied by --_fontSize → must stay a unitless ratio
+    lineHeight: { test: (v) => /^\d*\.?\d+$/.test(v), law: "must be a unitless ratio (it multiplies a length)" },
+    // added to a length → must BE a length (or zero)
+    baselineOffset: { test: (v) => /^(0|-?\d*\.?\d+(px|em|rem))$/.test(v), law: "must be a length or 0 (it adds to a margin)" },
+  };
+
+  const checkUnits = (owner, metric, value) => {
+    const rule = UNIT_LAWS[metric];
+    if (rule && !rule.test(String(value))) problems.push(`${owner}: "${value}" ${rule.law}`);
+  };
+
+  const eachValue = (owner, metric, value) => {
+    if (isTierMap(value)) {
+      for (const [t, v] of Object.entries(value)) checkUnits(`${owner}/${t}`, metric, v);
+    } else {
+      checkUnits(owner, metric, value);
+    }
+  };
+
   for (const [voice, def] of Object.entries(voices)) {
     if (!families[def.family]) problems.push(`${voice}: unknown family ${def.family}`);
     for (const [stop, w] of Object.entries(def.weights ?? {})) {
@@ -354,8 +379,9 @@ export function validateTypography(tables = TYPE_TABLES) {
       for (const m of BLOCK_METRICS) {
         if (!(m in def)) {
           problems.push(`${voice} is missing ${m} (a block voice carries the full bundle)`);
-        } else if (isTierMap(def[m])) {
-          checkTierMap(`${voice}/${m}`, def[m]);
+        } else {
+          if (isTierMap(def[m])) checkTierMap(`${voice}/${m}`, def[m]);
+          eachValue(`${voice}/${m}`, m, def[m]);
         }
       }
     }

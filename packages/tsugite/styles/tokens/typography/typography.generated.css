@@ -102,14 +102,14 @@
   --lineHeight-heading: 1.1;
   --letterSpacing-heading: normal;
   --fontFeatureSettings-heading: normal;
-  --baseline-offset-heading: 1;
+  --baseline-offset-heading: 1px;
 
   --fontFamily-display: var(--ABRIL-FATFACE);
   --fontWeight-display: var(--ABRIL-FATFACE-400);
   --lineHeight-display: 0.95;
   --letterSpacing-display: -0.01em;
   --fontFeatureSettings-display: normal;
-  --baseline-offset-display: 1;
+  --baseline-offset-display: 1px;
 
   --fontFamily-body: var(--NOTO-SERIF);
   --fontWeight-body: var(--NOTOS-SERIF-400);
@@ -117,7 +117,7 @@
   --lineHeight-body: 1.5;
   --letterSpacing-body: normal;
   --fontFeatureSettings-body: normal;
-  --baseline-offset-body: 1;
+  --baseline-offset-body: 1px;
 
   --fontFamily-code: var(--MONOSPACE);
   --fontWeight-code: var(--MONOSPACE-400);
@@ -127,14 +127,14 @@
   --lineHeight-label: 1.3;
   --letterSpacing-label: normal;
   --fontFeatureSettings-label: normal;
-  --baseline-offset-label: 1;
+  --baseline-offset-label: 1px;
 
   --fontFamily-preamble: var(--NOTO-SERIF);
   --fontWeight-preamble: var(--NOTOS-SERIF-400);
   --lineHeight-preamble: 1.35;
   --letterSpacing-preamble: normal;
   --fontFeatureSettings-preamble: normal;
-  --baseline-offset-preamble: 1;
+  --baseline-offset-preamble: 1px;
 }
 
 @media (max-width: 21.24999rem) {

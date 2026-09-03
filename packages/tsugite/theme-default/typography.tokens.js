@@ -51,7 +51,7 @@ export const typeVoices = {
     lineHeight: "1.1",
     letterSpacing: "normal",
     featureSettings: "normal",
-    baselineOffset: "1",
+    baselineOffset: "1px",
   },
   display: {
     family: "--ABRIL-FATFACE",
@@ -59,7 +59,7 @@ export const typeVoices = {
     lineHeight: "0.95",
     letterSpacing: "-0.01em",
     featureSettings: "normal",
-    baselineOffset: "1",
+    baselineOffset: "1px",
   },
   body: {
     family: "--NOTO-SERIF",
@@ -67,7 +67,7 @@ export const typeVoices = {
     lineHeight: "1.5",
     letterSpacing: "normal",
     featureSettings: "normal",
-    baselineOffset: "1",
+    baselineOffset: "1px",
   },
   code: {
     family: "--MONOSPACE",
@@ -80,7 +80,7 @@ export const typeVoices = {
     lineHeight: "1.3",
     letterSpacing: "normal",
     featureSettings: "normal",
-    baselineOffset: "1",
+    baselineOffset: "1px",
   },
   preamble: {
     // The standfirst voice: body's family at ingress metrics — big text
@@ -90,7 +90,7 @@ export const typeVoices = {
     lineHeight: "1.35",
     letterSpacing: "normal",
     featureSettings: "normal",
-    baselineOffset: "1",
+    baselineOffset: "1px",
   },
 };
 
