@@ -8,6 +8,7 @@ import {
   generateRawStylesheet,
   generateStylesheet,
   generateThemesStylesheet,
+  generateTypographyStylesheet,
   generateSeamStylesheet,
   gamutReport,
 } from "./collector.js";
@@ -16,16 +17,20 @@ const here = dirname(fileURLToPath(import.meta.url));
 const rawOut = resolve(here, "../styles/tokens/color/color.raw.generated.css");
 const out = resolve(here, "../styles/tokens/color/color.appearance.generated.css");
 const themesOut = resolve(here, "../styles/tokens/color/color.themes.generated.css");
+const typeOut = resolve(here, "../styles/tokens/typography/typography.generated.css");
 const seamOut = resolve(here, "../styles/ui-tokens.css");
 
 mkdirSync(dirname(out), { recursive: true });
+mkdirSync(dirname(typeOut), { recursive: true });
 writeFileSync(rawOut, generateRawStylesheet());
 writeFileSync(out, generateStylesheet());
 writeFileSync(themesOut, generateThemesStylesheet());
+writeFileSync(typeOut, generateTypographyStylesheet());
 writeFileSync(seamOut, generateSeamStylesheet());
 console.log(`raw    → ${rawOut}`);
 console.log(`tokens → ${out}`);
 console.log(`themes → ${themesOut}`);
+console.log(`type   → ${typeOut}`);
 console.log(`seam   → ${seamOut}`);
 
 const clipped = gamutReport();

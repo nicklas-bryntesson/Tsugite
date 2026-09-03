@@ -21,6 +21,7 @@ import { rawColorTokens, rawRefName, assertRawReferences } from "../theme-defaul
 import { semanticColorTokens } from "../theme-default/semantic.color.tokens.js";
 import { themeVoices, themeChannels, voiceMatrix, cellName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 import { uiSeamTokens } from "../theme-default/seam.ui.tokens.js";
+import { TIERS, typeFamilies, typeWeights, typeVoices, typeSizes } from "../theme-default/typography.tokens.js";
 import { resolveValue, computeMix, isRecipe, toSrgbCss, toSrgbHex } from "./color-engine.js";
 
 export const APPEARANCES = ["light", "dark", "light-contrast", "dark-contrast"];
@@ -304,7 +305,119 @@ export function generateThemesStylesheet() {
   ].join("\n\n");
 }
 
-// ── 4. The --ui-* seam ────────────────────────────────────────────────────────
+// ── 4. Typography (ADR-0003 extended to type) ─────────────────────────────────
+
+/** The refusal rule for type: every voice complete, every ramp complete.
+    Incomplete tables are a build error, never a silent metric bug. */
+export function validateTypography() {
+  const problems = [];
+  const BLOCK_METRICS = ["lineHeight", "letterSpacing", "featureSettings", "baselineOffset"];
+
+  for (const [voice, def] of Object.entries(typeVoices)) {
+    if (!typeFamilies[def.family]) problems.push(`${voice}: unknown family ${def.family}`);
+    for (const [stop, w] of Object.entries(def.weights ?? {})) {
+      if (!typeWeights[w]) problems.push(`${voice}/weights.${stop}: unknown weight ${w}`);
+    }
+    if (!def.weights?.default) problems.push(`${voice} is missing weights.default`);
+    if (!def.inline) {
+      for (const m of BLOCK_METRICS) {
+        if (!(m in def)) problems.push(`${voice} is missing ${m} (a block voice carries the full bundle)`);
+      }
+    }
+  }
+
+  for (const [name, tiers] of Object.entries(typeSizes)) {
+    for (const t of TIERS) {
+      if (!tiers[t]) problems.push(`fontSize ${name} is missing the ${t} tier`);
+    }
+    for (const t of Object.keys(tiers)) {
+      if (!TIERS.includes(t)) problems.push(`fontSize ${name} has unknown tier "${t}"`);
+    }
+  }
+
+  if (problems.length) throw new Error(`The typography table is incomplete:\n${problems.join("\n")}`);
+}
+
+export function generateTypographyStylesheet() {
+  validateTypography();
+
+  const rawSizeName = (name, tier) => `--FONTSIZE-${name.toUpperCase()}-${tier.toUpperCase()}`;
+
+  const rawConstants = Object.entries(typeSizes)
+    .flatMap(([name, tiers]) => TIERS.map((t) => `  ${rawSizeName(name, t)}: ${tiers[t]};`))
+    .join("\n");
+
+  const bundles = Object.entries(typeVoices)
+    .map(([voice, def]) => {
+      const lines = [
+        `  --fontFamily-${voice}: var(${def.family});`,
+        `  --fontWeight-${voice}: var(${def.weights.default});`,
+        ...Object.entries(def.weights)
+          .filter(([stop]) => stop !== "default")
+          .map(([stop, w]) => `  --fontWeight-${voice}-${stop}: var(${w});`),
+      ];
+      if (!def.inline) {
+        lines.push(
+          `  --lineHeight-${voice}: ${def.lineHeight};`,
+          `  --letterSpacing-${voice}: ${def.letterSpacing};`,
+          `  --fontFeatureSettings-${voice}: ${def.featureSettings};`,
+          `  --baseline-offset-${voice}: ${def.baselineOffset};`,
+        );
+      }
+      return lines.join("\n");
+    })
+    .join("\n\n");
+
+  const semanticSizes = (tier, indent) =>
+    Object.keys(typeSizes)
+      .map((name) => `${indent}--fontSize-${name}: calc(var(${rawSizeName(name, tier)}) * var(--TYPE-SCALE, 1));`)
+      .join("\n");
+
+  const TIER_MEDIA = {
+    floor: "(max-width: 21.24999rem)",
+    mobile: "(min-width: 21.25rem) and (max-width: 48.74rem)",
+    desktop: "(min-width: 48.75rem) and (max-width: 89.99rem)",
+    wide: "(min-width: 90rem)",
+  };
+
+  const mediaBlocks = TIERS.map(
+    (t) => `@media ${TIER_MEDIA[t]} {\n  :root {\n${semanticSizes(t, "    ")}\n  }\n}`,
+  ).join("\n\n");
+
+  // Test-viewport overrides: forces tier values regardless of actual
+  // viewport (the bench's side-by-side maps). The attribute selector
+  // wins over the media :root blocks by source order at equal weight.
+  const testViewports = ["floor", "mobile", "desktop"]
+    .map((t) => `[data-test-viewport="${t}"] {\n${semanticSizes(t, "  ")}\n}`)
+    .join("\n\n");
+
+  return [
+    "/* GENERATED — do not edit. Source: theme-default/typography.tokens.js",
+    "   The typography map: RAW families/weights/size stops (the rebrand",
+    "   surface), voice bundles, and the tier ramps (ADR-0001: explicit",
+    "   stops, no fluid math; WIDE equals DESKTOP — type stops growing).",
+    "   Regenerate: npm run tokens   (freshness guarded by tests) */",
+    "",
+    ":root {",
+    "  --TYPE-SCALE: 1;",
+    "",
+    ...Object.entries(typeFamilies).map(([n, v]) => `  ${n}: ${v};`),
+    "",
+    ...Object.entries(typeWeights).map(([n, v]) => `  ${n}: ${v};`),
+    "",
+    rawConstants,
+    "",
+    bundles,
+    "}",
+    "",
+    mediaBlocks,
+    "",
+    testViewports,
+    "",
+  ].join("\n");
+}
+
+// ── 5. The --ui-* seam ────────────────────────────────────────────────────────
 
 export function generateSeamStylesheet() {
   const entries = Object.entries(uiSeamTokens)
