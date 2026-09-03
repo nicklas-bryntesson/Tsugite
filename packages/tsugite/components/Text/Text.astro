@@ -233,8 +233,8 @@ const Tag = element as "p";
     &[data-run="block"] > .text-content {
       --_effectiveLineHeight: calc(var(--_fontSize) * var(--_lineHeight));
       --_marginBlock: calc((var(--_fontSize) - var(--_effectiveLineHeight)) / 2);
-      --_marginBlockStart: calc(var(--_marginBlock) + var(--_baselineOffset, 0));
-      --_marginBlockEnd: calc(var(--_marginBlock) - var(--_baselineOffset, 0));
+      --_marginBlockStart: calc(var(--_marginBlock) + (var(--_baselineOffset, 0) * var(--_fontSize)));
+      --_marginBlockEnd: calc(var(--_marginBlock) - (var(--_baselineOffset, 0) * var(--_fontSize)));
 
       margin-block-start: var(--_marginBlockStart);
       margin-block-end: var(--_marginBlockEnd);

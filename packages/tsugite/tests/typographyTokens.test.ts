@@ -35,7 +35,7 @@ describe("the typography tables", () => {
           lineHeight: "1.4",
           letterSpacing: { floor: "0", mobile: "-0.005em", desktop: "-0.01em", wide: "-0.01em" },
           featureSettings: "normal",
-          baselineOffset: "1",
+          baselineOffset: "0",
         },
       },
     };
@@ -67,6 +67,38 @@ describe("the typography tables", () => {
       },
     };
     expect(() => validateTypography(tables)).toThrow(/probe\/lineHeight is missing the desktop tier/);
+  });
+
+  it("the unit laws: line-height unitless, baseline offset a length", () => {
+    const base = {
+      families: { "--SYNTH": "x" },
+      weights: { "--SYNTH-400": "400" },
+      sizes: {},
+    };
+    const voice = (overrides: Record<string, unknown>) => ({
+      voices: {
+        probe: {
+          family: "--SYNTH",
+          weights: { default: "--SYNTH-400" },
+          lineHeight: "1.4",
+          letterSpacing: "normal",
+          featureSettings: "normal",
+          baselineOffset: "0.03",
+          ...overrides,
+        },
+      },
+      ...base,
+    });
+    // a line-height with a unit would invalidate calc(<length> × <length>)
+    expect(() => validateTypography(voice({ lineHeight: "1.2em" }))).toThrow(/unitless ratio/);
+    // the baseline offset is a pure factor (× font size); a unit would
+    // invalidate the multiplication the engine performs
+    expect(() => validateTypography(voice({ baselineOffset: "1px" }))).toThrow(/unitless factor/);
+    // tiered values obey the same laws per tier
+    expect(() =>
+      validateTypography(voice({ lineHeight: { floor: "1.5", mobile: "1.4", desktop: "1.3em", wide: "1.3" } })),
+    ).toThrow(/desktop: "1.3em" must be a unitless ratio/);
+    expect(() => validateTypography(voice({}))).not.toThrow();
   });
 
   it("every voice the family speaks has a bundle and a complete ramp", () => {

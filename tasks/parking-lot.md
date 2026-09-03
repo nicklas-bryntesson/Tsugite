@@ -1,5 +1,20 @@
 # Parking lot — noticed during the typography sweep, not swept
 
+- **Button's text engine is dead — everywhere, always** (found 2026-09-03
+  by browser probe during the baseline-offset work). Button.css's
+  `--_baselineOffset: var(--button--baselineOffset, 0)` defaults to a
+  bare number, and `calc(<length> + 0)` is invalid-at-computed-value —
+  so `.Button-text`'s leading compensation has never applied in ANY
+  browser (no @supports gate there). Also: `--_fontBaselineOffset:
+  var(--baseline-offset-label)` on line 10 is declared but never
+  consumed (orphaned). Both are upstream findings (ref-comps, ADR-0002
+  diffability): fixing changes button geometry that the whole alignment
+  bench is calibrated against — needs its own pass with the field ×
+  button rows as the instrument, and the family components' new
+  factor-×-fontSize formula as the donor pattern.
+
+## From the sweep (2026-09-02)
+
 Non-typography drift observed while sweeping (2026-09-02). Each is a
 future sweep or decision of its own; nothing here blocks anything.
 
