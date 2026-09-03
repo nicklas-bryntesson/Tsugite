@@ -13,5 +13,8 @@
     "tokens": "pnpm --filter tsugite tokens",
     "test": "pnpm --filter tsugite test && pnpm --filter docs test",
     "test:e2e": "pnpm --filter tsugite test:e2e && pnpm --filter docs test:e2e"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1"
   }
 }
