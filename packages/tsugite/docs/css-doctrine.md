@@ -99,3 +99,19 @@ Inspecting any element must show exactly one active rule per property —
 no strikethrough noise — and the resolution must read unambiguously:
 component slot → theme claim → semantic → raw. If the inspector cannot
 tell which truth is active, the doctrine has been violated.
+
+## 7. The authoring form — nested, one root, `&` first (ADR-0010)
+
+A component stylesheet is one tree, read once.
+
+- One root rule per component. Parts, states and variants are nested
+  rules that begin with `&`; the root selector is never repeated.
+- Tier, container and support gates (`@media`, `@container`,
+  `@supports`) nest inside the root rule. The gate still bounds the
+  declaration (§1); nesting only keeps it in the tree.
+- The parent of a nested rule is a single compound selector. Nesting
+  into a selector *list* forces `:is()` on lowering and a specificity
+  you did not write — author those flat.
+- The browser target is stated once, in `/.browserslistrc`. The
+  pipeline lowers nesting to the flat form for that target; the nesting
+  gate test proves it, and announces deletion day (§5).
