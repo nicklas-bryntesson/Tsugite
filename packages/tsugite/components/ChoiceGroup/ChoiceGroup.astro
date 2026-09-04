@@ -75,8 +75,8 @@ const cssClass = className && String(className).trim() ? `ChoiceGroup ${classNam
  *   hidden           — legend removed from flow (SR-only); .content is the whole box
  * .content is a flow-root so it forms its own block-formatting context.
  *
- * Root carries tokens + root props only; every part is a flat, fully-qualified
- * `.ChoiceGroup .element` rule below (ADR-0019).
+ * One root, one tree (ADR-0010): the root carries tokens + root props; parts,
+ * orientation and the legend placements are nested rules.
  */
 
 .ChoiceGroup {
@@ -95,70 +95,70 @@ const cssClass = className && String(className).trim() ? `ChoiceGroup ${classNam
   padding: 0;
   min-inline-size: 0;
   max-inline-size: var(--_cg-max-inline-size);
-}
 
-.ChoiceGroup > legend {
-  padding: 0;
-  font-weight: var(--_cg-legend-weight);
-}
+  & > legend {
+    padding: 0;
+    font-weight: var(--_cg-legend-weight);
+  }
 
-/* Body forms its own formatting context (holds hint + options + error). */
-.ChoiceGroup .content { display: flow-root; }
+  /* Body forms its own formatting context (holds hint + options + error). */
+  & .content { display: flow-root; }
 
-.ChoiceGroup .hint {
-  margin-block: 0 var(--_cg-gap);
-  color: var(--_cg-hint-color);
-}
+  & .hint {
+    margin-block: 0 var(--_cg-gap);
+    color: var(--_cg-hint-color);
+  }
 
-.ChoiceGroup .options {
-  display: flex;
-  flex-direction: column;
-  gap: var(--_cg-gap);
-}
+  & .options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_cg-gap);
+  }
 
-/* Group-level error is a Notice inside a persistent live region; ChoiceGroup
-   only owns the spacing (the announcer + payload are the Notice component). */
-.ChoiceGroup .notice-region {
-  margin-block-start: var(--_cg-gap);
-}
+  /* Group-level error is a Notice inside a persistent live region; ChoiceGroup
+     only owns the spacing (the announcer + payload are the Notice component). */
+  & .notice-region {
+    margin-block-start: var(--_cg-gap);
+  }
 
-/* ── Orientation ─────────────────────────────────────────────────────── */
-.ChoiceGroup[data-orientation="horizontal"] .options {
-  flex-direction: row;
-  flex-wrap: wrap;
-  column-gap: var(--_cg-gap-horizontal);
-}
+  /* ── Orientation ─────────────────────────────────────────────────────── */
+  &[data-orientation="horizontal"] .options {
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: var(--_cg-gap-horizontal);
+  }
 
-/* ── Legend: above (default) — full-width float, content clears below ─── */
-.ChoiceGroup[data-legend="above"] > legend,
-.ChoiceGroup:not([data-legend]) > legend {
-  float: left;
-  inline-size: 100%;
-  margin-block-end: var(--_cg-legend-gap);
-}
-.ChoiceGroup[data-legend="above"] > .content,
-.ChoiceGroup:not([data-legend]) > .content {
-  clear: both;                 /* drop the whole body below the full-width legend */
-}
+  /* ── Legend: above (default) — full-width float, content clears below ─── */
+  &[data-legend="above"] > legend,
+  &:not([data-legend]) > legend {
+    float: left;
+    inline-size: 100%;
+    margin-block-end: var(--_cg-legend-gap);
+  }
+  &[data-legend="above"] > .content,
+  &:not([data-legend]) > .content {
+    clear: both;                 /* drop the whole body below the full-width legend */
+  }
 
-/* ── Legend: beside — auto-width float, content fills the space beside it ─ */
-.ChoiceGroup[data-legend="beside"] > legend {
-  float: left;
-  inline-size: auto;
-  margin-inline-end: var(--_cg-gap-horizontal);
-}
-/* .content stays flow-root (not cleared) → shrinks to the room right of the float */
+  /* ── Legend: beside — auto-width float, content fills the space beside it ─ */
+  &[data-legend="beside"] > legend {
+    float: left;
+    inline-size: auto;
+    margin-inline-end: var(--_cg-gap-horizontal);
+  }
+  /* .content stays flow-root (not cleared) → shrinks to the room right of the float */
 
-/* ── Legend: hidden — removed visually, kept as the SR group name ────── */
-.ChoiceGroup[data-legend="hidden"] > legend {
-  position: absolute;
-  inline-size: 1px;
-  block-size: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
+  /* ── Legend: hidden — removed visually, kept as the SR group name ────── */
+  &[data-legend="hidden"] > legend {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
 }
 </style>
