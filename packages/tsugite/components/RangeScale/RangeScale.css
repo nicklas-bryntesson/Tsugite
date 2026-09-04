@@ -1,9 +1,6 @@
 /* Kept as a FILE (not inlined as <style> in one component).
    Shared contract: RangeScale and RangeGroup both draw the .RangeScale lane.
-   Inlining would duplicate it in the bundle or couple components to page composition. *
- * One root, one tree (ADR-0010): tokens + root props on the root; every part,
- * state, variant and gate is a nested `&` rule below, in cascade order.
- */
+   Inlining would duplicate it in the bundle or couple components to page composition. */
 /* src/partials/components/RangeScale/RangeScale.css */
 /*
  * RangeScale — the lane a RangeField is measured against.
