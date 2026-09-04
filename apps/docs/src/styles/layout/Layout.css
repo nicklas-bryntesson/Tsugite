@@ -19,12 +19,19 @@ body {
   inline-size: 100%;
   border-block-end: 1px solid var(--color-border-subtle);
 
-  > header {
+  & > header {
     padding-block: 1.5rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+  }
+
+  /* Header context: compact the switch through its public API so the pill
+     sits inside the existing header height instead of growing it. */
+  & .ThemeSwitch {
+    --_ts-size: 2rem;
+    --_ts-icon-size: 1rem;
   }
 }
 
@@ -59,13 +66,6 @@ body {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-}
-
-/* Header context: compact the switch through its public API so the pill
-   sits inside the existing header height instead of growing it. */
-.Header .ThemeSwitch {
-  --_ts-size: 2rem;
-  --_ts-icon-size: 1rem;
 }
 
 .MainNavigation {
