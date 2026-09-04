@@ -6,6 +6,11 @@
 @import "tsugite/styles/base/reset.css";
 @import "./base/font.css";
 
+/* Base tables — GENERATED from theme-default/size|site|grid.tokens.js
+   (ADR-0011): spacing scale, site offset and grids. RAW constants plus
+   the tier-gated semantic ramps (ADR-0001). */
+@import "tsugite/styles/tokens/base/base.generated.css";
+
 /* --ui-* — the reference-components theming seam (ADR-0018) + the color-scheme
    platform line (ADR-0021). Copied verbatim; mapped onto our own color system
    in a later pass. */

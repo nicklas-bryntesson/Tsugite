@@ -24,7 +24,6 @@ const SCAN_ROOTS = [
   "apps/docs/src",
 ];
 
-// .scss is Sass nesting, lowered by Sass before Lightning CSS sees it — out of scope.
 const EXTENSIONS = [".css", ".astro"];
 const SKIP = [/node_modules/, /\.generated\.css$/, /styles\/ui-tokens\.css$/];
 
