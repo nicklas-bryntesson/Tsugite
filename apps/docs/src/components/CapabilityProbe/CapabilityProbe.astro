@@ -1,0 +1,228 @@
+---
+// CapabilityProbe — one sample, both branches of one support gate, side by
+// side (RFC 0001 §6.3 and §8). The first time the fallback branch renders
+// anywhere but in an old browser.
+//
+// The mechanism is the probe build's discriminant, not this component: in a
+// `CAP_MODE=probe` build every registered `@supports` pair becomes a pair of
+// `@container style(--cap-<key>: on|off)` queries, and the generated head
+// lets `[data-cap-<kebab-key>="on"|"off"]` on any ANCESTOR set that
+// property by inheritance (style queries resolve against the nearest
+// ancestor container, never the subject itself). This component only puts
+// the attribute on three wrappers and renders the same sample under each:
+//
+//   on       the native branch — set EXPLICITLY, so the columns compare
+//            branches, never browsers
+//   off      the fallback branch
+//   overlay  off stacked on on with mix-blend-mode: difference — black
+//            means identical, any light pixel is drift
+//
+// In every other build mode the attribute is inert and all three copies show
+// the production branch; the page hosting the probe says so (it reads the
+// computed `--cap-<key>` and shows a banner).
+//
+// The registry is the only place the condition string lives — it is
+// imported, never retyped, and the inline script asks CSS.supports() for it
+// so the reader knows whether the `on` column means anything here.
+import { capabilities } from "tsugite/engine/capabilities.js";
+
+interface Props {
+  /** Registry key, e.g. "textTrim". */
+  capability: string;
+  /** The three copies are given equal inline size; wide samples set this. */
+  minColumnWidth?: string;
+}
+
+const { capability, minColumnWidth = "16rem" } = Astro.props;
+
+const registered = capabilities as Record<string, { css: string }>;
+const entry = registered[capability];
+if (!entry) throw new Error(`CapabilityProbe: unknown capability "${capability}"`);
+
+/** `textTrim` → `data-cap-text-trim`: the override attribute the probe head listens for. */
+const kebab = (key: string) => key.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase());
+const attribute = `data-cap-${kebab(capability)}`;
+
+// Astro renders a slot once per use — the sample is rendered to a string once
+// and mounted four times (two columns, two overlay layers).
+const sample = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+
+const on = { [attribute]: "on" };
+const off = { [attribute]: "off" };
+---
+
+<div
+  class="CapabilityProbe"
+  data-capability={capability}
+  data-attribute={attribute}
+  data-condition={entry.css}
+  style={`--_minColumnWidth: ${minColumnWidth}`}
+>
+  <p class="probe-key">
+    <code>{capability}</code>
+    <span class="probe-support">
+      this browser: <output data-probe-support>…</output>
+    </span>
+  </p>
+
+  <div class="probe-columns">
+    {/* Playwright hook (RFC §8, phase 3): locate
+        `[data-probe-copy="on"] .probe-sample` and `[data-probe-copy="off"] .probe-sample`
+        inside each .CapabilityProbe, boundingBox() both, and assert
+        |Δheight| < 1 and |Δy| < 1. Measure the WRAPPER, not `.heading-text`:
+        native trim shrinks the border box while the fallback shrinks the margin
+        box, and the child's margins collapse through `.Heading` — only a wrapper
+        with a border (this one) sees the two branches as the same flow height.
+        Measured 2026-09-04 in Chromium: |Δh| ≤ 0.02px, Δy = 0 across heading 1–6
+        and display 1–3. The test lives in apps/docs/tests/e2e when the CI
+        phase lands; nothing is written yet. */}
+    <section class="probe-column" data-probe-copy="on" {...on}>
+      <p class="probe-label">supported · native branch <code>{attribute}="on"</code></p>
+      <div class="probe-sample" set:html={sample} />
+    </section>
+
+    <section class="probe-column" data-probe-copy="off" {...off}>
+      <p class="probe-label">not supported · fallback branch <code>{attribute}="off"</code></p>
+      <div class="probe-sample" set:html={sample} />
+    </section>
+
+    <section class="probe-column" data-probe-overlay>
+      <p class="probe-label">overlay · <code>mix-blend-mode: difference</code> — black is identical</p>
+      <div class="probe-stack">
+        <div class="probe-layer" data-probe-layer="on" {...on} set:html={sample} />
+        <div class="probe-layer" data-probe-layer="off" {...off} set:html={sample} />
+      </div>
+    </section>
+  </div>
+
+  <p class="probe-note">
+    The <code>on</code> column is only meaningful in a browser that has the feature — without
+    it the native declarations are dropped at parse and the column shows no enhancement at all.
+  </p>
+</div>
+
+<script>
+  // Does THIS browser hold the registry condition? Asked with the exact
+  // string the registry stores, never a retyped one.
+  for (const probe of document.querySelectorAll<HTMLElement>(".CapabilityProbe")) {
+    const condition = probe.dataset.condition ?? "";
+    const out = probe.querySelector<HTMLElement>("[data-probe-support]");
+    if (!out) continue;
+    let ok = false;
+    try {
+      ok = CSS.supports(condition);
+    } catch {
+      ok = false;
+    }
+    out.textContent = ok ? `supports ${condition}` : `does not support ${condition}`;
+    out.dataset.supported = String(ok);
+  }
+</script>
+
+<style is:global>
+.CapabilityProbe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-sm);
+  inline-size: 100%;
+
+  & .probe-key {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--size-sm);
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+
+    & > code {
+      font-family: var(--fontFamily-code);
+      font-size: var(--fontSize-label);
+      color: var(--color-text-primary);
+    }
+  }
+
+  & .probe-support output {
+    font-family: var(--fontFamily-code);
+
+    &[data-supported="true"]::before,
+    &[data-supported="false"]::before {
+      content: "";
+      display: inline-block;
+      inline-size: 0.5rem;
+      block-size: 0.5rem;
+      border-radius: 50%;
+      margin-inline-end: 0.4rem;
+      vertical-align: 0.05em;
+    }
+
+    &[data-supported="true"]::before { background-color: var(--color-feedback-success); }
+    &[data-supported="false"]::before { background-color: var(--color-feedback-error); }
+  }
+
+  /* Equal columns, always: the sample must wrap identically in every copy,
+     so no column may be wider than another. auto-fit keeps that at every
+     width without a tier gate — copies that share a row share a width. */
+  & .probe-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--_minColumnWidth), 100%), 1fr));
+    gap: var(--size-md);
+    inline-size: 100%;
+  }
+
+  & .probe-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-sm);
+    min-inline-size: 0;
+    padding: var(--size-sm);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.5rem;
+  }
+
+  & .probe-label {
+    margin: 0;
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+
+    & code {
+      font-family: var(--fontFamily-code);
+      color: var(--color-text-primary);
+    }
+  }
+
+  /* The dashed guides bound the sample box top and bottom: with trim the
+     text should sit flush against them in both columns. */
+  & .probe-sample {
+    border-block: 1px dashed var(--color-feedback-error);
+  }
+
+  /* The difference overlay. Absolute black and white are the instrument
+     here, not a palette choice: difference(white, white) = black, so with
+     white text on a black ground an identical pair reads as a black box and
+     every drifted pixel lights up. Theme tokens would make the diff depend
+     on the theme, which is exactly what it must not do. */
+  & .probe-stack {
+    display: grid;
+    background-color: #000;
+    color: #fff;
+    isolation: isolate;
+  }
+
+  & .probe-layer {
+    grid-area: 1 / 1;
+    min-inline-size: 0;
+
+    &[data-probe-layer="off"] {
+      background-color: #000;
+      mix-blend-mode: difference;
+    }
+  }
+
+  & .probe-note {
+    margin: 0;
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+  }
+}
+</style>
