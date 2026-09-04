@@ -45,6 +45,9 @@
  * That is why there are four state rules, not eight.
  *
  * Part names follow CSS Forms L1 / Open UI: track = the lane, thumb = the handle.
+ *
+ * One root, one tree (ADR-0010): tokens + root props on the root; every part,
+ * state, variant and gate is a nested `&` rule below, in cascade order.
  */
 
 .RangeField {
@@ -80,141 +83,149 @@
      a relative floor would dip under 24px as soon as the root font shrinks. The
      thumb itself is relative and passes on its own at any normal text size. */
   block-size: max(var(--_rf-thumb), var(--_rf-target-floor));
-}
 
-.RangeField:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* ── Track ────────────────────────────────────────────────────────────────
-   One flat colour. Orientation needs no special case: the pseudo-element
-   inherits the input's writing-mode, so `block-size` is the thickness in both. */
-.RangeField::-webkit-slider-runnable-track {
-  block-size: var(--_rf-track);
-  border-radius: var(--_rf-radius);
-  background: var(--_rf-track-color);
-}
-.RangeField::-moz-range-track {
-  block-size: var(--_rf-track);
-  border-radius: var(--_rf-radius);
-  background: var(--_rf-track-color);
-}
-
-/* ── Thumb ────────────────────────────────────────────────────────────────
-   box-sizing + the same --_rf-thumb in both engines, or the inset only
-   matches in one of them. */
-.RangeField::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  box-sizing: border-box;
-  inline-size: var(--_rf-thumb);
-  block-size: var(--_rf-thumb);
-  margin-block-start: calc((var(--_rf-track) - var(--_rf-thumb)) / 2);  /* centre on the track */
-  border-radius: 50%;
-  border: var(--_rf-ring-width) solid var(--_rf-thumb-ring);
-  background: var(--_rf-thumb-color);
-  outline: var(--_rf-thumb-outline);
-  outline-offset: var(--_rf-ring-width);
-  /* Growth on interaction is a TRANSFORM, never a size change: --_rf-thumb feeds
-     the input's own block-size, so growing it would relayout the page by a few
-     pixels every time someone grabs the handle. transform does not participate
-     in layout, so the box stays put. */
-  transform: scale(var(--_rf-thumb-scale));
-}
-.RangeField::-moz-range-thumb {
-  box-sizing: border-box;
-  inline-size: var(--_rf-thumb);
-  block-size: var(--_rf-thumb);
-  border-radius: 50%;
-  border: var(--_rf-ring-width) solid var(--_rf-thumb-ring);
-  background: var(--_rf-thumb-color);
-  outline: var(--_rf-thumb-outline);
-  outline-offset: var(--_rf-ring-width);
-  transform: scale(var(--_rf-thumb-scale));
-}
-
-/* ── Focus, invalid, interaction states ───────────────────────────────────
-   All custom properties on the element — one rule per state instead of a
-   -webkit-/-moz- pair. The ring belongs on the THUMB, not the input: on the
-   input it draws a rectangle around the whole lane, which is not what is
-   focused. `outline` (not box-shadow) so it survives forced-colors. */
-.RangeField:focus-visible {
-  outline: none;                                   /* moved to the thumb */
-  --_rf-thumb-outline: var(--_rf-ring-width) solid currentColor;
-}
-
-/* Pair with aria-invalid="true" in the markup. */
-.RangeField[data-invalid="true"] {
-  --_rf-track-color: color-mix(in oklab, var(--_rf-invalid-color) 30%, transparent);
-  --_rf-thumb-color: var(--_rf-invalid-color);
-}
-
-/* Simulated states for the kitchensink, written in pairs with the real
-   pseudo-classes: data-test-state sits on the root and CSS projects it down. */
-.RangeField:hover,
-.RangeField[data-test-state="hover"] {
-  --_rf-thumb-color: color-mix(in oklab, currentColor 80%, Canvas);
-}
-
-.RangeField[data-test-state="focus"] {
-  --_rf-thumb-outline: var(--_rf-ring-width) solid currentColor;
-}
-
-.RangeField:active,
-.RangeField[data-test-state="active"] {
-  --_rf-thumb-scale: 1.1;
-}
-
-/* ── Forced colors (Windows High Contrast) — REQUIRED ─────────────────────
-   Forced-colors paints native controls for you, but we told the browser to stop
-   drawing, so the job comes back to us. Without this block the custom track is
-   overpainted or invisible. This is the item that is always forgotten. */
-@media (forced-colors: active) {
-  .RangeField { forced-color-adjust: none; }
-
-  .RangeField::-webkit-slider-runnable-track {
-    background: ButtonFace;
-    border: 1px solid ButtonText;   /* a hairline: px so it cannot round to zero */
-  }
-  .RangeField::-moz-range-track {
-    background: ButtonFace;
-    border: 1px solid ButtonText;   /* a hairline: px so it cannot round to zero */
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
-  .RangeField::-webkit-slider-thumb {
-    background: ButtonText;
-    border-color: ButtonFace;
+  /* ── Track ────────────────────────────────────────────────────────────────
+     One flat colour. Orientation needs no special case: the pseudo-element
+     inherits the input's writing-mode, so `block-size` is the thickness in both. */
+  &::-webkit-slider-runnable-track {
+    block-size: var(--_rf-track);
+    border-radius: var(--_rf-radius);
+    background: var(--_rf-track-color);
   }
-  .RangeField::-moz-range-thumb {
-    background: ButtonText;
-    border-color: ButtonFace;
+  &::-moz-range-track {
+    block-size: var(--_rf-track);
+    border-radius: var(--_rf-radius);
+    background: var(--_rf-track-color);
   }
 
-  .RangeField:focus-visible { --_rf-thumb-outline: var(--_rf-ring-width) solid Highlight; }
-}
+  /* ── Thumb ────────────────────────────────────────────────────────────────
+     box-sizing + the same --_rf-thumb in both engines, or the inset only
+     matches in one of them. */
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    inline-size: var(--_rf-thumb);
+    block-size: var(--_rf-thumb);
+    margin-block-start: calc((var(--_rf-track) - var(--_rf-thumb)) / 2);  /* centre on the track */
+    border-radius: 50%;
+    border: var(--_rf-ring-width) solid var(--_rf-thumb-ring);
+    background: var(--_rf-thumb-color);
+    outline: var(--_rf-thumb-outline);
+    outline-offset: var(--_rf-ring-width);
+    /* Growth on interaction is a TRANSFORM, never a size change: --_rf-thumb feeds
+       the input's own block-size, so growing it would relayout the page by a few
+       pixels every time someone grabs the handle. transform does not participate
+       in layout, so the box stays put. */
+    transform: scale(var(--_rf-thumb-scale));
+  }
+  &::-moz-range-thumb {
+    box-sizing: border-box;
+    inline-size: var(--_rf-thumb);
+    block-size: var(--_rf-thumb);
+    border-radius: 50%;
+    border: var(--_rf-ring-width) solid var(--_rf-thumb-ring);
+    background: var(--_rf-thumb-color);
+    outline: var(--_rf-thumb-outline);
+    outline-offset: var(--_rf-ring-width);
+    transform: scale(var(--_rf-thumb-scale));
+  }
 
-/* ── Vertical ─────────────────────────────────────────────────────────────
-   writing-mode, NEVER rotation: a rotate(-90deg) leaves the element in its
-   horizontal layout box, rotates the hit area, and does not remap the arrow
-   keys. Native vertical does — Up increases.
+  /* ── Focus, invalid, interaction states ───────────────────────────────────
+     All custom properties on the element — one rule per state instead of a
+     -webkit-/-moz- pair. The ring belongs on the THUMB, not the input: on the
+     input it draws a rectangle around the whole lane, which is not what is
+     focused. `outline` (not box-shadow) so it survives forced-colors. */
+  &:focus-visible {
+    outline: none;                                   /* moved to the thumb */
+    --_rf-thumb-outline: var(--_rf-ring-width) solid currentColor;
+  }
 
-   PHYSICAL width/height here, deliberately: logical sizing follows the
-   element's OWN writing-mode, so inline-size would mean HEIGHT inside a
-   vertical input — shipping a thumb-thin slider in a lane that looks correct.
+  /* Pair with aria-invalid="true" in the markup. */
+  &[data-invalid="true"] {
+    --_rf-track-color: color-mix(in oklab, var(--_rf-invalid-color) 30%, transparent);
+    --_rf-thumb-color: var(--_rf-invalid-color);
+  }
 
-   Default recipe is min at the BOTTOM (the convention for volume and mixer
-   controls). In vertical writing-mode the value follows the inline axis, and
-   `direction` reverses it. Measured in Chrome; re-measure when porting.
+  /* Simulated states for the kitchensink, written in pairs with the real
+     pseudo-classes: data-test-state sits on the root and CSS projects it down. */
+  &:hover,
+  &[data-test-state="hover"] {
+    --_rf-thumb-color: color-mix(in oklab, currentColor 80%, Canvas);
+  }
 
-   With no fill to anchor, that is the whole vertical story — a flat track needs
-   no per-orientation geometry. */
-.RangeField[data-orientation="vertical"] {
-  writing-mode: vertical-rl;
-  direction: rtl;                                  /* min at the bottom */
-  width: max(var(--_rf-thumb), var(--_rf-target-floor));
-  height: 12em;
-}
+  &[data-test-state="focus"] {
+    --_rf-thumb-outline: var(--_rf-ring-width) solid currentColor;
+  }
 
-.RangeField[data-orientation="vertical"][data-min="top"] {
-  direction: ltr;
+  &:active,
+  &[data-test-state="active"] {
+    --_rf-thumb-scale: 1.1;
+  }
+
+  /* ── Forced colors (Windows High Contrast) — REQUIRED ─────────────────────
+     Forced-colors paints native controls for you, but we told the browser to stop
+     drawing, so the job comes back to us. Without this block the custom track is
+     overpainted or invisible. This is the item that is always forgotten. */
+  @media (forced-colors: active) {
+    & {
+      forced-color-adjust: none;
+    }
+
+    &::-webkit-slider-runnable-track {
+      background: ButtonFace;
+      border: 1px solid ButtonText;   /* a hairline: px so it cannot round to zero */
+
+    }
+    &::-moz-range-track {
+      background: ButtonFace;
+      border: 1px solid ButtonText;   /* a hairline: px so it cannot round to zero */
+
+    }
+
+    &::-webkit-slider-thumb {
+      background: ButtonText;
+      border-color: ButtonFace;
+
+    }
+    &::-moz-range-thumb {
+      background: ButtonText;
+      border-color: ButtonFace;
+
+    }
+
+    &:focus-visible {
+      --_rf-thumb-outline: var(--_rf-ring-width) solid Highlight;
+    }
+  }
+
+  /* ── Vertical ─────────────────────────────────────────────────────────────
+     writing-mode, NEVER rotation: a rotate(-90deg) leaves the element in its
+     horizontal layout box, rotates the hit area, and does not remap the arrow
+     keys. Native vertical does — Up increases.
+
+     PHYSICAL width/height here, deliberately: logical sizing follows the
+     element's OWN writing-mode, so inline-size would mean HEIGHT inside a
+     vertical input — shipping a thumb-thin slider in a lane that looks correct.
+
+     Default recipe is min at the BOTTOM (the convention for volume and mixer
+     controls). In vertical writing-mode the value follows the inline axis, and
+     `direction` reverses it. Measured in Chrome; re-measure when porting.
+
+     With no fill to anchor, that is the whole vertical story — a flat track needs
+     no per-orientation geometry. */
+  &[data-orientation="vertical"] {
+    writing-mode: vertical-rl;
+    direction: rtl;                                  /* min at the bottom */
+    width: max(var(--_rf-thumb), var(--_rf-target-floor));
+    height: 12em;
+  }
+
+  &[data-orientation="vertical"][data-min="top"] {
+    direction: ltr;
+  }
 }
