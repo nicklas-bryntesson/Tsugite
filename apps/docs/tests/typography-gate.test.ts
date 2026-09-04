@@ -20,7 +20,7 @@ const SCAN_ROOTS = [
   "apps/docs/src",
 ];
 
-const EXTENSIONS = [".css", ".scss", ".astro"];
+const EXTENSIONS = [".css", ".astro"];
 const SKIP = [/node_modules/, /\.generated\.css$/, /styles\/ui-tokens\.css$/];
 
 const DECLARATION =

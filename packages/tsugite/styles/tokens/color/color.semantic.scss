@@ -1,6 +1,0 @@
-// RETIRED (tokenization pass, ADR-0003/0004): the semantic color layer is
-// now GENERATED from src/lib/tokens/*.tokens.js into
-// color.appearance.generated.css. This mixin is kept empty so tokens.scss's
-// include order stays intact; delete both together when convenient.
-@mixin tokens {
-}

@@ -26,7 +26,6 @@
     "axe-playwright": "^2.2.2",
     "browserslist": "^4.28.8",
     "lightningcss": "^1.33.0",
-    "sass": "^1.103.1",
     "vitest": "^4.1.11"
   }
 }

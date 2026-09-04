@@ -57,3 +57,24 @@ future sweep or decision of its own; nothing here blocks anything.
   everywhere else, but doctrine §7 says the gate nests inside the root.
   Teaser also has bare descendant selectors without `&` (`img { … }`).
   Mechanical to fix; the equivalence proof from the sweep applies.
+
+## From the base-table port (ADR-0011, 2026-09-04)
+
+The port to the factory was faithful; these four are what it preserved
+and did not decide. Each is a separate call.
+
+- **The grid runs on its own ladder.** `grid.tokens.js`: steps
+  base/mobile/tablet/desktop at 40 / 48 / 80rem, not the ADR-0001 tiers
+  (21.25 / 48.75 / 90rem). Aligning it changes where columns flip on
+  every grid consumer (utils/grids, CoverComposition) — threshold
+  decision, measure first.
+- **`--dir` lands on descendants of `:root`.** Emitted as
+  `:root :not([dir="rtl"])` / `:root [dir="rtl"]` because the Sass source
+  nested the selectors inside the `:root` mixin. No consumer today.
+  Decide where the sign lives (`html[dir]`?) or delete it.
+- **`--MOBILE-BREAKPOINT` (48.74rem) and `--DESKTOP-BREAKPOINT` (75rem)**
+  are unused and 75rem is no boundary anywhere. Delete, or make them the
+  tier boundaries and have the emitter read them.
+- **The px twins (`--size-*-px`, `--SIZE-*-*-PX`) have no consumer.**
+  They are now derived in the emitter; removing them is one line once
+  the decision is that px spacing should not exist.
