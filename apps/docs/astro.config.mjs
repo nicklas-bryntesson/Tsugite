@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
+import tsugiteCapabilities from "tsugite/vite/capabilities.js";
 
 // The support contract lives in /.browserslistrc (repo root). Lightning CSS
 // lowers what the targets lack — CSS nesting first of all (ADR-0010) — and
@@ -16,6 +17,9 @@ const targets = browserslistToTargets(
 // https://astro.build/config
 export default defineConfig({
   vite: {
+    // Capability probes (RFC 0001): a no-op unless CAP_MODE=probe, when the
+    // `@supports` pairs become style queries and the virtual head is emitted.
+    plugins: [tsugiteCapabilities()],
     css: {
       transformer: "lightningcss",
       lightningcss: { targets },

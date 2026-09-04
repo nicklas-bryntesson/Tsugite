@@ -1,0 +1,161 @@
+---
+// /capability-probes — both branches of every support gate, in one DOM
+// (RFC 0001, phase 2). The conformance suites run in a capable browser, so
+// every `@supports not` branch in the system is unreachable there; this page
+// is where the fallback renders on demand, beside the native branch it
+// approximates, across the whole size farm. Only a `CAP_MODE=probe` build
+// wires the discriminant; a normal build shows the production branch in
+// every column and the page says so.
+import Layout from "../layouts/Layout.astro";
+import CapabilityProbe from "../components/CapabilityProbe/CapabilityProbe.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+import Teaser from "tsugite/components/Teaser/Teaser.astro";
+import { VOICE_SIZES } from "tsugite/lib/typographyFamily.ts";
+import teaserImage from "tsugite/fixtures/media/amal-s.jpg";
+
+// The trim pair hangs on the loud voices: heading 1–6 and display 1–3.
+const trimFarm = (["heading", "display"] as const).map((voice) => ({
+  voice,
+  sizes: VOICE_SIZES[voice],
+}));
+
+// Swedish sample text is demo content (root hard rule 1); two lines so the
+// trim shows at both edges.
+const sampleText = "Rubrik som visar trimmet över två rader";
+---
+
+<Layout title="Capability probes">
+  <main class="Main CapabilityProbes grid-container">
+    <div class="content">
+      <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Capability probes</nav>
+      <Heading element="h1" size="1" text="Capability probes" />
+      <TextBlock
+        text={
+          "Every progressive-enhancement branch in the system is a closed @supports pair, and the fallback half never runs in the browsers we develop and test in. " +
+          "This page renders both halves of a pair side by side from one sample: the native branch, the fallback branch, and a difference overlay where black means the two are identical and any light pixel is drift. " +
+          "It only means something in a CAP_MODE=probe build, where the pair's discriminant becomes a style query that the data-cap-* attribute on each column sets. " +
+          "In a normal build the attribute is inert and every column shows the production branch."
+        }
+      />
+
+      <p class="probe-banner" data-probe-banner hidden>
+        This is not a probe build — run with <code>CAP_MODE=probe</code>. Every column below shows the production branch.
+      </p>
+
+      <section class="KitchenSink-section" id="textTrim">
+        <Heading element="h2" size="2" text="textTrim — a value swap" />
+        <p class="note">
+          Heading's fallback computes the cap-to-baseline trim from the font metrics; the native
+          branch asks <code>text-box-trim</code> for it. The two columns should match to the pixel
+          at every size of every voice — a mismatch names a mis-measured metric.
+        </p>
+
+        {trimFarm.map(({ voice, sizes }) => (
+          <div class="probe-group">
+            <Heading element="h3" variant="body" size="lg" text={`${voice} voice`} />
+            {sizes.map((size) => (
+              <div class="probe-row">
+                <p class="probe-row-label"><code>data-variant="{voice}"</code> <code>data-size="{size}"</code></p>
+                <CapabilityProbe capability="textTrim">
+                  <Heading element="h2" variant={voice} size={size} text={sampleText} />
+                </CapabilityProbe>
+              </div>
+            ))}
+          </div>
+        ))}
+      </section>
+
+      <section class="KitchenSink-section" id="cq">
+        <Heading element="h2" size="2" text="cq — an axis swap" />
+        <p class="note">
+          Teaser lays itself out with container queries; without them it falls back to a single
+          stacked flow. The columns will NOT look identical here, by design — the fallback is a
+          different layout, not an emulation of the native one. The overlay shows the shape of that
+          difference, nothing more.
+        </p>
+        <div class="probe-row">
+          <CapabilityProbe capability="cq" minColumnWidth="26rem">
+            <Teaser
+              image={teaserImage}
+              alt="Sample image"
+              heading="Container-query teaser"
+              href="#cq"
+              excerpt="Above 25rem of its own width the media sits beside the text; the fallback stacks it on top regardless."
+            />
+          </CapabilityProbe>
+        </div>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Is this a probe build? The probe head sets `--cap-<key>` from the
+  // `[data-cap-*="off"]` override; a production build sets nothing, so the
+  // computed value on an "off" column is not "off". The key and attribute are
+  // read off the first probe — nothing on this page retypes them.
+  const probe = document.querySelector<HTMLElement>(".CapabilityProbe");
+  const banner = document.querySelector<HTMLElement>("[data-probe-banner]");
+  if (probe && banner) {
+    const { capability, attribute } = probe.dataset;
+    const off = probe.querySelector<HTMLElement>(`[${attribute}="off"]`);
+    const value = off ? getComputedStyle(off).getPropertyValue(`--cap-${capability}`).trim() : "";
+    banner.hidden = value === "off";
+  }
+</script>
+
+<style is:global>
+.CapabilityProbes {
+  padding-block: 3rem 4rem;
+  background-color: var(--color-surface-page);
+
+  & .content {
+    /* placed in the main area by the .grid-container > * default */
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  & .doc-breadcrumb {
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+    & a { color: var(--color-interactive-secondary-text); }
+  }
+
+  & .note { margin: 0; color: var(--color-text-secondary); font-size: var(--fontSize-label); }
+
+  & .probe-banner {
+    margin: 0;
+    padding: var(--size-sm) var(--size-md);
+    border: 1px solid var(--color-feedback-error);
+    border-radius: 0.5rem;
+    color: var(--color-text-primary);
+    font-size: var(--fontSize-label);
+
+    & code { font-family: var(--fontFamily-code); }
+  }
+
+  & .probe-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-lg);
+    inline-size: 100%;
+  }
+
+  & .probe-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-sm);
+    inline-size: 100%;
+  }
+
+  & .probe-row-label {
+    margin: 0;
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+
+    & code { font-family: var(--fontFamily-code); color: var(--color-text-primary); }
+  }
+}
+</style>

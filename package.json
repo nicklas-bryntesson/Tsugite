@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "pnpm --filter docs dev",
+    "dev:probe": "pnpm --filter docs dev:probe",
     "build": "pnpm --filter docs build",
     "preview": "pnpm --filter docs preview",
     "tokens": "pnpm --filter tsugite tokens",

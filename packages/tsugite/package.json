@@ -14,12 +14,21 @@
   "dependencies": {
     "culori": "^4.0.2"
   },
+  "peerDependencies": {
+    "lightningcss": ">=1.30.0"
+  },
+  "peerDependenciesMeta": {
+    "lightningcss": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "axe-playwright": "^2.2.2",
     "axe-core": "^4.13.0",
     "jsdom": "^29.1.1",
     "vitest": "^4.1.11",
-    "astro": "7.2.9"
+    "astro": "7.2.9",
+    "lightningcss": "^1.33.0"
   }
 }

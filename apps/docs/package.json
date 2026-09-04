@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "dev:probe": "CAP_MODE=probe astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "tokens": "pnpm --filter tsugite tokens",
