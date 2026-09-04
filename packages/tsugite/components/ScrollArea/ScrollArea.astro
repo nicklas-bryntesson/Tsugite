@@ -46,7 +46,10 @@ const { id, ariaLabel, contentStyle, ...rest } = Astro.props;
                       over a dark page, which is the one thing a fade cannot get
                       wrong. Naming `Canvas` directly is the same assumption one
                       step out — correct only while the surface IS the page.
-     --_sc-fade-size   width of each fade (default: --_sc-offset). */
+     --_sc-fade-size   width of each fade (default: --_sc-offset).
+
+   One root, one tree (ADR-0010): the root carries tokens + root props; the
+   viewport, scrollbar, thumb, fades and the reduced-motion gate are nested. */
 
 .ScrollArea {
   --_sc-offset: var(--content-offset, 1rem);
@@ -66,98 +69,102 @@ const { id, ariaLabel, contentStyle, ...rest } = Astro.props;
   grid-template-columns: minmax(0, 1fr);
   /* break out to the page edges so the fades sit over the gutter */
   margin-inline: calc(var(--_sc-offset) * -1);
-}
 
-.ScrollArea .viewport {
-  grid-area: stack;
-  /* flex makes the trailing padding-inline-end survive the scroll end; in plain
-     block layout the end padding is eaten by overflowing content. */
-  display: flex;
-  padding-inline: var(--_sc-offset);
-  overflow-x: auto;
-  /* horizontal only — no forced vertical bar. NOTE: overflow-x:auto forces
-     overflow-y to a non-visible value, so popovers opened inside are clipped. */
-  overflow-y: hidden;
-}
+  & .viewport {
+    grid-area: stack;
+    /* flex makes the trailing padding-inline-end survive the scroll end; in plain
+       block layout the end padding is eaten by overflowing content. */
+    display: flex;
+    padding-inline: var(--_sc-offset);
+    overflow-x: auto;
+    /* horizontal only — no forced vertical bar. NOTE: overflow-x:auto forces
+       overflow-y to a non-visible value, so popovers opened inside are clipped. */
+    overflow-y: hidden;
 
-/* Native bar hidden only once JS has mounted the custom bar (progressive
-   enhancement — without JS the native bar stays as the scroll affordance). */
-.ScrollArea[data-scrollbar="true"] .viewport {
-  scrollbar-width: none;
-}
-.ScrollArea[data-scrollbar="true"] .viewport::-webkit-scrollbar {
-  display: none;
-}
+    /* The viewport is the focusable scroll region (keyboard/screen-reader surface). */
+    &:focus-visible {
+      outline: 2px solid var(--_sb-thumb);
+      outline-offset: -2px;
+    }
+  }
 
-/* Custom horizontal scrollbar: absolute under the content, inset in line with
-   it, no layout space. A native bar cannot be inset — hence a custom one. */
-.ScrollArea .scrollbar {
-  position: absolute;
-  inset-block-start: calc(100% + var(--_sb-gap));
-  inset-inline: var(--_sc-offset);
-  block-size: var(--_sb-height);
-  border-radius: 999px;
-  background: var(--_sb-track);
+  /* Native bar hidden only once JS has mounted the custom bar (progressive
+     enhancement — without JS the native bar stays as the scroll affordance). */
+  &[data-scrollbar="true"] .viewport {
+    scrollbar-width: none;
 
-  /* auto-hide: fades in when JS sets [data-visible] (scroll/hover/drag) */
-  opacity: 0;
-  transition: opacity 160ms ease;
-}
-.ScrollArea .scrollbar[data-visible="true"] {
-  opacity: 1;
-}
-.ScrollArea .scrollbar[hidden] {
-  display: none;
-}
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 
-/* The viewport is the focusable scroll region (keyboard/screen-reader surface). */
-.ScrollArea .viewport:focus-visible {
-  outline: 2px solid var(--_sb-thumb);
-  outline-offset: -2px;
-}
+  /* Custom horizontal scrollbar: absolute under the content, inset in line with
+     it, no layout space. A native bar cannot be inset — hence a custom one. */
+  & .scrollbar {
+    position: absolute;
+    inset-block-start: calc(100% + var(--_sb-gap));
+    inset-inline: var(--_sc-offset);
+    block-size: var(--_sb-height);
+    border-radius: 999px;
+    background: var(--_sb-track);
 
-.ScrollArea .thumb {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  inline-size: 0; /* set by JS */
-  border-radius: inherit;
-  background: var(--_sb-thumb);
-  cursor: grab;
-  touch-action: none;
-}
-.ScrollArea .thumb:active {
-  cursor: grabbing;
-}
+    /* auto-hide: fades in when JS sets [data-visible] (scroll/hover/drag) */
+    opacity: 0;
+    transition: opacity 160ms ease;
 
-/* Edge fades: width = the offset, colour = the surface, so they are invisible
-   over the gutter at the ends but tone out content mid-scroll. Must sit after
-   the scroller in the DOM for correct stacking; pointer-events off so they
-   never intercept scroll/drag. */
-.ScrollArea .fades {
-  grid-area: stack;
-  position: relative;
-  pointer-events: none;
-}
-.ScrollArea .fades::before,
-.ScrollArea .fades::after {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  inline-size: var(--_sc-fade-size);
-}
-.ScrollArea .fades::before {
-  inset-inline-start: 0;
-  background: linear-gradient(to right, var(--_sc-fade-color), transparent);
-}
-.ScrollArea .fades::after {
-  inset-inline-end: 0;
-  background: linear-gradient(to left, var(--_sc-fade-color), transparent);
-}
+    &[data-visible="true"] {
+      opacity: 1;
+    }
+    &[hidden] {
+      display: none;
+    }
+  }
 
-@media (prefers-reduced-motion: reduce) {
-  .ScrollArea .scrollbar {
-    transition: none;
+  & .thumb {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 0; /* set by JS */
+    border-radius: inherit;
+    background: var(--_sb-thumb);
+    cursor: grab;
+    touch-action: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  /* Edge fades: width = the offset, colour = the surface, so they are invisible
+     over the gutter at the ends but tone out content mid-scroll. Must sit after
+     the scroller in the DOM for correct stacking; pointer-events off so they
+     never intercept scroll/drag. */
+  & .fades {
+    grid-area: stack;
+    position: relative;
+    pointer-events: none;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inline-size: var(--_sc-fade-size);
+    }
+    &::before {
+      inset-inline-start: 0;
+      background: linear-gradient(to right, var(--_sc-fade-color), transparent);
+    }
+    &::after {
+      inset-inline-end: 0;
+      background: linear-gradient(to left, var(--_sc-fade-color), transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    & .scrollbar {
+      transition: none;
+    }
   }
 }
 </style>
