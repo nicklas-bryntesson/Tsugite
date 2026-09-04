@@ -1,6 +1,11 @@
 ---
 // Port of AiPoc Views/Shared/_Layout.cshtml
 import "../styles/global.css";
+// The capability head (RFC 0001, mode `probe`): `--cap-*` discriminants for
+// the probe page. An empty sheet in every other mode — served by the
+// tsugite/vite/capabilities.js plugin, imported here (not via CSS @import,
+// which the Lightning bundler reads from disk) so it is emitted exactly once.
+import "virtual:tsugite/capabilities.css";
 import Header from "../components/Header/Header.astro";
 import Footer from "../components/Footer/Footer.astro";
 import SvgSprite from "../components/SvgSprite/SvgSprite.astro";
