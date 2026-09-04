@@ -11,6 +11,9 @@
 //      initial-value is the third safety net: an invalid substitution degrades
 //      to a real color instead of killing the consuming property.
 //   3. ui-tokens.css                  — the --ui-* seam as appearance-free pointers.
+//   4. base.generated.css             — spacing, site scaffolding and grids
+//      (ADR-0011): RAW constants + tier-gated semantic ramps, from
+//      size/site/grid.tokens.js. Retired the Sass token tables.
 //
 // Recipes (mixes) are precomputed by the color engine; in-gamut results emit a
 // single literal so no color-mix/light-dark construct ever ships. The only
@@ -22,9 +25,22 @@ import { semanticColorTokens } from "../theme-default/semantic.color.tokens.js";
 import { themeVoices, themeChannels, voiceMatrix, cellName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 import { uiSeamTokens } from "../theme-default/seam.ui.tokens.js";
 import { TIERS, typeFamilies, typeWeights, typeVoices, typeSizes } from "../theme-default/typography.tokens.js";
+import { spaceScale, spaceSteps, sizeConstantName, sizeTokenName } from "../theme-default/size.tokens.js";
+import { siteConstants, siteOffset, siteOffsetConstantName } from "../theme-default/site.tokens.js";
+import { GRID_STEPS, GRID_MEDIA, gridSteps, gridGapConstantName, gridColumnsConstantName } from "../theme-default/grid.tokens.js";
 import { resolveValue, computeMix, isRecipe, toSrgbCss, toSrgbHex } from "./color-engine.js";
 
 export const APPEARANCES = ["light", "dark", "light-contrast", "dark-contrast"];
+
+// The viewport-tier ladder (ADR-0001): bounded, mutually exclusive ranges —
+// exactly one block matches at any viewport. Shared by every tier-mapped ramp
+// (typography, spacing, site offset).
+export const TIER_MEDIA = {
+  floor: "(max-width: 21.24999rem)",
+  mobile: "(min-width: 21.25rem) and (max-width: 48.74rem)",
+  desktop: "(min-width: 48.75rem) and (max-width: 89.99rem)",
+  wide: "(min-width: 90rem)",
+};
 
 const factories = {
   semantic: semanticColorTokens,
@@ -464,13 +480,6 @@ export function generateTypographyStylesheet(tables = TYPE_TABLES) {
       ),
     ].join("\n");
 
-  const TIER_MEDIA = {
-    floor: "(max-width: 21.24999rem)",
-    mobile: "(min-width: 21.25rem) and (max-width: 48.74rem)",
-    desktop: "(min-width: 48.75rem) and (max-width: 89.99rem)",
-    wide: "(min-width: 90rem)",
-  };
-
   const mediaBlocks = TIERS.map(
     (t) => `@media ${TIER_MEDIA[t]} {\n  :root {\n${semanticSizes(t, "    ")}\n  }\n}`,
   ).join("\n\n");
@@ -533,6 +542,165 @@ export function generateSeamStylesheet() {
     "   These two rules are the entire projection surface (ref-lib ADR-0021). */",
     ':root[data-appearance="light"] { color-scheme: light; }',
     ':root[data-appearance="dark"]  { color-scheme: dark; }',
+    "",
+  ].join("\n");
+}
+
+// ─── BASE TABLES: spacing, site, grids (ADR-0011) ─────────────────────────────
+
+const BASE_TABLES = { steps: spaceSteps, offset: siteOffset, grid: gridSteps };
+
+/** rem → px at the CSS reference 16px/rem, printed without float noise. */
+const remToPx = (rem) => {
+  const m = /^(-?[\d.]+)rem$/.exec(rem);
+  if (!m) throw new Error(`base tokens: expected a rem literal, got "${rem}"`);
+  return `${+(parseFloat(m[1]) * 16).toFixed(4)}px`;
+};
+
+/**
+ * The refusal rule for the base tables: every spacing step and the site
+ * offset define every tier; every grid step defines gap and columns. A hole
+ * is a build error, never a silently missing viewport.
+ */
+export function validateBase(tables = BASE_TABLES) {
+  const errors = [];
+  for (const [step, tiers] of Object.entries(tables.steps)) {
+    for (const t of TIERS) if (!(t in tiers)) errors.push(`spacing step "${step}" lacks tier "${t}"`);
+    for (const t of Object.keys(tiers)) if (!TIERS.includes(t)) errors.push(`spacing step "${step}" has unknown tier "${t}"`);
+    for (const t of TIERS) if (t in tiers && !/^[\d.]+rem$/.test(tiers[t])) errors.push(`spacing ${step}/${t}: "${tiers[t]}" is not a rem literal`);
+  }
+  for (const t of TIERS) if (!(t in tables.offset)) errors.push(`site offset lacks tier "${t}"`);
+  for (const step of GRID_STEPS) {
+    const def = tables.grid[step];
+    if (!def) { errors.push(`grid lacks step "${step}"`); continue; }
+    for (const k of ["gap", "columns"]) if (!(k in def)) errors.push(`grid step "${step}" lacks "${k}"`);
+  }
+  for (const step of Object.keys(tables.grid)) if (!GRID_STEPS.includes(step)) errors.push(`grid has unknown step "${step}"`);
+  if (errors.length) throw new Error(`base token tables are incomplete:\n  ${errors.join("\n  ")}`);
+}
+
+export function generateBaseStylesheet(tables = BASE_TABLES) {
+  validateBase(tables);
+  const { steps, offset, grid } = tables;
+  const stepNames = Object.keys(steps);
+
+  // ── RAW constants ──────────────────────────────────────────────────────
+  const sizeConstants = [
+    `  --SPACE-SCALE: ${spaceScale};`,
+    "",
+    ...TIERS.flatMap((t) => [
+      ...stepNames.map((s) => `  ${sizeConstantName(s, t)}: ${steps[s][t]};`),
+      "",
+    ]),
+    ...TIERS.flatMap((t) => [
+      ...stepNames.map((s) => `  ${sizeConstantName(s, t)}-PX: ${remToPx(steps[s][t])};`),
+      "",
+    ]),
+  ].join("\n").trimEnd();
+
+  const siteConsts = [
+    ...Object.entries(siteConstants).map(([n, v]) => `  ${n}: ${v};`),
+    "",
+    ...TIERS.flatMap((t) => [
+      `  ${siteOffsetConstantName(t)}: ${offset[t]};`,
+      `  ${siteOffsetConstantName(t)}-NEGATIVE: calc(var(${siteOffsetConstantName(t)}) * -1);`,
+    ]),
+  ].join("\n");
+
+  const gridConsts = [
+    ...GRID_STEPS.map((s) => `  ${gridGapConstantName(s)}: ${grid[s].gap};`),
+    ...GRID_STEPS.map((s) => `  ${gridColumnsConstantName(s)}: ${grid[s].columns};`),
+  ].join("\n");
+
+  // ── Semantic: spacing ramp, gated per tier ─────────────────────────────
+  const sizeTier = (t) =>
+    [
+      ...stepNames.map((s) => `    ${sizeTokenName(s)}: calc(var(${sizeConstantName(s, t)}) * var(--SPACE-SCALE, 1));`),
+      ...stepNames.map((s) => `    ${sizeTokenName(s)}-px: var(${sizeConstantName(s, t)}-PX);`),
+      `    --site-offset: var(${siteOffsetConstantName(t)});`,
+    ].join("\n");
+
+  const tierBlocks = TIERS.map((t) => `@media ${TIER_MEDIA[t]} {\n  :root {\n${sizeTier(t)}\n  }\n}`).join("\n\n");
+
+  // ── Semantic: grids ────────────────────────────────────────────────────
+  const pad = (name, value) => `  ${name.padEnd(46)}${value};`;
+  const layoutCount = (s) => `--grid-layout-columns-count-${s}`;
+  const layoutGap = (s) => `--grid-layout-gap-${s}`;
+  const layoutCols = (s) => `--grid-layout-columns-${s}`;
+  const bCount = (s) => `--grid-breakout-columns-count-${s}`;
+  const bGap = (s) => `--grid-breakout-gap-${s}`;
+  const bCols = (s) => `--grid-breakout-columns-${s}`;
+  const bAuto = (s) => `--grid-breakout-column-autoSize-${s}`;
+  const bPad = (s) => `--grid-breakout-content-autoPadding-${s}`;
+  const gapValue = (s) => (s === "base" ? `var(${gridGapConstantName(s)}, 0)` : `var(${gridGapConstantName(s)})`);
+  const [firstStep, ...restSteps] = GRID_STEPS;
+
+  const gridSemantic = [
+    "  /* container — a centered grid with a fluid single content column */",
+    pad("--grid-container-offset:", "var(--site-offset)"),
+    pad("--grid-container-maxWidth:", "var(--SITE-MAXWIDTH)"),
+    pad("--grid-container-columns:", "[full-start] minmax(var(--grid-container-offset), 1fr) [main-start] minmax(0, var(--grid-container-maxWidth)) [main-end]minmax(var(--grid-container-offset), 1fr) [full-end]"),
+    "",
+    "  /* layout — the 1/4/8/12-column responsive grid */",
+    ...GRID_STEPS.map((s) => pad(`${layoutCount(s)}:`, `var(${gridColumnsConstantName(s)})`)),
+    ...GRID_STEPS.map((s) => pad(`${layoutGap(s)}:`, gapValue(s))),
+    ...GRID_STEPS.map((s) => pad(`${layoutCols(s)}:`, `repeat(var(${layoutCount(s)}), 1fr)`)),
+    "",
+    "  /* breakout — 12 centered columns with a fluid first and last track */",
+    pad("--grid-breakout-offset:", "var(--site-offset)"),
+    pad("--grid-breakout-maxWidth:", "var(--SITE-MAXWIDTH)"),
+    ...GRID_STEPS.map((s) => pad(`${bCount(s)}:`, `var(${gridColumnsConstantName(s)})`)),
+    ...GRID_STEPS.map((s) => pad(`${bGap(s)}:`, gapValue(s))),
+    ...restSteps.flatMap((s) => [
+      pad(`${bAuto(s)}:`, `calc((var(--grid-breakout-maxWidth) - (calc(var(${bCount(s)}) - 1) * var(${bGap(s)}))) / var(${bCount(s)}))`),
+      pad(`${bPad(s)}:`, `calc(var(--grid-breakout-offset, 0rem) - var(${bGap(s)}, 0rem))`),
+    ]),
+    pad(`${bCols(firstStep)}:`, "[full-start] var(--grid-breakout-offset) [main-start] repeat(1, [main] 1fr) [main-end] var(--grid-breakout-offset) [full-end]"),
+    ...restSteps.map((s) =>
+      pad(`${bCols(s)}:`, `[full-start] minmax(var(${bPad(s)}), 1fr) [main-start] repeat(var(${bCount(s)}), [main] minmax(0, var(${bAuto(s)}))) [main-end] minmax(var(${bPad(s)}), 1fr) [full-end]`),
+    ),
+  ].join("\n");
+
+  const gridBlocks = GRID_STEPS.map((s) =>
+    [
+      `@media ${GRID_MEDIA[s]} {`,
+      "  :root {",
+      `    --grid-layout-gap: var(${layoutGap(s)});`,
+      `    --grid-layout-columns: var(${layoutCols(s)});`,
+      `    --grid-breakout-gap: var(${bGap(s)});`,
+      `    --grid-breakout-columns: var(${bCols(s)});`,
+      "  }",
+      "}",
+    ].join("\n"),
+  ).join("\n\n");
+
+  return [
+    "/* GENERATED — do not edit. Source: theme-default/size.tokens.js,",
+    "   site.tokens.js, grid.tokens.js (ADR-0011). RAW constants first, then",
+    "   the tier-gated semantic ramps (ADR-0001: explicit stops, one active",
+    "   block per viewport), then the grids on their own ladder.",
+    "   Regenerate: npm run tokens   (freshness guarded by tests) */",
+    "",
+    ":root {",
+    sizeConstants,
+    "",
+    siteConsts,
+    "",
+    gridConsts,
+    "",
+    "  --size-none: 0;",
+    "",
+    gridSemantic,
+    "}",
+    "",
+    "/* Writing direction as a sign, for mirrored offsets. Ported as emitted by",
+    "   the Sass source: descendant selectors under :root (see ADR-0011). */",
+    ':root :not([dir="rtl"]) { --dir: var(--DIR-LTR); }',
+    ':root [dir="rtl"] { --dir: var(--DIR-RTL); }',
+    "",
+    tierBlocks,
+    "",
+    gridBlocks,
     "",
   ].join("\n");
 }

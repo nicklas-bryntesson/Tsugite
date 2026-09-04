@@ -1,0 +1,294 @@
+/* GENERATED — do not edit. Source: theme-default/size.tokens.js,
+   site.tokens.js, grid.tokens.js (ADR-0011). RAW constants first, then
+   the tier-gated semantic ramps (ADR-0001: explicit stops, one active
+   block per viewport), then the grids on their own ladder.
+   Regenerate: npm run tokens   (freshness guarded by tests) */
+
+:root {
+  --SPACE-SCALE: 1;
+
+  --SIZE-XS-FLOOR: 0.125rem;
+  --SIZE-SM-FLOOR: 0.25rem;
+  --SIZE-MD-FLOOR: 0.625rem;
+  --SIZE-LG-FLOOR: 1rem;
+  --SIZE-XL-FLOOR: 1.25rem;
+  --SIZE-2XL-FLOOR: 1.5rem;
+  --SIZE-3XL-FLOOR: 1.75rem;
+  --SIZE-4XL-FLOOR: 2rem;
+  --SIZE-5XL-FLOOR: 2.25rem;
+
+  --SIZE-XS-MOBILE: 0.1875rem;
+  --SIZE-SM-MOBILE: 0.375rem;
+  --SIZE-MD-MOBILE: 0.75rem;
+  --SIZE-LG-MOBILE: 1.125rem;
+  --SIZE-XL-MOBILE: 1.5rem;
+  --SIZE-2XL-MOBILE: 1.875rem;
+  --SIZE-3XL-MOBILE: 2.25rem;
+  --SIZE-4XL-MOBILE: 2.625rem;
+  --SIZE-5XL-MOBILE: 3rem;
+
+  --SIZE-XS-DESKTOP: 0.25rem;
+  --SIZE-SM-DESKTOP: 0.5rem;
+  --SIZE-MD-DESKTOP: 1rem;
+  --SIZE-LG-DESKTOP: 1.5rem;
+  --SIZE-XL-DESKTOP: 2rem;
+  --SIZE-2XL-DESKTOP: 2.5rem;
+  --SIZE-3XL-DESKTOP: 3rem;
+  --SIZE-4XL-DESKTOP: 3.5rem;
+  --SIZE-5XL-DESKTOP: 4rem;
+
+  --SIZE-XS-WIDE: 0.25rem;
+  --SIZE-SM-WIDE: 0.5rem;
+  --SIZE-MD-WIDE: 1rem;
+  --SIZE-LG-WIDE: 1.5rem;
+  --SIZE-XL-WIDE: 2rem;
+  --SIZE-2XL-WIDE: 2.5rem;
+  --SIZE-3XL-WIDE: 3rem;
+  --SIZE-4XL-WIDE: 3.5rem;
+  --SIZE-5XL-WIDE: 4rem;
+
+  --SIZE-XS-FLOOR-PX: 2px;
+  --SIZE-SM-FLOOR-PX: 4px;
+  --SIZE-MD-FLOOR-PX: 10px;
+  --SIZE-LG-FLOOR-PX: 16px;
+  --SIZE-XL-FLOOR-PX: 20px;
+  --SIZE-2XL-FLOOR-PX: 24px;
+  --SIZE-3XL-FLOOR-PX: 28px;
+  --SIZE-4XL-FLOOR-PX: 32px;
+  --SIZE-5XL-FLOOR-PX: 36px;
+
+  --SIZE-XS-MOBILE-PX: 3px;
+  --SIZE-SM-MOBILE-PX: 6px;
+  --SIZE-MD-MOBILE-PX: 12px;
+  --SIZE-LG-MOBILE-PX: 18px;
+  --SIZE-XL-MOBILE-PX: 24px;
+  --SIZE-2XL-MOBILE-PX: 30px;
+  --SIZE-3XL-MOBILE-PX: 36px;
+  --SIZE-4XL-MOBILE-PX: 42px;
+  --SIZE-5XL-MOBILE-PX: 48px;
+
+  --SIZE-XS-DESKTOP-PX: 4px;
+  --SIZE-SM-DESKTOP-PX: 8px;
+  --SIZE-MD-DESKTOP-PX: 16px;
+  --SIZE-LG-DESKTOP-PX: 24px;
+  --SIZE-XL-DESKTOP-PX: 32px;
+  --SIZE-2XL-DESKTOP-PX: 40px;
+  --SIZE-3XL-DESKTOP-PX: 48px;
+  --SIZE-4XL-DESKTOP-PX: 56px;
+  --SIZE-5XL-DESKTOP-PX: 64px;
+
+  --SIZE-XS-WIDE-PX: 4px;
+  --SIZE-SM-WIDE-PX: 8px;
+  --SIZE-MD-WIDE-PX: 16px;
+  --SIZE-LG-WIDE-PX: 24px;
+  --SIZE-XL-WIDE-PX: 32px;
+  --SIZE-2XL-WIDE-PX: 40px;
+  --SIZE-3XL-WIDE-PX: 48px;
+  --SIZE-4XL-WIDE-PX: 56px;
+  --SIZE-5XL-WIDE-PX: 64px;
+
+  --DIR-LTR: 1;
+  --DIR-RTL: -1;
+  --MOBILE-BREAKPOINT: 48.74rem;
+  --DESKTOP-BREAKPOINT: 75rem;
+  --SITE-MAXWIDTH: 106rem;
+  --CONTENT-MAXWIDTH: 64rem;
+
+  --SITE-OFFSET-FLOOR: 1rem;
+  --SITE-OFFSET-FLOOR-NEGATIVE: calc(var(--SITE-OFFSET-FLOOR) * -1);
+  --SITE-OFFSET-MOBILE: 1.5rem;
+  --SITE-OFFSET-MOBILE-NEGATIVE: calc(var(--SITE-OFFSET-MOBILE) * -1);
+  --SITE-OFFSET-DESKTOP: 3rem;
+  --SITE-OFFSET-DESKTOP-NEGATIVE: calc(var(--SITE-OFFSET-DESKTOP) * -1);
+  --SITE-OFFSET-WIDE: 5rem;
+  --SITE-OFFSET-WIDE-NEGATIVE: calc(var(--SITE-OFFSET-WIDE) * -1);
+
+  --GRID-GAP-BASE: 0;
+  --GRID-GAP-MOBILE: 0.5rem;
+  --GRID-GAP-TABLET: 1rem;
+  --GRID-GAP-DESKTOP: 2rem;
+  --GRID-COLUMNS-BASE: 1;
+  --GRID-COLUMNS-MOBILE: 4;
+  --GRID-COLUMNS-TABLET: 8;
+  --GRID-COLUMNS-DESKTOP: 12;
+
+  --size-none: 0;
+
+  /* container — a centered grid with a fluid single content column */
+  --grid-container-offset:                      var(--site-offset);
+  --grid-container-maxWidth:                    var(--SITE-MAXWIDTH);
+  --grid-container-columns:                     [full-start] minmax(var(--grid-container-offset), 1fr) [main-start] minmax(0, var(--grid-container-maxWidth)) [main-end]minmax(var(--grid-container-offset), 1fr) [full-end];
+
+  /* layout — the 1/4/8/12-column responsive grid */
+  --grid-layout-columns-count-base:             var(--GRID-COLUMNS-BASE);
+  --grid-layout-columns-count-mobile:           var(--GRID-COLUMNS-MOBILE);
+  --grid-layout-columns-count-tablet:           var(--GRID-COLUMNS-TABLET);
+  --grid-layout-columns-count-desktop:          var(--GRID-COLUMNS-DESKTOP);
+  --grid-layout-gap-base:                       var(--GRID-GAP-BASE, 0);
+  --grid-layout-gap-mobile:                     var(--GRID-GAP-MOBILE);
+  --grid-layout-gap-tablet:                     var(--GRID-GAP-TABLET);
+  --grid-layout-gap-desktop:                    var(--GRID-GAP-DESKTOP);
+  --grid-layout-columns-base:                   repeat(var(--grid-layout-columns-count-base), 1fr);
+  --grid-layout-columns-mobile:                 repeat(var(--grid-layout-columns-count-mobile), 1fr);
+  --grid-layout-columns-tablet:                 repeat(var(--grid-layout-columns-count-tablet), 1fr);
+  --grid-layout-columns-desktop:                repeat(var(--grid-layout-columns-count-desktop), 1fr);
+
+  /* breakout — 12 centered columns with a fluid first and last track */
+  --grid-breakout-offset:                       var(--site-offset);
+  --grid-breakout-maxWidth:                     var(--SITE-MAXWIDTH);
+  --grid-breakout-columns-count-base:           var(--GRID-COLUMNS-BASE);
+  --grid-breakout-columns-count-mobile:         var(--GRID-COLUMNS-MOBILE);
+  --grid-breakout-columns-count-tablet:         var(--GRID-COLUMNS-TABLET);
+  --grid-breakout-columns-count-desktop:        var(--GRID-COLUMNS-DESKTOP);
+  --grid-breakout-gap-base:                     var(--GRID-GAP-BASE, 0);
+  --grid-breakout-gap-mobile:                   var(--GRID-GAP-MOBILE);
+  --grid-breakout-gap-tablet:                   var(--GRID-GAP-TABLET);
+  --grid-breakout-gap-desktop:                  var(--GRID-GAP-DESKTOP);
+  --grid-breakout-column-autoSize-mobile:       calc((var(--grid-breakout-maxWidth) - (calc(var(--grid-breakout-columns-count-mobile) - 1) * var(--grid-breakout-gap-mobile))) / var(--grid-breakout-columns-count-mobile));
+  --grid-breakout-content-autoPadding-mobile:   calc(var(--grid-breakout-offset, 0rem) - var(--grid-breakout-gap-mobile, 0rem));
+  --grid-breakout-column-autoSize-tablet:       calc((var(--grid-breakout-maxWidth) - (calc(var(--grid-breakout-columns-count-tablet) - 1) * var(--grid-breakout-gap-tablet))) / var(--grid-breakout-columns-count-tablet));
+  --grid-breakout-content-autoPadding-tablet:   calc(var(--grid-breakout-offset, 0rem) - var(--grid-breakout-gap-tablet, 0rem));
+  --grid-breakout-column-autoSize-desktop:      calc((var(--grid-breakout-maxWidth) - (calc(var(--grid-breakout-columns-count-desktop) - 1) * var(--grid-breakout-gap-desktop))) / var(--grid-breakout-columns-count-desktop));
+  --grid-breakout-content-autoPadding-desktop:  calc(var(--grid-breakout-offset, 0rem) - var(--grid-breakout-gap-desktop, 0rem));
+  --grid-breakout-columns-base:                 [full-start] var(--grid-breakout-offset) [main-start] repeat(1, [main] 1fr) [main-end] var(--grid-breakout-offset) [full-end];
+  --grid-breakout-columns-mobile:               [full-start] minmax(var(--grid-breakout-content-autoPadding-mobile), 1fr) [main-start] repeat(var(--grid-breakout-columns-count-mobile), [main] minmax(0, var(--grid-breakout-column-autoSize-mobile))) [main-end] minmax(var(--grid-breakout-content-autoPadding-mobile), 1fr) [full-end];
+  --grid-breakout-columns-tablet:               [full-start] minmax(var(--grid-breakout-content-autoPadding-tablet), 1fr) [main-start] repeat(var(--grid-breakout-columns-count-tablet), [main] minmax(0, var(--grid-breakout-column-autoSize-tablet))) [main-end] minmax(var(--grid-breakout-content-autoPadding-tablet), 1fr) [full-end];
+  --grid-breakout-columns-desktop:              [full-start] minmax(var(--grid-breakout-content-autoPadding-desktop), 1fr) [main-start] repeat(var(--grid-breakout-columns-count-desktop), [main] minmax(0, var(--grid-breakout-column-autoSize-desktop))) [main-end] minmax(var(--grid-breakout-content-autoPadding-desktop), 1fr) [full-end];
+}
+
+/* Writing direction as a sign, for mirrored offsets. Ported as emitted by
+   the Sass source: descendant selectors under :root (see ADR-0011). */
+:root :not([dir="rtl"]) { --dir: var(--DIR-LTR); }
+:root [dir="rtl"] { --dir: var(--DIR-RTL); }
+
+@media (max-width: 21.24999rem) {
+  :root {
+    --size-xs: calc(var(--SIZE-XS-FLOOR) * var(--SPACE-SCALE, 1));
+    --size-sm: calc(var(--SIZE-SM-FLOOR) * var(--SPACE-SCALE, 1));
+    --size-md: calc(var(--SIZE-MD-FLOOR) * var(--SPACE-SCALE, 1));
+    --size-lg: calc(var(--SIZE-LG-FLOOR) * var(--SPACE-SCALE, 1));
+    --size-xl: calc(var(--SIZE-XL-FLOOR) * var(--SPACE-SCALE, 1));
+    --size-2xl: calc(var(--SIZE-2XL-FLOOR) * var(--SPACE-SCALE, 1));
+    --size-3xl: calc(var(--SIZE-3XL-FLOOR) * var(--SPACE-SCALE, 1));
+    --size-4xl: calc(var(--SIZE-4XL-FLOOR) * var(--SPACE-SCALE, 1));
+    --size-5xl: calc(var(--SIZE-5XL-FLOOR) * var(--SPACE-SCALE, 1));
+    --size-xs-px: var(--SIZE-XS-FLOOR-PX);
+    --size-sm-px: var(--SIZE-SM-FLOOR-PX);
+    --size-md-px: var(--SIZE-MD-FLOOR-PX);
+    --size-lg-px: var(--SIZE-LG-FLOOR-PX);
+    --size-xl-px: var(--SIZE-XL-FLOOR-PX);
+    --size-2xl-px: var(--SIZE-2XL-FLOOR-PX);
+    --size-3xl-px: var(--SIZE-3XL-FLOOR-PX);
+    --size-4xl-px: var(--SIZE-4XL-FLOOR-PX);
+    --size-5xl-px: var(--SIZE-5XL-FLOOR-PX);
+    --site-offset: var(--SITE-OFFSET-FLOOR);
+  }
+}
+
+@media (min-width: 21.25rem) and (max-width: 48.74rem) {
+  :root {
+    --size-xs: calc(var(--SIZE-XS-MOBILE) * var(--SPACE-SCALE, 1));
+    --size-sm: calc(var(--SIZE-SM-MOBILE) * var(--SPACE-SCALE, 1));
+    --size-md: calc(var(--SIZE-MD-MOBILE) * var(--SPACE-SCALE, 1));
+    --size-lg: calc(var(--SIZE-LG-MOBILE) * var(--SPACE-SCALE, 1));
+    --size-xl: calc(var(--SIZE-XL-MOBILE) * var(--SPACE-SCALE, 1));
+    --size-2xl: calc(var(--SIZE-2XL-MOBILE) * var(--SPACE-SCALE, 1));
+    --size-3xl: calc(var(--SIZE-3XL-MOBILE) * var(--SPACE-SCALE, 1));
+    --size-4xl: calc(var(--SIZE-4XL-MOBILE) * var(--SPACE-SCALE, 1));
+    --size-5xl: calc(var(--SIZE-5XL-MOBILE) * var(--SPACE-SCALE, 1));
+    --size-xs-px: var(--SIZE-XS-MOBILE-PX);
+    --size-sm-px: var(--SIZE-SM-MOBILE-PX);
+    --size-md-px: var(--SIZE-MD-MOBILE-PX);
+    --size-lg-px: var(--SIZE-LG-MOBILE-PX);
+    --size-xl-px: var(--SIZE-XL-MOBILE-PX);
+    --size-2xl-px: var(--SIZE-2XL-MOBILE-PX);
+    --size-3xl-px: var(--SIZE-3XL-MOBILE-PX);
+    --size-4xl-px: var(--SIZE-4XL-MOBILE-PX);
+    --size-5xl-px: var(--SIZE-5XL-MOBILE-PX);
+    --site-offset: var(--SITE-OFFSET-MOBILE);
+  }
+}
+
+@media (min-width: 48.75rem) and (max-width: 89.99rem) {
+  :root {
+    --size-xs: calc(var(--SIZE-XS-DESKTOP) * var(--SPACE-SCALE, 1));
+    --size-sm: calc(var(--SIZE-SM-DESKTOP) * var(--SPACE-SCALE, 1));
+    --size-md: calc(var(--SIZE-MD-DESKTOP) * var(--SPACE-SCALE, 1));
+    --size-lg: calc(var(--SIZE-LG-DESKTOP) * var(--SPACE-SCALE, 1));
+    --size-xl: calc(var(--SIZE-XL-DESKTOP) * var(--SPACE-SCALE, 1));
+    --size-2xl: calc(var(--SIZE-2XL-DESKTOP) * var(--SPACE-SCALE, 1));
+    --size-3xl: calc(var(--SIZE-3XL-DESKTOP) * var(--SPACE-SCALE, 1));
+    --size-4xl: calc(var(--SIZE-4XL-DESKTOP) * var(--SPACE-SCALE, 1));
+    --size-5xl: calc(var(--SIZE-5XL-DESKTOP) * var(--SPACE-SCALE, 1));
+    --size-xs-px: var(--SIZE-XS-DESKTOP-PX);
+    --size-sm-px: var(--SIZE-SM-DESKTOP-PX);
+    --size-md-px: var(--SIZE-MD-DESKTOP-PX);
+    --size-lg-px: var(--SIZE-LG-DESKTOP-PX);
+    --size-xl-px: var(--SIZE-XL-DESKTOP-PX);
+    --size-2xl-px: var(--SIZE-2XL-DESKTOP-PX);
+    --size-3xl-px: var(--SIZE-3XL-DESKTOP-PX);
+    --size-4xl-px: var(--SIZE-4XL-DESKTOP-PX);
+    --size-5xl-px: var(--SIZE-5XL-DESKTOP-PX);
+    --site-offset: var(--SITE-OFFSET-DESKTOP);
+  }
+}
+
+@media (min-width: 90rem) {
+  :root {
+    --size-xs: calc(var(--SIZE-XS-WIDE) * var(--SPACE-SCALE, 1));
+    --size-sm: calc(var(--SIZE-SM-WIDE) * var(--SPACE-SCALE, 1));
+    --size-md: calc(var(--SIZE-MD-WIDE) * var(--SPACE-SCALE, 1));
+    --size-lg: calc(var(--SIZE-LG-WIDE) * var(--SPACE-SCALE, 1));
+    --size-xl: calc(var(--SIZE-XL-WIDE) * var(--SPACE-SCALE, 1));
+    --size-2xl: calc(var(--SIZE-2XL-WIDE) * var(--SPACE-SCALE, 1));
+    --size-3xl: calc(var(--SIZE-3XL-WIDE) * var(--SPACE-SCALE, 1));
+    --size-4xl: calc(var(--SIZE-4XL-WIDE) * var(--SPACE-SCALE, 1));
+    --size-5xl: calc(var(--SIZE-5XL-WIDE) * var(--SPACE-SCALE, 1));
+    --size-xs-px: var(--SIZE-XS-WIDE-PX);
+    --size-sm-px: var(--SIZE-SM-WIDE-PX);
+    --size-md-px: var(--SIZE-MD-WIDE-PX);
+    --size-lg-px: var(--SIZE-LG-WIDE-PX);
+    --size-xl-px: var(--SIZE-XL-WIDE-PX);
+    --size-2xl-px: var(--SIZE-2XL-WIDE-PX);
+    --size-3xl-px: var(--SIZE-3XL-WIDE-PX);
+    --size-4xl-px: var(--SIZE-4XL-WIDE-PX);
+    --size-5xl-px: var(--SIZE-5XL-WIDE-PX);
+    --site-offset: var(--SITE-OFFSET-WIDE);
+  }
+}
+
+@media (max-width: 39.9375rem) {
+  :root {
+    --grid-layout-gap: var(--grid-layout-gap-base);
+    --grid-layout-columns: var(--grid-layout-columns-base);
+    --grid-breakout-gap: var(--grid-breakout-gap-base);
+    --grid-breakout-columns: var(--grid-breakout-columns-base);
+  }
+}
+
+@media (min-width: 40rem) and (max-width: 47.9375rem) {
+  :root {
+    --grid-layout-gap: var(--grid-layout-gap-mobile);
+    --grid-layout-columns: var(--grid-layout-columns-mobile);
+    --grid-breakout-gap: var(--grid-breakout-gap-mobile);
+    --grid-breakout-columns: var(--grid-breakout-columns-mobile);
+  }
+}
+
+@media (min-width: 48rem) and (max-width: 79.9375rem) {
+  :root {
+    --grid-layout-gap: var(--grid-layout-gap-tablet);
+    --grid-layout-columns: var(--grid-layout-columns-tablet);
+    --grid-breakout-gap: var(--grid-breakout-gap-tablet);
+    --grid-breakout-columns: var(--grid-breakout-columns-tablet);
+  }
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --grid-layout-gap: var(--grid-layout-gap-desktop);
+    --grid-layout-columns: var(--grid-layout-columns-desktop);
+    --grid-breakout-gap: var(--grid-breakout-gap-desktop);
+    --grid-breakout-columns: var(--grid-breakout-columns-desktop);
+  }
+}
