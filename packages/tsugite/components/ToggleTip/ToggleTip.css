@@ -5,8 +5,9 @@
    ToggleTip — fully self-contained
    No Tailwind, no framework reset, no external dependencies
 
-   The component root is the custom element `toggle-tip`, so every part is a
-   flat, fully-qualified `toggle-tip .element` rule (ADR-0019).
+   The component root is the custom element `toggle-tip` — one root, one tree
+   (ADR-0010): every part, state and direction is a nested `&` rule inside it.
+   The public tokens sit on :root by design and stay outside the tree.
    ================================================================ */
 
 /* ── Public API (theme layer) ──────────────────────────────────── */
@@ -55,147 +56,147 @@ toggle-tip {
   height: var(--_tt-button-width);
   overflow: hidden;
   vertical-align: middle;
-}
 
-/* Hide raw content before JS builds the DOM */
-toggle-tip > * {
-  opacity: 0;
-}
-
-toggle-tip[initialized] {
-  overflow: visible;
-}
-toggle-tip[initialized] > * {
-  opacity: 1;
-}
-
-/* ── Button ────────────────────────────────────────────────────── */
-toggle-tip button {
-  all: unset;
-  box-sizing: border-box;
-  display: inline-block;
-  position: absolute;
-  inset: 0;
-  width: var(--_tt-button-width);
-  height: var(--_tt-button-width);
-  cursor: pointer;
-  color: var(--_tt-button-color);
-}
-
-/* Enlarged hit area */
-toggle-tip button::after {
-  --_click-area: 2rem;
-  --_offset: calc((var(--_tt-button-width) - var(--_click-area)) / 2);
-  position: absolute;
-  content: "";
-  width: var(--_click-area);
-  height: var(--_click-area);
-  inset: var(--_offset);
-}
-
-toggle-tip button .icon {
-  display: block;
-  width: var(--_tt-button-width);
-  height: var(--_tt-button-width);
-}
-
-/* ── Slide rail ────────────────────────────────────────────────── */
-/*
- * Centered on the trigger button's vertical midpoint.
- * left: 50% + transform: translateX(-50%) aligns rail center = trigger center.
- * top: 50% = button center (toggle-tip height = button width).
- * Width is capped at site max-width + content-width so it never exceeds
- * what makes sense for the layout.
- *
- * Note: physical properties (left, top, bottom) are used intentionally here.
- * The slider-rail model is left-to-right by design; RTL is not in scope.
- */
-toggle-tip .rail {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(100vw, var(--_tt-rail-max-width));
-  height: 0;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* ── Bubble ────────────────────────────────────────────────────── */
-toggle-tip .popup {
-  position: absolute;
-  left: var(--_tt-popup-offset);
-  transform: translateX(-50%);
-  inline-size: var(--_tt-content-width);
-  max-inline-size: calc(100vw - var(--_tt-site-padding) * 2);
-  min-inline-size: 20ch;
-  block-size: max-content;
-  pointer-events: auto;
-  padding-inline: var(--_tt-padding);
-  padding-block: var(--_tt-padding);
-  border-radius: var(--_tt-border-radius);
-  border: 1px solid var(--_tt-border-color);
-  background-color: var(--_tt-surface-color);
-  color: var(--_tt-text-color);
-  font: inherit;
-  font-size: var(--ui-font-size);
-  box-shadow: var(--ui-shadow);
-}
-
-/* Force all descendant text to use the bubble's colour, not the page default */
-toggle-tip .popup * {
-  color: inherit;
-}
-
-toggle-tip .popup[aria-hidden="true"] {
-  display: none;
-}
-
-toggle-tip .popup[aria-hidden="false"] {
-  display: block;
-  transition: opacity 0.15s;
-
-  @starting-style {
+  /* Hide raw content before JS builds the DOM */
+  & > * {
     opacity: 0;
   }
-}
 
-/* ── Title ─────────────────────────────────────────────────────── */
-toggle-tip .title {
-  display: block;
-  font-weight: var(--ui-font-weight-strong);
-  margin-block-end: 1rem;
-  padding-block-end: 1rem;
-  border-block-end: 1px solid var(--_tt-border-color);
-}
+  &[initialized] {
+    overflow: visible;
+  }
+  &[initialized] > * {
+    opacity: 1;
+  }
 
-/* ── Arrow ─────────────────────────────────────────────────────── */
-toggle-tip .arrow {
-  position: absolute;
-  width: var(--_tt-arrow-size);
-  height: var(--_tt-arrow-size);
-  background-color: var(--_tt-surface-color);
-  left: 50%;
-}
+  /* ── Button ────────────────────────────────────────────────────── */
+  & button {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-block;
+    position: absolute;
+    inset: 0;
+    width: var(--_tt-button-width);
+    height: var(--_tt-button-width);
+    cursor: pointer;
+    color: var(--_tt-button-color);
+  }
 
-/* ── Direction: top (bubble above trigger) ─────────────────────── */
-toggle-tip[data-direction="top"] .popup {
-  bottom: var(--_tt-gap);
-}
+  /* Enlarged hit area */
+  & button::after {
+    --_click-area: 2rem;
+    --_offset: calc((var(--_tt-button-width) - var(--_click-area)) / 2);
+    position: absolute;
+    content: "";
+    width: var(--_click-area);
+    height: var(--_click-area);
+    inset: var(--_offset);
+  }
 
-toggle-tip[data-direction="top"] .arrow {
-  bottom: calc(var(--_tt-arrow-size) * -0.5);
-  transform: translateX(calc(-50% + var(--_tt-arrow-offset))) rotate(45deg);
-  border-end-end-radius: var(--_tt-arrow-corner-radius);
-}
+  & button .icon {
+    display: block;
+    width: var(--_tt-button-width);
+    height: var(--_tt-button-width);
+  }
 
-/* ── Direction: bottom (bubble below trigger) ──────────────────── */
-toggle-tip[data-direction="bottom"] .popup {
-  top: var(--_tt-gap);
-}
+  /* ── Slide rail ────────────────────────────────────────────────── */
+  /*
+   * Centered on the trigger button's vertical midpoint.
+   * left: 50% + transform: translateX(-50%) aligns rail center = trigger center.
+   * top: 50% = button center (toggle-tip height = button width).
+   * Width is capped at site max-width + content-width so it never exceeds
+   * what makes sense for the layout.
+   *
+   * Note: physical properties (left, top, bottom) are used intentionally here.
+   * The slider-rail model is left-to-right by design; RTL is not in scope.
+   */
+  & .rail {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100vw, var(--_tt-rail-max-width));
+    height: 0;
+    pointer-events: none;
+    z-index: 9999;
+  }
 
-toggle-tip[data-direction="bottom"] .arrow {
-  top: calc(var(--_tt-arrow-size) * -0.5);
-  transform: translateX(calc(-50% + var(--_tt-arrow-offset))) rotate(45deg);
-  border-start-start-radius: var(--_tt-arrow-corner-radius);
+  /* ── Bubble ────────────────────────────────────────────────────── */
+  & .popup {
+    position: absolute;
+    left: var(--_tt-popup-offset);
+    transform: translateX(-50%);
+    inline-size: var(--_tt-content-width);
+    max-inline-size: calc(100vw - var(--_tt-site-padding) * 2);
+    min-inline-size: 20ch;
+    block-size: max-content;
+    pointer-events: auto;
+    padding-inline: var(--_tt-padding);
+    padding-block: var(--_tt-padding);
+    border-radius: var(--_tt-border-radius);
+    border: 1px solid var(--_tt-border-color);
+    background-color: var(--_tt-surface-color);
+    color: var(--_tt-text-color);
+    font: inherit;
+    font-size: var(--ui-font-size);
+    box-shadow: var(--ui-shadow);
+  }
+
+  /* Force all descendant text to use the bubble's colour, not the page default */
+  & .popup * {
+    color: inherit;
+  }
+
+  & .popup[aria-hidden="true"] {
+    display: none;
+  }
+
+  & .popup[aria-hidden="false"] {
+    display: block;
+    transition: opacity 0.15s;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+
+  /* ── Title ─────────────────────────────────────────────────────── */
+  & .title {
+    display: block;
+    font-weight: var(--ui-font-weight-strong);
+    margin-block-end: 1rem;
+    padding-block-end: 1rem;
+    border-block-end: 1px solid var(--_tt-border-color);
+  }
+
+  /* ── Arrow ─────────────────────────────────────────────────────── */
+  & .arrow {
+    position: absolute;
+    width: var(--_tt-arrow-size);
+    height: var(--_tt-arrow-size);
+    background-color: var(--_tt-surface-color);
+    left: 50%;
+  }
+
+  /* ── Direction: top (bubble above trigger) ─────────────────────── */
+  &[data-direction="top"] .popup {
+    bottom: var(--_tt-gap);
+  }
+
+  &[data-direction="top"] .arrow {
+    bottom: calc(var(--_tt-arrow-size) * -0.5);
+    transform: translateX(calc(-50% + var(--_tt-arrow-offset))) rotate(45deg);
+    border-end-end-radius: var(--_tt-arrow-corner-radius);
+  }
+
+  /* ── Direction: bottom (bubble below trigger) ──────────────────── */
+  &[data-direction="bottom"] .popup {
+    top: var(--_tt-gap);
+  }
+
+  &[data-direction="bottom"] .arrow {
+    top: calc(var(--_tt-arrow-size) * -0.5);
+    transform: translateX(calc(-50% + var(--_tt-arrow-offset))) rotate(45deg);
+    border-start-start-radius: var(--_tt-arrow-corner-radius);
+  }
 }
