@@ -93,6 +93,38 @@ happy path last, authored as the end state.
   its gate, or the polyfill package is deleted wholesale. The surviving
   modern branch is never edited by the deletion.
 
+### 5.1 Capabilities — one pair per fallback, one axis per pair
+
+A capability is the unit a fallback replaces. The registry
+(`engine/capabilities.js`) names each one and owns its condition string;
+the capability gate holds the rules below.
+
+- **A pair is closed.** `@supports X` and `@supports not (X)`, siblings
+  under the same parent, with `X` a registry entry verbatim. Exactly one
+  applies; neither knows the other exists. The two branches need not
+  mirror each other — a value swap (trim) does, an axis swap (container
+  queries against viewport queries) cannot, and both are lawful.
+- **No base under the branches.** Nothing outside the support axis sets
+  a property a branch sets on the same target where the two can be
+  active at once. That is base-plus-override, the one bleed this
+  section forbids (§1).
+- **One capability per fallback.** If two features are replaced by two
+  different fallbacks, they are two pairs, two axes, decided
+  independently: a browser with one and not the other gets one native
+  branch and one fallback. If two features together are replaced by one
+  fallback — a single rule that cannot be written with either alone —
+  they are one capability with a compound condition (`X and Y`), one
+  pair, and that rule's fallback applies when either is missing.
+  `textTrim` is the model: `text-box-trim` without `text-box-edge` is
+  meaningless, so the two properties are one capability.
+- **Gates never nest in gates.** A pair inside a pair is combinatorics;
+  the compound condition above is how a real dependency is expressed
+  instead. Every capability stays its own axis, and the test matrix
+  stays all-on, all-off, one-off-at-a-time.
+- **A pair whose only subject is `:root` cannot be probed** — a style
+  query has no ancestor to ask at the root. Author probeable fallbacks
+  on descendants.
+
 ## 6. The inspector test
 
 Inspecting any element must show exactly one active rule per property —
