@@ -1,0 +1,142 @@
+---
+// Code — the source half of a documentation example.
+//
+// Highlighted at BUILD time by Astro's bundled Shiki (<Code> from
+// astro:components): no client-side highlighter, no loading state. Two
+// themes are emitted as CSS variables (defaultColor: false) and the page's
+// appearance axis picks one — four closed blocks below, exactly one active,
+// so the code block follows data-appearance like every other surface.
+//
+// The copy button is the only script on the component.
+import { Code as Shiki } from "astro:components";
+
+interface Props {
+  code: string;
+  lang?: string;
+  /** Label shown in the header; defaults to the language. */
+  label?: string;
+  class?: string;
+}
+const { code, lang = "astro", label = lang, class: className } = Astro.props;
+const trimmed = code.replace(/^\n+|\n+$/g, "");
+---
+
+<div class:list={["Code", className]} data-lang={lang}>
+  <div class="Code-bar">
+    <span class="Code-label">{label}</span>
+    <button type="button" class="Code-copy" data-copy aria-label={`Copy ${label} to clipboard`}>
+      <span data-copy-idle>Copy</span>
+      <span data-copy-done hidden>Copied</span>
+    </button>
+  </div>
+  <div class="Code-body">
+    <Shiki
+      code={trimmed}
+      lang={lang as any}
+      themes={{ light: "vitesse-light", dark: "vitesse-dark" }}
+      defaultColor={false}
+    />
+  </div>
+  <template data-copy-source set:text={trimmed} />
+</div>
+
+<script>
+  // One handler per copy button; the source is read from the sibling
+  // <template>, never from the highlighted DOM (which carries spans).
+  for (const button of document.querySelectorAll<HTMLButtonElement>(".Code [data-copy]")) {
+    const root = button.closest<HTMLElement>(".Code");
+    const idle = root?.querySelector<HTMLElement>("[data-copy-idle]");
+    const done = root?.querySelector<HTMLElement>("[data-copy-done]");
+    const source = root?.querySelector<HTMLTemplateElement>("[data-copy-source]")?.content.textContent ?? "";
+    if (!idle || !done) continue;
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(source);
+        idle.hidden = true;
+        done.hidden = false;
+        setTimeout(() => {
+          idle.hidden = false;
+          done.hidden = true;
+        }, 2000);
+      } catch {
+        button.textContent = "Copy failed";
+      }
+    });
+  }
+</script>
+
+<style is:global>
+.Code {
+  display: grid;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--ui-radius);
+  overflow: hidden;
+  font-size: var(--fontSize-label-small);
+
+  & .Code-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--size-xs) var(--size-md);
+    border-block-end: 1px solid var(--color-border-subtle);
+    background-color: var(--color-surface-chrome);
+  }
+
+  & .Code-label {
+    font-family: var(--fontFamily-label);
+    font-weight: var(--fontWeight-label);
+    color: var(--color-text-secondary);
+  }
+
+  & .Code-copy {
+    font: inherit;
+    font-family: var(--fontFamily-label);
+    color: var(--color-interactive-secondary-text);
+    background: none;
+    border: 0;
+    padding: var(--size-xs) var(--size-sm);
+    border-radius: var(--ui-radius);
+    cursor: pointer;
+
+    &:hover { background-color: var(--ui-hover); }
+    &:focus-visible { outline: 2px solid var(--ui-ring); outline-offset: 1px; }
+  }
+
+  & .Code-body {
+    overflow-x: auto;
+
+    & pre {
+      margin: 0;
+      padding: var(--size-md);
+      font-family: var(--fontFamily-code);
+      font-size: var(--fontSize-code);
+      tab-size: 2;
+    }
+  }
+}
+
+/* Shiki emitted both themes as variables (Astro's <Code> renders <pre class="astro-code">);
+   the appearance axis chooses.
+   Four closed blocks — explicit light, explicit dark, and the two
+   system-preference fallbacks when no attribute is set (ADR-0003 shape). */
+:root[data-appearance^="light"] .Code {
+  & .astro-code, & .astro-code span { color: var(--shiki-light); }
+  & .astro-code { background-color: var(--shiki-light-bg); }
+}
+:root[data-appearance^="dark"] .Code {
+  & .astro-code, & .astro-code span { color: var(--shiki-dark); }
+  & .astro-code { background-color: var(--shiki-dark-bg); }
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-appearance]) .Code {
+    & .astro-code, & .astro-code span { color: var(--shiki-light); }
+    & .astro-code { background-color: var(--shiki-light-bg); }
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-appearance]) .Code {
+    & .astro-code, & .astro-code span { color: var(--shiki-dark); }
+    & .astro-code { background-color: var(--shiki-dark-bg); }
+  }
+}
+</style>
