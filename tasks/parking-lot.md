@@ -51,12 +51,7 @@ future sweep or decision of its own; nothing here blocks anything.
   document-global names at all, and should the custom-element root take the
   tokens directly, like the class-rooted components do? Upstream finding
   (reference-components, ADR-0002 diffability).
-- **In-house Teaser and CoverComposition gate outside the root.** Both wrap
-  `.Teaser { … }` / `.CoverComposition { … }` inside top-level `@supports`
-  and `@container` blocks, repeating the root per gate — the nested form
-  everywhere else, but doctrine §7 says the gate nests inside the root.
-  Teaser also has bare descendant selectors without `&` (`img { … }`).
-  Mechanical to fix; the equivalence proof from the sweep applies.
+
 
 ## From the base-table port (ADR-0011, 2026-09-04)
 

@@ -156,6 +156,13 @@ const isVideo = !!videoSrc;
  *
  * Video variant: activated by data-component="CoverCompositionVideo" on .CoverComposition.
  * JS injects .CoverComposition-videoControls / .CoverComposition-videoToggle into .CoverComposition-media.
+ *
+ * One root, one tree (ADR-0010): the STACKED tier, both branches of the
+ * container-query pair and the column-span tiers all nest inside
+ * .CoverComposition. Every part is therefore scoped to the root — the
+ * container-query branch used to address `.media-container` and
+ * `.content-container` bare, which reached any element of that class in a
+ * wide enough container (MotionRegionSection has one).
  */
 
 .CoverComposition {
@@ -174,7 +181,7 @@ const isVideo = !!videoSrc;
       z-index: 1;
       pointer-events: none;
     }
-  
+
     & .video-controls {
       position: absolute;
       inset-block-start: 1rem;
@@ -183,7 +190,7 @@ const isVideo = !!videoSrc;
 
       & .video-toggle {
         --_size: 2.75rem;
-    
+
         display: grid;
         place-items: center;
         inline-size: var(--_size);
@@ -194,14 +201,14 @@ const isVideo = !!videoSrc;
         color: white;
         cursor: pointer;
         backdrop-filter: blur(2px);
-          -webkit-tap-highlight-color: transparent;
-          -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    
+        -webkit-tap-highlight-color: transparent;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
         &:focus-visible {
           outline: 2px solid white;
           outline-offset: 2px;
         }
-    
+
         & svg {
           inline-size: 1.25rem;
           block-size: 1.25rem;
@@ -234,22 +241,12 @@ const isVideo = !!videoSrc;
       & .Prose {
         max-inline-size: 50ch;
       }
-
-      @media (max-width: 21.24999rem) {
-
-      }
-
-      @media (min-width: 21.25rem) {
-
-      }
     }
   }
-}
 
-/* ── STACKED — narrow screens ───────────────────────── */
+  /* ── STACKED — narrow screens ───────────────────────── */
 
-@media (max-width: 21.24999rem) {
-  .CoverComposition {
+  @media (max-width: 21.24999rem) {
     margin-block-start: var(--size-lg);
     row-gap: var(--size-lg);
 
@@ -266,21 +263,14 @@ const isVideo = !!videoSrc;
 
     & .content-container {
       grid-row: 2;
-
-      & .content {
-
-      }
     }
   }
-}
 
-/* ── OVERLAY — viewport MQ fallback ─────────────────── */
+  /* ── OVERLAY — viewport MQ fallback ─────────────────── */
 
-@supports not (container-type: inline-size) {
-  @media (min-width: 21.25rem) {
-    .CoverComposition {
+  @supports not (container-type: inline-size) {
+    @media (min-width: 21.25rem) {
       & .media-container {
-        position: relative;
         grid-column: 1 / -1;
         grid-row: 1;
         z-index: 1;
@@ -310,95 +300,77 @@ const isVideo = !!videoSrc;
       }
     }
   }
-}
 
-/* ── OVERLAY — container query (preferred) ──────────── */
+  /* ── OVERLAY — container query (preferred) ──────────── */
 
-@supports (container-type: inline-size) {
-  .CoverComposition {
+  @supports (container-type: inline-size) {
     container-type: inline-size;
-  }
 
-  @container (min-width: 21.25rem) {
-    .media-container {
-      position: relative;
-      grid-column: 1 / -1;
-      grid-row: 1;
-      z-index: 1;
+    @container (min-width: 21.25rem) {
+      & .media-container {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        z-index: 1;
 
-      &::after {
-        position: absolute;
-        inset: 0;
-        content: "";
+        &::after {
+          position: absolute;
+          inset: 0;
+          content: "";
+        }
+
+        & img,
+        & video {
+          position: absolute;
+          inset: 0;
+          inline-size: 100%;
+          block-size: 100%;
+          object-fit: cover;
+        }
       }
 
-      & img,
-      & video {
-        position: absolute;
-        inset: 0;
-        inline-size: 100%;
-        block-size: 100%;
-        object-fit: cover;
+      & .content-container {
+        position: relative;
+        grid-row: 1;
+        z-index: 2;
+        padding-block: 30dvh;
       }
     }
 
-    .content-container {
-      position: relative;
-      grid-row: 1;
-      z-index: 2;
-      padding-block: 30dvh;
-    }
-  }
+    /* Column span per grid step (the grid's own ladder, ADR-0011). */
 
-  @media (min-width: 21.25rem) {
-    .content-container {
-
-    }
-  }
-
-  /* 1col */
-  @media (max-width: 39.9375rem) {
-    .content-container {
-      & .content {
+    /* 1col */
+    @media (max-width: 39.9375rem) {
+      & .content-container .content {
         grid-column: 1/-1;
       }
     }
-  }
-  /* 4col */
-  @media (min-width: 40rem) and (max-width: 47.9375rem) {
-    .content-container {
-
-      & .content {
+    /* 4col */
+    @media (min-width: 40rem) and (max-width: 47.9375rem) {
+      & .content-container .content {
         grid-column: 1/-1;
       }
     }
-  }
     /* 8col */
-  @media (min-width: 48rem) and (max-width: 79.9375rem) {
-    .content-container {
-
-      & .content {
+    @media (min-width: 48rem) and (max-width: 79.9375rem) {
+      & .content-container .content {
         grid-column: 1/8;
       }
     }
-  }
     /* 12col */
-  @media (min-width: 80rem) and (max-width: 94.937rem) {
-    .content-container { 
-
-      & .content {
+    @media (min-width: 80rem) and (max-width: 94.937rem) {
+      & .content-container .content {
         grid-column: 1/9;
       }
     }
-  }
 
-  @media (min-width: 95rem) {
-    .content-container {
-      grid-column: 1/-1;
+    @media (min-width: 95rem) {
+      & .content-container {
+        grid-column: 1/-1;
 
-      & .content {
-        grid-column: 2/9;
-        margin-inline-start: calc(var(--grid-layout-gap) * -1);
+        & .content {
+          grid-column: 2/9;
+          margin-inline-start: calc(var(--grid-layout-gap) * -1);
+        }
       }
     }
   }
