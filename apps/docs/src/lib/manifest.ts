@@ -113,3 +113,10 @@ export const pillarMeta: Record<Pillar, { romaji?: string; kanji?: string }> = {
 };
 
 export const foundationsMeta = { label: "Foundations", romaji: "Dodai", kanji: "土台" };
+
+/** The manifest row for a slug — explicit pages (docs/notice.astro) look themselves up here. Throws on a typo. */
+export function entryFor(slug: string): ManifestEntry {
+  const entry = manifest.find((e) => e.slug === slug);
+  if (!entry) throw new Error(`manifest: no entry for slug "${slug}"`);
+  return entry;
+}

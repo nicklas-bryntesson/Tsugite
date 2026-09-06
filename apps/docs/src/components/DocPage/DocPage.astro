@@ -1,0 +1,96 @@
+---
+// DocPage — the shell every /docs page shares: breadcrumb to the map, the
+// component's title, its pillar and family chips, then the page's own
+// content. Explicit pages (docs/notice.astro) and the fallback
+// (docs/[slug].astro) both use it, so the chrome lives here once.
+import Heading from "tsugite/components/Heading/Heading.astro";
+import { pillarLabels, type ManifestEntry } from "../../lib/manifest.ts";
+
+interface Props {
+  entry: ManifestEntry;
+}
+const { entry } = Astro.props;
+---
+
+<main class="Main DocPage grid-container">
+  <div class="content">
+    <nav class="doc-breadcrumb" aria-label="Map">
+      <a href="/map">Map</a> <span aria-hidden="true">/</span> {pillarLabels[entry.pillar]}
+    </nav>
+
+    <Heading element="h1" size="1" text={entry.title} />
+
+    <ul class="doc-meta">
+      <li class="chip" data-kind="pillar">{pillarLabels[entry.pillar]}</li>
+      {entry.family && <li class="chip" data-kind="family">fields</li>}
+      {entry.adrs?.map((n) => <li class="chip" data-kind="adr">ADR-{n}</li>)}
+    </ul>
+
+    <slot />
+  </div>
+</main>
+
+<style is:global>
+.DocPage {
+  padding-block: 3rem 4rem;
+  background-color: var(--color-surface-page);
+
+  & .content {
+    /* placed in the main area by the .grid-container > * default */
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-xl);
+  }
+
+  & .doc-breadcrumb {
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+
+    & a { color: var(--color-interactive-secondary-text); }
+  }
+
+  & .doc-meta {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  & .chip {
+    font-size: var(--fontSize-label-small);
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    background-color: var(--color-surface-chrome);
+
+    &[data-kind="pillar"] {
+      border-color: var(--color-interactive-primary);
+      color: var(--color-text-primary);
+    }
+    & code { font-size: 0.875em; /* inline code scales relatively — the Prose mechanism */ }
+  }
+
+  & .doc-note {
+    margin: 0;
+    color: var(--color-text-secondary);
+    max-inline-size: 65ch;
+  }
+
+  /* sections carry bench classes; give them the same breathing room */
+  & .doc-demo,
+  & .doc-bench {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-md);
+    inline-size: 100%;
+  }
+
+  & .doc-bench {
+    padding-block-start: var(--size-xl);
+    border-block-start: 1px solid var(--color-border-subtle);
+  }
+}
+</style>
