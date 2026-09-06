@@ -153,6 +153,12 @@ const cardAttrs =
    data-button axis:
      false (default) — stretched link via Teaser-link::after
      true            — no stretched link; CTA lives in child slot
+
+   One root, one tree (ADR-0010): invariants, the data-button axis and
+   both branches of the container-query pair nest inside .Teaser. The
+   support gate and the container gates sit inside the root (§7); the
+   pair stays closed (§5.1) — the fallback is an axis swap (viewport
+   flow instead of container states), not a mirror of the modern branch.
 ───────────────────────────────────────────────────────────────── */
 
 /* ── Invariants ───────────────────────────────────────────────── */
@@ -173,16 +179,159 @@ const cardAttrs =
         border-radius: 0.3em;
         overflow: hidden;
 
-        & .Media.StackedSources    { 
+        & .Media.StackedSources    {
             overflow: hidden;
         }
 
-        & .Media.HorizontalSources { 
+        & .Media.HorizontalSources {
             overflow: hidden;
         }
     }
-}
 
+    /* ── Stretched link (data-button="false") ─────────────────── */
+
+    &[data-button="false"] .Teaser-link {
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            cursor: pointer;
+        }
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    /* ── Fallback — no container query support (~3% of browsers) ── */
+
+    @supports not (container-type: inline-size) {
+        & .LayoutContainer {
+            gap: var(--size-md);
+
+            & .MediaContainer {
+                inline-size: 100%;
+                margin-block-end: var(--size-md);
+
+                & .Media.StackedSources {
+                    display: block;
+
+                    & img {
+                        inline-size: 100%;
+                        block-size:  auto;
+                    }
+                }
+
+                & .Media.HorizontalSources {
+                    display: none;
+                }
+            }
+
+            & .ContentContainer {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--size-md);
+                margin-block-start: var(--size-md);
+            }
+        }
+    }
+
+    /* ── Container queries supported ─────────────────────────── */
+
+    @supports (container-type: inline-size) {
+        --_minMediaSize: 12rem;
+        container-type: inline-size;
+
+        & .LayoutContainer {
+            display: grid;
+            column-gap: var(--size-md);
+
+            & .MediaContainer {
+                grid-area: media;
+            }
+
+            & .Heading {
+                grid-area: heading;
+                margin-block-end: var(--size-md)
+            }
+
+            & .ContentContainer {
+                grid-area: body;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--size-md)
+            }
+        }
+
+        /* ── STATE A — flow-vertical (< 25rem) ─────────────── */
+
+        @container (max-width: 24.999rem) {
+            & .LayoutContainer {
+                grid-template-areas:
+                    "media"
+                    "heading"
+                    "body"
+                ;
+
+                & .MediaContainer {
+                    margin-block-end: var(--size-md);
+
+                    & .Media.StackedSources    {
+                        display: block;
+                    }
+
+                    & .Media.HorizontalSources {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        /* ── STATE B — flow-horizontal (≥ 25rem) ───────────── */
+
+        @container (min-width: 25rem) {
+            & .LayoutContainer {
+                grid-template-columns: minmax(var(--_minMediaSize), 1fr) 2fr;
+                grid-template-rows: auto auto 1fr;
+                grid-template-areas:
+                    "media heading"
+                    "media body"
+                    "media body";
+                block-size:  100%;
+                align-items: stretch;
+
+                & .MediaContainer {
+                    min-block-size: var(--_minMediaSize);
+
+                    & .Media.StackedSources { display: none; }
+
+                    & .Media.HorizontalSources {
+                        display: block;
+                        position: relative;
+                        aspect-ratio: 1 / 1;
+
+                        & img {
+                            position: absolute;
+                            inset: 0;
+                            inline-size: 100%;
+                            block-size:  100%;
+                            object-fit:  cover;
+                        }
+                    }
+                }
+
+                & .ContentContainer {
+                    & .Button {
+                        margin-block-start: auto;
+                        margin-inline-start: auto;
+                    }
+                }
+            }
+        }
+    }
+}
 
 /* ── Body ────────────────────────────────────────────────────── */
 
@@ -203,156 +352,5 @@ const cardAttrs =
 .Teaser-link {
     text-decoration: none;
     color:           inherit;
-}
-
-.Teaser[data-button="false"] {
-    .Teaser-link {
-        &::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            cursor: pointer;
-        }
-    
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-} 
-
-/* ── Fallback — no container query support (~3% of browsers) ──── */
-
-@supports not (container-type: inline-size) {
-    .Teaser {
-
-        .LayoutContainer {
-            gap: var(--size-md);
-    
-            & .MediaContainer {
-                inline-size: 100%;
-                margin-block-end: var(--size-md);
-    
-                & .Media.StackedSources {
-                    display: block;
-    
-                    img {
-                        inline-size: 100%;
-                        block-size:  auto;
-                    }
-                }
-    
-                & .Media.HorizontalSources {
-                    display: none;
-                }
-            }
-    
-            & .ContentContainer {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--size-md);
-                margin-block-start: var(--size-md);
-            }
-        }
-    } 
-    
-}
-
-/* ── Container queries supported ─────────────────────────────── */
-
-@supports (container-type: inline-size) {
-    .Teaser {
-        --_minMediaSize: 12rem;
-        container-type: inline-size;
-
-        & .LayoutContainer {
-            display: grid;
-            column-gap: var(--size-md);
-
-            & .MediaContainer {
-                grid-area: media;
-            }
-
-            & .Heading     { 
-                grid-area: heading;
-                margin-block-end: var(--size-md)
-            }
-
-            & .ContentContainer { 
-                grid-area: body;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--size-md)
-            }
-        }
-    }
-
-    /* ── STATE A — flow-vertical (< 25rem) ─────────────────── */
-
-    @container (max-width: 24.999rem) {
-        .Teaser .LayoutContainer { 
-            grid-template-areas:
-                "media"
-                "heading"
-                "body"
-            ;
-
-            & .MediaContainer {
-                margin-block-end: var(--size-md);
-
-                & .Media.StackedSources    { 
-                    display: block;
-                }
-    
-                & .Media.HorizontalSources { 
-                    display: none;
-                }
-            }
-        }
-    }
-
-    /* ── STATE B — flow-horizontal (≥ 25rem) ───────────────── */
-
-    @container (min-width: 25rem) {
-        .Teaser .LayoutContainer {
-            grid-template-columns: minmax(var(--_minMediaSize), 1fr) 2fr;
-            grid-template-rows: auto auto 1fr;
-            grid-template-areas:
-                "media heading"
-                "media body"
-                "media body";
-            block-size:  100%;
-            align-items: stretch;
-
-            & .MediaContainer {
-                min-block-size: var(--_minMediaSize);
-
-                & .Media.StackedSources { display: none; }
-
-                & .Media.HorizontalSources {
-                    display: block;
-                    position: relative;
-                    aspect-ratio: 1 / 1;
-
-                    img {
-                        position: absolute;
-                        inset: 0;
-                        inline-size: 100%;
-                        block-size:  100%;
-                        object-fit:  cover;
-                    }
-                }
-            }
-
-            & .ContentContainer {
-
-                & .Button {
-                    margin-block-start: auto;
-                    margin-inline-start: auto;
-                }
-            }
-        }
-    }
 }
 </style>
