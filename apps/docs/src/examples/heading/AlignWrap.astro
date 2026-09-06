@@ -1,0 +1,7 @@
+---
+import Heading from "tsugite/components/Heading/Heading.astro";
+---
+{/* align: left | center | right.  wrap: balance (default) | pretty | stable | nowrap. */}
+<Heading text="Centered, balanced across two lines when the space runs out" element="h2" size="3" align="center" />
+<Heading text="Right-aligned and set to wrap pretty, so no orphan word ends the block" element="h2" size="3" align="right" wrap="pretty" />
+<Heading text="Never wraps — nowrap lets the line overflow instead of breaking" element="h2" size="3" wrap="nowrap" />
