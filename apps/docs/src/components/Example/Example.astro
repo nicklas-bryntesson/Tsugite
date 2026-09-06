@@ -1,0 +1,58 @@
+---
+// Example — Figure + Code from ONE source file.
+//
+// The page imports an example file twice: as a component (rendered in the
+// Figure) and as `?raw` (highlighted in the Code). One source, two mounts,
+// no drift — the same rule /docs already follows for the test-bench fixtures.
+//
+//   import Variants from "../../examples/notice/Variants.astro";
+//   import variantsSrc from "../../examples/notice/Variants.astro?raw";
+//   <Example title="Variants" source={variantsSrc}><Variants /></Example>
+//
+// The frontmatter of the example file (imports, data) is shown by default,
+// because a consumer needs the import lines too; pass `frontmatter={false}`
+// when the markup alone is the point.
+import Figure from "./Figure.astro";
+import Code from "./Code.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+
+interface Props {
+  /** Raw source of the example file (`import src from "./X.astro?raw"`). */
+  source: string;
+  title?: string;
+  /** Prose under the title, before the figure. */
+  lead?: string;
+  caption?: string;
+  lang?: string;
+  /** Show the example file's frontmatter block in the code panel. */
+  frontmatter?: boolean;
+  /** Let the example stretch to the frame width (layout examples). */
+  block?: boolean;
+  id?: string;
+}
+const { source, title, lead, caption, lang = "astro", frontmatter = true, block = false, id } = Astro.props;
+
+const shown = frontmatter ? source : source.replace(/^---[\s\S]*?---\s*/, "");
+---
+
+<section class="Example" id={id}>
+  {title && <Heading text={title} element="h3" variant="body" size="lg" />}
+  {lead && <p class="Example-lead">{lead}</p>}
+  <Figure caption={caption} block={block}>
+    <slot />
+  </Figure>
+  <Code code={shown} lang={lang} />
+</section>
+
+<style is:global>
+.Example {
+  display: grid;
+  gap: var(--size-md);
+
+  & .Example-lead {
+    margin: 0;
+    color: var(--color-text-secondary);
+    max-inline-size: 65ch;
+  }
+}
+</style>

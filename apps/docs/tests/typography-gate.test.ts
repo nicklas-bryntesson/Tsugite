@@ -67,7 +67,7 @@ const ALLOWLIST: Record<string, Record<string, number>> = {
     "text-transform: uppercase": 1,
     "font-size: 0.875em": 1,
   },
-  "apps/docs/src/pages/docs/[slug].astro": {
+  "apps/docs/src/components/DocPage/DocPage.astro": {
     "font-size: 0.875em": 1,
   },
   "apps/docs/src/pages/docs/tiers.astro": {
