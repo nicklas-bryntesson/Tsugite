@@ -83,4 +83,9 @@ and did not decide. Each is a separate call.
   so), or ChoiceGroup's legend should route through the Heading body voice and
   a Figure/Picture caption should exist. Found writing /docs/heading, where the
   only way to show a body-voiced legend was a bare `<fieldset>` — which the
-  system forbids.
+  system forbids. Direction Nicklas sketched (2026-09-07, not decided):
+  ChoiceGroup stays the radio/checkbox group wrapper; a separate **Fieldset**
+  primitive would host legend in the body voice and carry the nesting complex
+  wizards need — several fieldset levels, each tied to its heading via
+  aria-describedby. That primitive would own the fieldset vocabulary (ADR-0005:
+  compositions own none). Later.
