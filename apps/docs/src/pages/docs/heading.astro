@@ -1,0 +1,77 @@
+---
+// /docs/heading — explicit page. The page is the view: it imports exactly
+// the examples it shows, each one file under src/examples/heading/, mounted
+// twice (Figure + Code). The typography fixture is mounted last as the bench.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+import Typography from "tsugite/fixtures/Typography.astro";
+import Example from "../../components/Example/Example.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+import Sizes from "../../examples/heading/Sizes.astro";
+import sizesSrc from "../../examples/heading/Sizes.astro?raw";
+import ElementAndSize from "../../examples/heading/ElementAndSize.astro";
+import elementAndSizeSrc from "../../examples/heading/ElementAndSize.astro?raw";
+import Display from "../../examples/heading/Display.astro";
+import displaySrc from "../../examples/heading/Display.astro?raw";
+import Body from "../../examples/heading/Body.astro";
+import bodySrc from "../../examples/heading/Body.astro?raw";
+import Highlight from "../../examples/heading/Highlight.astro";
+import highlightSrc from "../../examples/heading/Highlight.astro?raw";
+import Link from "../../examples/heading/Link.astro";
+import linkSrc from "../../examples/heading/Link.astro?raw";
+import AlignWrap from "../../examples/heading/AlignWrap.astro";
+import alignWrapSrc from "../../examples/heading/AlignWrap.astro?raw";
+import Emphasis from "../../examples/heading/Emphasis.astro";
+import emphasisSrc from "../../examples/heading/Emphasis.astro?raw";
+
+const entry = entryFor("heading");
+---
+
+<Layout title={entry.title}>
+  <DocPage entry={entry}>
+    <TextBlock
+      text="The heading primitive. Three voices — heading, display and body — on the heading-shaped elements. The element is the outline, the size is the visual step, and the two are independent."
+    />
+
+    <Example id="sizes" title="Sizes" lead="The heading voice has six steps. By default the element decides the size: h1 is 1, h6 is 6." source={sizesSrc} block>
+      <Sizes />
+    </Example>
+
+    <Example id="element-and-size" title="Element and size are independent" lead="The element belongs to the document outline; the size to the layout. Override the size when the composition asks for it, never the element." source={elementAndSizeSrc} block>
+      <ElementAndSize />
+    </Example>
+
+    <Example id="display" title="Display voice" lead="Three steps of the loud voice, for heroes and covers." source={displaySrc} block>
+      <Display />
+    </Example>
+
+    <Example id="body" title="Body voice" lead="A heading that should read like text. The quiet voice is allowed on heading-shaped elements — a body-voiced p or span has one door, and that is Text. The farm also lists legend and figcaption, but no component emits them through Heading today (see the parking lot)." source={bodySrc} block>
+      <Body />
+    </Example>
+
+    <Example id="highlight" title="Highlight" lead="Comma-separated words to mark. The mark inherits the run's metrics." source={highlightSrc} block>
+      <Highlight />
+    </Example>
+
+    <Example id="link" title="As a link" lead="href makes the run a link. Size and trim apply to it exactly as to plain text." source={linkSrc} block>
+      <Link />
+    </Example>
+
+    <Example id="align-wrap" title="Alignment and wrapping" lead="align sets the inline alignment; wrap chooses the line-breaking strategy, balance by default." source={alignWrapSrc} block>
+      <AlignWrap />
+    </Example>
+
+    <Example id="emphasis" title="Emphasis is flattened" lead="Child content runs through the same engine as prop text. In the loud voices strong and em inherit the run's font — partial bolding of a heading is drift (ADR-0012)." source={emphasisSrc} block>
+      <Emphasis />
+    </Example>
+
+    <section class="doc-bench" id="test-bench">
+      <Heading text="Test bench" element="h2" size="2" />
+      <p class="doc-note">The typography fixture — every voice × element × size the family allows, mounted unchanged.</p>
+      <Typography />
+    </section>
+  </DocPage>
+</Layout>

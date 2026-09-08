@@ -73,3 +73,19 @@ and did not decide. Each is a separate call.
 - **The px twins (`--size-*-px`, `--SIZE-*-*-PX`) have no consumer.**
   They are now derived in the emitter; removing them is one line once
   the decision is that px spacing should not exist.
+
+## From the docs pages (2026-09-07)
+
+- **legend and figcaption are in Heading's body farm, but nothing emits them.**
+  `FAMILY.Heading.voices.body` lists `legend` and `figcaption`, yet
+  ChoiceGroup renders its `<legend>` as plain text and no component renders a
+  `<figure>`/`<figcaption>` at all. Either the farm is aspirational (then say
+  so), or ChoiceGroup's legend should route through the Heading body voice and
+  a Figure/Picture caption should exist. Found writing /docs/heading, where the
+  only way to show a body-voiced legend was a bare `<fieldset>` — which the
+  system forbids. Direction Nicklas sketched (2026-09-07, not decided):
+  ChoiceGroup stays the radio/checkbox group wrapper; a separate **Fieldset**
+  primitive would host legend in the body voice and carry the nesting complex
+  wizards need — several fieldset levels, each tied to its heading via
+  aria-describedby. That primitive would own the fieldset vocabulary (ADR-0005:
+  compositions own none). Later.

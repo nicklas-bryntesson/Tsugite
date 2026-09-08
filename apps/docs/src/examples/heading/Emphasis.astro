@@ -1,0 +1,9 @@
+---
+import Heading from "tsugite/components/Heading/Heading.astro";
+---
+{/* Child content passes through the same engine as prop text. In the loud
+    voices emphasis is FLATTENED: a heading with one bold word is drift, so
+    <strong> and <em> inherit the run's font (ADR-0012, law b). */}
+<Heading element="h2" size="2">
+  Partial <strong>bolding</strong> and <em>italics</em> are flattened here
+</Heading>
