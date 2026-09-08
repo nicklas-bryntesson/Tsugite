@@ -1,0 +1,12 @@
+---
+import Card from "tsugite/components/Card/Card.astro";
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* border is off by default. The line comes from --color-border-default,
+    so it follows the appearance axis with everything else. */}
+<Card>
+  <Text text="No border — the default. The card is a surface with a radius and a gap, nothing more." />
+</Card>
+<Card border={true}>
+  <Text text="Bordered — one hairline in the theme's border color." />
+</Card>

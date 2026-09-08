@@ -1,0 +1,13 @@
+---
+import Card from "tsugite/components/Card/Card.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* Card owns no typography. What speaks inside it speaks through the family —
+    Heading for the loud voices, Text for the quiet ones — and the card gives
+    surface, gap and edge. A raw <p> in here would be unvoiced. */}
+<Card border={true} padding="lg">
+  <Heading text="A frame, not a voice" element="h3" size="4" />
+  <Text text="The card sets the gap between these two runs and the edge around them. Their font, size and leading come from the family components, not from the card." />
+  <Text text="Quiet meta line — label voice, small." variant="label" size="sm" />
+</Card>

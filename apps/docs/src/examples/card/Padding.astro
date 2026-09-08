@@ -1,0 +1,19 @@
+---
+import Card from "tsugite/components/Card/Card.astro";
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* Four steps, md by default. Each resolves through a --size-* token, so
+    the padding grows with the tier — never a raw measure. Bordered here so
+    the step reads. */}
+<Card border={true} padding="none">
+  <Text text="padding none — the content meets the edge; for media that bleeds." />
+</Card>
+<Card border={true} padding="sm">
+  <Text text="padding sm — a compact list item." />
+</Card>
+<Card border={true}>
+  <Text text="padding md — the default." />
+</Card>
+<Card border={true} padding="lg">
+  <Text text="padding lg — a feature card with room to breathe." />
+</Card>
