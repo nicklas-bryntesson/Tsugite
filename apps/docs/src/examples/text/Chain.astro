@@ -1,0 +1,9 @@
+---
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* Two voices on one line: a body-voiced block host with a label-voiced
+    inline run at its start. Each run resolves its own bundle; the line
+    negotiates the baseline. */}
+<Text element="p" variant="body" size="lg">
+  <Text element="span" variant="label" size="lg" text="Found a mistake?" /> Let us know.
+</Text>
