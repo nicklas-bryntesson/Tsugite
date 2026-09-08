@@ -1,0 +1,9 @@
+---
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* align: left | center | right.  wrap: pretty (default) | balance | stable | nowrap.
+    Text defaults to pretty — no orphan word ends a paragraph — where
+    Heading defaults to balance. */}
+<Text text="Centered, and set to balance so the two lines come out even when the space runs out" align="center" wrap="balance" />
+<Text text="Right-aligned, wrapping pretty by default, so no single word is left on the last line" align="right" />
+<Text text="Never wraps — nowrap lets the line overflow instead of breaking" wrap="nowrap" />

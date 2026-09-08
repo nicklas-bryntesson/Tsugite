@@ -1,0 +1,10 @@
+---
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* Law (d): an UNVOICED inline element inherits the run's metrics; a
+    VOICED child (data-variant) owns its own bundle. Nearest voice wins by
+    inheritance, never by specificity. */}
+<Text element="p" variant="body">
+  An unvoiced <span>span inherits the run</span>; a voiced child
+  <Text element="span" variant="label" text=" owns its own bundle" />.
+</Text>

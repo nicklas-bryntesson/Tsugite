@@ -1,0 +1,12 @@
+---
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* The element is the markup shape; the voice is the look. They are
+    independent — and the shape decides the run mode (law c): a span is an
+    inline run that flows on the line and leaves trim to its host; p and
+    div are block runs that own their trim. */}
+<Text text="A p — a block run, owns its trim" element="p" />
+<Text text="A div — also a block run, the same metrics" element="div" />
+<Text element="p">
+  A line with <Text text="a span — an inline run" element="span" /> flowing on it.
+</Text>

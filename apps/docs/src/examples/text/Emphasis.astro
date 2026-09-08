@@ -1,0 +1,10 @@
+---
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* Child content passes through the same engine as prop text (law a). In
+    the quiet voices emphasis KEEPS its semantics (law b): strong takes the
+    body-bold weight, em stays italic. The loud voices flatten instead —
+    compare /docs/heading. */}
+<Text size="lg">
+  <strong>Found a mistake?</strong> Let us know, and we <em>will</em> fix it.
+</Text>
