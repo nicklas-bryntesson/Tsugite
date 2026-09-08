@@ -1,0 +1,8 @@
+---
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+---
+{/* align: left | center | right.  wrap: pretty (default) | balance | stable | nowrap.
+    A centered standfirst is the natural case — balance it so the lines
+    come out even. */}
+<TextBlock text="A centered standfirst, balanced so its two lines come out even when the space runs out" align="center" wrap="balance" />
+<TextBlock text="Right-aligned, wrapping pretty by default, so no single word is left on the last line" align="right" />

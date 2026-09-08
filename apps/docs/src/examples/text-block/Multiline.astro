@@ -1,0 +1,10 @@
+---
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+
+// The string a CMS textarea delivers: \n for line breaks, runs of spaces
+// where the editor left them. white-space: pre-line keeps the breaks and
+// collapses the spaces.
+const fromTheField =
+  "Opening hours\nMonday to Friday      9–17\nSaturday 10–14\nClosed on Sundays and public holidays.";
+---
+<TextBlock variant="body" text={fromTheField} />

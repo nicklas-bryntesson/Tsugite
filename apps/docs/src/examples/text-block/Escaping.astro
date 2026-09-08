@@ -1,0 +1,8 @@
+---
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+
+// Sub-typography is unrepresentable: markup in the string is escaped and
+// shows as text. The field is plain, and stays plain.
+const attempted = "You cannot <strong>bold</strong> a word here, & entities stay literal.";
+---
+<TextBlock variant="body" text={attempted} />

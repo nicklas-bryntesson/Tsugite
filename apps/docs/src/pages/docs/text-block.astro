@@ -1,0 +1,59 @@
+---
+// /docs/text-block — explicit page. The page is the view: it imports exactly
+// the examples it shows, each one file under src/examples/text-block/,
+// mounted twice (Figure + Code). The TextBlockSection fixture is the bench.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+import TextBlockSection from "tsugite/fixtures/TextBlockSection.astro";
+import Example from "../../components/Example/Example.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+import Sizes from "../../examples/text-block/Sizes.astro";
+import sizesSrc from "../../examples/text-block/Sizes.astro?raw";
+import Body from "../../examples/text-block/Body.astro";
+import bodySrc from "../../examples/text-block/Body.astro?raw";
+import Multiline from "../../examples/text-block/Multiline.astro";
+import multilineSrc from "../../examples/text-block/Multiline.astro?raw";
+import Escaping from "../../examples/text-block/Escaping.astro";
+import escapingSrc from "../../examples/text-block/Escaping.astro?raw";
+import AlignWrap from "../../examples/text-block/AlignWrap.astro";
+import alignWrapSrc from "../../examples/text-block/AlignWrap.astro?raw";
+
+const entry = entryFor("text-block");
+---
+
+<Layout title={entry.title}>
+  <DocPage entry={entry}>
+    <TextBlock
+      text="The textarea contract. The family's third input shape: not a flow you don't control (Prose), not an authored run (Text), but a plain multiline string the way a CMS field delivers it. Only the text prop is accepted, line breaks are honored, and sub-typography cannot be authored."
+    />
+
+    <Example id="sizes" title="Sizes" lead="preamble is the default voice — the standfirst, with its own leading. Three steps, md by default." source={sizesSrc} block>
+      <Sizes />
+    </Example>
+
+    <Example id="body" title="Body voice" lead="For a plain field that is not a standfirst. One door per look: an authored single-run body text is Text; a body-voiced block from a plain field is TextBlock." source={bodySrc} block>
+      <Body />
+    </Example>
+
+    <Example id="multiline" title="The multiline contract" lead="Line breaks in the string survive as line breaks; runs of spaces collapse. This is what the component exists for." source={multilineSrc} frontmatter block>
+      <Multiline />
+    </Example>
+
+    <Example id="escaping" title="Markup stays literal" lead="Sub-typography is unrepresentable. Tags and entities in the string are escaped and shown as text — the field is plain, and stays plain." source={escapingSrc} frontmatter block>
+      <Escaping />
+    </Example>
+
+    <Example id="align-wrap" title="Alignment and wrapping" lead="align sets the inline alignment; wrap chooses the line-breaking strategy, pretty by default." source={alignWrapSrc} block>
+      <AlignWrap />
+    </Example>
+
+    <section class="doc-bench" id="test-bench">
+      <Heading text="Test bench" element="h2" size="2" />
+      <p class="doc-note">The TextBlock fixture — the preamble steps and the multiline specimen, mounted unchanged.</p>
+      <TextBlockSection />
+    </section>
+  </DocPage>
+</Layout>
