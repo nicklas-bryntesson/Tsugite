@@ -1,0 +1,75 @@
+---
+// Card — the frame axes: border, padding, elevation, combined.
+// Split from Components.astro (the AiPoc _Components.cshtml port); the
+// Media and Teaser sections live in MediaSection / TeaserSection.
+import Heading from "../components/Heading/Heading.astro";
+import Card from "../components/Card/Card.astro";
+---
+
+{/* ═══════════════════════════════════════════
+    CARD
+    ═══════════════════════════════════════════ */}
+
+<section class="KitchenSink-section">
+  <Heading text="Card" element="h2" size="2" />
+
+  {/* — Border ——————————————————————————————— */}
+  <Heading text="Border" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+    <Card border={false} padding="md">
+      <Heading element="h4" text="No border" />
+      <p>border="false" (default)</p>
+    </Card>
+    <Card border={true} padding="md">
+      <Heading element="h4" text="Bordered" />
+      <p>border="true"</p>
+    </Card>
+  </div>
+
+  {/* — Elevation ————————————————————————————— */}
+  <Heading text="Elevation" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:2rem; flex-wrap:wrap; padding:1rem;">
+    {
+      ["sm", "md", "lg"].map((elevation) => (
+        <Card elevation={elevation} padding="md">
+          <Heading element="h4" text={`Elevation ${elevation}`} />
+          <p>elevation="{elevation}"</p>
+        </Card>
+      ))
+    }
+  </div>
+
+  {/* — Padding ——————————————————————————————— */}
+  <Heading text="Padding" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start;">
+    <Card border={true} padding="none">
+      <Heading element="h4" text="None" />
+      <p>padding="none"</p>
+    </Card>
+    <Card border={true} padding="sm">
+      <Heading element="h4" text="Small" />
+      <p>padding="sm"</p>
+    </Card>
+    <Card border={true} padding="md">
+      <Heading element="h4" text="Medium" />
+      <p>padding="md" (default)</p>
+    </Card>
+    <Card border={true} padding="lg">
+      <Heading element="h4" text="Large" />
+      <p>padding="lg"</p>
+    </Card>
+  </div>
+
+  {/* — Combined ——————————————————————————————— */}
+  <Heading text="Combined" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:2rem; flex-wrap:wrap; padding:1rem;">
+    <Card border={true} elevation="sm" padding="lg">
+      <Heading element="h4" text="Border + elevation" />
+      <p>border="true" elevation="sm" padding="lg"</p>
+    </Card>
+    <Card elevation="md" padding="lg" element="div">
+      <Heading element="h4" text="Floating card" />
+      <p>elevation="md" padding="lg" element="div"</p>
+    </Card>
+  </div>
+</section>

@@ -4,11 +4,12 @@ import AffixFieldSection from "tsugite/fixtures/AffixFieldSection.astro";
 import Buttons from "tsugite/fixtures/Buttons.astro";
 import ChoiceFieldSection from "tsugite/fixtures/ChoiceFieldSection.astro";
 import ChoiceGroupSection from "tsugite/fixtures/ChoiceGroupSection.astro";
-import Components from "tsugite/fixtures/Components.astro";
+import CardSection from "tsugite/fixtures/CardSection.astro";
 import CtaButtonSection from "tsugite/fixtures/CtaButtonSection.astro";
 import DateFieldSection from "tsugite/fixtures/DateFieldSection.astro";
 import DateTimeFieldSection from "tsugite/fixtures/DateTimeFieldSection.astro";
 import FileUploadSection from "tsugite/fixtures/FileUploadSection.astro";
+import MediaSection from "tsugite/fixtures/MediaSection.astro";
 import Misc from "tsugite/fixtures/Misc.astro";
 import MonthFieldSection from "tsugite/fixtures/MonthFieldSection.astro";
 import MotionRegionSection from "tsugite/fixtures/MotionRegionSection.astro";
@@ -21,6 +22,7 @@ import RangeScaleSection from "tsugite/fixtures/RangeScaleSection.astro";
 import ScrollAreaSection from "tsugite/fixtures/ScrollAreaSection.astro";
 import TablesSection from "tsugite/fixtures/TablesSection.astro";
 import ThemeSwitchSection from "tsugite/fixtures/ThemeSwitchSection.astro";
+import TeaserSection from "tsugite/fixtures/TeaserSection.astro";
 import ThemesSection from "tsugite/fixtures/ThemesSection.astro";
 import TimeFieldSection from "tsugite/fixtures/TimeFieldSection.astro";
 import ToggleTipSection from "tsugite/fixtures/ToggleTipSection.astro";
@@ -32,11 +34,12 @@ export const sections: Record<string, any> = {
   Buttons,
   ChoiceFieldSection,
   ChoiceGroupSection,
-  Components,
+  CardSection,
   CtaButtonSection,
   DateFieldSection,
   DateTimeFieldSection,
   FileUploadSection,
+  MediaSection,
   Misc,
   MonthFieldSection,
   MotionRegionSection,
@@ -49,6 +52,7 @@ export const sections: Record<string, any> = {
   ScrollAreaSection,
   TablesSection,
   ThemeSwitchSection,
+  TeaserSection,
   ThemesSection,
   TimeFieldSection,
   ToggleTipSection,
