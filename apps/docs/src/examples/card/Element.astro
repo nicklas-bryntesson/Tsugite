@@ -1,0 +1,17 @@
+---
+import Card from "tsugite/components/Card/Card.astro";
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* The element is the markup shape — article (default), section, li or div —
+    and it is independent of the look. Three cards as list items. */}
+<ul style="list-style:none; margin:0; padding:0; display:grid; gap:var(--size-sm);">
+  <Card element="li" border={true} padding="sm">
+    <Text text="First item — a card as an li." />
+  </Card>
+  <Card element="li" border={true} padding="sm">
+    <Text text="Second item — same frame, same shape." />
+  </Card>
+  <Card element="li" border={true} padding="sm">
+    <Text text="Third item — the list owns the flow, the card owns the frame." />
+  </Card>
+</ul>

@@ -1,0 +1,14 @@
+---
+import Card from "tsugite/components/Card/Card.astro";
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* The axes combine freely. The list of forbidden (border, elevation) pairs
+    is EMPTY in Tsugite — a project rule, not a system one — so every
+    combination is permitted until a project says otherwise. Teaser is the
+    consumer that actually owns its permitted combinations. */}
+<Card border={true} elevation="sm" padding="lg">
+  <Text text="border + elevation sm — an outlined card that is also lifted." />
+</Card>
+<Card border={true} elevation="lg" padding="sm">
+  <Text text="border + elevation lg, padding sm — permitted, whether or not a project would want it." />
+</Card>

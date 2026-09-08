@@ -1,0 +1,66 @@
+---
+// /docs/card — explicit page. The page is the view: it imports exactly the
+// examples it shows, each one file under src/examples/card/, mounted twice
+// (Figure + Code). The Components fixture — shared with Picture and Teaser —
+// is mounted last as the bench.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+import Components from "tsugite/fixtures/Components.astro";
+import Example from "../../components/Example/Example.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+import Border from "../../examples/card/Border.astro";
+import borderSrc from "../../examples/card/Border.astro?raw";
+import Padding from "../../examples/card/Padding.astro";
+import paddingSrc from "../../examples/card/Padding.astro?raw";
+import Elevation from "../../examples/card/Elevation.astro";
+import elevationSrc from "../../examples/card/Elevation.astro?raw";
+import Element from "../../examples/card/Element.astro";
+import elementSrc from "../../examples/card/Element.astro?raw";
+import Frame from "../../examples/card/Frame.astro";
+import frameSrc from "../../examples/card/Frame.astro?raw";
+import Combined from "../../examples/card/Combined.astro";
+import combinedSrc from "../../examples/card/Combined.astro?raw";
+
+const entry = entryFor("card");
+---
+
+<Layout title={entry.title}>
+  <DocPage entry={entry}>
+    <TextBlock
+      text="The card frame. A surface with three axes — border, padding, elevation — on article, section, li or div. It owns no typography: what speaks inside a card speaks through Heading and Text. Teaser wraps one and owns the combinations it permits."
+    />
+
+    <Example id="border" title="Border" lead="Off by default. The line is the theme's border color, so it follows the appearance axis." source={borderSrc} block>
+      <Border />
+    </Example>
+
+    <Example id="padding" title="Padding" lead="Four steps, md by default. Each resolves through a size token, so the padding grows with the tier." source={paddingSrc} block>
+      <Padding />
+    </Example>
+
+    <Example id="elevation" title="Elevation" lead="Three steps of shadow. The attribute is written only when asked for — a card without the prop carries no data-elevation." source={elevationSrc} block>
+      <Elevation />
+    </Example>
+
+    <Example id="element" title="Element" lead="The markup shape is independent of the look. Cards as list items: the list owns the flow, the card owns the frame." source={elementSrc} block>
+      <Element />
+    </Example>
+
+    <Example id="frame" title="A frame, not a voice" lead="Card owns no typography. Heading and Text speak inside it; the card gives surface, gap and edge. A raw p in a card is unvoiced." source={frameSrc} block>
+      <Frame />
+    </Example>
+
+    <Example id="combined" title="Combined — and the empty rule list" lead="The axes combine freely. The list of forbidden border/elevation pairs is empty in Tsugite — a project rule, not a system one — so every combination is permitted until a project says otherwise." source={combinedSrc} block>
+      <Combined />
+    </Example>
+
+    <section class="doc-bench" id="test-bench">
+      <Heading text="Test bench" element="h2" size="2" />
+      <p class="doc-note">The Components fixture — Card first, then Picture and Teaser, which share the file. Mounted unchanged.</p>
+      <Components />
+    </section>
+  </DocPage>
+</Layout>
