@@ -1,10 +1,8 @@
 ---
-// Port of AiPoc Views/Shared/Partials/KitchenSink/_Components.cshtml
-// Umbraco.Media() lookups are replaced by ImageMetadata imports.
+// Teaser — frame axis, media/no media, container-query switching, button
+// axis, slot content, the invalid state. Split from Components.astro.
 import Heading from "../components/Heading/Heading.astro";
 import Text from "../components/Text/Text.astro";
-import Card from "../components/Card/Card.astro";
-import Picture from "../components/Picture/Picture.astro";
 import Teaser from "../components/Teaser/Teaser.astro";
 
 import img1 from "./media/amal-s.jpg";
@@ -16,92 +14,7 @@ const frames = [
   { frame: "elevated", label: "elevated" },
   { frame: "bare", label: "bare" },
 ];
-
-const allImages = [
-  { img: img1, label: "img1 — amal-s" },
-  { img: img2, label: "img2 — david-becker" },
-  { img: img3, label: "img3 — jean-philippe" },
-];
 ---
-
-{/* ═══════════════════════════════════════════
-    CARD
-    ═══════════════════════════════════════════ */}
-
-<section class="KitchenSink-section">
-  <Heading text="Card" element="h2" size="2" />
-
-  {/* — Border ——————————————————————————————— */}
-  <Heading text="Border" element="h3" variant="body" size="lg" />
-  <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-    <Card border={false} padding="md">
-      <Heading element="h4" text="No border" />
-      <p>border="false" (default)</p>
-    </Card>
-    <Card border={true} padding="md">
-      <Heading element="h4" text="Bordered" />
-      <p>border="true"</p>
-    </Card>
-  </div>
-
-  {/* — Elevation ————————————————————————————— */}
-  <Heading text="Elevation" element="h3" variant="body" size="lg" />
-  <div style="display:flex; gap:2rem; flex-wrap:wrap; padding:1rem;">
-    {
-      ["sm", "md", "lg"].map((elevation) => (
-        <Card elevation={elevation} padding="md">
-          <Heading element="h4" text={`Elevation ${elevation}`} />
-          <p>elevation="{elevation}"</p>
-        </Card>
-      ))
-    }
-  </div>
-
-  {/* — Padding ——————————————————————————————— */}
-  <Heading text="Padding" element="h3" variant="body" size="lg" />
-  <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start;">
-    <Card border={true} padding="none">
-      <Heading element="h4" text="None" />
-      <p>padding="none"</p>
-    </Card>
-    <Card border={true} padding="sm">
-      <Heading element="h4" text="Small" />
-      <p>padding="sm"</p>
-    </Card>
-    <Card border={true} padding="md">
-      <Heading element="h4" text="Medium" />
-      <p>padding="md" (default)</p>
-    </Card>
-    <Card border={true} padding="lg">
-      <Heading element="h4" text="Large" />
-      <p>padding="lg"</p>
-    </Card>
-  </div>
-
-  {/* — Combined ——————————————————————————————— */}
-  <Heading text="Combined" element="h3" variant="body" size="lg" />
-  <div style="display:flex; gap:2rem; flex-wrap:wrap; padding:1rem;">
-    <Card border={true} elevation="sm" padding="lg">
-      <Heading element="h4" text="Border + elevation" />
-      <p>border="true" elevation="sm" padding="lg"</p>
-    </Card>
-    <Card elevation="md" padding="lg" element="div">
-      <Heading element="h4" text="Floating card" />
-      <p>elevation="md" padding="lg" element="div"</p>
-    </Card>
-  </div>
-</section>
-
-{/* ═══════════════════════════════════════════
-    MEDIA — HERO
-    ═══════════════════════════════════════════ */}
-
-<section class="KitchenSink-section">
-  <Heading text="Media — Hero" element="h2" size="2" />
-  <p>preset="hero" — single picture, HTML art direction, 4 breakpoint crops, loading="eager"</p>
-
-  <Picture preset="hero" image={img1} alt="Hero test — amal-s unsplash" />
-</section>
 
 {/* ═══════════════════════════════════════════
     TEASER
@@ -259,34 +172,5 @@ const allImages = [
       heading="This teaser is misconfigured"
       excerpt="button=true is set but href is missing."
     />
-  </div>
-</section>
-
-{/* ═══════════════════════════════════════════
-    MEDIA — TEASER
-    ═══════════════════════════════════════════ */}
-
-<section class="KitchenSink-section">
-  <Heading text="Media — Teaser" element="h2" size="2" />
-  <p>
-    preset="teaser" — two pictures (StackedSources + HorizontalSources), CSS/container-query
-    driven. Both render; visibility controlled by consuming component.
-  </p>
-
-  <Picture preset="teaser" image={img2} alt="Teaser test — david-becker unsplash" />
-
-  {/* — All three images side by side ——————————— */}
-  <Heading text="All media items" element="h3" variant="body" size="lg" />
-  <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-    {
-      allImages.map(({ img, label }) => (
-        <Card border={true} padding="none" style="width:16rem;">
-          <Picture preset="teaser" image={img} alt={label} />
-          <div style="padding:var(--size-sm);">
-            <Heading element="h4" variant="body" size="sm" text={label} />
-          </div>
-        </Card>
-      ))
-    }
   </div>
 </section>

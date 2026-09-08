@@ -1,0 +1,58 @@
+---
+// Picture — the two presets from lib/media: hero (one art-directed picture,
+// four crops) and teaser (two pictures, host-controlled visibility).
+// Split from Components.astro; Umbraco.Media() lookups are ImageMetadata imports.
+import Heading from "../components/Heading/Heading.astro";
+import Card from "../components/Card/Card.astro";
+import Picture from "../components/Picture/Picture.astro";
+
+import img1 from "./media/amal-s.jpg";
+import img2 from "./media/david-becker.jpg";
+import img3 from "./media/jean-philippe.jpg";
+
+const allImages = [
+  { img: img1, label: "img1 — amal-s" },
+  { img: img2, label: "img2 — david-becker" },
+  { img: img3, label: "img3 — jean-philippe" },
+];
+---
+
+{/* ═══════════════════════════════════════════
+    MEDIA — HERO
+    ═══════════════════════════════════════════ */}
+
+<section class="KitchenSink-section">
+  <Heading text="Media — Hero" element="h2" size="2" />
+  <p>preset="hero" — single picture, HTML art direction, 4 breakpoint crops, loading="eager"</p>
+
+  <Picture preset="hero" image={img1} alt="Hero test — amal-s unsplash" />
+</section>
+
+{/* ═══════════════════════════════════════════
+    MEDIA — TEASER
+    ═══════════════════════════════════════════ */}
+
+<section class="KitchenSink-section">
+  <Heading text="Media — Teaser" element="h2" size="2" />
+  <p>
+    preset="teaser" — two pictures (StackedSources + HorizontalSources), CSS/container-query
+    driven. Both render; visibility controlled by consuming component.
+  </p>
+
+  <Picture preset="teaser" image={img2} alt="Teaser test — david-becker unsplash" />
+
+  {/* — All three images side by side ——————————— */}
+  <Heading text="All media items" element="h3" variant="body" size="lg" />
+  <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+    {
+      allImages.map(({ img, label }) => (
+        <Card border={true} padding="none" style="width:16rem;">
+          <Picture preset="teaser" image={img} alt={label} />
+          <div style="padding:var(--size-sm);">
+            <Heading element="h4" variant="body" size="sm" text={label} />
+          </div>
+        </Card>
+      ))
+    }
+  </div>
+</section>

@@ -41,8 +41,8 @@ export const manifest: ManifestEntry[] = [
   { slug: "prose", title: "Prose", pillar: "primitive", origin: "aipoc", section: "ProseSection", published: true },
   { slug: "button", title: "Button", pillar: "primitive", origin: "aipoc", section: "Buttons", adrs: ["0005", "0006"], published: true },
   { slug: "cta-button", title: "CtaButton", pillar: "primitive", origin: "aipoc", section: "CtaButtonSection", published: true },
-  { slug: "card", title: "Card", pillar: "primitive", origin: "aipoc", section: "Components", published: true },
-  { slug: "picture", title: "Picture", pillar: "primitive", origin: "aipoc", section: "Components", published: true },
+  { slug: "card", title: "Card", pillar: "primitive", origin: "aipoc", section: "CardSection", published: true },
+  { slug: "picture", title: "Picture", pillar: "primitive", origin: "aipoc", section: "MediaSection", published: true },
   { slug: "notice", title: "Notice", pillar: "primitive", origin: "ref-comps", section: "NoticeSection", suite: "tests/e2e/notice.e2e.test.js", published: true },
   { slug: "toggletip", title: "ToggleTip", pillar: "primitive", origin: "ref-comps", section: "ToggleTipSection", suite: "tests/e2e/toggletip.e2e.test.js", published: true },
   { slug: "theme-switch", title: "ThemeSwitch", pillar: "primitive", family: "fields", origin: "ref-comps", section: "ThemeSwitchSection", suite: "tests/e2e/themeswitch.e2e.test.js", adrs: ["0003"], published: true },
@@ -63,7 +63,7 @@ export const manifest: ManifestEntry[] = [
   { slug: "file-upload", title: "FileUpload", pillar: "primitive", family: "fields", origin: "ref-comps", section: "FileUploadSection", suite: "tests/e2e/fileupload.e2e.test.js", published: true },
 
   // ── Compositions ────────────────────────────────────────────────────────────
-  { slug: "teaser", title: "Teaser", pillar: "composition", origin: "aipoc", section: "Components", published: true },
+  { slug: "teaser", title: "Teaser", pillar: "composition", origin: "aipoc", section: "TeaserSection", published: true },
   { slug: "cover-composition", title: "CoverComposition", pillar: "composition", origin: "own", demoHref: "/", suite: "tests/e2e/themes.e2e.test.js", adrs: ["0005", "0006"], published: true },
 
   // ── Regions ─────────────────────────────────────────────────────────────────
