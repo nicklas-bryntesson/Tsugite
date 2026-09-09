@@ -161,6 +161,9 @@ const {
   --_df-rail-max-width: calc(var(--_df-site-max-width) + var(--_df-calendar-width));
   --_df-arrow-size: 0.75rem;
   --_df-arrow-corner-radius: 0.25rem;
+  /* Written by popup-anchor on open and resize; the resting values centre the bubble. */
+  --_df-popup-offset: 50%;
+  --_df-arrow-offset: 0px;
 
   /* ── Native / custom fallback ──────────────────────────────────────────── */
   & .native {
@@ -465,7 +468,7 @@ const {
 
   /* ── Calendar bubble positioning ───────────────────────────────────────── */
   & .popup {
-    left: var(--_df-popup-offset, 50%);
+    left: var(--_df-popup-offset);
     transform: translateX(-50%);
     inline-size: var(--_df-calendar-width);
     pointer-events: auto;
@@ -487,12 +490,12 @@ const {
   }
   &[data-direction="top"] .arrow {
     bottom: calc(var(--_df-arrow-size) * -0.5);
-    transform: translateX(calc(-50% + var(--_df-arrow-offset, 0px))) rotate(45deg);
+    transform: translateX(calc(-50% + var(--_df-arrow-offset))) rotate(45deg);
     border-end-end-radius: var(--_df-arrow-corner-radius);
   }
   &[data-direction="bottom"] .arrow {
     top: calc(var(--_df-arrow-size) * -0.5);
-    transform: translateX(calc(-50% + var(--_df-arrow-offset, 0px))) rotate(45deg);
+    transform: translateX(calc(-50% + var(--_df-arrow-offset))) rotate(45deg);
     border-start-start-radius: var(--_df-arrow-corner-radius);
   }
 }
