@@ -59,6 +59,13 @@ export default class ThemeSwitch {
       this.darkQuery.addEventListener('change', this.onSystemChange)
     }
 
+    // Flush style before granting motion. reflectPreference() and this attribute
+    // would otherwise land in the same style recalc, and CSS Transitions decide
+    // from the AFTER-change style — so the indicator would still slide from the
+    // server-rendered segment. Reading a computed value forces the recalc now,
+    // with the right radio checked and no transition yet; the attribute then
+    // enables it for interactions only.
+    void getComputedStyle(this.root).translate
     this.root.dataset.initialized = 'true'
   }
 
