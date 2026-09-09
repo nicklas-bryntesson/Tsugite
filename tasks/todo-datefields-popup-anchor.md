@@ -28,9 +28,9 @@ Plan: [plan-datefields-popup-anchor.md](plan-datefields-popup-anchor.md) · Base
 
 ### Checkpoint 3 — contract preserved
 - [x] `pnpm --filter tsugite test` green (283, gate break-tested)
-- [ ] five field suites + toggletip in one run · one full e2e run
-- [ ] docs tests + build clean
-- [ ] PR opened against `main`
+- [x] full e2e run 415/415
+- [x] docs tests 64/64 + build clean
+- [x] PR opened against `main`
 
 ## Out of scope
 - The `, 50%` / `, 0px` fallbacks on the offset/arrow tokens in the fields' CSS (defaults in CSS, ADR-0007) — a CSS pass of its own
