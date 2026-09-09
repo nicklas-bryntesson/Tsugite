@@ -142,6 +142,9 @@ const {
   /* Internal */
   --_tf-arrow-size: 0.75rem;
   --_tf-arrow-corner-radius: 0.25rem;
+  /* Written by popup-anchor on open and resize; the resting values centre the bubble. */
+  --_tf-popup-offset: 50%;
+  --_tf-arrow-offset: 0px;
 
   /* ── Native / custom fallback ──────────────────────────────────────────── */
   & .native {
@@ -297,7 +300,7 @@ const {
   /* ── Popup bubble ──────────────────────────────────────────────────────── */
   & .popup {
     position: absolute;
-    left: var(--_tf-popup-offset, 50%);
+    left: var(--_tf-popup-offset);
     transform: translateX(-50%);
     inline-size: var(--_tf-popup-width);
     pointer-events: auto;
@@ -367,12 +370,12 @@ const {
   }
   &[data-direction="top"] .arrow {
     bottom: calc(var(--_tf-arrow-size) * -0.5);
-    transform: translateX(calc(-50% + var(--_tf-arrow-offset, 0px))) rotate(45deg);
+    transform: translateX(calc(-50% + var(--_tf-arrow-offset))) rotate(45deg);
     border-end-end-radius: var(--_tf-arrow-corner-radius);
   }
   &[data-direction="bottom"] .arrow {
     top: calc(var(--_tf-arrow-size) * -0.5);
-    transform: translateX(calc(-50% + var(--_tf-arrow-offset, 0px))) rotate(45deg);
+    transform: translateX(calc(-50% + var(--_tf-arrow-offset))) rotate(45deg);
     border-start-start-radius: var(--_tf-arrow-corner-radius);
   }
 }

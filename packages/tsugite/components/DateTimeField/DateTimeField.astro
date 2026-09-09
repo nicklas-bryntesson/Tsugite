@@ -155,6 +155,9 @@ const {
   --_dtf-rail-max-width: calc(var(--_dtf-site-max-width) + var(--_dtf-calendar-width));
   --_dtf-arrow-size: 0.75rem;
   --_dtf-arrow-corner-radius: 0.25rem;
+  /* Written by popup-anchor on open and resize; the resting values centre the bubble. */
+  --_dtf-popup-offset: 50%;
+  --_dtf-arrow-offset: 0px;
 
   /* ── Native / overlay fallback ─────────────────────────────────────────── */
   & .native {
@@ -466,7 +469,7 @@ const {
 
   /* ── Calendar bubble positioning ───────────────────────────────────────── */
   & .popup {
-    left: var(--_dtf-popup-offset, 50%);
+    left: var(--_dtf-popup-offset);
     transform: translateX(-50%);
     min-inline-size: var(--_dtf-calendar-width);
     pointer-events: auto;
@@ -488,12 +491,12 @@ const {
   }
   &[data-direction="top"] .arrow {
     bottom: calc(var(--_dtf-arrow-size) * -0.5);
-    transform: translateX(calc(-50% + var(--_dtf-arrow-offset, 0px))) rotate(45deg);
+    transform: translateX(calc(-50% + var(--_dtf-arrow-offset))) rotate(45deg);
     border-end-end-radius: var(--_dtf-arrow-corner-radius);
   }
   &[data-direction="bottom"] .arrow {
     top: calc(var(--_dtf-arrow-size) * -0.5);
-    transform: translateX(calc(-50% + var(--_dtf-arrow-offset, 0px))) rotate(45deg);
+    transform: translateX(calc(-50% + var(--_dtf-arrow-offset))) rotate(45deg);
     border-start-start-radius: var(--_dtf-arrow-corner-radius);
   }
 

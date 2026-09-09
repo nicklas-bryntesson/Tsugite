@@ -150,6 +150,9 @@ const {
   /* Internal */
   --_mf-arrow-size: 0.75rem;
   --_mf-arrow-corner-radius: 0.25rem;
+  /* Written by popup-anchor on open and resize; the resting values centre the bubble. */
+  --_mf-popup-offset: 50%;
+  --_mf-arrow-offset: 0px;
 
   /* ── Native / custom fallback ──────────────────────────────────────────── */
   & .native {
@@ -308,7 +311,7 @@ const {
   /* ── Popup bubble ──────────────────────────────────────────────────────── */
   & .popup {
     position: absolute;
-    left: var(--_mf-popup-offset, 50%);
+    left: var(--_mf-popup-offset);
     transform: translateX(-50%);
     inline-size: fit-content;
     pointer-events: auto;
@@ -385,12 +388,12 @@ const {
   }
   &[data-direction="top"] .arrow {
     bottom: calc(var(--_mf-arrow-size) * -0.5);
-    transform: translateX(calc(-50% + var(--_mf-arrow-offset, 0px))) rotate(45deg);
+    transform: translateX(calc(-50% + var(--_mf-arrow-offset))) rotate(45deg);
     border-end-end-radius: var(--_mf-arrow-corner-radius);
   }
   &[data-direction="bottom"] .arrow {
     top: calc(var(--_mf-arrow-size) * -0.5);
-    transform: translateX(calc(-50% + var(--_mf-arrow-offset, 0px))) rotate(45deg);
+    transform: translateX(calc(-50% + var(--_mf-arrow-offset))) rotate(45deg);
     border-start-start-radius: var(--_mf-arrow-corner-radius);
   }
 }
