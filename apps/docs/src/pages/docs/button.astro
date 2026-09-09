@@ -1,0 +1,71 @@
+---
+// /docs/button — explicit page. The page is the view: it imports exactly the
+// examples it shows, each one file under src/examples/button/, mounted twice
+// (Figure + Code). The Buttons fixture is mounted last as the bench.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+import Buttons from "tsugite/fixtures/Buttons.astro";
+import Example from "../../components/Example/Example.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+import Element from "../../examples/button/Element.astro";
+import elementSrc from "../../examples/button/Element.astro?raw";
+import Emphasis from "../../examples/button/Emphasis.astro";
+import emphasisSrc from "../../examples/button/Emphasis.astro?raw";
+import Intent from "../../examples/button/Intent.astro";
+import intentSrc from "../../examples/button/Intent.astro?raw";
+import Size from "../../examples/button/Size.astro";
+import sizeSrc from "../../examples/button/Size.astro?raw";
+import Icon from "../../examples/button/Icon.astro";
+import iconSrc from "../../examples/button/Icon.astro?raw";
+import Ownership from "../../examples/button/Ownership.astro";
+import ownershipSrc from "../../examples/button/Ownership.astro?raw";
+import Empty from "../../examples/button/Empty.astro";
+import emptySrc from "../../examples/button/Empty.astro?raw";
+
+const entry = entryFor("button");
+---
+
+<Layout title={entry.title}>
+  <DocPage entry={entry}>
+    <TextBlock
+      text="One contract, two components. Button is the class and its four axes — emphasis, intent, size, pill — but the element decides which component you write: LinkButton renders an a and navigates, ActionButton renders a button and acts. They share Button.css, so the look can never be picked apart from the meaning. Intent belongs to actions alone."
+    />
+
+    <Example id="element" title="Element" lead="Same look, different element. A link goes somewhere; an action does something. The shared class is the reason there is no way to style an a as a button by hand — you pick the component, and the element follows." source={elementSrc} row>
+      <Element />
+    </Example>
+
+    <Example id="emphasis" title="Emphasis" lead="Emphasis ranks siblings: which of these buttons matters most. It says nothing about the surface underneath — that is prominence (ADR-0006), and a primary button in a subtle section is the normal case. Tertiary is unfinished: it drops the border and owns no color or hover yet." source={emphasisSrc} row>
+      <Emphasis />
+    </Example>
+
+    <Example id="intent" title="Intent — actions only" lead="Destructive and success are things an action can be, not a link. LinkButton drops the prop before the DOM: the fourth button carries no data-intent. Known today: an intent block outranks the hover and active rules, so intent buttons do not change on hover." source={intentSrc} row>
+      <Intent />
+    </Example>
+
+    <Example id="size" title="Size and pill" lead="Three sizes, md by default, each resolving type and padding through label tokens. Pill is its own axis and the attribute is always written, so a button's shape is never implicit." source={sizeSrc} row>
+      <Size />
+    </Example>
+
+    <Example id="icon" title="Icon" lead="An icon references the page sprite, right of the text unless asked otherwise. Drop the text and the button pads to a square — then the aria-label is the whole accessible name. Known today: the svg has no inline size of its own, so a sprite symbol renders at the browser default width until Button.css sets one." source={iconSrc} row>
+      <Icon />
+    </Example>
+
+    <Example id="ownership" title="The ownership chain" lead="The button consumes theme slots with one fallback to the semantic default (ADR-0005, ADR-0008). It never reads data-theme. The surface claims a voice, the voice's donut points the button's slots into its palette, and the same markup renders three ways." source={ownershipSrc} block>
+      <Ownership />
+    </Example>
+
+    <Example id="empty" title="The empty rule" lead="No text, no icon, no aria-label: nothing to click and nothing to announce, so the component renders nothing. An empty button tag never reaches the page." source={emptySrc} row>
+      <Empty />
+    </Example>
+
+    <section class="doc-bench" id="test-bench">
+      <Heading text="Test bench" element="h2" size="2" />
+      <p class="doc-note">The Buttons fixture — link and action, both emphases, three sizes, every state, intents — mounted unchanged.</p>
+      <Buttons />
+    </section>
+  </DocPage>
+</Layout>

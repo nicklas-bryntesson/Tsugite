@@ -1,0 +1,9 @@
+---
+import ActionButton from "tsugite/components/Button/ActionButton.astro";
+---
+{/* Emphasis ranks siblings against each other — it says nothing about the
+    surface the button sits on (that is prominence, ADR-0006). Tertiary is
+    still unfinished: it drops the border but owns no color or hover yet. */}
+<ActionButton emphasis="primary">Primary</ActionButton>
+<ActionButton emphasis="secondary">Secondary</ActionButton>
+<ActionButton emphasis="tertiary">Tertiary</ActionButton>

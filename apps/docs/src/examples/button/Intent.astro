@@ -1,0 +1,11 @@
+---
+import ActionButton from "tsugite/components/Button/ActionButton.astro";
+import LinkButton from "tsugite/components/Button/LinkButton.astro";
+---
+{/* Intent exists only on ActionButton. An action can be destructive or
+    successful; a link merely goes somewhere. LinkButton ignores the prop
+    entirely — no data-intent is written, so the DOM carries the rule. */}
+<ActionButton intent="neutral">Neutral</ActionButton>
+<ActionButton intent="destructive">Delete</ActionButton>
+<ActionButton intent="success">Confirm</ActionButton>
+<LinkButton href="#" intent="destructive">A link, intent ignored</LinkButton>

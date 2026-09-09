@@ -1,0 +1,8 @@
+---
+import ActionButton from "tsugite/components/Button/ActionButton.astro";
+---
+{/* The empty rule. No text, no icon, no aria-label: nothing to click and
+    nothing to announce, so the component renders nothing at all rather
+    than an empty <button>. Only the second one below reaches the DOM. */}
+<ActionButton />
+<ActionButton>Rendered</ActionButton>

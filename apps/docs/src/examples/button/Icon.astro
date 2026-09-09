@@ -1,0 +1,11 @@
+---
+import LinkButton from "tsugite/components/Button/LinkButton.astro";
+import ActionButton from "tsugite/components/Button/ActionButton.astro";
+---
+{/* The icon is a <use> into the page's sprite, right of the text by default.
+    Without text the button becomes icon-only and pads to a square — then
+    aria-label is the whole accessible name, and without one the button
+    would not render at all. */}
+<LinkButton href="#" icon="mail">Contact us</LinkButton>
+<LinkButton href="#" icon="calendar" icon-position="left">Book a time</LinkButton>
+<ActionButton icon="icon-search" aria-label="Search" emphasis="secondary" />

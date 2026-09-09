@@ -1,0 +1,10 @@
+---
+import LinkButton from "tsugite/components/Button/LinkButton.astro";
+import ActionButton from "tsugite/components/Button/ActionButton.astro";
+---
+{/* One contract, two components. The element decides which: a LinkButton
+    renders <a> and navigates, an ActionButton renders <button> and acts.
+    They share .Button and every data-* axis, so the look cannot be chosen
+    apart from the meaning. */}
+<LinkButton href="/map">Go to the map</LinkButton>
+<ActionButton>Save changes</ActionButton>
