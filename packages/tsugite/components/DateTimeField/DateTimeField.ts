@@ -13,7 +13,7 @@ import {
   type DateSegmentType,
 } from '../../kernel/utils/dates'
 import { readLocale, resolveLocale } from '../../kernel/utils/locale'
-import { calculatePopupOffset, calculateArrowOffset, detectDirection } from '../../kernel/js/popup-position'
+import { layoutPopup, watchResize, lightDismiss } from '../../kernel/js/popup-anchor'
 import { trapPopupInteraction } from '../../kernel/js/popup-interaction'
 import WheelColumn from '../../kernel/js/WheelColumn'
 
@@ -72,6 +72,16 @@ declare global {
 const SEGMENT_PLACEHOLDERS: Record<string, string> = {
   day: 'dd', month: 'mm', year: 'yyyy',
   hour: '--', minute: '--', second: '--',
+}
+
+// The tokens DateTimeField.astro declares on its root; popup-anchor writes the
+// first two and reads the rest.
+const POPUP_TOKENS = {
+  offset: '--_dtf-popup-offset',
+  arrow: '--_dtf-arrow-offset',
+  arrowSize: '--_dtf-arrow-size',
+  arrowRadius: '--_dtf-arrow-corner-radius',
+  inset: '--_dtf-site-padding',
 }
 
 // ─── DateTimeField class ──────────────────────────────────────────────────────
@@ -138,20 +148,14 @@ export class DateTimeField {
   _segmentEls: HTMLSpanElement[] = []
   _digitBuffer = ''
   _digitTimer: ReturnType<typeof setTimeout> | null = null
-  _outsideClickHandler: ((e: MouseEvent) => void) | null = null
   private _rail!: HTMLElement
-  private _rafHandle: number | null = null
+  // Lives as long as the instance — the resize watcher. Aborted in destroy().
+  private readonly _lifetime = new AbortController()
   // Aborted on close — tears down the shared focus-trap + scroll-containment listeners.
   private _popupAbort: AbortController | null = null
   _handleTriggerClick: () => void
   _handleNativeChange: () => void
   _handleFormReset: () => void
-  private _handleResize = (): void => {
-    if (this._rafHandle) cancelAnimationFrame(this._rafHandle)
-    this._rafHandle = requestAnimationFrame(() => {
-      if (this.calendarEl) this._updateLayout()
-    })
-  }
 
   static registerLocale(locale: string, strings: Partial<TranslationStrings>): void {
     DateTimeField.translations[locale] = {
@@ -277,7 +281,7 @@ export class DateTimeField {
 
     this.native.addEventListener('change', this._handleNativeChange)
     this.native.form?.addEventListener('reset', this._handleFormReset)
-    window.addEventListener('resize', this._handleResize)
+    watchResize(() => this._updateLayout(), this._lifetime.signal)
   }
 
   // ─── Display mode (touch / coarse pointer) ────────────────────────────────
@@ -333,46 +337,13 @@ export class DateTimeField {
 
   _updateLayout(): void {
     if (!this.calendarEl) return
-    const triggerRect = this.trigger.getBoundingClientRect()
-    const containerRect = this._rail.getBoundingClientRect()
-    const calendarWidth = this.calendarEl.getBoundingClientRect().width
-    if (!containerRect.width || !calendarWidth) return
-
-    this.root.dataset.direction = detectDirection(triggerRect)
-
-    const triggerCenterX = triggerRect.left + triggerRect.width / 2
-    const viewportInset = this._getCSSPx('--_dtf-site-padding') / 2
-
-    const offset = calculatePopupOffset(
-      triggerCenterX,
-      containerRect.left,
-      containerRect.width,
-      calendarWidth,
-      window.innerWidth,
-      viewportInset,
-    )
-    this.root.style.setProperty('--_dtf-popup-offset', `${offset}%`)
-
-    const calendarLeft = containerRect.left + (offset / 100 * containerRect.width) - calendarWidth / 2
-    const arrowOffset = calculateArrowOffset(
-      triggerCenterX,
-      calendarLeft,
-      calendarWidth,
-      this._getCSSPx('--_dtf-arrow-corner-radius'),
-      this._getCSSPx('--_dtf-arrow-size'),
-    )
-    this.root.style.setProperty('--_dtf-arrow-offset', `${arrowOffset}px`)
-  }
-
-  _getCSSPx(property: string): number {
-    const probe = document.createElement('div')
-    probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;width:var(${property},0px)`
-    // Append inside the component root so component-scoped tokens (--_dtf-*) resolve;
-    // appending to document.body would resolve them to the var() fallback (0).
-    this.root.appendChild(probe)
-    const value = parseFloat(getComputedStyle(probe).width) || 0
-    probe.remove()
-    return value
+    layoutPopup({
+      root: this.root,
+      trigger: this.trigger,
+      rail: this._rail,
+      popup: this.calendarEl,
+      tokens: POPUP_TOKENS,
+    })
   }
 
   destroy(): void {
@@ -388,8 +359,7 @@ export class DateTimeField {
     this.trigger.removeEventListener('click', this._handleTriggerClick)
     this.native.removeEventListener('change', this._handleNativeChange)
     this.native.form?.removeEventListener('reset', this._handleFormReset)
-    window.removeEventListener('resize', this._handleResize)
-    if (this._rafHandle) cancelAnimationFrame(this._rafHandle)
+    this._lifetime.abort()
     this._closeCalendar(false)
     delete this.root.__dateTimeFieldInstance
   }
@@ -871,10 +841,6 @@ export class DateTimeField {
       this._popupAbort.abort()
       this._popupAbort = null
     }
-    if (this._outsideClickHandler) {
-      document.removeEventListener('click', this._outsideClickHandler)
-      this._outsideClickHandler = null
-    }
     this._wheels.forEach(w => w.destroy())
     this._wheels.clear()
     this.calendarEl.remove()
@@ -1122,13 +1088,18 @@ export class DateTimeField {
       signal: this._popupAbort.signal,
     })
 
-    this._outsideClickHandler = (e: MouseEvent) => {
-      // Light dismiss: don't refocus the trigger — that would scroll the viewport
-      // back to an off-screen trigger and steal focus from whatever the user
-      // clicked. Focus restoration is only for keyboard/Escape close.
-      if (!this.root.contains(e.target as Node)) this._closeCalendar(false)
-    }
-    setTimeout(() => document.addEventListener('click', this._outsideClickHandler!), 0)
+    // Light dismiss: don't refocus the trigger — that would scroll the viewport
+    // back to an off-screen trigger and steal focus from whatever the user
+    // clicked. Focus restoration is only for keyboard/Escape close, which stays
+    // local (_handleCalendarKeydown) — hence escape: false.
+    lightDismiss({
+      root: this.root,
+      pointer: 'click',
+      focusout: false,
+      escape: false,
+      onDismiss: () => this._closeCalendar(false),
+      signal: this._popupAbort.signal,
+    })
   }
 
   // Ordered tab stops for the shared focus trap. Depends on which panel is
