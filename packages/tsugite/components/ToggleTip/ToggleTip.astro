@@ -1,0 +1,264 @@
+---
+// ToggleTip, rail variant — a trigger that reveals a short rich explanation in
+// a bubble anchored to it. Port of reference-components ToggleTip, re-authored
+// as the DOM end-state (INTAKE §1): the markup below is what the runtime used
+// to build with innerHTML; ToggleTip.ts now only toggles attributes and
+// positions the bubble through kernel/js/popup-anchor.
+//
+// Flow content, never inside a <p>. The bubble takes rich text (paragraphs,
+// lists, links), so the component cannot be phrasing content: a <p> inside a
+// ToggleTip inside a <p> makes the parser close the outer paragraph and the
+// bubble renders empty. Place it as a sibling of the text it explains.
+//
+// "Rail variant": the bubble slides along a full-width rail positioned from
+// the trigger (data-direction above/below, --_tt-popup-offset along the rail).
+// The Popover API + top layer is the other variant of this contract; this
+// repo's support contract (Chrome 109 in .browserslistrc) keeps the rail.
+
+interface Props {
+  /** Root id; the bubble is `${id}-popup` and the trigger's aria-controls. */
+  id: string;
+  /** Which glyph the trigger shows — and which name it announces. */
+  icon?: "info" | "question";
+  /** Optional heading inside the bubble; also names the dialog. */
+  heading?: string;
+  /** Heading level for the optional heading. */
+  headingLevel?: 2 | 3 | 4 | 5 | 6;
+  [key: string]: unknown;
+}
+
+const { id, icon = "info", heading, headingLevel = 3, ...rest } = Astro.props;
+
+const popupId = `${id}-popup`;
+const headingId = `${id}-heading`;
+const triggerLabel = icon === "question" ? "Learn more" : "More information";
+---
+
+<div
+  class="ToggleTip"
+  data-component="ToggleTip"
+  id={id}
+  data-icon={icon}
+  data-direction="top"
+  {...rest}
+>
+  <button
+    type="button"
+    class="trigger"
+    aria-label={triggerLabel}
+    aria-expanded="false"
+    aria-controls={popupId}
+  >
+    {
+      icon === "question" ? (
+        <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+          <path d="M12 17h.01" />
+        </svg>
+      ) : (
+        <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        </svg>
+      )
+    }
+  </button>
+  <div class="rail">
+    <div
+      class="popup"
+      id={popupId}
+      role="dialog"
+      aria-hidden="true"
+      aria-labelledby={heading ? headingId : undefined}
+      aria-label={heading ? undefined : triggerLabel}
+    >
+      {heading && <span class="heading" id={headingId} role="heading" aria-level={headingLevel}>{heading}</span>}
+      <div class="content"><slot /></div>
+      <div class="arrow"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import ToggleTip from "./ToggleTip";
+  ToggleTip.attach();
+</script>
+
+<style is:global>
+/* One root, one tree (ADR-0010): tokens + root props on the root; every part,
+   state and direction is a nested `&` rule below, in cascade order.
+   Reads the --ui-* seam (ADR-0002); one layer of component tokens, on the
+   root, like every other component — the former :root block is gone. */
+.ToggleTip {
+  /* Public API */
+  --_tt-gap: 0.75rem;
+  --_tt-content-width: 20rem;
+  --_tt-padding: 1.5rem;
+  --_tt-border-radius: var(--ui-radius);
+  --_tt-button-width: 1.5rem;
+  --_tt-button-color: currentColor;
+  --_tt-surface-color: var(--ui-surface);
+  --_tt-text-color: var(--ui-surface-foreground);
+  --_tt-border-color: var(--ui-border);
+  --_tt-site-max-width: 100rem;
+  --_tt-site-padding: var(--SITE--PADDING);
+
+  /* Derived */
+  --_tt-rail-max-width: calc(var(--_tt-site-max-width) + var(--_tt-content-width));
+  --_tt-arrow-size: calc(var(--_tt-button-width) / 2);
+  --_tt-arrow-corner-radius: calc(var(--_tt-border-radius) / 4);
+
+  /* Written by popup-anchor on open and resize; the resting values centre the bubble. */
+  --_tt-popup-offset: 50%;
+  --_tt-arrow-offset: 0px;
+
+  /* Layout — the root is exactly the trigger's box; the rail hangs off it. */
+  display: inline-block;
+  position: relative;
+  width: var(--_tt-button-width);
+  height: var(--_tt-button-width);
+  vertical-align: middle;
+
+  /* ── Trigger ───────────────────────────────────────────────────── */
+  & .trigger {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-block;
+    position: absolute;
+    inset: 0;
+    width: var(--_tt-button-width);
+    height: var(--_tt-button-width);
+    cursor: pointer;
+    color: var(--_tt-button-color);
+  }
+
+  & .trigger:focus-visible {
+    outline: 2px solid var(--ui-ring);
+    outline-offset: 2px;
+    border-radius: 50%;
+  }
+
+  /* Enlarged hit area */
+  & .trigger::after {
+    --_click-area: 2rem;
+    --_offset: calc((var(--_tt-button-width) - var(--_click-area)) / 2);
+    position: absolute;
+    content: "";
+    width: var(--_click-area);
+    height: var(--_click-area);
+    inset: var(--_offset);
+  }
+
+  & .trigger .icon {
+    display: block;
+    width: var(--_tt-button-width);
+    height: var(--_tt-button-width);
+  }
+
+  /* ── Slide rail ────────────────────────────────────────────────── */
+  /*
+   * Centred on the trigger's vertical midpoint: left 50% + translateX(-50%)
+   * puts the rail centre on the trigger centre; top 50% is the trigger centre
+   * because the root is exactly the trigger's box. Width is capped at site
+   * max-width + content width so it never exceeds what the layout needs.
+   *
+   * Physical properties (left, top, bottom) are intentional: the slide-rail
+   * model is left-to-right by design; RTL is not in scope.
+   */
+  & .rail {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100vw, var(--_tt-rail-max-width));
+    height: 0;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── Bubble ────────────────────────────────────────────────────── */
+  & .popup {
+    position: absolute;
+    left: var(--_tt-popup-offset);
+    transform: translateX(-50%);
+    inline-size: var(--_tt-content-width);
+    max-inline-size: calc(100vw - var(--_tt-site-padding) * 2);
+    min-inline-size: 20ch;
+    block-size: max-content;
+    pointer-events: auto;
+    padding-inline: var(--_tt-padding);
+    padding-block: var(--_tt-padding);
+    border-radius: var(--_tt-border-radius);
+    border: 1px solid var(--_tt-border-color);
+    background-color: var(--_tt-surface-color);
+    color: var(--_tt-text-color);
+    font: inherit;
+    font-size: var(--ui-font-size);
+    box-shadow: var(--ui-shadow);
+  }
+
+  & .popup[aria-hidden="true"] {
+    display: none;
+  }
+
+  & .popup[aria-hidden="false"] {
+    display: block;
+    transition: opacity 0.15s;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+
+  /* ── Heading ───────────────────────────────────────────────────── */
+  & .heading {
+    display: block;
+    font-weight: var(--ui-font-weight-strong);
+    margin-block-end: 1rem;
+    padding-block-end: 1rem;
+    border-block-end: 1px solid var(--_tt-border-color);
+  }
+
+  /* ── Content — rich text; the bubble owns the outer spacing, not the runs */
+  & .content > :first-child {
+    margin-block-start: 0;
+  }
+
+  & .content > :last-child {
+    margin-block-end: 0;
+  }
+
+  /* ── Arrow ─────────────────────────────────────────────────────── */
+  & .arrow {
+    position: absolute;
+    width: var(--_tt-arrow-size);
+    height: var(--_tt-arrow-size);
+    background-color: var(--_tt-surface-color);
+    left: 50%;
+  }
+
+  /* ── Direction: top (bubble above trigger) ─────────────────────── */
+  &[data-direction="top"] .popup {
+    bottom: var(--_tt-gap);
+  }
+
+  &[data-direction="top"] .arrow {
+    bottom: calc(var(--_tt-arrow-size) * -0.5);
+    transform: translateX(calc(-50% + var(--_tt-arrow-offset))) rotate(45deg);
+    border-end-end-radius: var(--_tt-arrow-corner-radius);
+  }
+
+  /* ── Direction: bottom (bubble below trigger) ──────────────────── */
+  &[data-direction="bottom"] .popup {
+    top: var(--_tt-gap);
+  }
+
+  &[data-direction="bottom"] .arrow {
+    top: calc(var(--_tt-arrow-size) * -0.5);
+    transform: translateX(calc(-50% + var(--_tt-arrow-offset))) rotate(45deg);
+    border-start-start-radius: var(--_tt-arrow-corner-radius);
+  }
+}
+</style>
