@@ -26,6 +26,8 @@ const DEFAULT_TARGET = {
   AffixField: '[data-component="AffixField"][data-id="affixfield-live"]',
   MotionRegion: '[data-component="MotionRegion"][data-id="motion-region-live"]',
   ScrollArea: '[data-component="ScrollArea"][data-id="scrollarea-live"]',
+  // ToggleTip's suite addresses five instances by data-id; this is the root shape they share.
+  ToggleTip: '[data-component="ToggleTip"]',
 }
 
 export function targetId(component) {

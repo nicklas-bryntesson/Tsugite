@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test'
 import { checkA11y, injectAxe } from 'axe-playwright'
-import { targetPath } from './helpers/target.js'
+import { targetPath, targetId } from './helpers/target.js'
+
+// Tsugite adaptation (INTAKE §3, mechanical): the root is `.ToggleTip[data-component]`,
+// not the `toggle-tip` custom element — the DOM end-state is authored in
+// ToggleTip.astro. Every other selector, attribute and assertion is upstream's.
+const tipRoot = (id) => `${targetId('ToggleTip')}[data-id="${id}"]`
 
 test.beforeEach(async ({ page }) => {
   await page.goto(targetPath())
@@ -9,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 // ── Open / close ───────────────────────────────────────────────────────────
 
 test('opens on button click', async ({ page }) => {
-  const tip = page.locator('toggle-tip[data-id="inline"]')
+  const tip = page.locator(tipRoot('inline'))
   await tip.scrollIntoViewIfNeeded()
   const button = tip.locator('button')
   const popup = tip.locator('.popup')
@@ -22,7 +27,7 @@ test('opens on button click', async ({ page }) => {
 })
 
 test('closes on second click', async ({ page }) => {
-  const tip = page.locator('toggle-tip[data-id="inline"]')
+  const tip = page.locator(tipRoot('inline'))
   await tip.scrollIntoViewIfNeeded()
   const button = tip.locator('button')
 
@@ -33,7 +38,7 @@ test('closes on second click', async ({ page }) => {
 })
 
 test('closes on click outside', async ({ page }) => {
-  const tip = page.locator('toggle-tip[data-id="inline"]')
+  const tip = page.locator(tipRoot('inline'))
   await tip.scrollIntoViewIfNeeded()
   await tip.locator('button').click()
   await expect(tip.locator('.popup')).toBeVisible()
@@ -45,7 +50,7 @@ test('closes on click outside', async ({ page }) => {
 // ── Keyboard ────────────────────────────────────────────────────────────────
 
 test('button is keyboard-activatable with Enter', async ({ page }) => {
-  const tip = page.locator('toggle-tip[data-id="inline"]')
+  const tip = page.locator(tipRoot('inline'))
   await tip.scrollIntoViewIfNeeded()
   await tip.locator('button').focus()
   await page.keyboard.press('Enter')
@@ -53,7 +58,7 @@ test('button is keyboard-activatable with Enter', async ({ page }) => {
 })
 
 test('focusout closes the tip', async ({ page }) => {
-  const tip = page.locator('toggle-tip[data-id="inline"]')
+  const tip = page.locator(tipRoot('inline'))
   await tip.scrollIntoViewIfNeeded()
   await tip.locator('button').click()
   await expect(tip.locator('.popup')).toBeVisible()
@@ -63,10 +68,25 @@ test('focusout closes the tip', async ({ page }) => {
   await expect(tip.locator('.popup')).not.toBeVisible()
 })
 
+test('Escape closes the tip and returns focus to the trigger', async ({ page }) => {
+  // Tsugite addition (2026-09-09): the disclosure pattern's keyboard close. The
+  // date fields had it; ToggleTip did not, and the shared popup-anchor now does.
+  const root = page.locator(tipRoot('inline'))
+  await root.scrollIntoViewIfNeeded()
+  const button = root.locator('button')
+  await button.click()
+  await expect(root.locator('.popup')).toBeVisible()
+
+  await page.keyboard.press('Escape')
+  await expect(root.locator('.popup')).not.toBeVisible()
+  await expect(button).toHaveAttribute('aria-expanded', 'false')
+  await expect(button).toBeFocused()
+})
+
 // ── Positioning ─────────────────────────────────────────────────────────────
 
 test('bubble is positioned above trigger by default', async ({ page }) => {
-  const tip = page.locator('toggle-tip[data-id="center"]')
+  const tip = page.locator(tipRoot('center'))
 
   // Place the tip well into the lower half of the viewport so there is clearly
   // more room above than below. The bubble's default "above" placement is only
@@ -86,7 +106,7 @@ test('bubble is positioned above trigger by default', async ({ page }) => {
 })
 
 test('bubble flips below trigger when near top of viewport', async ({ page }) => {
-  const tip = page.locator('toggle-tip[data-id="near-top"]')
+  const tip = page.locator(tipRoot('near-top'))
 
   // Use a short viewport so even a few pixels of space above is less than space below.
   // First get the element's absolute top, then scroll so it sits 4px from the viewport top.
@@ -112,7 +132,7 @@ test('bubble flips below trigger when near top of viewport', async ({ page }) =>
 
 test('bubble does not overflow viewport left edge', async ({ page }) => {
   await page.setViewportSize({ width: 800, height: 600 })
-  const tip = page.locator('toggle-tip[data-id="left-edge"]')
+  const tip = page.locator(tipRoot('left-edge'))
   await tip.scrollIntoViewIfNeeded()
   await tip.locator('button').click()
 
@@ -122,7 +142,7 @@ test('bubble does not overflow viewport left edge', async ({ page }) => {
 
 test('bubble does not overflow viewport right edge', async ({ page }) => {
   await page.setViewportSize({ width: 800, height: 600 })
-  const tip = page.locator('toggle-tip[data-id="right-edge"]')
+  const tip = page.locator(tipRoot('right-edge'))
   await tip.scrollIntoViewIfNeeded()
   await tip.locator('button').click()
 
@@ -134,14 +154,14 @@ test('bubble does not overflow viewport right edge', async ({ page }) => {
 // ── Accessibility ────────────────────────────────────────────────────────────
 
 test('no axe violations on closed state', async ({ page }) => {
-  const tip = page.locator('toggle-tip[data-id="center"]')
+  const tip = page.locator(tipRoot('center'))
   await tip.scrollIntoViewIfNeeded()
   await injectAxe(page)
-  await checkA11y(page, 'toggle-tip[data-id="center"]')
+  await checkA11y(page, tipRoot('center'))
 })
 
 test('no axe violations on open state', async ({ page }) => {
-  const tip = page.locator('toggle-tip[data-id="center"]')
+  const tip = page.locator(tipRoot('center'))
   await tip.scrollIntoViewIfNeeded()
   await tip.locator('button').click()
   await injectAxe(page)
@@ -150,5 +170,5 @@ test('no axe violations on open state', async ({ page }) => {
   // instead of the computed rgb(0,0,0). Re-measured — it passes with the rule
   // enabled, so the axe limitation is gone and the suppression was only still
   // standing down a rule that now works.
-  await checkA11y(page, 'toggle-tip[data-id="center"]')
+  await checkA11y(page, tipRoot('center'))
 })
