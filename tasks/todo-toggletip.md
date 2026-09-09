@@ -22,9 +22,9 @@ Plan: [plan-toggletip.md](plan-toggletip.md) · Baseline: 11/11 e2e green on `/k
 
 ### Checkpoint 2 — contract preserved
 - [x] `pnpm --filter tsugite test` green
-- [x] toggletip 12/12 + scrollarea green against the dev server · [ ] one full e2e run
-- [ ] `pnpm build` (apps/docs) succeeds
-- [ ] PR opened against `main`
+- [x] toggletip 12/12 + scrollarea green · full run 414/415 with one dev-server ECONNRESET in DateTimeField, rerun ×2 84/84
+- [x] `pnpm build` (apps/docs) succeeds · docs gate tests 63/63
+- [x] PR opened against `main`
 
 ## Out of scope (own passes)
 - Date fields (DateField, DateTimeField, TimeField, MonthField, WeekField) adopting `popup-anchor` — verbatim upstream files, ADR-0002
