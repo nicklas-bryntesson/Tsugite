@@ -9,7 +9,10 @@ conversion happens here, occasionally, one component at a time.
    not the simplified snippets in the contract .md.
 2. **The TS travels verbatim** where possible. Keep the init-gate when
    reusing reference JS (the component hydrates like the vanilla
-   reference); adjust only import paths.
+   reference); adjust only import paths. This is an intake rule, not a
+   freeze: once a component is in, its script is Tsugite's to refactor
+   (reference-components is closed — "development continues in the
+   Tsugite monorepo"); such passes are logged in the porting log (§7).
 3. **The suites travel with the component** into `tests/e2e/` — they are
    the durable contract. Adaptations must be mechanical (selector
    scoping, targetPath) and each one is logged as feedback upstream.

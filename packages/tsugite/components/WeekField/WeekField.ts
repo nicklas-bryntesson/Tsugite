@@ -1,6 +1,6 @@
 // src/partials/components/WeekField/WeekField.ts
 
-import { calculatePopupOffset, calculateArrowOffset, detectDirection } from '../../kernel/js/popup-position'
+import { layoutPopup, watchResize, lightDismiss } from '../../kernel/js/popup-anchor'
 import { trapPopupInteraction } from '../../kernel/js/popup-interaction'
 import { readLocale, resolveLocale } from '../../kernel/utils/locale'
 import {
@@ -92,6 +92,16 @@ export function clampWeekISO(value: string, min: string | undefined, max: string
   return out
 }
 
+// The tokens WeekField.astro declares on its root; popup-anchor writes the
+// first two and reads the rest.
+const POPUP_TOKENS = {
+  offset: '--_wf-popup-offset',
+  arrow: '--_wf-arrow-offset',
+  arrowSize: '--_wf-arrow-size',
+  arrowRadius: '--_wf-arrow-corner-radius',
+  inset: '--_wf-site-padding',
+}
+
 // ─── WeekField class ─────────────────────────────────────────────────────────
 
 class WeekField {
@@ -158,8 +168,8 @@ class WeekField {
   private _suppressEvents = false
   private popupEl: HTMLElement | null = null
   private _rail!: HTMLElement
-  private _outsideClickHandler: ((e: MouseEvent) => void) | null = null
-  private _rafHandle: number | null = null
+  // Lives as long as the instance — the resize watcher. Aborted in destroy().
+  private readonly _lifetime = new AbortController()
   private _popupTemplate: HTMLTemplateElement | null = null
   private _popupAbort: AbortController | null = null
 
@@ -290,7 +300,7 @@ class WeekField {
     this._buildSegments()
     this._bindSegmentEvents()
     this._bindTrigger()
-    window.addEventListener('resize', this._handleResize)
+    watchResize(() => this._updateLayout(), this._lifetime.signal)
 
     if (!this.native.disabled) {
       this._bindValueSync()
@@ -799,15 +809,16 @@ class WeekField {
       signal: this._popupAbort.signal,
     })
 
-    this._outsideClickHandler = (e: MouseEvent) => {
-      if (!this.root.contains(e.target as Node)) {
-        // Light dismiss — no refocus (avoids scroll-jump / focus-steal).
-        this._closePopup(false)
-      }
-    }
-    setTimeout(() => {
-      document.addEventListener('click', this._outsideClickHandler!)
-    }, 0)
+    // Outside click to close — light dismiss, no refocus. Escape and focus stay
+    // local (see _handlePopupKeydown); the listener goes with the popup's signal.
+    lightDismiss({
+      root: this.root,
+      pointer: 'click',
+      focusout: false,
+      escape: false,
+      onDismiss: () => this._closePopup(false),
+      signal: this._popupAbort.signal,
+    })
 
     this._moveFocusIntoGrid()
   }
@@ -846,14 +857,6 @@ class WeekField {
     }
     this.root.removeAttribute('data-open')
     this.trigger.setAttribute('aria-expanded', 'false')
-    if (this._outsideClickHandler) {
-      document.removeEventListener('click', this._outsideClickHandler)
-      this._outsideClickHandler = null
-    }
-    if (this._rafHandle !== null) {
-      cancelAnimationFrame(this._rafHandle)
-      this._rafHandle = null
-    }
     if (refocusTrigger) this.trigger.focus()
   }
 
@@ -1149,49 +1152,12 @@ class WeekField {
 
   private _updateLayout(): void {
     if (!this.popupEl) return
-    const triggerRect = this.trigger.getBoundingClientRect()
-    const containerRect = this._rail.getBoundingClientRect()
-    const popupWidth = this.popupEl.getBoundingClientRect().width
-    if (!containerRect.width || !popupWidth) return
-
-    this.root.dataset.direction = detectDirection(triggerRect)
-
-    const triggerCenterX = triggerRect.left + triggerRect.width / 2
-    const offset = calculatePopupOffset(
-      triggerCenterX,
-      containerRect.left,
-      containerRect.width,
-      popupWidth,
-      window.innerWidth,
-      this._getCSSPx('--_wf-site-padding') / 2,
-    )
-    this.root.style.setProperty('--_wf-popup-offset', `${offset}%`)
-
-    const popupLeft = containerRect.left + (offset / 100 * containerRect.width) - popupWidth / 2
-    const arrowOffset = calculateArrowOffset(
-      triggerCenterX,
-      popupLeft,
-      popupWidth,
-      this._getCSSPx('--_wf-arrow-corner-radius'),
-      this._getCSSPx('--_wf-arrow-size'),
-    )
-    this.root.style.setProperty('--_wf-arrow-offset', `${arrowOffset}px`)
-  }
-
-  private _getCSSPx(property: string): number {
-    const probe = document.createElement('div')
-    probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;width:var(${property},0px)`
-    this.root.appendChild(probe)
-    const value = probe.getBoundingClientRect().width || 0
-    probe.remove()
-    return value
-  }
-
-  private _handleResize = (): void => {
-    if (this._rafHandle !== null) cancelAnimationFrame(this._rafHandle)
-    this._rafHandle = requestAnimationFrame(() => {
-      this._updateLayout()
-      this._rafHandle = null
+    layoutPopup({
+      root: this.root,
+      trigger: this.trigger,
+      rail: this._rail,
+      popup: this.popupEl,
+      tokens: POPUP_TOKENS,
     })
   }
 
@@ -1204,7 +1170,7 @@ class WeekField {
     }
 
     this._closePopup(false)
-    window.removeEventListener('resize', this._handleResize)
+    this._lifetime.abort()
 
     this._segmentEls.forEach(seg => {
       const handlers = seg.__weekFieldHandlers

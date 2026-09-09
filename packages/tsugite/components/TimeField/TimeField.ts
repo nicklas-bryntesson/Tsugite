@@ -1,6 +1,6 @@
 // src/partials/components/TimeField/TimeField.ts
 
-import { calculatePopupOffset, calculateArrowOffset, detectDirection } from '../../kernel/js/popup-position'
+import { layoutPopup, watchResize, lightDismiss } from '../../kernel/js/popup-anchor'
 import { trapPopupInteraction } from '../../kernel/js/popup-interaction'
 import { readLocale, resolveLocale } from '../../kernel/utils/locale'
 import WheelColumn, { type WheelColumnOptions } from '../../kernel/js/WheelColumn'
@@ -66,6 +66,16 @@ function is12hLocale(locale: string): boolean {
   return new Intl.DateTimeFormat(locale, { hour: 'numeric' }).resolvedOptions().hour12 === true
 }
 
+// The tokens TimeField.astro declares on its root; popup-anchor writes the
+// first two and reads the rest.
+const POPUP_TOKENS = {
+  offset: '--_tf-popup-offset',
+  arrow: '--_tf-arrow-offset',
+  arrowSize: '--_tf-arrow-size',
+  arrowRadius: '--_tf-arrow-corner-radius',
+  inset: '--_tf-site-padding',
+}
+
 // ─── TimeField class ──────────────────────────────────────────────────────────
 
 class TimeField {
@@ -113,8 +123,8 @@ class TimeField {
   private popupEl: HTMLElement | null = null
   private _wheels: Map<string, WheelColumn> = new Map()
   private _rail!: HTMLElement
-  private _outsideClickHandler: ((e: MouseEvent) => void) | null = null
-  private _rafHandle: number | null = null
+  // Lives as long as the instance — the resize watcher. Aborted in destroy().
+  private readonly _lifetime = new AbortController()
   private _popupTemplate: HTMLTemplateElement | null = null
   // Aborted on close — tears down the shared focus-trap + scroll-containment listeners.
   private _popupAbort: AbortController | null = null
@@ -235,7 +245,7 @@ class TimeField {
     this._buildSegments()
     this._bindSegmentEvents()
     this._bindTrigger()
-    window.addEventListener('resize', this._handleResize)
+    watchResize(() => this._updateLayout(), this._lifetime.signal)
 
     if (!this.native.disabled) {
       this._bindValueSync()
@@ -787,15 +797,16 @@ class TimeField {
       signal: this._popupAbort.signal,
     })
 
-    // Outside click to close
-    this._outsideClickHandler = (e: MouseEvent) => {
-      if (!this.root.contains(e.target as Node)) {
-        this._closePopup()
-      }
-    }
-    setTimeout(() => {
-      document.addEventListener('click', this._outsideClickHandler!)
-    }, 0)
+    // Outside click to close — light dismiss, no refocus. Escape and focus stay
+    // local (see _handlePopupKeydown); the listener goes with the popup's signal.
+    lightDismiss({
+      root: this.root,
+      pointer: 'click',
+      focusout: false,
+      escape: false,
+      onDismiss: () => this._closePopup(),
+      signal: this._popupAbort.signal,
+    })
     // An aria-modal dialog opened with a mouse has to take focus. The Escape
     // handler lives inside the popup, so with focus left on the trigger the key
     // never reaches it and Escape does nothing at all — a keyboard user was fine
@@ -833,14 +844,6 @@ class TimeField {
     }
     this.root.removeAttribute('data-open')
     this.trigger.setAttribute('aria-expanded', 'false')
-    if (this._outsideClickHandler) {
-      document.removeEventListener('click', this._outsideClickHandler)
-      this._outsideClickHandler = null
-    }
-    if (this._rafHandle !== null) {
-      cancelAnimationFrame(this._rafHandle)
-      this._rafHandle = null
-    }
   }
 
   private _selectPopupOption(segType: 'hour' | 'minute' | 'second', value: number): void {
@@ -950,51 +953,12 @@ class TimeField {
 
   private _updateLayout(): void {
     if (!this.popupEl) return
-    const triggerRect = this.trigger.getBoundingClientRect()
-    const containerRect = this._rail.getBoundingClientRect()
-    const popupWidth = this.popupEl.getBoundingClientRect().width
-    if (!containerRect.width || !popupWidth) return
-
-    this.root.dataset.direction = detectDirection(triggerRect)
-
-    const triggerCenterX = triggerRect.left + triggerRect.width / 2
-    const offset = calculatePopupOffset(
-      triggerCenterX,
-      containerRect.left,
-      containerRect.width,
-      popupWidth,
-      window.innerWidth,
-      this._getCSSPx('--_tf-site-padding') / 2
-    )
-    this.root.style.setProperty('--_tf-popup-offset', `${offset}%`)
-
-    const popupLeft = containerRect.left + (offset / 100 * containerRect.width) - popupWidth / 2
-    const arrowOffset = calculateArrowOffset(
-      triggerCenterX,
-      popupLeft,
-      popupWidth,
-      this._getCSSPx('--_tf-arrow-corner-radius'),
-      this._getCSSPx('--_tf-arrow-size'),
-    )
-    this.root.style.setProperty('--_tf-arrow-offset', `${arrowOffset}px`)
-  }
-
-  // Resolve a CSS custom property to px by measuring a probe inside the root,
-  // so component-scoped tokens (--_tf-*) resolve rather than the var() fallback.
-  private _getCSSPx(property: string): number {
-    const probe = document.createElement('div')
-    probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;width:var(${property},0px)`
-    this.root.appendChild(probe)
-    const value = probe.getBoundingClientRect().width || 0
-    probe.remove()
-    return value
-  }
-
-  private _handleResize = (): void => {
-    if (this._rafHandle !== null) cancelAnimationFrame(this._rafHandle)
-    this._rafHandle = requestAnimationFrame(() => {
-      this._updateLayout()
-      this._rafHandle = null
+    layoutPopup({
+      root: this.root,
+      trigger: this.trigger,
+      rail: this._rail,
+      popup: this.popupEl,
+      tokens: POPUP_TOKENS,
     })
   }
 
@@ -1007,7 +971,7 @@ class TimeField {
     }
 
     this._closePopup()
-    window.removeEventListener('resize', this._handleResize)
+    this._lifetime.abort()
 
     this._segmentEls.forEach(seg => {
       const handlers = seg.__timeFieldHandlers
