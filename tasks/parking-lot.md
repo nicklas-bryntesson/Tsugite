@@ -48,13 +48,10 @@ future sweep or decision of its own; nothing here blocks anything.
 
 ## From the ToggleTip house-structure pass (2026-09-09)
 
-- **The date fields still carry their private popup wiring.** DateField,
-  DateTimeField, TimeField, MonthField and WeekField each have their own
-  `_updateLayout` / `_getCSSPx` / rAF resize / outside-click copy (~20 JS
-  and ~15 CSS lines each, differing only in token prefix). The shared form
-  now exists — `kernel/js/popup-anchor.ts`, ToggleTip is consumer one —
-  but the fields are verbatim upstream files (ADR-0002 diffability), so
-  their adoption is its own pass, and an upstream finding first.
+- ~~The date fields still carry their private popup wiring~~ — **resolved
+  2026-09-09** (`tasks/plan-datefields-popup-anchor.md`): all five fields
+  call `popup-anchor`; `tests/kernel/popup-anchor-adoption.test.ts` keeps
+  it that way.
 - **Two variants of the same verb upstream.** Reference-components may
   carry ToggleTip twice: the rail variant (this port — bubble on a
   full-width rail, positioned by the shared kernel math) and a Popover API
