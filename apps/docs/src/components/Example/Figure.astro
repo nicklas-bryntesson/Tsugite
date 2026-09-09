@@ -10,12 +10,14 @@ interface Props {
   caption?: string;
   /** Let the example stretch to the full frame width (layout examples). */
   block?: boolean;
+  /** Lay the example's items out in a wrapping row (inline components: buttons, chips). */
+  row?: boolean;
   class?: string;
 }
-const { caption, block = false, class: className } = Astro.props;
+const { caption, block = false, row = false, class: className } = Astro.props;
 ---
 
-<figure class:list={["Figure", className]} data-block={block ? "true" : undefined}>
+<figure class:list={["Figure", className]} data-block={block ? "true" : undefined} data-row={row ? "true" : undefined}>
   <div class="Figure-stage">
     <slot />
   </div>
@@ -42,6 +44,12 @@ const { caption, block = false, class: className } = Astro.props;
 
   &[data-block="true"] .Figure-stage {
     align-items: stretch;
+  }
+
+  &[data-row="true"] .Figure-stage {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
   }
 
   & .Figure-caption {
