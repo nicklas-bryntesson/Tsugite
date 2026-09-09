@@ -28,9 +28,11 @@ interface Props {
   frontmatter?: boolean;
   /** Let the example stretch to the frame width (layout examples). */
   block?: boolean;
+  /** Lay the items out in a wrapping row (inline components). */
+  row?: boolean;
   id?: string;
 }
-const { source, title, lead, caption, lang = "astro", frontmatter = true, block = false, id } = Astro.props;
+const { source, title, lead, caption, lang = "astro", frontmatter = true, block = false, row = false, id } = Astro.props;
 
 const shown = frontmatter ? source : source.replace(/^---[\s\S]*?---\s*/, "");
 ---
@@ -38,7 +40,7 @@ const shown = frontmatter ? source : source.replace(/^---[\s\S]*?---\s*/, "");
 <section class="Example" id={id}>
   {title && <Heading text={title} element="h3" variant="body" size="lg" />}
   {lead && <p class="Example-lead">{lead}</p>}
-  <Figure caption={caption} block={block}>
+  <Figure caption={caption} block={block} row={row}>
     <slot />
   </Figure>
   <Code code={shown} lang={lang} />

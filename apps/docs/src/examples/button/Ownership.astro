@@ -1,0 +1,33 @@
+---
+import LinkButton from "tsugite/components/Button/LinkButton.astro";
+---
+{/* The ownership chain (ADR-0005). The button consumes
+    var(--theme-button-*, var(--color-interactive-*)) and knows nothing about
+    voices. The surface claims data-theme; the theme's donut points the
+    button's slots into its own palette. Same markup, three surfaces. */}
+<div class="surface">
+  <LinkButton href="#">Primary</LinkButton>
+  <LinkButton href="#" emphasis="secondary">Secondary</LinkButton>
+</div>
+<div class="surface" data-theme="brand">
+  <LinkButton href="#">Primary</LinkButton>
+  <LinkButton href="#" emphasis="secondary">Secondary</LinkButton>
+</div>
+<div class="surface" data-theme="inverse">
+  <LinkButton href="#">Primary</LinkButton>
+  <LinkButton href="#" emphasis="secondary">Secondary</LinkButton>
+</div>
+
+<style>
+  /* Example chrome only. The surface consumes the voice's public slots with
+     the same one-fallback-per-seam rule the button uses. */
+  .surface {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--size-sm);
+    padding: var(--size-md);
+    border-radius: 0.75rem;
+    background-color: var(--theme-surface, var(--color-surface-inset));
+    color: var(--theme-text, var(--color-text-primary));
+  }
+</style>

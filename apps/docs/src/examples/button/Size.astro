@@ -1,0 +1,11 @@
+---
+import LinkButton from "tsugite/components/Button/LinkButton.astro";
+---
+{/* Three sizes, md by default. Pill is a second, independent axis: the
+    attribute is always written (data-pill="false" | "true"), so the shape
+    is never implicit. */}
+<LinkButton href="#" size="sm">Small</LinkButton>
+<LinkButton href="#" size="md">Medium</LinkButton>
+<LinkButton href="#" size="lg">Large</LinkButton>
+<LinkButton href="#" size="md" pill={true}>Pill</LinkButton>
+<LinkButton href="#" size="md" pill={true} emphasis="secondary">Pill, secondary</LinkButton>
