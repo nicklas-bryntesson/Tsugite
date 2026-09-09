@@ -139,6 +139,34 @@ test('a stored choice is restored before first paint, without the component', as
   ).toBeNull()
 })
 
+test('a stored choice is reflected in the radios before the component runs', async ({ page }) => {
+  // Tsugite addition (2026-09-09): the radios' half of the FOUC guard. The server
+  // renders "system" checked; an inline script right after the markup checks the
+  // stored segment while the parser is still there. With the module blocked, the
+  // right radio is checked and the indicator already sits on it — so there is
+  // nothing for the module to move later.
+  await page.route((url) => url.pathname === '/main.js' || url.pathname.includes('ThemeSwitch'), (route) => route.abort())
+  await page.addInitScript(() => window.localStorage.setItem('appearance-preference', 'dark'))
+  await page.goto(targetPath(), { waitUntil: 'domcontentloaded' })
+
+  expect(await page.locator(TS).getAttribute('data-initialized')).toBeNull()
+  await expect(page.locator(`${TS} input[value="dark"]`)).toBeChecked()
+  expect(await page.locator(`${TS} .indicator`).evaluate((el) => getComputedStyle(el).translate)).toBe('200%')
+})
+
+test('on reload the indicator is on the stored segment at once — it does not slide there', async ({ page }) => {
+  // Deliberately NOT freezing transitions: the point is that nothing needs
+  // freezing. If the module had to move the indicator after first paint, the
+  // computed translate right after DOMContentLoaded would be mid-slide.
+  await page.addInitScript(() => window.localStorage.setItem('appearance-preference', 'dark'))
+  await page.goto(targetPath(), { waitUntil: 'domcontentloaded' })
+
+  expect(await page.locator(`${TS} .indicator`).evaluate((el) => getComputedStyle(el).translate)).toBe('200%')
+  await expect(page.locator(TS)).toHaveAttribute('data-initialized', 'true')
+  // Motion is granted only now, for interactions.
+  expect(await page.locator(`${TS} .indicator`).evaluate((el) => getComputedStyle(el).transitionProperty)).toBe('translate')
+})
+
 test('icons carry an intrinsic size, so they cannot flash at the default 300×150', async ({ page }) => {
   // An <svg> with only a viewBox falls back to 300×150 until CSS sizes it, which
   // is visible as a large shape snapping down on load whenever styles arrive late.
