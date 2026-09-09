@@ -1,44 +1,72 @@
 ---
-// Port of reference-components ToggleTip.html — <toggle-tip> is authored
-// directly (the verbatim ToggleTip.ts self-initializes on DOMContentLoaded).
-import "../components/ToggleTip/ToggleTip.css";
+// Port of reference-components ToggleTip.html — the suite's host markup.
+// Every tip is flow content placed as a sibling of the text it explains,
+// never inside a <p>: the bubble takes rich text, and a <p> inside a <p>
+// splits the paragraph (the former "inline with text" demo rendered an
+// empty bubble for exactly that reason). The data-ids are the e2e anchors.
 import Heading from "../components/Heading/Heading.astro";
+import ToggleTip from "../components/ToggleTip/ToggleTip.astro";
 ---
 
 <section class="KitchenSink-section" id="ToggleTip">
   <Heading text="ToggleTip" element="h2" size="2" />
 
-  <p>
-    Near the top of the page — should flip to below:
-    <toggle-tip data-id="near-top"></toggle-tip>
-  </p>
+  <div class="tip-row">
+    <span>Near the top of the page — should flip to below</span>
+    <ToggleTip id="tt-near-top" data-id="near-top">
+      <p>Opened near the top, the bubble has no room above and flips below.</p>
+    </ToggleTip>
+  </div>
 
-  <p>
-    Inline with text
-    <toggle-tip data-id="inline">
+  <div class="tip-row">
+    <span>Next to text</span>
+    <ToggleTip id="tt-inline" data-id="inline">
       <p>This is some content inside the toggle tip.</p>
-    </toggle-tip>
-    more text after.
-  </p>
+      <p>Rich text is the point: a second paragraph, <a href="#ToggleTip">a link</a>, <strong>emphasis</strong>.</p>
+    </ToggleTip>
+    <span>more text after.</span>
+  </div>
 
-  <div style="display:flex; justify-content:flex-start; align-items:center; gap:0.5rem;">
-    <toggle-tip data-id="left-edge"></toggle-tip>
+  <div class="tip-row">
+    <ToggleTip id="tt-left-edge" data-id="left-edge">
+      <p>Anchored at the left edge; the bubble clamps to the viewport and the arrow follows the trigger.</p>
+    </ToggleTip>
     <span>Near left edge — bubble should clamp right</span>
   </div>
 
-  <div style="display:flex; justify-content:flex-end; align-items:center; gap:0.5rem; margin-block-start:1rem;">
+  <div class="tip-row" data-align="end">
     <span>Near right edge — bubble should clamp left</span>
-    <toggle-tip data-id="right-edge"></toggle-tip>
+    <ToggleTip id="tt-right-edge" data-id="right-edge">
+      <p>Anchored at the right edge; the bubble clamps to the viewport and the arrow follows the trigger.</p>
+    </ToggleTip>
   </div>
 
-  <div style="display:flex; justify-content:center; align-items:center; gap:0.5rem; margin-block-start:1rem;">
-    <toggle-tip data-id="center" icon="question" title="A title">
+  <div class="tip-row" data-align="center">
+    <ToggleTip id="tt-center" data-id="center" icon="question" heading="A title">
       <p>Content with a title heading above it.</p>
-    </toggle-tip>
-    <span>Centered, question icon, with title</span>
+      <ul>
+        <li>Lists are fine in here.</li>
+        <li>So is anything else flow content allows.</li>
+      </ul>
+    </ToggleTip>
+    <span>Centered, question icon, with heading</span>
   </div>
 </section>
 
-<script>
-  import "../components/ToggleTip/ToggleTip";
-</script>
+<style is:global>
+/* Fixture chrome only: a row that seats a tip beside its text. */
+#ToggleTip .tip-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block-start: 1rem;
+
+  &[data-align="end"] {
+    justify-content: flex-end;
+  }
+
+  &[data-align="center"] {
+    justify-content: center;
+  }
+}
+</style>

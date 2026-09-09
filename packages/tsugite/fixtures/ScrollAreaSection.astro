@@ -1,8 +1,8 @@
 ---
 // Port of reference-components ScrollArea.html.
-import "../components/ToggleTip/ToggleTip.css";
 import Heading from "../components/Heading/Heading.astro";
 import ScrollArea from "../components/ScrollArea/ScrollArea.astro";
+import ToggleTip from "../components/ToggleTip/ToggleTip.astro";
 ---
 
 <section class="KitchenSink-section" id="ScrollArea">
@@ -81,9 +81,9 @@ import ScrollArea from "../components/ScrollArea/ScrollArea.astro";
     style="max-inline-size: 22rem;"
     contentStyle="display: flex; gap: 0.5rem; align-items: center; white-space: nowrap;"
   >
-    <toggle-tip data-id="scrollarea-clip" title="Clipped inside a scroller">
+    <ToggleTip id="tt-scrollarea-clip" data-id="scrollarea-clip" heading="Clipped inside a scroller">
       <p>This bubble is clipped by the scroller's overflow.</p>
-    </toggle-tip>
+    </ToggleTip>
     <span>Open me — the bubble is clipped by the scroll container.</span>
   </ScrollArea>
 
