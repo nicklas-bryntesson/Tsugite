@@ -42,16 +42,29 @@ future sweep or decision of its own; nothing here blocks anything.
 
 ## From the nesting sweep (2026-09-04)
 
-- **ToggleTip's public API lives on `:root`, not on the component.** Every
-  other component carries its public tokens on its own root element;
-  ToggleTip declares `--_toggletip-*` on `:root` and then re-maps them to
-  `--_tt-*` on `toggle-tip`. That is why its stylesheet cannot be one tree
-  (ADR-0010 port left the `:root` block top-level). Two questions for a
-  separate pass: does the token grammar allow a component to claim
-  document-global names at all, and should the custom-element root take the
-  tokens directly, like the class-rooted components do? Upstream finding
-  (reference-components, ADR-0002 diffability).
+- ~~ToggleTip's public API lives on `:root`~~ — **resolved 2026-09-09** by
+  the ToggleTip house-structure pass (`tasks/plan-toggletip.md`): tokens
+  sit on `.ToggleTip` in one layer, the `:root` block is gone.
 
+## From the ToggleTip house-structure pass (2026-09-09)
+
+- **The date fields still carry their private popup wiring.** DateField,
+  DateTimeField, TimeField, MonthField and WeekField each have their own
+  `_updateLayout` / `_getCSSPx` / rAF resize / outside-click copy (~20 JS
+  and ~15 CSS lines each, differing only in token prefix). The shared form
+  now exists — `kernel/js/popup-anchor.ts`, ToggleTip is consumer one —
+  but the fields are verbatim upstream files (ADR-0002 diffability), so
+  their adoption is its own pass, and an upstream finding first.
+- **Two variants of the same verb upstream.** Reference-components may
+  carry ToggleTip twice: the rail variant (this port — bubble on a
+  full-width rail, positioned by the shared kernel math) and a Popover API
+  variant (top layer — escapes overflow clipping, retires the z-index
+  rail; positioning still from the kernel math since CSS anchor
+  positioning lacks Firefox). The consuming library picks by its support
+  contract. Tsugite's `.browserslistrc` pins Chrome 109 (Popover is 114,
+  anchor positioning 125), so the swap here is a deletion-day event under
+  ADR-0009 — the rail CSS is deleted, not overlaid — not something to
+  gate today.
 
 ## From the base-table port (ADR-0011, 2026-09-04)
 
