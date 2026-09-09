@@ -98,6 +98,30 @@ const [systemId, lightId, darkId] = inputIds;
     <span class="indicator" aria-hidden="true"></span>
   </div>
 </fieldset>
+{
+  live && (
+    <script is:inline>
+      // Reflect the stored preference into the radios BEFORE first paint. The
+      // server renders "system" checked; the module that corrects it runs after
+      // parsing, and by then the indicator has painted on segment one — so the
+      // correction slid it into place on every reload. Inline and synchronous by
+      // design, like the head script that restores data-appearance: this is the
+      // radios' half of the same FOUC guard. Only light/dark are stored states;
+      // "system" is absence and needs nothing.
+      (function (script) {
+        try {
+          var stored = localStorage.getItem("appearance-preference");
+          if (stored !== "light" && stored !== "dark") return;
+          var root = script.previousElementSibling;
+          var input = root && root.querySelector('input[value="' + stored + '"]');
+          if (input) input.checked = true;
+        } catch (e) {
+          /* storage blocked — the module resolves it after parsing */
+        }
+      })(document.currentScript);
+    </script>
+  )
+}
 
 <script>
   import ThemeSwitch from "./ThemeSwitch";
@@ -210,7 +234,6 @@ const [systemId, lightId, darkId] = inputIds;
       color: var(--_ts-fg);
       cursor: pointer;
       user-select: none;
-      transition: color var(--_ts-transition);
     }
 
     & .icon {
@@ -239,7 +262,6 @@ const [systemId, lightId, darkId] = inputIds;
       border-radius: var(--_ts-radius);
       background-color: var(--_ts-selected-bg);
       translate: 0;
-      transition: translate var(--_ts-transition);
       pointer-events: none;
     }
 
@@ -247,11 +269,23 @@ const [systemId, lightId, darkId] = inputIds;
     & input:nth-of-type(3):checked ~ .indicator { translate: 200%; }
   }
 
-  /* A moving indicator is decorative motion. The reference implementation this is
-     modelled on had no reduced-motion guard at all on its 250ms slide. */
-  @media (prefers-reduced-motion: reduce) {
-    & .options .indicator,
-    & .options input + label { transition: none; }
+  /* ── Motion is granted, not assumed ──────────────────────────────────────
+     The slide and the colour change exist only once the component has attached
+     (data-initialized) AND the user has not asked for reduced motion. Before
+     attach there is nothing to animate from — a reload paints the stored segment
+     at once — and the state gate bounds the declaration to the context where a
+     transition means an interaction (doctrine §1). The reference implementation
+     this is modelled on had no reduced-motion guard at all on its 250ms slide. */
+  &[data-initialized="true"] .options .indicator {
+    @media (prefers-reduced-motion: no-preference) {
+      transition: translate var(--_ts-transition);
+    }
+  }
+
+  &[data-initialized="true"] .options input + label {
+    @media (prefers-reduced-motion: no-preference) {
+      transition: color var(--_ts-transition);
+    }
   }
 
   /* ── Interaction states (real pseudo-class + data-test-state pairs) ────── */
