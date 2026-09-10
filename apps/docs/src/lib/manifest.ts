@@ -68,6 +68,7 @@ export const manifest: ManifestEntry[] = [
 
   // ── Regions ─────────────────────────────────────────────────────────────────
   { slug: "motion-region", title: "MotionRegion", pillar: "region", origin: "ref-comps", section: "MotionRegionSection", suite: "tests/e2e/motionregion.e2e.test.js", published: true },
+  { slug: "surface", title: "Surface", pillar: "region", origin: "own", section: "SurfaceSection", adrs: ["0006", "0016"], published: true },
   { slug: "scroll-area", title: "ScrollArea", pillar: "region", origin: "ref-comps", section: "ScrollAreaSection", suite: "tests/e2e/scrollarea.e2e.test.js", published: true },
 
   // ── Chrome ──────────────────────────────────────────────────────────────────

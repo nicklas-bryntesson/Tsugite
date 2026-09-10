@@ -1,0 +1,107 @@
+---
+// Surface — a region that claims a voice for everything it hosts. It owns a ground,
+// a rhythm and the theme claim; it owns no content vocabulary and no layout.
+import "./Surface.generated.css";
+import DevError from "../DevError/DevError.astro";
+import { voiceMatrix, VOLUMES } from "../../theme-default/theme.voices.tokens.js";
+
+const VALID_ELEMENTS = ["div", "section", "article", "aside"];
+
+interface Props {
+  element?: string;
+  /** the voice (data-theme). Absent: the surrounding ground, no claim made. */
+  theme?: string;
+  /** the volume (data-prominence). With a voice it defaults to primary; without one it
+      means "the surrounding voice, at this volume" and is written only when passed. */
+  prominence?: string;
+  /** is the hosted content held to the site's content measure? (ADR-0015) */
+  capInline?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  element: elementProp = "div",
+  theme,
+  prominence: prominenceProp,
+  capInline = true,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const element = VALID_ELEMENTS.includes(elementProp.toLowerCase()) ? elementProp.toLowerCase() : "div";
+const Tag = element as "div";
+
+const voice = theme?.trim() || null;
+const volume = prominenceProp?.trim() || (voice ? "primary" : null);
+
+// The combination law (ADR-0006 §6): the component reads the same matrix the generator does.
+let errorMessage = "";
+if (voice && !(voice in voiceMatrix)) {
+  errorMessage = `unknown voice "${voice}" — expected ${Object.keys(voiceMatrix).join(" | ")}`;
+} else if (volume && !VOLUMES.includes(volume)) {
+  errorMessage = `unknown volume "${volume}" — expected ${VOLUMES.join(" | ")}`;
+} else if (voice && volume && !voiceMatrix[voice].includes(volume)) {
+  errorMessage = `${voice} × ${volume} is not an allowed combination`;
+}
+
+const cssClass = className && String(className).trim() ? `Surface ${className}` : "Surface";
+---
+
+{
+  errorMessage ? (
+    <DevError name="Surface" message={errorMessage} />
+  ) : (
+    <Tag
+      class={cssClass}
+      data-theme={voice ?? undefined}
+      data-prominence={volume ?? undefined}
+      data-cap-inline={capInline ? "true" : "false"}
+      {...rest}
+    >
+      <div class="content">
+        <slot />
+      </div>
+    </Tag>
+  )
+}
+
+<style is:global>
+/*
+ * Surface — a region that claims a voice for what it hosts.
+ *
+ * The ground and the ink come through the theme channels with the semantic default
+ * as the one fallback (ADR-0008); the voice blocks generated from theme.voices do
+ * the rest, so no per-voice CSS lives here. Two adjacent Surfaces of the same voice
+ * and volume read as one ground and the second drops its start padding: those rules
+ * are generated from the combination matrix (Surface.generated.css, ADR-0016).
+ *
+ * Gates:
+ *   data-theme        the voice; absent means the surrounding ground.
+ *   data-prominence   the volume; absent with a voice never happens (primary is written).
+ *   data-cap-inline   the hosted content held to the site's content measure.
+ */
+
+.Surface {
+  --_sf-paddingBlock: var(--size-2xl);
+  --_sf-paddingInline: var(--site-offset);
+  --_sf-contentMaxInlineSize: var(--grid-container-maxWidth);
+
+  padding-block: var(--_sf-paddingBlock);
+  padding-inline: var(--_sf-paddingInline);
+  background-color: var(--theme-surface, var(--color-surface-page));
+  color: var(--theme-text, var(--color-text-primary));
+
+  & .content {
+    margin-inline: auto;
+  }
+
+  &[data-cap-inline="false"] .content {
+    max-inline-size: none;
+  }
+
+  &[data-cap-inline="true"] .content {
+    max-inline-size: var(--_sf-contentMaxInlineSize);
+  }
+}
+</style>

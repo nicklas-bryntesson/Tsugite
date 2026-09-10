@@ -1,0 +1,54 @@
+---
+// Surface — the voice donut as a region: voice × volume, the ground, and the
+// adjacency collapse (two equal Surfaces read as one ground).
+import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
+import LinkButton from "../components/Button/LinkButton.astro";
+import Surface from "../components/Surface/Surface.astro";
+---
+
+<section class="KitchenSink-section" id="Surface">
+  <Heading text="Surface" element="h2" size="2" />
+
+  <Heading text="Voice × volume" element="h3" variant="body" size="lg" />
+  <div style="display:grid; gap:1rem;">
+    <Surface theme="brand">
+      <Heading element="h4" text="brand · primary" />
+      <Text text="The full brand voice. The button inverts because the voice says so." />
+      <LinkButton href="#">Read on</LinkButton>
+    </Surface>
+    <Surface theme="brand" prominence="subtle">
+      <Heading element="h4" text="brand · subtle" />
+      <Text text="Same voice, quieter. Nothing in here knows which." />
+      <LinkButton href="#">Read on</LinkButton>
+    </Surface>
+    <Surface theme="inverse">
+      <Heading element="h4" text="inverse · primary" />
+      <Text text="The dark-ground voice, mode-stable by its table." />
+    </Surface>
+  </div>
+
+  <Heading text="Adjacency: equal neighbours are one ground" element="h3" variant="body" size="lg" />
+  <div id="surface-adjacency">
+    <Surface theme="neutral" prominence="subtle" element="section">
+      <Heading element="h4" text="First neutral · subtle" />
+      <Text text="Keeps its start padding." />
+    </Surface>
+    <Surface theme="neutral" prominence="subtle" element="section">
+      <Heading element="h4" text="Second neutral · subtle" />
+      <Text text="Drops its start padding: one ground, one rhythm." />
+    </Surface>
+    <Surface theme="brand" prominence="subtle" element="section">
+      <Heading element="h4" text="Then brand · subtle" />
+      <Text text="A different voice, so the padding stays." />
+    </Surface>
+  </div>
+
+  <Heading text="Ground and volume-only nesting" element="h3" variant="body" size="lg" />
+  <Surface theme="brand">
+    <Heading element="h4" text="brand · primary" />
+    <Surface prominence="subtle" capInline={false}>
+      <Text text="No voice of its own: the surrounding voice, at subtle volume." />
+    </Surface>
+  </Surface>
+</section>

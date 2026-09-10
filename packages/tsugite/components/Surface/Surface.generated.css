@@ -1,0 +1,45 @@
+/* GENERATED — do not edit. Source: theme-default/theme.voices.tokens.js (voiceMatrix)
+   via engine/surface.js (ADR-0016). Two adjacent Surfaces of the same voice × volume
+   are one ground: the second drops its start padding. One rule per allowed
+   combination, plus the volume-only nestings and the ground.
+   Regenerate: pnpm tokens   (freshness guarded by tests) */
+
+.Surface:not([data-theme]):not([data-prominence]) + .Surface:not([data-theme]):not([data-prominence]) {
+  padding-block-start: 0;
+}
+
+.Surface:not([data-theme])[data-prominence="primary"] + .Surface:not([data-theme])[data-prominence="primary"] {
+  padding-block-start: 0;
+}
+
+.Surface:not([data-theme])[data-prominence="subtle"] + .Surface:not([data-theme])[data-prominence="subtle"] {
+  padding-block-start: 0;
+}
+
+.Surface[data-theme="neutral"][data-prominence="primary"] + .Surface[data-theme="neutral"][data-prominence="primary"] {
+  padding-block-start: 0;
+}
+
+.Surface[data-theme="neutral"][data-prominence="subtle"] + .Surface[data-theme="neutral"][data-prominence="subtle"] {
+  padding-block-start: 0;
+}
+
+.Surface[data-theme="brand"][data-prominence="primary"] + .Surface[data-theme="brand"][data-prominence="primary"] {
+  padding-block-start: 0;
+}
+
+.Surface[data-theme="brand"][data-prominence="subtle"] + .Surface[data-theme="brand"][data-prominence="subtle"] {
+  padding-block-start: 0;
+}
+
+.Surface[data-theme="accent"][data-prominence="primary"] + .Surface[data-theme="accent"][data-prominence="primary"] {
+  padding-block-start: 0;
+}
+
+.Surface[data-theme="accent"][data-prominence="subtle"] + .Surface[data-theme="accent"][data-prominence="subtle"] {
+  padding-block-start: 0;
+}
+
+.Surface[data-theme="inverse"][data-prominence="primary"] + .Surface[data-theme="inverse"][data-prominence="primary"] {
+  padding-block-start: 0;
+}
