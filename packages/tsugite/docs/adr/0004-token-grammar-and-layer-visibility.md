@@ -1,43 +1,45 @@
-# ADR-0004: Tokengrammatik och lagersynlighet
+# ADR-0004: Token grammar and layer visibility
 
-**Status:** Accepted · 2026-08-31 · Prejudikat: `src/styles/tokens/base/grid/`
+**Status:** Accepted · 2026-08-31 · Precedent: `src/styles/tokens/base/grid/`
 
-## Kontext
+## Context
 
-Craft-experimentet (källan till författarmodellen i ADR-0003) använder
-dubbel-dash-grammatik (`--COLOR--B50`, `--button--color--primary`) — ett
-medvetet namngivningsexperiment för att se om dubbel dash ökade läsbarheten
-i långa var()-kedjor. Experimentet är utvärderat och vinner inte: det här
-repots etablerade grammatik (grid, size, site, typography) behålls.
-Craft låter dessutom komponenttabeller referera RAW-paletten direkt, vilket
-strider mot lagerregeln nedan. Tokeniseringspassen behöver ETT svar.
+The Craft experiment (the source of the authoring model in ADR-0003) used a
+double-dash grammar (`--COLOR--B50`, `--button--color--primary`), a
+deliberate naming experiment to see whether the double dash made long `var()`
+chains more readable. The experiment has been evaluated and does not win: this
+repo's established grammar (grid, size, site, typography) stays. Craft also
+let component tables reference the RAW palette directly, which contradicts
+the layer rule below. The tokenisation passes need ONE answer.
 
-## Beslut
+## Decision
 
-**Grammatiken är repots etablerade — enkel dash, aldrig dubbel i mitten:**
+**The grammar is the repo's established one: single dash, never a double dash
+in the middle.**
 
-| Lager | Form | Exempel |
+| Layer | Form | Example |
 |---|---|---|
-| RAW (constant) | `--VERSALER-ENKEL-DASH` | `--COLOR-B50`, `--FONTSIZE-DISPLAY-1-FLOOR` |
-| Semantic/tone | `--gemener-enkel-dash`, camelCase för property-ord | `--grid-container-maxWidth`, `--site-offset`, `--button-backgroundColor-primary` |
-| Komponent-privat | `--_`-prefix | `--_mf-popup-bg`, `--_rs-p` |
+| RAW (constant) | `--UPPERCASE-SINGLE-DASH` | `--COLOR-B50`, `--FONTSIZE-DISPLAY-1-FLOOR` |
+| Semantic / tone | `--lowercase-single-dash`, camelCase for property words | `--grid-container-maxWidth`, `--site-offset`, `--button-backgroundColor-primary` |
+| Component-private | `--_` prefix | `--_mf-popup-bg`, `--_rs-p` (form refined by ADR-0013) |
 
-**Lagersynlighet — primitives syns aldrig i en komponents slutstate:**
+**Layer visibility: primitives never appear in a component's end state.**
 
-1. RAW refereras **endast** av semantiklagret. En komponents slutstate
-   (computed styles, genererade block, fabriker) innehåller aldrig
-   `--COLOR-*` eller andra RAW-namn.
-2. Följdverkan för ADR-0003:s fabriker: **fyrlägestabellerna bor i
-   semantik-/temalagrets fabriker** (där RAW-värden per läge hör hemma).
-   Komponentfabriker är **lägesfria pekare** in i semantiklagret —
-   `--button-backgroundColor-primary: var(--color-interactive-primary)`-form,
-   utan appearance-nycklar. (= manifestets "components derive from tone".)
-3. Detta krymper också den genererade CSS:en: endast semantik/teman
-   dupliceras per läge; komponentpekare deklareras en gång,
-   appearance-oberoende — precis som tema-donutens pekare.
+1. RAW is referenced **only** by the semantic layer. A component's end state
+   (computed styles, generated blocks, factories) never contains `--COLOR-*`
+   or any other RAW name.
+2. Consequence for the ADR-0003 factories: **the four-mode tables live in
+   the semantic and theme layers' factories**, where per-mode RAW values
+   belong. Component factories are **mode-free pointers** into the semantic
+   layer, of the form `--button-backgroundColor-primary: var(--color-interactive-primary)`,
+   with no appearance keys. (This is the manifest's "components derive from
+   tone".)
+3. This also shrinks the generated CSS: only semantic and theme tokens are
+   duplicated per mode; component pointers are declared once, independent of
+   appearance, exactly like the theme donut's pointers.
 
-## Noterat undantag
+## Noted exception
 
-Theme-lab-tokens (`--lab-*`) refererar RAW direkt — medvetet, labbet testade
-leverans, inte lager. Labbet raderas när riktiga implementationen landar
-(ADR-0003).
+The theme-lab tokens (`--lab-*`) referenced RAW directly, deliberately: the
+lab tested delivery, not layering. The lab was deleted when the real
+implementation landed (ADR-0003).
