@@ -1,7 +1,7 @@
 # ADR-0017: The recipe is the source; renderers are adapters
 
-**Status:** Proposed · 2026-09-10 — spiked on Card (Astro + React, byte-identical
-markup under test, one CSS gating both on the docs page). Accepted when Nicklas
+**Status:** Proposed · 2026-09-10 — spiked on Card (Astro + React + Vue, byte-identical
+markup under test, one CSS gating all three on the docs page). Accepted when Nicklas
 says so; a second component on the pattern is the natural next proof.
 
 ## Context
@@ -67,16 +67,21 @@ function resolves props to attributes, and two Astro components render it.
 ## Consequences
 
 - Card is the first component on the pattern: `lib/card.ts`,
-  `Card.astro`, `Card.tsx`, `Card.css`, `tests/card-renderers.test.ts`,
+  `Card.astro`, `Card.tsx`, `Card.vue`, `Card.css`, `tests/card-renderers.test.ts`,
   and `apps/docs/tests/e2e/card-renderers.e2e.test.js` against the
   Renderers example on `/docs/card`.
 - The rule "one `.css` per component" joins the cleanup conventions;
   Notice, Heading, Teaser and Surface still carry their CSS in the
   `.astro` file.
-- Vue and Svelte are one thin template each, plus the integration and a
-  row in the equality test. Not started.
-- `react` and `react-dom` are dev dependencies of the package (for the
-  equality test) and dependencies of the docs app (for the page);
-  `@astrojs/react` is a docs dependency.
+- Vue joined the spike as one SFC plus a row in the equality test; its SSR
+  slot markers are comments and the normaliser strips them. Svelte is the
+  same move. Not started.
+- `react`, `react-dom`, `vue` and `@vitejs/plugin-vue` are dev
+  dependencies of the package (for the equality test); `react`,
+  `react-dom`, `vue`, `@astrojs/react` and `@astrojs/vue` are docs
+  dependencies (for the page).
+- A running dev server does not pick up a newly added integration's Vite
+  defines; restart it after adding one (the Vue SSR globals threw a
+  ReferenceError until then, while the build was fine).
 - The docs Elevation lead still described the pre-pass-1 behaviour
   ("the attribute is written only when asked for"); corrected on the way.

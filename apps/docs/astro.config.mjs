@@ -2,6 +2,7 @@
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
+import vue from "@astrojs/vue";
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
 
@@ -16,9 +17,9 @@ const targets = browserslistToTargets(
 
 // https://astro.build/config
 export default defineConfig({
-  // React renders server-side only here: the renderer spike (lib/card.ts) shows the
-  // same component through Astro and React on one page, against one CSS.
-  integrations: [react()],
+  // React and Vue render server-side only here: the renderer spike (lib/card.ts) shows
+  // the same component through Astro, React and Vue on one page, against one CSS.
+  integrations: [react(), vue()],
   vite: {
     css: {
       transformer: "lightningcss",
