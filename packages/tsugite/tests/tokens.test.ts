@@ -18,6 +18,7 @@ import {
   APPEARANCES,
 } from "../engine/collector.js";
 import { generateTokenRegistry } from "../engine/registry.js";
+import { generateSurfaceStylesheet, surfaceStates } from "../engine/surface.js";
 import { rawColorTokens } from "../theme-default/raw.color.tokens.js";
 import { themeVoices, themeChannels, voiceMatrix, cellName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 import { rawRefName } from "../theme-default/raw.color.tokens.js";
@@ -71,6 +72,19 @@ describe("generated artifacts are fresh", () => {
   it("docs/tokens.generated.md matches the registry builder (ADR-0014)", () => {
     const onDisk = readFileSync(new URL("../docs/tokens.generated.md", import.meta.url), "utf8");
     expect(onDisk).toBe(generateTokenRegistry());
+  });
+
+  it("components/Surface/Surface.generated.css matches the adjacency builder (ADR-0016)", () => {
+    const onDisk = readFileSync(new URL("../components/Surface/Surface.generated.css", import.meta.url), "utf8");
+    expect(onDisk).toBe(generateSurfaceStylesheet());
+  });
+
+  it("surface adjacency: one rule per allowed pair, none for a forbidden one", () => {
+    const css = generateSurfaceStylesheet();
+    const allowed = Object.values(voiceMatrix).reduce((n, v) => n + v.length, 0);
+    expect(surfaceStates().length).toBe(1 + VOLUMES.length + allowed);
+    expect(css).toContain('[data-theme="brand"][data-prominence="subtle"] + .Surface[data-theme="brand"][data-prominence="subtle"]');
+    expect(css).not.toContain('[data-theme="inverse"][data-prominence="subtle"]');
   });
 
   it("the registry names every semantic colour token with a role", () => {
