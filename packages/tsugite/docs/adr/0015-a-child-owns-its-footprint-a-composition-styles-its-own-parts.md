@@ -70,7 +70,11 @@ per container state, viewport tier or user preference:
 ```
 
 The button is `grow-inline="true"` in both states and never learns which
-state it is in. Three kinds of lever follow, and only the first is props:
+state it is in. (The example shows the mechanism; what Teaser ships is a
+`max-content` track in both states, start-aligned stacked and end-aligned
+beside media. Whether the button ever spans the row, and on which axis —
+the stacked state is not it, a 3-up desktop grid is stacked too — is an open
+`TODO(decide)` in Teaser, to be settled with a real design in front of us.) Three kinds of lever follow, and only the first is props:
 the author's choice per instance (`data-*`, static); the design's choice
 per context (tokens, and CSS gates in the composition's regions); the
 user's choice (media gates, never props). **A prop never carries a
