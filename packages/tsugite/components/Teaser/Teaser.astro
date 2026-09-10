@@ -1,10 +1,10 @@
 ---
-// Composable content card. Wraps its own Card frame — callers never set Card
-import "../Card/Card.astro";
-import "../Heading/Heading.astro";
-import "../Prose/Prose.astro";
-import "../Picture/Picture.astro";
-import "../Button/Button.css";
+// Teaser — transports the reader to one destination. Image, heading, excerpt and
+// child content in a Card frame; the whole card is the link, or a button is.
+import Card from "../Card/Card.astro";
+import Heading from "../Heading/Heading.astro";
+import Prose from "../Prose/Prose.astro";
+import LinkButton from "../Button/LinkButton.astro";
 import DevError from "../DevError/DevError.astro";
 import type { ImageMetadata } from "astro";
 import { PRESETS, buildFigureHtml } from "../../lib/media";
@@ -23,7 +23,10 @@ interface Props {
   heading?: string;
   href?: string;
   excerpt?: string;
+  /** true: a button carries the link and the heading is plain; false: the card is the link */
   button?: boolean;
+  // TODO(decide): kebab prop names ("button-label", Button's "icon-position") against the
+  // camelCase of growInline/capInline. One convention for props.
   "button-label"?: string;
   frame?: string;
   element?: string;
@@ -45,6 +48,8 @@ const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default
 const hasChildContent = childHtml.trim().length > 0;
 const hasExcerpt = !!excerpt?.trim();
 const hasHref = !!href?.trim();
+const hasHeading = !!heading?.trim();
+const hasMedia = image != null;
 
 const invalid = button && !hasHref;
 
@@ -53,292 +58,270 @@ const element = VALID_ELEMENTS.includes(elementProp.toLowerCase())
   ? elementProp.toLowerCase()
   : "article";
 
-const hasMedia = image != null;
+// The card is the link unless a button is.
+const headingIsLink = hasHref && !button;
 
-
-let inner = "";
-
-if (!invalid) {
-  inner += '<div class="LayoutContainer">';
-
-  if (hasMedia) {
-    inner += await buildFigureHtml({
+const figureHtml = hasMedia
+  ? await buildFigureHtml({
       image: image!,
       preset: PRESETS["teaser"],
       altText: alt ?? "",
       figureClass: "MediaContainer",
       pictureClass: "Media",
-    });
-  }
-
-  if (heading?.trim()) {
-    const encodedHeading = escapeHtml(heading);
-    const hasLink = hasHref && !button;
-
-    const headingContent = hasLink
-      ? `<a class="heading-link Teaser-link" href="${escapeHtml(href!)}">${encodedHeading}</a>`
-      : `<span class="heading-text">${encodedHeading}</span>`;
-
-    inner += `<h2 class="Heading" data-variant="heading" data-size="4" data-align="left" data-wrap="balance">${headingContent}</h2>`;
-  }
-
-  if (hasExcerpt || hasChildContent || button) {
-    inner += '<div class="ContentContainer">';
-
-    if (hasExcerpt) {
-      inner += `<div class="Prose" data-variant="basic" data-size="sm"><p>${escapeHtml(excerpt!)}</p></div>`;
-    }
-
-    if (hasChildContent) inner += childHtml;
-
-    if (button) {
-      const srOnly = heading?.trim()
-        ? `<span class="ScreenReaderText"> about ${escapeHtml(heading)}</span>`
-        : "";
-      inner +=
-        `<a class="Button" href="${escapeHtml(href!)}" data-emphasis="primary" data-size="sm" data-pill="false">` +
-        `<span class="Button-text">${escapeHtml(buttonLabel)}${srOnly}</span></a>`;
-    }
-
-    inner += "</div>"; // Teaser-body
-  }
-
-  inner += "</div>"; // LayoutContainer
-}
+    })
+  : "";
 
 const Tag = element as "article";
 
-// Card frame — Teaser owns the permitted Card combinations.
-const cardAttrs =
-  frame === "elevated"
-    ? { "data-border": "false", "data-elevation": "sm" }
-    : { "data-border": "true", "data-elevation": "none" };
+// Teaser owns the permitted Card combinations; bare renders no frame at all.
+const Frame = frame === "bare" ? Fragment : Card;
+const frameProps =
+  frame === "bare"
+    ? {}
+    : { element: "div", padding: "none", border: frame !== "elevated", elevation: frame === "elevated" ? "sm" : "none" };
 ---
 
 {
   invalid ? (
-    <DevError name="app-teaser" message={'button="true" requires href'} />
-  ) : frame !== "bare" ? (
-    <div class="Card" data-padding="none" {...cardAttrs}>
-      <Tag
-        class="Teaser"
-        data-button={button ? "true" : "false"}
-        data-media={hasMedia ? "true" : "false"}
-        set:html={inner}
-      />
-    </div>
+    <DevError name="Teaser" message={'button="true" requires href'} />
   ) : (
-    <Tag
-      class="Teaser"
-      data-button={button ? "true" : "false"}
-      data-media={hasMedia ? "true" : "false"}
-      set:html={inner}
-    />
+    <Frame {...frameProps}>
+      <Tag class="Teaser" data-button={button ? "true" : "false"} data-media={hasMedia ? "true" : "false"}>
+        <div class="LayoutContainer">
+          {hasMedia && <Fragment set:html={figureHtml} />}
+          {hasHeading && (
+            <div class="HeadingContainer">
+              {headingIsLink ? (
+                <a class="Teaser-link" href={href}>
+                  <Heading element="h2" size="4" text={heading} />
+                </a>
+              ) : (
+                <Heading element="h2" size="4" text={heading} />
+              )}
+            </div>
+          )}
+          {(hasExcerpt || hasChildContent || button) && (
+            <div class="ContentContainer">
+              {hasExcerpt && <Prose variant="basic" size="sm" content={`<p>${escapeHtml(excerpt!)}</p>`} />}
+              {hasChildContent && <Fragment set:html={childHtml} />}
+              {button && (
+                <div class="Actions">
+                  <LinkButton href={href} size="sm" growInline={false}>
+                    {buttonLabel}
+                    {hasHeading && <span class="visually-hidden"> about {heading}</span>}
+                  </LinkButton>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </Tag>
+    </Frame>
   )
 }
 
 <style is:global>
-/* ─────────────────────────────────────────────────────────────────
-   Teaser
-   Composable content card — image + heading + body slot.
+/*
+ * Teaser — image, heading and body in a card that transports to one destination.
+ *
+ * Layout is container-driven: one column below 25rem, media beside text above it.
+ * Locked layouts belong to a parent composition, not to Teaser. The support gate
+ * and both container states nest inside the root; the @supports-not branch is an
+ * axis swap (flow instead of container states), not a mirror of the modern one.
+ *
+ * Gates:
+ *   data-button   false: the heading's link is stretched over the whole card.
+ *                 true: the heading is plain and a button in .Actions carries the link.
+ *   data-media    whether a MediaContainer is present.
+ *
+ * Teaser styles only its own parts (LayoutContainer, MediaContainer, HeadingContainer,
+ * ContentContainer, Actions, Teaser-link); the children it composes are configured
+ * through their props (ADR-0015).
+ */
 
-   Layout is always CQ-driven (flow-vertical → flow-horizontal at 25rem).
-   Locked layouts belong to a parent composition, not Teaser.
-
-   data-button axis:
-     false (default) — stretched link via Teaser-link::after
-     true            — no stretched link; CTA lives in child slot
-
-   One root, one tree (ADR-0010): invariants, the data-button axis and
-   both branches of the container-query pair nest inside .Teaser. The
-   support gate and the container gates sit inside the root (§7); the
-   pair stays closed (§5.1) — the fallback is an axis swap (viewport
-flow instead of container states), not a mirror of the modern branch.
-───────────────────────────────────────────────────────────────── */
-
-/* ── Invariants ───────────────────────────────────────────────── */
-
+/* TODO(decide): "visually-hidden" is Teaser's own sr-only part; ThemeSwitch carries the
+   same rule, and the docs app has a .ScreenReaderText. One kernel utility, or one per
+   component? */
 .Teaser {
-    position: relative;  /* stretched link anchor */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex: 1;
-    padding: var(--size-md);
+  /* TODO(token): raw values. The media minimum and the media radius should be tokens. */
+  --_te-minMediaSize: 12rem;
+  --_te-mediaRadius: 0.3em;
 
-    & .LayoutContainer {
-        flex: 1;
+  /* stretched-link anchor */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  padding: var(--size-md);
+
+  & .LayoutContainer {
+    flex: 1;
+  }
+
+  & .MediaContainer {
+    border-radius: var(--_te-mediaRadius);
+    overflow: hidden;
+
+    & .Media.StackedSources {
+      overflow: hidden;
     }
 
-    & .MediaContainer {
-        border-radius: 0.3em;
-        overflow: hidden;
+    & .Media.HorizontalSources {
+      overflow: hidden;
+    }
+  }
 
-        & .Media.StackedSources    {
-            overflow: hidden;
+  & .Teaser-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  & .visually-hidden {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  &[data-button="false"] .Teaser-link {
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  /* No container query support: viewport flow, media first, one column. */
+  @supports not (container-type: inline-size) {
+    & .LayoutContainer {
+      gap: var(--size-md);
+
+      & .MediaContainer {
+        inline-size: 100%;
+        margin-block-end: var(--size-md);
+
+        & .Media.StackedSources {
+          display: block;
+
+          & img {
+            inline-size: 100%;
+            block-size: auto;
+          }
         }
 
         & .Media.HorizontalSources {
-            overflow: hidden;
+          display: none;
         }
+      }
+
+      & .ContentContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--size-md);
+        margin-block-start: var(--size-md);
+      }
+    }
+  }
+
+  @supports (container-type: inline-size) {
+    container-type: inline-size;
+
+    & .LayoutContainer {
+      display: grid;
+      column-gap: var(--size-md);
+
+      & .MediaContainer {
+        grid-area: media;
+      }
+
+      & .HeadingContainer {
+        grid-area: heading;
+        margin-block-end: var(--size-md);
+      }
+
+      & .ContentContainer {
+        grid-area: body;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--size-md);
+      }
     }
 
-    /* ── Stretched link (data-button="false") ─────────────────── */
+    /* TODO(token): the 25rem switch is a raw container threshold. */
+    /* State A, one column: media, heading, body. */
+    @container (max-width: 24.999rem) {
+      & .LayoutContainer {
+        grid-template-areas:
+          "media"
+          "heading"
+          "body";
 
-    &[data-button="false"] .Teaser-link {
-        &::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            cursor: pointer;
-        }
+        & .MediaContainer {
+          margin-block-end: var(--size-md);
 
-        &:hover {
-            text-decoration: underline;
+          & .Media.StackedSources {
+            display: block;
+          }
+
+          & .Media.HorizontalSources {
+            display: none;
+          }
         }
+      }
     }
 
-    /* ── Fallback — no container query support (~3% of browsers) ── */
-    @supports not (container-type: inline-size) {
-        & .LayoutContainer {
-            gap: var(--size-md);
+    /* State B, media beside text; the actions row sits at the bottom, end-aligned. */
+    @container (min-width: 25rem) {
+      & .LayoutContainer {
+        grid-template-columns: minmax(var(--_te-minMediaSize), 1fr) 2fr;
+        grid-template-rows: auto auto 1fr;
+        grid-template-areas:
+          "media heading"
+          "media body"
+          "media body";
+        block-size: 100%;
+        align-items: stretch;
 
-            & .MediaContainer {
-                inline-size: 100%;
-                margin-block-end: var(--size-md);
+        & .MediaContainer {
+          min-block-size: var(--_te-minMediaSize);
 
-                & .Media.StackedSources {
-                    display: block;
+          & .Media.StackedSources {
+            display: none;
+          }
 
-                    & img {
-                        inline-size: 100%;
-                        block-size:  auto;
-                    }
-                }
+          & .Media.HorizontalSources {
+            display: block;
+            position: relative;
+            aspect-ratio: 1 / 1;
 
-                & .Media.HorizontalSources {
-                    display: none;
-                }
+            & img {
+              position: absolute;
+              inset: 0;
+              inline-size: 100%;
+              block-size: 100%;
+              object-fit: cover;
             }
-
-            & .ContentContainer {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--size-md);
-                margin-block-start: var(--size-md);
-            }
+          }
         }
+
+        & .ContentContainer .Actions {
+          align-self: stretch;
+          margin-block-start: auto;
+          display: flex;
+          justify-content: end;
+        }
+      }
     }
-
-    /* ── Container queries supported ─────────────────────────── */
-    @supports (container-type: inline-size) {
-        --_minMediaSize: 12rem;
-        container-type: inline-size;
-
-        & .LayoutContainer {
-            display: grid;
-            column-gap: var(--size-md);
-
-            & .MediaContainer {
-                grid-area: media;
-            }
-
-            & .Heading {
-                grid-area: heading;
-                margin-block-end: var(--size-md)
-            }
-
-            & .ContentContainer {
-                grid-area: body;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--size-md)
-            }
-        }
-
-        /* ── STATE A — flow-vertical (< 25rem) ─────────────── */
-        @container (max-width: 24.999rem) {
-            & .LayoutContainer {
-                grid-template-areas:
-                    "media"
-                    "heading"
-                    "body"
-                ;
-
-                & .MediaContainer {
-                    margin-block-end: var(--size-md);
-
-                    & .Media.StackedSources    {
-                        display: block;
-                    }
-
-                    & .Media.HorizontalSources {
-                        display: none;
-                    }
-                }
-            }
-        }
-
-        /* ── STATE B — flow-horizontal (≥ 25rem) ───────────── */
-        @container (min-width: 25rem) {
-            & .LayoutContainer {
-                grid-template-columns: minmax(var(--_minMediaSize), 1fr) 2fr;
-                grid-template-rows: auto auto 1fr;
-                grid-template-areas:
-                    "media heading"
-                    "media body"
-                    "media body";
-                block-size:  100%;
-                align-items: stretch;
-
-                & .MediaContainer {
-                    min-block-size: var(--_minMediaSize);
-
-                    & .Media.StackedSources {
-                        display: none;
-                    }
-
-                    & .Media.HorizontalSources {
-                        display: block;
-                        position: relative;
-                        aspect-ratio: 1 / 1;
-
-                        & img {
-                            position: absolute;
-                            inset: 0;
-                            inline-size: 100%;
-                            block-size:  100%;
-                            object-fit:  cover;
-                        }
-                    }
-                }
-
-                & .ContentContainer {
-                    & .Button {
-                        margin-block-start: auto;
-                        margin-inline-start: auto;
-                    }
-                }
-            }
-        }
-    }
-}
-.Teaser-body {
-    display:        flex;
-    flex-direction: column;
-    align-items:    flex-start;
-    flex:           1;
-
-    & time {
-        padding-block-start: var(--size-sm);
-        margin-block-start:  auto;
-    }
-}
-
-.Teaser-link {
-    text-decoration: none;
-    color:           inherit;
+  }
 }
 </style>

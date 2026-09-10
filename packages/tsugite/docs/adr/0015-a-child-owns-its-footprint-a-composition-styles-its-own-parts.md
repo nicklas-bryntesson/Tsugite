@@ -1,7 +1,8 @@
 # ADR-0015: A child owns its footprint; a composition styles its own parts
 
-**Status:** Proposed · 2026-09-10 — accepted when Teaser, a composition with real
-layout logic of its own, has been rebuilt on it and the suites stay green.
+**Status:** Accepted · 2026-09-10 — proposed the same day, accepted after Teaser, a
+composition with real layout logic of its own, was rebuilt on it: zero rules on a
+child's class remain, and the button sits where it did in both container states.
 
 ## Context
 
