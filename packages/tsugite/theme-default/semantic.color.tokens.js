@@ -38,12 +38,14 @@ export const semanticColorTokens = {
   },
 
   // ── Text ────────────────────────────────────────────────────────────────────
+  /** Body ink on the page ground. */
   "--color-text-primary": {
     light: "var(--COLOR-SUMI-90)",
     dark: "var(--COLOR-SUMI-05)",
     "light-contrast": "var(--COLOR-SUMI-95)",
     "dark-contrast": "var(--COLOR-SUMI-00)",
   },
+  /** Muted ink: captions, hints, secondary labels. */
   "--color-text-secondary": {
     light: "var(--COLOR-SUMI-60)",
     dark: "var(--COLOR-SUMI-35)",
@@ -52,48 +54,56 @@ export const semanticColorTokens = {
   },
 
   // ── Interactive (buttons, links — the tone-interactive slots) ──────────────
+  /** Primary action surface (buttons, links). */
   "--color-interactive-primary": {
     light: "var(--COLOR-AI-80)",
     dark: "var(--COLOR-AI-30)",
     "light-contrast": "var(--COLOR-SUMI-95)",
     "dark-contrast": "var(--COLOR-SUMI-00)",
   },
+  /** Primary action surface on hover. */
   "--color-interactive-primary-hover": {
     light: "var(--COLOR-AI-90)",
     dark: "var(--COLOR-AI-20)",
     "light-contrast": "var(--COLOR-SUMI-95)",
     "dark-contrast": "var(--COLOR-SUMI-00)",
   },
+  /** Ink on the primary action surface. */
   "--color-interactive-onPrimary": {
     light: "var(--COLOR-SUMI-00)",
     dark: "var(--COLOR-SUMI-95)",
     "light-contrast": "var(--COLOR-SUMI-00)",
     "dark-contrast": "var(--COLOR-SUMI-95)",
   },
+  /** Secondary action ink. */
   "--color-interactive-secondary-text": {
     light: "var(--COLOR-AI-80)",
     dark: "var(--COLOR-AI-20)",
     "light-contrast": "var(--COLOR-SUMI-95)",
     "dark-contrast": "var(--COLOR-SUMI-00)",
   },
+  /** Secondary action outline. */
   "--color-interactive-secondary-border": {
     light: "var(--COLOR-AI-30)",
     dark: "var(--COLOR-AI-60)",
     "light-contrast": "var(--COLOR-SUMI-95)",
     "dark-contrast": "var(--COLOR-SUMI-00)",
   },
+  /** Secondary action surface on hover. */
   "--color-interactive-secondary-hoverSurface": {
     light: "var(--COLOR-SUMI-10)",
     dark: "var(--COLOR-SUMI-80)",
     "light-contrast": "transparent",
     "dark-contrast": "transparent",
   },
+  /** Ring drawn around an interactive element on hover. */
   "--color-interactive-hoverRing": {
     light: mix("--COLOR-AI-20", 60),
     dark: mix("--COLOR-AI-60", 60),
     "light-contrast": "var(--COLOR-SUMI-95)",
     "dark-contrast": "var(--COLOR-SUMI-00)",
   },
+  /** Keyboard focus ring. */
   "--color-focus-ring": {
     light: "var(--COLOR-AI-50)",
     dark: "var(--COLOR-AI-30)",
@@ -118,18 +128,21 @@ export const semanticColorTokens = {
   },
 
   // ── Disabled — WCAG-exempt, midtones stay in the contrast modes ────────────
+  /** Ink of a disabled control. */
   "--color-disabled-text": {
     light: "var(--COLOR-SUMI-70)",
     dark: "var(--COLOR-SUMI-40)",
     "light-contrast": "var(--COLOR-SUMI-70)",
     "dark-contrast": "var(--COLOR-SUMI-40)",
   },
+  /** Surface of a disabled control. */
   "--color-disabled-surface": {
     light: "var(--COLOR-SUMI-05)",
     dark: "var(--COLOR-SUMI-85)",
     "light-contrast": "var(--COLOR-SUMI-05)",
     "dark-contrast": "var(--COLOR-SUMI-85)",
   },
+  /** Outline of a disabled control. */
   "--color-disabled-border": {
     light: "var(--COLOR-SUMI-20)",
     dark: "var(--COLOR-SUMI-75)",
@@ -138,42 +151,49 @@ export const semanticColorTokens = {
   },
 
   // ── Feedback (intent: destructive/success — shared with Notice later) ──────
+  /** Error / destructive intent. */
   "--color-feedback-error": {
     light: raw("KAKI-50"),
     dark: raw("KAKI-30"),
     "light-contrast": raw("KAKI-80"),
     "dark-contrast": raw("KAKI-10"),
   },
+  /** Ink on an error surface. */
   "--color-feedback-onError": {
     light: "var(--COLOR-SUMI-00)",
     dark: "var(--COLOR-SUMI-95)",
     "light-contrast": "var(--COLOR-SUMI-00)",
     "dark-contrast": "var(--COLOR-SUMI-95)",
   },
+  /** Success intent. */
   "--color-feedback-success": {
     light: raw("MATCHA-50"),
     dark: raw("MATCHA-30"),
     "light-contrast": raw("MATCHA-80"),
     "dark-contrast": raw("MATCHA-10"),
   },
+  /** Warning intent. */
   "--color-feedback-warning": {
     light: raw("KOHAKU-50"),
     dark: raw("KOHAKU-30"),
     "light-contrast": raw("KOHAKU-10"),
     "dark-contrast": raw("KOHAKU-10"),
   },
+  /** Informational intent. */
   "--color-feedback-info": {
     light: raw("AI-60"),
     dark: raw("AI-30"),
     "light-contrast": raw("AI-80"),
     "dark-contrast": raw("AI-10"),
   },
+  /** Ink on a warning surface. */
   "--color-feedback-onWarning": {
     light: raw("SUMI-95"),
     dark: raw("SUMI-95"),
     "light-contrast": raw("SUMI-95"),
     "dark-contrast": raw("SUMI-95"),
   },
+  /** Ink on a success surface. */
   "--color-feedback-onSuccess": {
     light: "var(--COLOR-SUMI-00)",
     dark: "var(--COLOR-SUMI-95)",
@@ -234,12 +254,14 @@ export const semanticColorTokens = {
   },
 
   // ── Borders — the midtones that expose the modes ───────────────────────────
+  /** Default hairline between surfaces. */
   "--color-border-default": {
     light: "var(--COLOR-SUMI-30)",
     dark: "var(--COLOR-SUMI-60)",
     "light-contrast": "var(--COLOR-SUMI-95)",
     "dark-contrast": "var(--COLOR-SUMI-00)",
   },
+  /** Quieter hairline for inner divisions. */
   "--color-border-subtle": {
     light: "var(--COLOR-SUMI-20)",
     dark: "var(--COLOR-SUMI-70)",

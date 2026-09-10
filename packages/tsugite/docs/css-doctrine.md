@@ -53,6 +53,10 @@ component slot (--_*) → theme claim (--theme-*) → semantic (--color-*) → R
   covers both worlds.
 - Nested defensive fallbacks — `var(--a, var(--b, var(--c, …)))` — are
   forbidden. A chain describes ownership, never guesswork.
+- Choose every name from the registry, `docs/tokens.generated.md`
+  (ADR-0014): it lists what each layer holds, one layer down from where
+  you stand. A name that is not there does not exist — write a
+  `TODO(token)` beside the raw value instead of inventing one.
 
 ## 3. Forbidden reflexes — the no-list
 

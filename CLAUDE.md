@@ -30,8 +30,8 @@ Decide which side of the seam you are on before changing anything.
    on its unsettled sections without explicit user sign-off: stop and
    ask first. Settled parts are the ones already moved to the ADR ledger.
 4. **Generated files are never edited by hand** (`*.generated.css`,
-   `packages/tsugite/styles/ui-tokens.css`). Author tokens in
-   `packages/tsugite/theme-default/*.tokens.js`, regenerate with
+   `*.generated.md`, `packages/tsugite/styles/ui-tokens.css`). Author
+   tokens in `packages/tsugite/theme-default/*.tokens.js`, regenerate with
    `pnpm tokens`. Enforced by a PreToolUse hook.
 5. **Git flow.** All work happens on branches (`feat/`, `fix/`,
    `chore/`, `docs/`); nothing is committed directly to `main` —
@@ -45,6 +45,7 @@ Decide which side of the seam you are on before changing anything.
 | Document | When to read |
 |----------|--------------|
 | `packages/tsugite/docs/css-doctrine.md` | Before writing or changing any CSS — the anti-drift contract |
+| `packages/tsugite/docs/tokens.generated.md` | Before writing any `var()` in a component — the list of every token that exists, per layer (ADR-0014) |
 | `packages/tsugite/docs/adr/` | Before touching kernel, engine, or token grammar |
 | `packages/tsugite/docs/INTAKE.md` | Before converting a component from reference-components (or invoke the `intake` skill) |
 | `packages/tsugite/docs/component-model.md` | Background only — DRAFT, see hard rule 3 |
