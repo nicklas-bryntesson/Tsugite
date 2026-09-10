@@ -1,0 +1,16 @@
+---
+import Card from "tsugite/components/Card/Card.astro";
+import CardReact from "tsugite/components/Card/Card.tsx";
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* One recipe (lib/card.ts), two renderers. Both write the same root class and the
+    same data-* attributes, so the same CSS gates on both. React renders on the
+    server here; no client directive, no hydration. */}
+<Card border={true} padding="md" elevation="sm" data-renderer="astro">
+  <Text text="Rendered by Card.astro." />
+</Card>
+<CardReact border={true} padding="md" elevation="sm" data-renderer="react">
+  <p class="Text" data-variant="body" data-size="md" data-run="block" data-align="left" data-wrap="pretty">
+    <span class="text-content">Rendered by Card.tsx.</span>
+  </p>
+</CardReact>
