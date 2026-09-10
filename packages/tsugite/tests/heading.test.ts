@@ -1,5 +1,4 @@
-// Contract tests for Heading.astro — mirrors HeadingTagHelper.cs behaviour
-// as documented in AiPoc .claude/contracts/tag-helpers.md
+// Contract tests for Heading.astro
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
 import Heading from "../components/Heading/Heading.astro";
@@ -46,7 +45,7 @@ describe("Heading", () => {
 
   it("rejects non-heading elements for body variant (dev error)", async () => {
     const html = await render({ text: "T", element: "span", variant: "body" });
-    expect(html).toContain("app-heading:");
+    expect(html).toContain("Heading:");
     expect(html).toContain("does not allow element");
   });
 
@@ -90,12 +89,5 @@ describe("Heading", () => {
   it("merges caller class after Heading", async () => {
     const html = await render({ text: "T", class: "extra" });
     expect(html).toContain('class="Heading extra"');
-  });
-
-  it("sets data-color only for valid colors", async () => {
-    const html = await render({ text: "T", color: "primary" });
-    expect(html).toContain('data-color="primary"');
-    const html2 = await render({ text: "T", color: "hotpink" });
-    expect(html2).not.toContain("data-color");
   });
 });

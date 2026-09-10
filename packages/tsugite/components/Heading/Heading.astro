@@ -1,11 +1,9 @@
 ---
-// Port of AiPoc TagHelpers/HeadingTagHelper.cs
-// Contract: .claude/contracts/tag-helpers.md — CSS class "Heading",
-// variants via data-* attributes, validation errors visible in dev only.
-
-// Element farms and voices come from the family contract — the door law
-// (one component per voice × element × input) is enforced by
-// tests/typographyFamily.test.ts, never re-declared here.
+// Heading — the LOUD voices (heading, display) of the typography family, plus
+// body on heading elements. Element farms and voices come from the family
+// contract; the door law (one component per voice × element × input) is
+// enforced by tests/typographyFamily.test.ts, never re-declared here.
+import DevError from "../DevError/DevError.astro";
 import { FAMILY, VOICE_SIZES } from "../../lib/typographyFamily.ts";
 
 const VALID_ELEMENTS_BY_VARIANT = FAMILY.Heading.voices;
@@ -22,7 +20,10 @@ const HEADING_ELEMENT_TO_SIZE: Record<string, string> = {
   h1: "1", h2: "2", h3: "3", h4: "4", h5: "5", h6: "6",
 };
 
-const VALID_COLORS = ["primary", "dark", "light", "inherit"];
+// TODO(decide): the first codebase had a colour axis (primary | dark | light) here.
+// Removed: colour is not a value in this system (ADR-0006: voice × volume × four
+// modes, all on the region, inherited). If a heading ever needs its own ink, it
+// re-enters as a CHANNEL choice, text or textMuted, resolved through the voice.
 const VALID_ALIGNS = ["left", "center", "right"];
 const VALID_WRAPS = ["balance", "pretty", "stable", "nowrap"];
 
@@ -33,7 +34,6 @@ interface Props {
   element?: string;
   size?: string;
   variant?: string;
-  color?: string;
   align?: string;
   wrap?: string;
   class?: string;
@@ -47,15 +47,14 @@ const {
   element: elementProp = "h2",
   size: sizeProp,
   variant: variantProp,
-  color,
   align = "left",
   wrap = "balance",
   class: className,
   ...rest
 } = Astro.props;
 
-const isDev = import.meta.env.DEV;
-
+// TODO(decide): a local copy; Teaser imports escapeHtml from lib/buttonShared.
+// One shared helper, or one per component?
 const escapeHtml = (s: string) =>
   s
     .replace(/&/g, "&amp;")
@@ -82,8 +81,6 @@ function applyHighlight(t: string, h: string): string {
     .map((part) => (regex.test(part) ? `<mark>${escapeHtml(part)}</mark>` : escapeHtml(part)))
     .join("");
 }
-
-// ── Guards ──────────────────────────────────────────
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
 const hasChildContent = childHtml.trim().length > 0;
@@ -112,8 +109,6 @@ if (mode === "render" && !VALID_ELEMENTS_BY_VARIANT[variant].includes(element)) 
   errorMessage = `variant "${variant}" does not allow element "${element}"`;
 }
 
-// ── Size ────────────────────────────────────────────
-
 function resolveSize(): string | undefined {
   if (sizeProp && VALID_SIZES_BY_VARIANT[variant]?.includes(sizeProp.toLowerCase()))
     return sizeProp.toLowerCase();
@@ -124,22 +119,18 @@ function resolveSize(): string | undefined {
 
 const resolvedSize = resolveSize();
 
-// ── Optional attributes ─────────────────────────────
-
-const colorAttr =
-  color && VALID_COLORS.includes(color.toLowerCase()) ? color.toLowerCase() : undefined;
+// TODO(decide): an invalid align or wrap drops the attribute silently; Card raises a
+// dev error for an invalid padding. Two policies for invalid input.
 const alignAttr = VALID_ALIGNS.includes(align.toLowerCase()) ? align.toLowerCase() : undefined;
 const wrapAttr = VALID_WRAPS.includes(wrap.toLowerCase()) ? wrap.toLowerCase() : undefined;
 
 const cssClass = className && String(className).trim() ? `Heading ${className}` : "Heading";
 
-// ── Content ─────────────────────────────────────────
-
 let inner = "";
 if (mode === "render") {
   if (hasChildContent) {
-    // Run engine law (a): child content passes through the same engine
-    // container as prop text — no path bypasses size/leading/trim.
+    // ADR-0012 §1: child content passes through the same engine container as
+    // prop text; no path bypasses size, leading or trim.
     inner = `<span class="heading-text">${childHtml}</span>`;
   } else {
     const encoded = highlight ? applyHighlight(text!, highlight) : escapeHtml(text!);
@@ -149,7 +140,7 @@ if (mode === "render") {
   }
 }
 
-// Run engine law (c): a span is an inline run; block runs own their trim.
+// ADR-0012 §3: a span is an inline run; every other element is a block run.
 const runMode = element === "span" ? "inline" : "block";
 
 const Tag = element as "h2";
@@ -162,43 +153,55 @@ const Tag = element as "h2";
       data-variant={variant}
       data-size={resolvedSize}
       data-run={runMode}
-      data-color={colorAttr}
       data-align={alignAttr}
       data-wrap={wrapAttr}
       {...rest}
       set:html={inner}
     />
-  ) : mode === "error" && isDev ? (
-    <div style="color:red;" set:html={`<!-- app-heading: ${errorMessage} --><span>&times;</span>`} />
+  ) : mode === "error" ? (
+    <DevError name="Heading" message={errorMessage} />
   ) : null
 }
 
 <style is:global>
-/* =====================================================
-   HEADING COMPONENT
-===================================================== */
+/*
+ * Heading — the loud voices of the typography family.
+ *
+ * The root carries the voice (data-variant) and size (data-size); the inner
+ * container (.heading-text or .heading-link) receives the resolved font-size,
+ * line-height and the cap-to-baseline trim. The engine below is shared word for
+ * word with Text and TextBlock (ADR-0012); a change here is a change in three
+ * files.
+ *
+ * Gates:
+ *   data-variant   heading | display | body, the voice bundle.
+ *   data-size      per voice: 1–6, 1–3, sm | md | lg.
+ *   data-run       block | inline, derived from the element (ADR-0012 §3).
+ *   data-align     left | center | right.
+ *   data-wrap      balance | pretty | stable | nowrap.
+ */
 
+/* TODO(decide): the part classes (.heading-text, .heading-link) follow the family's
+   prefixed-lowercase scheme; Notice and Card use bare part names (.icon, .content).
+   Two schemes for inner parts. Family-wide, decide once. */
+/* TODO(decide): the engine slots (--_fontSize, --_lineHeight, --_emBox, ...) are shared
+   by Heading, Text and TextBlock. ADR-0013 left the family prefix open. */
 .Heading {
-   --_color: ;
+  /* TODO(dead): word-wrap is the legacy alias of overflow-wrap; both are declared.
+     Same in Text and TextBlock, remove family-wide. */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin-block: 0;
 
-   /* reset */
-   word-wrap: break-word;
-   overflow-wrap: break-word;
-   margin-block: 0;
-
-  /* ================================================
-     TEXT CONTAINER (Typography Engine)
-  ================================================= */
-
-   .heading-link,
-   .heading-text {
+  & .heading-link,
+  & .heading-text {
     font-size: var(--_fontSize);
     line-height: var(--_lineHeight);
 
-    /* Law (d) — voice sovereignty: an UNVOICED inline element inherits
-       (and in the loud voices that includes strong/em — partial bolding
-       of a heading is drift, deliberately flattened); a voiced child
-       (data-variant) — and everything inside it — owns its own bundle. */
+    /* ADR-0012 §4, voice sovereignty: an unvoiced inline element inherits the
+       run's metrics. In the loud voices that includes strong and em; partial
+       bolding of a heading is drift, deliberately flattened. A voiced child
+       (data-variant) and everything inside it owns its own bundle. */
     & :where(a, span, strong, em, b, i):where(:not([data-variant], [data-variant] *)) {
       font: inherit;
       line-height: inherit;
@@ -206,16 +209,12 @@ const Tag = element as "h2";
     }
   }
 
-  /* Law (c) — block runs own their display; inline runs (span) keep
-     the UA's inline flow. */
+  /* ADR-0012 §3: block runs own their display; inline runs keep the UA's inline
+     flow, and receive nothing here. */
   &[data-run="block"] > .heading-link,
   &[data-run="block"] > .heading-text {
     display: block;
   }
-
-  /* =====================================================
-     VARIANT LAYER (voice + baseline offset)
-  ===================================================== */
 
   &[data-variant="heading"] {
     --_lineHeight: var(--lineHeight-heading);
@@ -229,12 +228,29 @@ const Tag = element as "h2";
     letter-spacing: var(--letterSpacing-heading);
     font-feature-settings: var(--fontFeatureSettings-heading);
 
-    &[data-size="1"] { --_fontSize: var(--fontSize-h1); }
-    &[data-size="2"] { --_fontSize: var(--fontSize-h2); }
-    &[data-size="3"] { --_fontSize: var(--fontSize-h3); }
-    &[data-size="4"] { --_fontSize: var(--fontSize-h4); }
-    &[data-size="5"] { --_fontSize: var(--fontSize-h5); }
-    &[data-size="6"] { --_fontSize: var(--fontSize-h6); }
+    &[data-size="1"] {
+      --_fontSize: var(--fontSize-h1);
+    }
+
+    &[data-size="2"] {
+      --_fontSize: var(--fontSize-h2);
+    }
+
+    &[data-size="3"] {
+      --_fontSize: var(--fontSize-h3);
+    }
+
+    &[data-size="4"] {
+      --_fontSize: var(--fontSize-h4);
+    }
+
+    &[data-size="5"] {
+      --_fontSize: var(--fontSize-h5);
+    }
+
+    &[data-size="6"] {
+      --_fontSize: var(--fontSize-h6);
+    }
   }
 
   &[data-variant="display"] {
@@ -249,9 +265,17 @@ const Tag = element as "h2";
     letter-spacing: var(--letterSpacing-display);
     font-feature-settings: var(--fontFeatureSettings-display);
 
-    &[data-size="1"] { --_fontSize: var(--fontSize-display-1); }
-    &[data-size="2"] { --_fontSize: var(--fontSize-display-2); }
-    &[data-size="3"] { --_fontSize: var(--fontSize-display-3); }
+    &[data-size="1"] {
+      --_fontSize: var(--fontSize-display-1);
+    }
+
+    &[data-size="2"] {
+      --_fontSize: var(--fontSize-display-2);
+    }
+
+    &[data-size="3"] {
+      --_fontSize: var(--fontSize-display-3);
+    }
   }
 
   &[data-variant="body"] {
@@ -266,67 +290,74 @@ const Tag = element as "h2";
     letter-spacing: var(--letterSpacing-body);
     font-feature-settings: var(--fontFeatureSettings-body);
 
-    &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-body); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); }
+    &[data-size="sm"] {
+      --_fontSize: var(--fontSize-body-small);
+    }
+
+    &[data-size="md"] {
+      --_fontSize: var(--fontSize-body);
+    }
+
+    &[data-size="lg"] {
+      --_fontSize: var(--fontSize-body-large);
+    }
   }
 
-  /* =====================================================
-     ALIGNMENT
-  ===================================================== */
+  &[data-align="left"] {
+    text-align: left;
+  }
 
-  &[data-align="left"]   { text-align: left; }
-  &[data-align="center"] { text-align: center; }
-  &[data-align="right"]  { text-align: right; }
+  &[data-align="center"] {
+    text-align: center;
+  }
 
-  /* =====================================================
-     WRAP STRATEGIES
-  ===================================================== */
+  &[data-align="right"] {
+    text-align: right;
+  }
 
-  &[data-wrap="balance"] { text-wrap: balance; }
-  &[data-wrap="pretty"]  { text-wrap: pretty; }
-  &[data-wrap="stable"]  { text-wrap: stable; }
+  &[data-wrap="balance"] {
+    text-wrap: balance;
+  }
 
-  /* =====================================================
-     FEATURE LAYER — TEXT TRIM
-     Completely isolated. Removable in one sweep.
-     Applies ONLY to the text container.
-  ===================================================== */
-  
-  /* Native trim branch — law (c): trim is a block concept */
+  &[data-wrap="pretty"] {
+    text-wrap: pretty;
+  }
+
+  &[data-wrap="stable"] {
+    text-wrap: stable;
+  }
+
+  &[data-wrap="nowrap"] {
+    text-wrap: nowrap;
+  }
+
+  /* Text trim (ADR-0012 §3): a block concept, so both branches sit behind the
+     data-run gate and an inline run receives neither. Isolated, removable in
+     one sweep. */
   @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-     &[data-run="block"] > .heading-link,
-     &[data-run="block"] > .heading-text {
+    &[data-run="block"] > .heading-link,
+    &[data-run="block"] > .heading-text {
       text-box-trim: trim-both;
       text-box-edge: cap alphabetic;
       margin-block: 0;
     }
   }
 
-  /* Fallback branch */
   @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
-     &[data-run="block"] > .heading-link,
-     &[data-run="block"] > .heading-text {
-         /* Emulates text-box-edge: cap alphabetic. The line box's content
-            area is the REAL em box (ascent+descent — 1.19-1.36em for our
-            faces, never 1), so the shave is half of (emBox - lineHeight)
-            plus the cap gap above / the descent below. baselineOffset stays
-            as the artistic nudge on top (factor x font size). */
-         --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
-         --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
-   
-         margin-block-start: var(--_marginBlockStart);
-         margin-block-end: var(--_marginBlockEnd);
-      }
-   }
-}
+    &[data-run="block"] > .heading-link,
+    &[data-run="block"] > .heading-text {
+      /* Emulates text-box-edge: cap alphabetic. The line box's content area is
+         the real em box (ascent + descent, 1.19 to 1.36em for our faces, never
+         1), so the shave is half of (emBox - lineHeight) plus the cap gap above
+         and the descent below. baselineOffset is the artistic nudge on top. */
+      /* TODO(dead): the `, 1` and `, 0` fallbacks can never fire, every variant sets
+         the slots. Doctrine §2 forbids them. Same in Text and TextBlock. */
+      --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
+      --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
 
-/* .Heading {
-   background-color: hotpink;
-   
-   .heading-link,
-   .heading-text {
-      background-color: rgba(255, 182, 193, 0.563);
-   }
-} */
+      margin-block-start: var(--_marginBlockStart);
+      margin-block-end: var(--_marginBlockEnd);
+    }
+  }
+}
 </style>

@@ -2,8 +2,8 @@
 import Card from "tsugite/components/Card/Card.astro";
 import Text from "tsugite/components/Text/Text.astro";
 ---
-{/* Three steps of shadow. The attribute is only written when asked for —
-    a card without an elevation prop carries no data-elevation at all. */}
+{/* Three steps of shadow. A card without an elevation prop carries
+    data-elevation="none", so every card states its depth. */}
 <Card elevation="sm">
   <Text text="elevation sm — barely lifted." />
 </Card>

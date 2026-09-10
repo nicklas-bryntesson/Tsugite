@@ -13,7 +13,9 @@ const render = (props: Record<string, unknown>, slots?: Record<string, string>) 
 describe("Teaser", () => {
   it("default frame wraps article.Teaser in a bordered Card with no padding", async () => {
     const html = await render({ heading: "Post title", href: "#", excerpt: "Short excerpt" });
-    expect(html).toContain('<div class="Card" data-padding="none" data-border="true">');
+    expect(html).toContain(
+      '<div class="Card" data-padding="none" data-border="true" data-elevation="none">'
+    );
     expect(html).toContain('class="Teaser"');
     expect(html).toContain('data-button="false"');
     expect(html).toContain('data-media="false"');
@@ -23,7 +25,7 @@ describe("Teaser", () => {
   it("elevated frame maps to data-elevation=sm", async () => {
     const html = await render({ frame: "elevated", heading: "T", href: "#" });
     expect(html).toContain('data-elevation="sm"');
-    expect(html).not.toContain("data-border");
+    expect(html).toContain('data-border="false"');
   });
 
   it("bare frame renders no Card wrapper", async () => {

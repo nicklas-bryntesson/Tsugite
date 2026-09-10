@@ -1,10 +1,5 @@
 ---
-// Port of AiPoc TagHelpers/TeaserTagHelper.cs
 // Composable content card. Wraps its own Card frame — callers never set Card
-// props directly. Markup mirrors the TagHelper's StringBuilder output exactly.
-// Teaser renders raw Card/Heading/Prose/Button/Media markup. Importing the
-// components pulls in their style contracts (Astro includes an imported
-// component's CSS even when it is not rendered; none of these carry scripts).
 import "../Card/Card.astro";
 import "../Heading/Heading.astro";
 import "../Prose/Prose.astro";
@@ -16,6 +11,10 @@ import { PRESETS, buildFigureHtml } from "../../lib/media";
 import { escapeHtml } from "../../lib/buttonShared";
 
 const VALID_ELEMENTS = ["article", "div", "li", "section"];
+// TODO(decide): should the permitted frames be defined in the theme setup (JS) rather
+// than in the component? Same question as Card's FORBIDDEN_COMBINATIONS, but this is a
+// POSITIVE list. Direction: the brand forbids, the component guards, so this should
+// become a negative list too.
 const VALID_FRAMES = ["bordered", "elevated", "bare"];
 
 interface Props {
@@ -47,8 +46,6 @@ const hasChildContent = childHtml.trim().length > 0;
 const hasExcerpt = !!excerpt?.trim();
 const hasHref = !!href?.trim();
 
-// ── Guards ──────────────────────────────────────────
-
 const invalid = button && !hasHref;
 
 const frame = VALID_FRAMES.includes(frameProp.toLowerCase()) ? frameProp.toLowerCase() : "bordered";
@@ -58,14 +55,12 @@ const element = VALID_ELEMENTS.includes(elementProp.toLowerCase())
 
 const hasMedia = image != null;
 
-// ── Body ─────────────────────────────────────────────
 
 let inner = "";
 
 if (!invalid) {
   inner += '<div class="LayoutContainer">';
 
-  // ── Media ─────────────────────────────────────────
   if (hasMedia) {
     inner += await buildFigureHtml({
       image: image!,
@@ -76,7 +71,6 @@ if (!invalid) {
     });
   }
 
-  // ── Heading ───────────────────────────────────────
   if (heading?.trim()) {
     const encodedHeading = escapeHtml(heading);
     const hasLink = hasHref && !button;
@@ -88,7 +82,6 @@ if (!invalid) {
     inner += `<h2 class="Heading" data-variant="heading" data-size="4" data-align="left" data-wrap="balance">${headingContent}</h2>`;
   }
 
-  // ── Body ──────────────────────────────────────────
   if (hasExcerpt || hasChildContent || button) {
     inner += '<div class="ContentContainer">';
 
@@ -117,7 +110,9 @@ const Tag = element as "article";
 
 // Card frame — Teaser owns the permitted Card combinations.
 const cardAttrs =
-  frame === "elevated" ? { "data-elevation": "sm" } : { "data-border": "true" };
+  frame === "elevated"
+    ? { "data-border": "false", "data-elevation": "sm" }
+    : { "data-border": "true", "data-elevation": "none" };
 ---
 
 {
@@ -158,7 +153,7 @@ const cardAttrs =
    both branches of the container-query pair nest inside .Teaser. The
    support gate and the container gates sit inside the root (§7); the
    pair stays closed (§5.1) — the fallback is an axis swap (viewport
-   flow instead of container states), not a mirror of the modern branch.
+flow instead of container states), not a mirror of the modern branch.
 ───────────────────────────────────────────────────────────────── */
 
 /* ── Invariants ───────────────────────────────────────────────── */
@@ -204,7 +199,6 @@ const cardAttrs =
     }
 
     /* ── Fallback — no container query support (~3% of browsers) ── */
-
     @supports not (container-type: inline-size) {
         & .LayoutContainer {
             gap: var(--size-md);
@@ -238,7 +232,6 @@ const cardAttrs =
     }
 
     /* ── Container queries supported ─────────────────────────── */
-
     @supports (container-type: inline-size) {
         --_minMediaSize: 12rem;
         container-type: inline-size;
@@ -266,7 +259,6 @@ const cardAttrs =
         }
 
         /* ── STATE A — flow-vertical (< 25rem) ─────────────── */
-
         @container (max-width: 24.999rem) {
             & .LayoutContainer {
                 grid-template-areas:
@@ -290,7 +282,6 @@ const cardAttrs =
         }
 
         /* ── STATE B — flow-horizontal (≥ 25rem) ───────────── */
-
         @container (min-width: 25rem) {
             & .LayoutContainer {
                 grid-template-columns: minmax(var(--_minMediaSize), 1fr) 2fr;
@@ -305,7 +296,9 @@ const cardAttrs =
                 & .MediaContainer {
                     min-block-size: var(--_minMediaSize);
 
-                    & .Media.StackedSources { display: none; }
+                    & .Media.StackedSources {
+                        display: none;
+                    }
 
                     & .Media.HorizontalSources {
                         display: block;
@@ -332,9 +325,6 @@ const cardAttrs =
         }
     }
 }
-
-/* ── Body ────────────────────────────────────────────────────── */
-
 .Teaser-body {
     display:        flex;
     flex-direction: column;
@@ -346,8 +336,6 @@ const cardAttrs =
         margin-block-start:  auto;
     }
 }
-
-/* ── Stretched link ──────────────────────────────────────────── */
 
 .Teaser-link {
     text-decoration: none;

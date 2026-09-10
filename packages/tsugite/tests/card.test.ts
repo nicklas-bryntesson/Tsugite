@@ -1,4 +1,4 @@
-// Contract tests for Card.astro — mirrors CardTagHelper.cs (CardHelper.cs)
+// Contract tests for Card.astro
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
 import Card from "../components/Card/Card.astro";
@@ -9,16 +9,16 @@ const render = (props: Record<string, unknown>, slots?: Record<string, string>) 
   container.renderToString(Card, { props, slots });
 
 describe("Card", () => {
-  it("renders article.Card with default padding and border attributes", async () => {
+  it("renders div.Card with default padding, border and elevation attributes", async () => {
     const html = await render({}, { default: "<p>x</p>" });
-    expect(html).toContain("<article");
+    expect(html).toContain("<div");
     expect(html).toContain('class="Card"');
     expect(html).toContain('data-border="false"');
     expect(html).toContain('data-padding="md"');
-    expect(html).not.toContain("data-elevation");
+    expect(html).toContain('data-elevation="none"');
   });
 
-  it("sets data-elevation only when elevation prop is provided", async () => {
+  it("projects the elevation prop as data-elevation", async () => {
     const html = await render({ elevation: "sm" }, { default: "<p>x</p>" });
     expect(html).toContain('data-elevation="sm"');
   });
@@ -28,9 +28,9 @@ describe("Card", () => {
     expect(html).toContain('data-border="true"');
   });
 
-  it("renders the requested valid element, falls back to article", async () => {
+  it("renders the requested valid element, falls back to div", async () => {
     expect(await render({ element: "li" }, { default: "x" })).toContain("<li");
-    expect(await render({ element: "nav" }, { default: "x" })).toContain("<article");
+    expect(await render({ element: "nav" }, { default: "x" })).toContain("<div");
   });
 
   it("suppresses output without child content", async () => {
