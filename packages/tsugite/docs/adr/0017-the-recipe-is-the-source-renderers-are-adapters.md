@@ -80,8 +80,12 @@ function resolves props to attributes, and two Astro components render it.
   dependencies of the package (for the equality test); `react`,
   `react-dom`, `vue`, `@astrojs/react` and `@astrojs/vue` are docs
   dependencies (for the page).
-- A running dev server does not pick up a newly added integration's Vite
-  defines; restart it after adding one (the Vue SSR globals threw a
-  ReferenceError until then, while the build was fine).
+- Vue SFCs stay in plain JS. With Vite 8, plugin-vue 6 and plugin-react 5
+  together, a `lang="ts"` script is stripped through Vite's shared oxc
+  transform, which in dev carries the React plugin's Fast Refresh setting
+  and ignores its exclude filter; the SFC then throws `$RefreshSig$ is not
+  defined`. Build and preview are unaffected, which is why the spike passed
+  before the dev server saw it. Also: a dev server started before an
+  integration is added must be restarted.
 - The docs Elevation lead still described the pre-pass-1 behaviour
   ("the attribute is written only when asked for"); corrected on the way.
