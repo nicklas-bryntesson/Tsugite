@@ -2,6 +2,7 @@
 // Port of AiPoc TagHelpers/ActionButtonTagHelper.cs
 // Renders <button class="Button">. Supports intent for destructive/success states.
 import "./Button.css";
+import DevError from "../DevError/DevError.astro";
 import { sharedButtonAttributes, renderIcon } from "../../lib/buttonShared";
 
 interface Props {
@@ -10,6 +11,8 @@ interface Props {
   emphasis?: string;
   intent?: string;
   pill?: boolean;
+  /** may the button take more inline space than its label? (ADR-0015) */
+  growInline?: boolean;
   size?: string;
   icon?: string;
   "icon-position"?: string;
@@ -24,6 +27,7 @@ const {
   emphasis = "primary",
   intent = "neutral",
   pill = false,
+  growInline = false,
   size = "md",
   icon,
   "icon-position": iconPosition = "right",
@@ -45,6 +49,7 @@ const sharedAttrs = sharedButtonAttributes({
   emphasis,
   intent,
   pill,
+  growInline,
   size,
   icon,
   iconPosition,
@@ -52,6 +57,8 @@ const sharedAttrs = sharedButtonAttributes({
 });
 
 const iconOnly = hasIcon && !hasChildContent;
+// Forbidden combination (ADR-0015): a square icon button never spans a row.
+const forbidden = iconOnly && growInline;
 
 let inner = "";
 if (hasChildContent) inner += `<span class="Button-text">${childHtml}</span>`;
@@ -59,7 +66,9 @@ if (hasIcon) inner += renderIcon(icon!);
 ---
 
 {
-  !suppress && (
+  forbidden ? (
+    <DevError name="ActionButton" message="icon-only buttons cannot grow: growInline requires a label" />
+  ) : !suppress && (
     <button
       type={buttonType}
       disabled={disabled ? "disabled" : undefined}

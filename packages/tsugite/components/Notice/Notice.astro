@@ -1,6 +1,7 @@
 ---
 type Variant = "error" | "warning" | "success" | "info" | "neutral";
 
+// TODO: do we need an id prop, yes we probably do don't we, and possibly som aria?
 interface Props {
   variant?: Variant;
   /** false drops the icon and collapses the grid to one column */
@@ -11,6 +12,10 @@ interface Props {
   emphasis?: boolean;
   /** optional bold title above the body */
   title?: string;
+  /** may the box take more inline space than its content? (ADR-0015) */
+  growInline?: boolean;
+  /** is there a reading ceiling on the inline size? (ADR-0015) */
+  capInline?: boolean;
   class?: string;
   [key: string]: unknown;
 }
@@ -20,6 +25,8 @@ const {
   icon = true,
   border = false,
   emphasis = false,
+  growInline = true,
+  capInline = true,
   title,
   class: className,
   ...rest
@@ -50,6 +57,8 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
   data-icon={icon ? "true" : "false"}
   data-border={border ? "true" : undefined}
   data-emphasis={emphasis ? "true" : undefined}
+  data-grow-inline={growInline ? "true" : "false"}
+  data-cap-inline={capInline ? "true" : "false"}
   {...rest}
 >
   {
@@ -85,16 +94,19 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
  *                   (shape + colour), never by chrome alone.
  *   data-border     a full border in the accent colour.
  *   data-emphasis   a stronger visual weight.
+ *   data-grow-inline  may the box take more inline space than its content.
+ *   data-cap-inline   a reading ceiling on the inline size (--_nt-maxInlineSize).
  *
  * Icons are inline stroke SVG drawn with currentColor, which .icon points at
  * the accent, so the mark re-tints with the variant.
  */
 
 .Notice {
-  --_nt-accent: CanvasText;
-  /* TODO(token): color mixing on the fly, should point to globally defined colors on DS level. */
-  --_nt-backgroundColor: color-mix(in srgb, var(--_nt-accent) 8%, Canvas);
-  --_nt-textColor: CanvasText;
+  --_nt-accent: var(--ui-surface-foreground);
+  /* TODO(token): the tint is mixed here. It should be a precomputed semantic token per
+     intent (a feedback surface, four modes); the feedback families already have the steps. */
+  --_nt-backgroundColor: color-mix(in srgb, var(--_nt-accent) 8%, var(--ui-surface));
+  --_nt-textColor: var(--ui-surface-foreground);
   --_nt-titleColor: currentColor;
   --_nt-borderWidth: 1px;
   --_nt-barWidth: 0.25rem;
@@ -106,7 +118,6 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
   --_nt-maxInlineSize: 50rem;
 
   display: grid;
-  max-inline-size: var(--_nt-maxInlineSize);
   padding: var(--_nt-padding);
   border-radius: var(--_nt-radius);
   background-color: var(--_nt-backgroundColor);
@@ -152,6 +163,24 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
     grid-template-columns: 1fr;
   }
 
+  &[data-grow-inline="false"] {
+    inline-size: fit-content;
+  }
+
+  /* 100%, not auto: in a grid or flex parent that aligns its items to the start,
+     auto shrinks to the content and the box would never grow. */
+  &[data-grow-inline="true"] {
+    inline-size: 100%;
+  }
+
+  &[data-cap-inline="false"] {
+    max-inline-size: none;
+  }
+
+  &[data-cap-inline="true"] {
+    max-inline-size: var(--_nt-maxInlineSize);
+  }
+
   &[data-border="true"] {
     border: var(--_nt-borderWidth) solid var(--_nt-accent);
   }
@@ -162,36 +191,38 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
 
   /* Variants set only the accent; tint, icon and chrome derive from it. */
   &[data-variant="error"] {
-    --_nt-accent: var(--ui-destructive, #c0362c);
+    --_nt-accent: var(--ui-destructive);
   }
 
   &[data-variant="warning"] {
-    --_nt-accent: var(--ui-warning, #a85a00);
+    --_nt-accent: var(--ui-warning);
   }
 
   &[data-variant="success"] {
-    --_nt-accent: var(--ui-success, #1a7f37);
+    --_nt-accent: var(--ui-success);
   }
 
   &[data-variant="info"] {
-    --_nt-accent: var(--ui-info, #0b6bcb);
+    --_nt-accent: var(--ui-info);
   }
 
   /* TODO(dead): variant defaults to "neutral" in the frontmatter, so the attribute
      is never absent and :not() can never match. */
   &[data-variant="neutral"],
   &:not([data-variant]) {
-    --_nt-accent: CanvasText;
+    --_nt-accent: var(--ui-surface-foreground);
   }
 
-  /* TODO(investigate): Is canvasText needed if all our tokens is responsive to user prefs for contrast, should we just pass text color token instead? */
+  /* The tint is this box's only edge, and it vanishes in forced colours and the
+     contrast modes. A border regardless of data-border; the token picks the colour. */
+  @media (forced-colors: active), (prefers-contrast: more) {
+    border: var(--_nt-borderWidth) solid var(--ui-border);
+  }
 
-  /* Forced colors: the tint collapses to Canvas, so every Notice gets a boundary
-     and chrome is drawn from system colours. Meaning stays with the per-variant icon. */
+  /* TODO(token): system colours stay here until the factory maps the semantic layer
+     to them under forced colours; then this block goes. SVG stroke is not forced by
+     the UA, so the icon must be told. */
   @media (forced-colors: active) {
-    border: 1px solid CanvasText;
-    background-color: Canvas;
-
     &[data-emphasis="true"] {
       border-inline-start-color: CanvasText;
     }

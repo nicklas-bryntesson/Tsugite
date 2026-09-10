@@ -18,6 +18,8 @@ export interface SharedButtonOptions {
   emphasis: string;
   intent?: string | null;
   pill: boolean;
+  /** may the button take more inline space than its label? (ADR-0015) */
+  growInline: boolean;
   size: string;
   icon?: string | null;
   iconPosition: string;
@@ -37,6 +39,7 @@ export function sharedButtonAttributes(opts: SharedButtonOptions): Record<string
     attrs["data-size"] = opts.size.toLowerCase();
 
   attrs["data-pill"] = opts.pill ? "true" : "false";
+  attrs["data-grow-inline"] = opts.growInline ? "true" : "false";
 
   if (opts.icon) {
     attrs["data-icon"] = opts.icon;

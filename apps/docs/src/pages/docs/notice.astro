@@ -21,6 +21,8 @@ import Emphasis from "../../examples/notice/Emphasis.astro";
 import emphasisSrc from "../../examples/notice/Emphasis.astro?raw";
 import NoIcon from "../../examples/notice/NoIcon.astro";
 import noIconSrc from "../../examples/notice/NoIcon.astro?raw";
+import Footprint from "../../examples/notice/Footprint.astro";
+import footprintSrc from "../../examples/notice/Footprint.astro?raw";
 
 const entry = entryFor("notice");
 ---
@@ -65,6 +67,15 @@ const entry = entryFor("notice");
       source={noIconSrc}
     >
       <NoIcon />
+    </Example>
+
+    <Example
+      id="footprint"
+      title="Footprint"
+      lead="data-grow-inline and data-cap-inline: may it take more room than its content, and is there a reading ceiling. The default is both."
+      source={footprintSrc}
+    >
+      <Footprint />
     </Example>
 
     <section class="doc-bench" id="test-bench">

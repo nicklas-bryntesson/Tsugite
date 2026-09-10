@@ -13,6 +13,7 @@ const VALID_ELEVATIONS = ["none", "sm", "md", "lg"];
 // Every component with combinable axes needs the same hook.
 const FORBIDDEN_COMBINATIONS: Array<[boolean, string]> = [];
 
+// TODO: do we ever need to pass an ID to the card, or an aria-described property?
 interface Props {
   element?: string;
   padding?: string;

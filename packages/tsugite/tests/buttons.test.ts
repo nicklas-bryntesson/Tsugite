@@ -21,8 +21,20 @@ describe("LinkButton", () => {
     expect(html).toContain('data-emphasis="primary"');
     expect(html).toContain('data-size="md"');
     expect(html).toContain('data-pill="false"');
+    expect(html).toContain('data-grow-inline="false"');
     expect(html).toContain('<span class="Button-text">Get started</span>');
     expect(html).not.toContain("data-intent");
+  });
+
+  it("growInline projects as data-grow-inline (ADR-0015)", async () => {
+    const html = await renderLink({ href: "/x", growInline: true }, { default: "Wide" });
+    expect(html).toContain('data-grow-inline="true"');
+  });
+
+  it("refuses icon-only + growInline (forbidden combination, dev error)", async () => {
+    const html = await renderLink({ href: "/x", icon: "icon-search", "aria-label": "Search", growInline: true });
+    expect(html).toContain("icon-only buttons cannot grow");
+    expect(html).not.toContain('class="Button"');
   });
 
   it("adds rel noopener for target=_blank", async () => {

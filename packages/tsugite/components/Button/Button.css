@@ -282,6 +282,16 @@
 
   /* ── Icon layout ── */
 
+  /* Footprint on the inline axis (ADR-0015): may the button take more room than its
+     label. 100%, not auto, so a start-aligned flex or grid parent cannot shrink it. */
+  &[data-grow-inline="false"] {
+    inline-size: fit-content;
+  }
+
+  &[data-grow-inline="true"] {
+    inline-size: 100%;
+  }
+
   &[data-icon-only="true"] {
     --_buttonColumns: auto;
     --_buttonAreas: "icon";
