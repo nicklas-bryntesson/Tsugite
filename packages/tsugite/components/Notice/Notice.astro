@@ -1,6 +1,7 @@
 ---
 type Variant = "error" | "warning" | "success" | "info" | "neutral";
 
+// TODO: do we need an id prop, yes we probably do don't we, and possibly som aria?
 interface Props {
   variant?: Variant;
   /** false drops the icon and collapses the grid to one column */
@@ -11,6 +12,10 @@ interface Props {
   emphasis?: boolean;
   /** optional bold title above the body */
   title?: string;
+  /** may the box take more inline space than its content? (ADR-0015) */
+  growInline?: boolean;
+  /** is there a reading ceiling on the inline size? (ADR-0015) */
+  capInline?: boolean;
   class?: string;
   [key: string]: unknown;
 }
@@ -20,6 +25,8 @@ const {
   icon = true,
   border = false,
   emphasis = false,
+  growInline = true,
+  capInline = true,
   title,
   class: className,
   ...rest
@@ -50,6 +57,8 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
   data-icon={icon ? "true" : "false"}
   data-border={border ? "true" : undefined}
   data-emphasis={emphasis ? "true" : undefined}
+  data-grow-inline={growInline ? "true" : "false"}
+  data-cap-inline={capInline ? "true" : "false"}
   {...rest}
 >
   {
@@ -85,6 +94,8 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
  *                   (shape + colour), never by chrome alone.
  *   data-border     a full border in the accent colour.
  *   data-emphasis   a stronger visual weight.
+ *   data-grow-inline  may the box take more inline space than its content.
+ *   data-cap-inline   a reading ceiling on the inline size (--_nt-maxInlineSize).
  *
  * Icons are inline stroke SVG drawn with currentColor, which .icon points at
  * the accent, so the mark re-tints with the variant.
@@ -107,7 +118,6 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
   --_nt-maxInlineSize: 50rem;
 
   display: grid;
-  max-inline-size: var(--_nt-maxInlineSize);
   padding: var(--_nt-padding);
   border-radius: var(--_nt-radius);
   background-color: var(--_nt-backgroundColor);
@@ -151,6 +161,24 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
 
   &[data-icon="false"] {
     grid-template-columns: 1fr;
+  }
+
+  &[data-grow-inline="false"] {
+    inline-size: fit-content;
+  }
+
+  /* 100%, not auto: in a grid or flex parent that aligns its items to the start,
+     auto shrinks to the content and the box would never grow. */
+  &[data-grow-inline="true"] {
+    inline-size: 100%;
+  }
+
+  &[data-cap-inline="false"] {
+    max-inline-size: none;
+  }
+
+  &[data-cap-inline="true"] {
+    max-inline-size: var(--_nt-maxInlineSize);
   }
 
   &[data-border="true"] {
