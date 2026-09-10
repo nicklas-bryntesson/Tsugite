@@ -1,17 +1,9 @@
 ---
+// Card — a visual frame around other components. The recipe (tag, class, data-*)
+// lives in lib/card.ts and is shared by every renderer; this file renders it in Astro.
+import "./Card.css";
 import DevError from "../DevError/DevError.astro";
-
-const VALID_ELEMENTS = ["article", "section", "li", "div"];
-const VALID_PADDINGS = ["none", "sm", "md", "lg"];
-const VALID_ELEVATIONS = ["none", "sm", "md", "lg"];
-
-// TODO(decide): the guardrail stays; the question is where its rules live. A capability
-// map lets every combination of axes be built, but a design also says what may NOT be
-// combined (border with elevation, say). Those rules belong to the brand, not to this
-// file, so they should come from the theme setup. Direction: a NEGATIVE list (forbidden
-// pairs, as here), never a positive one; forbids scale when axes grow, permits do not.
-// Every component with combinable axes needs the same hook.
-const FORBIDDEN_COMBINATIONS: Array<[boolean, string]> = [];
+import { resolveCard } from "../../lib/card";
 
 // TODO: do we ever need to pass an ID to the card, or an aria-described property?
 interface Props {
@@ -23,119 +15,26 @@ interface Props {
   [key: string]: unknown;
 }
 
-const {
-  element: elementProp = "div",
-  padding = "md",
-  border = false,
-  elevation: elevationProp = "none",
-  class: className,
-  ...rest
-} = Astro.props;
+const { element, padding, border, elevation, class: className, ...rest } = Astro.props;
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
 
-let mode: "render" | "suppress" | "error" = "render";
-let errorMessage = "";
+const card = resolveCard({
+  element,
+  padding,
+  border,
+  elevation,
+  class: className,
+  hasContent: childHtml.trim().length > 0,
+});
 
-const elevation = elevationProp.toLowerCase();
-
-if (childHtml.trim().length === 0) {
-  mode = "suppress";
-} else if (!VALID_PADDINGS.includes(padding.toLowerCase())) {
-  mode = "error";
-  errorMessage = `invalid padding "${padding}" — expected none | sm | md | lg`;
-} else if (!VALID_ELEVATIONS.includes(elevation)) {
-  mode = "error";
-  errorMessage = `invalid elevation "${elevationProp}" — expected none | sm | md | lg`;
-} else if (FORBIDDEN_COMBINATIONS.some(([b, e]) => b === border && e === elevation)) {
-  mode = "error";
-  errorMessage = `border="${border}" with elevation="${elevation}" is not a permitted combination`;
-}
-
-const Tag = (
-  VALID_ELEMENTS.includes(elementProp.toLowerCase()) ? elementProp.toLowerCase() : "div"
-) as "div";
-
-const cssClass = className && String(className).trim() ? `Card ${className}` : "Card";
+const Tag = card.tag as "div";
 ---
 
 {
-  mode === "render" ? (
-    <Tag
-      class={cssClass}
-      data-border={border ? "true" : "false"}
-      data-padding={padding.toLowerCase()}
-      data-elevation={elevation}
-      {...rest}
-      set:html={childHtml}
-    />
-  ) : mode === "error" ? (
-    <DevError name="Card" message={errorMessage} />
+  card.mode === "render" ? (
+    <Tag class={card.className} {...card.attrs} {...rest} set:html={childHtml} />
+  ) : card.mode === "error" ? (
+    <DevError name="Card" message={card.errorMessage} />
   ) : null
 }
-
-<style is:global>
-/*
- * Card — a visual frame around other components. It owns a surface, a radius
- * and clipping, nothing about its content.
- *
- * Three gates over one base:
- *   data-border      a border, width and colour from the border tokens.
- *   data-padding     none | sm | md | lg, inset from the size scale.
- *   data-elevation   none | sm | md | lg, depth as shadow.
- */
-
-.Card {
-  /* TODO(token): border width and radius are raw values; --ui-radius exists. */
-  --_cd-borderWidth: 1px;
-  --_cd-borderRadius: 0.5rem;
-  /* TODO(token): the chain skips the theme layer; --ui-border exists as the seam. */
-  --_cd-borderColor: var(--color-border-default);
-
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--_cd-borderRadius);
-
-  &[data-border="false"] {
-    border: none;
-  }
-  &[data-border="true"] {
-    border: var(--_cd-borderWidth) solid var(--_cd-borderColor);
-  }
-
-  &[data-padding="none"] {
-    padding: 0;
-  }
-
-  &[data-padding="sm"] {
-    padding: var(--size-sm);
-  }
-
-  &[data-padding="md"] {
-    padding: var(--size-md);
-  }
-
-  &[data-padding="lg"] {
-    padding: var(--size-lg);
-  }
-
-  &[data-elevation="none"] {
-    box-shadow: none;
-  }
-
-  /* TODO(token): shadows are raw oklch mixes in the component; they should resolve
-     to precomputed shadow tokens (--color-shadow-popup / --ui-shadow exist). */
-  &[data-elevation="sm"] {
-    box-shadow: 0 1px 3px oklch(0 0 0 / 0.08), 0 1px 2px oklch(0 0 0 / 0.04);
-  }
-
-  &[data-elevation="md"] {
-    box-shadow: 0 4px 12px oklch(0 0 0 / 0.08), 0 1px 3px oklch(0 0 0 / 0.05);
-  }
-
-  &[data-elevation="lg"] {
-    box-shadow: 0 10px 24px oklch(0 0 0 / 0.1), 0 4px 8px oklch(0 0 0 / 0.06);
-  }
-}
-</style>

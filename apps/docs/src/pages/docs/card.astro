@@ -22,6 +22,8 @@ import Frame from "../../examples/card/Frame.astro";
 import frameSrc from "../../examples/card/Frame.astro?raw";
 import Combined from "../../examples/card/Combined.astro";
 import combinedSrc from "../../examples/card/Combined.astro?raw";
+import Renderers from "../../examples/card/Renderers.astro";
+import renderersSrc from "../../examples/card/Renderers.astro?raw";
 
 const entry = entryFor("card");
 ---
@@ -40,7 +42,7 @@ const entry = entryFor("card");
       <Padding />
     </Example>
 
-    <Example id="elevation" title="Elevation" lead="Three steps of shadow. The attribute is written only when asked for — a card without the prop carries no data-elevation." source={elevationSrc} block>
+    <Example id="elevation" title="Elevation" lead="Three steps of shadow. Every card states its depth: without the prop it carries data-elevation=&quot;none&quot;." source={elevationSrc} block>
       <Elevation />
     </Example>
 
@@ -54,6 +56,10 @@ const entry = entryFor("card");
 
     <Example id="combined" title="Combined — and the empty rule list" lead="The axes combine freely. The list of forbidden border/elevation pairs is empty in Tsugite — a project rule, not a system one — so every combination is permitted until a project says otherwise." source={combinedSrc} block>
       <Combined />
+    </Example>
+
+    <Example id="renderers" title="Three renderers, one recipe" lead="The contract is the rendered DOM. lib/card.ts resolves the props; Card.astro, Card.tsx and Card.vue write the same class and data-* attributes, and the same CSS gates on all of them." source={renderersSrc}>
+      <Renderers />
     </Example>
 
     <section class="doc-bench" id="test-bench">

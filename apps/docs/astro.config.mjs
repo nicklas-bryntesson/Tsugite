@@ -1,6 +1,8 @@
 // @ts-check
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
+import react from "@astrojs/react";
+import vue from "@astrojs/vue";
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
 
@@ -15,6 +17,12 @@ const targets = browserslistToTargets(
 
 // https://astro.build/config
 export default defineConfig({
+  // React and Vue render server-side only here: the renderer spike (lib/card.ts) shows
+  // the same component through Astro, React and Vue on one page, against one CSS.
+  // React and Vue render server-side only here: the renderer spike (lib/card.ts) shows
+  // the same component through Astro, React and Vue on one page, against one CSS.
+  // Keep Vue SFCs in plain JS: see the note in packages/tsugite/components/Card/Card.vue.
+  integrations: [react(), vue()],
   vite: {
     css: {
       transformer: "lightningcss",
