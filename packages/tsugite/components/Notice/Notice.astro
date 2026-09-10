@@ -91,10 +91,11 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
  */
 
 .Notice {
-  --_nt-accent: CanvasText;
-  /* TODO(token): color mixing on the fly, should point to globally defined colors on DS level. */
-  --_nt-backgroundColor: color-mix(in srgb, var(--_nt-accent) 8%, Canvas);
-  --_nt-textColor: CanvasText;
+  --_nt-accent: var(--ui-surface-foreground);
+  /* TODO(token): the tint is mixed here. It should be a precomputed semantic token per
+     intent (a feedback surface, four modes); the feedback families already have the steps. */
+  --_nt-backgroundColor: color-mix(in srgb, var(--_nt-accent) 8%, var(--ui-surface));
+  --_nt-textColor: var(--ui-surface-foreground);
   --_nt-titleColor: currentColor;
   --_nt-borderWidth: 1px;
   --_nt-barWidth: 0.25rem;
@@ -162,36 +163,38 @@ const cssClass = className && String(className).trim() ? `Notice ${className}` :
 
   /* Variants set only the accent; tint, icon and chrome derive from it. */
   &[data-variant="error"] {
-    --_nt-accent: var(--ui-destructive, #c0362c);
+    --_nt-accent: var(--ui-destructive);
   }
 
   &[data-variant="warning"] {
-    --_nt-accent: var(--ui-warning, #a85a00);
+    --_nt-accent: var(--ui-warning);
   }
 
   &[data-variant="success"] {
-    --_nt-accent: var(--ui-success, #1a7f37);
+    --_nt-accent: var(--ui-success);
   }
 
   &[data-variant="info"] {
-    --_nt-accent: var(--ui-info, #0b6bcb);
+    --_nt-accent: var(--ui-info);
   }
 
   /* TODO(dead): variant defaults to "neutral" in the frontmatter, so the attribute
      is never absent and :not() can never match. */
   &[data-variant="neutral"],
   &:not([data-variant]) {
-    --_nt-accent: CanvasText;
+    --_nt-accent: var(--ui-surface-foreground);
   }
 
-  /* TODO(investigate): Is canvasText needed if all our tokens is responsive to user prefs for contrast, should we just pass text color token instead? */
+  /* The tint is this box's only edge, and it vanishes in forced colours and the
+     contrast modes. A border regardless of data-border; the token picks the colour. */
+  @media (forced-colors: active), (prefers-contrast: more) {
+    border: var(--_nt-borderWidth) solid var(--ui-border);
+  }
 
-  /* Forced colors: the tint collapses to Canvas, so every Notice gets a boundary
-     and chrome is drawn from system colours. Meaning stays with the per-variant icon. */
+  /* TODO(token): system colours stay here until the factory maps the semantic layer
+     to them under forced colours; then this block goes. SVG stroke is not forced by
+     the UA, so the icon must be told. */
   @media (forced-colors: active) {
-    border: 1px solid CanvasText;
-    background-color: Canvas;
-
     &[data-emphasis="true"] {
       border-inline-start-color: CanvasText;
     }
