@@ -2,6 +2,7 @@
 // Port of AiPoc TagHelpers/LinkButtonTagHelper.cs
 // Renders <a class="Button">. No intent — links are always intent-neutral.
 import "./Button.css";
+import DevError from "../DevError/DevError.astro";
 import { sharedButtonAttributes, renderIcon } from "../../lib/buttonShared";
 
 interface Props {
@@ -9,6 +10,8 @@ interface Props {
   target?: string;
   emphasis?: string;
   pill?: boolean;
+  /** may the button take more inline space than its label? (ADR-0015) */
+  growInline?: boolean;
   size?: string;
   icon?: string;
   "icon-position"?: string;
@@ -22,6 +25,7 @@ const {
   target,
   emphasis = "primary",
   pill = false,
+  growInline = false,
   size = "md",
   icon,
   "icon-position": iconPosition = "right",
@@ -43,6 +47,7 @@ const sharedAttrs = sharedButtonAttributes({
   emphasis,
   intent: null,
   pill,
+  growInline,
   size,
   icon,
   iconPosition,
@@ -50,6 +55,8 @@ const sharedAttrs = sharedButtonAttributes({
 });
 
 const iconOnly = hasIcon && !hasChildContent;
+// Forbidden combination (ADR-0015): a square icon button never spans a row.
+const forbidden = iconOnly && growInline;
 
 let inner = "";
 if (hasChildContent) inner += `<span class="Button-text">${childHtml}</span>`;
@@ -57,7 +64,9 @@ if (hasIcon) inner += renderIcon(icon!);
 ---
 
 {
-  !suppress && (
+  forbidden ? (
+    <DevError name="LinkButton" message="icon-only buttons cannot grow: growInline requires a label" />
+  ) : !suppress && (
     <a
       class={cssClass}
       href={href || undefined}
