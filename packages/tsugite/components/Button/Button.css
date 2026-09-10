@@ -3,6 +3,8 @@
    Inlining would duplicate it in the bundle or couple components to page composition. */
 /* prettier-ignore */
 .Button {
+  /* TODO(decide): unprefixed slots. ADR-0013 sets --_<prefix>-<propertyCamel>; the
+     names already have the right form, Button only needs its prefix (own pass). */
   /* invariants */
   --_fontFamily:      var(--fontFamily-label);
   --_fontWeight:      var(--fontWeight-label);
