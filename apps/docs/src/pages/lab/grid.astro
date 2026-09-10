@@ -1,0 +1,57 @@
+---
+// /lab/grid — an empty stage between the site's header and footer for spoofing
+// grid use cases. Not on the map, not a docs page: a scratch surface for the
+// grid-region discussion. Drop markup into <main>; the .lab-block helper draws
+// an outline and a label so placement is visible without inspecting.
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Grid lab">
+  <main class="GridLab">
+    {/* Spoof use cases here. Examples to start from (uncomment one at a time):
+
+    <section class="grid-container">
+      <div class="lab-block" data-label="main">in the main column (default)</div>
+      <div class="lab-block grid-container-full" data-label="full">full bleed</div>
+    </section>
+
+    <section class="grid-breakout">
+      <div class="lab-block" style="grid-column: 2 / 8" data-label="2 / 8">text</div>
+      <div class="lab-block" style="grid-column: 8 / 14" data-label="8 / 14">media</div>
+    </section>
+
+    <section class="grid-layout">
+      <div class="lab-block" style="grid-column: span 4" data-label="span 4">a</div>
+      <div class="lab-block" style="grid-column: span 4" data-label="span 4">b</div>
+      <div class="lab-block" style="grid-column: span 4" data-label="span 4">c</div>
+    </section>
+
+    */}
+  </main>
+</Layout>
+
+<style is:global>
+  /* Lab-only helpers. Not part of the system. */
+  .GridLab {
+    min-block-size: 40vh;
+  }
+
+  .lab-block {
+    position: relative;
+    min-block-size: 6rem;
+    padding: var(--size-md);
+    outline: 1px dashed var(--color-border-default);
+    background-color: color-mix(in srgb, var(--color-interactive-primary) 6%, transparent);
+
+    &::before {
+      content: attr(data-label);
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      padding: 0.125rem 0.375rem;
+      font: var(--fontWeight-label) 0.75rem var(--fontFamily-label);
+      color: var(--color-text-secondary);
+      background-color: var(--color-surface-inset);
+    }
+  }
+</style>
