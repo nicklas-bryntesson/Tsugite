@@ -13,8 +13,13 @@ are the durable contract; green suites are the definition of done.
   contradicts an ADR requires a new ADR, agreed with the user, before
   any code.
 - Tokens are authored in JS (`theme-default/*.tokens.js`) and delivered
-  as generated CSS (ADR-0003). Never hand-edit `*.generated.css` or
-  `styles/ui-tokens.css` — run `pnpm tokens` after changing sources.
+  as generated CSS plus the registry `docs/tokens.generated.md`
+  (ADR-0003, ADR-0014). Never hand-edit `*.generated.css`,
+  `*.generated.md` or `styles/ui-tokens.css` — run `pnpm tokens` after
+  changing sources.
+- Before writing any `var()` in a component, read the registry. A name
+  that is not there does not exist; leave a `TODO(token)` instead of a
+  made-up value.
 - New CSS vocabulary means a new primitive. Ask "who owns the
   vocabulary?" before adding any; compositions own no vocabulary
   (ADR-0005).
