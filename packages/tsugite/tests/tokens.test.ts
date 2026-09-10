@@ -17,6 +17,7 @@ import {
   gamutReport,
   APPEARANCES,
 } from "../engine/collector.js";
+import { generateTokenRegistry } from "../engine/registry.js";
 import { rawColorTokens } from "../theme-default/raw.color.tokens.js";
 import { themeVoices, themeChannels, voiceMatrix, cellName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 import { rawRefName } from "../theme-default/raw.color.tokens.js";
@@ -65,6 +66,18 @@ describe("generated artifacts are fresh", () => {
       "utf8",
     );
     expect(onDisk).toBe(generateStylesheet());
+  });
+
+  it("docs/tokens.generated.md matches the registry builder (ADR-0014)", () => {
+    const onDisk = readFileSync(new URL("../docs/tokens.generated.md", import.meta.url), "utf8");
+    expect(onDisk).toBe(generateTokenRegistry());
+  });
+
+  it("the registry names every semantic colour token with a role", () => {
+    const md = generateTokenRegistry();
+    for (const line of md.split("\n").filter((l) => l.startsWith("| `--color-"))) {
+      expect(line, line).not.toMatch(/\|\s*\|$/);
+    }
   });
 
   it("the generated --ui-* seam is fresh and appearance-free", () => {
