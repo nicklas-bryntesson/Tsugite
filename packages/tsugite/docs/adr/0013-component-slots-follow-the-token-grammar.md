@@ -53,7 +53,7 @@ separated by hyphens. A slot is the last link of the same chain
    | `fu` | FileUpload | | `tt` | ToggleTip |
    | `mf` | MonthField | | `wf` | WeekField |
    | `nt` | Notice | | `pl` | Picklist |
-   | `te` | Teaser | | | |
+   | `te` | Teaser | | `sf` | Surface |
 
    A new component claims its prefix by adding a row here.
 3. **Two kinds of slot, both on the root's terms.**
