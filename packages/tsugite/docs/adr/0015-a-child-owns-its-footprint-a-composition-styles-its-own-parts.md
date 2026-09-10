@@ -53,6 +53,37 @@ cannot express them and two booleans can.
    child's props.
 4. **Tone keeps going through the claim chain** (ADR-0005), unchanged.
 
+## Addendum 2026-09-10: permission and allocation
+
+The footprint booleans are static, and a design often wants different
+footprints per context — a Teaser's button spanning the row in its
+one-column state and fitting its label beside media. That is not a
+per-state prop value. The child's boolean is a **permission**: `true`
+means "I fill what I am given", `false` means "never". What the child is
+given is the parent's **allocation**, decided in the parent's own region
+per container state, viewport tier or user preference:
+
+```css
+& .Actions { display: grid; }
+@container (max-width: 24.999rem) { & .Actions { grid-template-columns: 1fr; } }
+@container (min-width: 25rem)     { & .Actions { grid-template-columns: max-content; justify-content: end; } }
+```
+
+The button is `grow-inline="true"` in both states and never learns which
+state it is in. (The example shows the mechanism; what Teaser ships is a
+`max-content` track in both states, start-aligned stacked and end-aligned
+beside media. Whether the button ever spans the row, and on which axis —
+the stacked state is not it, a 3-up desktop grid is stacked too — is an open
+`TODO(decide)` in Teaser, to be settled with a real design in front of us.) Three kinds of lever follow, and only the first is props:
+the author's choice per instance (`data-*`, static); the design's choice
+per context (tokens, and CSS gates in the composition's regions); the
+user's choice (media gates, never props). **A prop never carries a
+context condition** — no `grow="sm:true lg:false"`. That is ADR-0001's
+rule for tiers applied to every axis, and it is what keeps this system
+from becoming utility classes as data attributes. A composition that
+wants a page to choose between behaviours exposes an axis of its own,
+or refuses.
+
 ## Alternatives rejected
 
 - **One enum** (`data-width="fit | measure | stretch"`): cannot express

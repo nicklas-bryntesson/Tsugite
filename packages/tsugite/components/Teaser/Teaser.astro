@@ -106,7 +106,7 @@ const frameProps =
               {hasChildContent && <Fragment set:html={childHtml} />}
               {button && (
                 <div class="Actions">
-                  <LinkButton href={href} size="sm" growInline={false}>
+                  <LinkButton href={href} size="sm" growInline={true}>
                     {buttonLabel}
                     {hasHeading && <span class="visually-hidden"> about {heading}</span>}
                   </LinkButton>
@@ -131,7 +131,8 @@ const frameProps =
  *
  * Gates:
  *   data-button   false: the heading's link is stretched over the whole card.
- *                 true: the heading is plain and a button in .Actions carries the link.
+ *                 true: the heading is plain and a button in .Actions carries the link,
+ *                 bottom-start when stacked, bottom-end beside media.
  *   data-media    whether a MediaContainer is present.
  *
  * Teaser styles only its own parts (LayoutContainer, MediaContainer, HeadingContainer,
@@ -254,11 +255,23 @@ const frameProps =
         flex-direction: column;
         align-items: flex-start;
         gap: var(--size-md);
+
+        /* The button may grow (growInline); this region decides what it is given: one
+           track, sized to the label in both states. The button never learns which state
+           it is in. */
+        /* TODO(decide): when should the button span the row (a 1fr track)? Stacked alone
+           is not it: a 3-up grid on desktop is stacked too. Candidate: the mobile viewport
+           tier, gated here. Decide with a real design in front of us. */
+        & .Actions {
+          align-self: stretch;
+          display: grid;
+          grid-template-columns: max-content;
+        }
       }
     }
 
     /* TODO(token): the 25rem switch is a raw container threshold. */
-    /* State A, one column: media, heading, body. */
+    /* State A, one column: media, heading, body; the button sits at the start. */
     @container (max-width: 24.999rem) {
       & .LayoutContainer {
         grid-template-areas:
@@ -280,7 +293,7 @@ const frameProps =
       }
     }
 
-    /* State B, media beside text; the actions row sits at the bottom, end-aligned. */
+    /* State B, media beside text; the button sits at the bottom, end-aligned. */
     @container (min-width: 25rem) {
       & .LayoutContainer {
         grid-template-columns: minmax(var(--_te-minMediaSize), 1fr) 2fr;
@@ -315,9 +328,7 @@ const frameProps =
         }
 
         & .ContentContainer .Actions {
-          align-self: stretch;
           margin-block-start: auto;
-          display: flex;
           justify-content: end;
         }
       }

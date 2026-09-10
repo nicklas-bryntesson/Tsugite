@@ -288,6 +288,10 @@
     inline-size: fit-content;
   }
 
+  /* TODO(decide): a grown button's inner layout. With an icon the grid already gives
+     label-at-start, icon-at-end; without one the label sits at the start. A centred
+     label for the icon-less case is a design call, Button's own, gated on its own
+     attributes. Decide when a real full-width CTA appears. */
   &[data-grow-inline="true"] {
     inline-size: 100%;
   }
