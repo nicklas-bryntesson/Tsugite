@@ -106,7 +106,7 @@ const frameProps =
               {hasChildContent && <Fragment set:html={childHtml} />}
               {button && (
                 <div class="Actions">
-                  <LinkButton href={href} size="sm" growInline={false}>
+                  <LinkButton href={href} size="sm" growInline={true}>
                     {buttonLabel}
                     {hasHeading && <span class="visually-hidden"> about {heading}</span>}
                   </LinkButton>
@@ -131,7 +131,8 @@ const frameProps =
  *
  * Gates:
  *   data-button   false: the heading's link is stretched over the whole card.
- *                 true: the heading is plain and a button in .Actions carries the link.
+ *                 true: the heading is plain and a button in .Actions carries the link;
+ *                 it spans the row in the one-column state and fits its label beside media.
  *   data-media    whether a MediaContainer is present.
  *
  * Teaser styles only its own parts (LayoutContainer, MediaContainer, HeadingContainer,
@@ -254,17 +255,28 @@ const frameProps =
         flex-direction: column;
         align-items: flex-start;
         gap: var(--size-md);
+
+        /* The button may grow (growInline); this region decides what it is given: a
+           track per container state. The button never learns which state it is in. */
+        & .Actions {
+          align-self: stretch;
+          display: grid;
+        }
       }
     }
 
     /* TODO(token): the 25rem switch is a raw container threshold. */
-    /* State A, one column: media, heading, body. */
+    /* State A, one column: media, heading, body; the button spans the row. */
     @container (max-width: 24.999rem) {
       & .LayoutContainer {
         grid-template-areas:
           "media"
           "heading"
           "body";
+
+        & .ContentContainer .Actions {
+          grid-template-columns: 1fr;
+        }
 
         & .MediaContainer {
           margin-block-end: var(--size-md);
@@ -280,7 +292,8 @@ const frameProps =
       }
     }
 
-    /* State B, media beside text; the actions row sits at the bottom, end-aligned. */
+    /* State B, media beside text; the button sits at the bottom, end-aligned, as wide as
+       its label: the track is max-content, so 100% of it is the label. */
     @container (min-width: 25rem) {
       & .LayoutContainer {
         grid-template-columns: minmax(var(--_te-minMediaSize), 1fr) 2fr;
@@ -315,9 +328,8 @@ const frameProps =
         }
 
         & .ContentContainer .Actions {
-          align-self: stretch;
           margin-block-start: auto;
-          display: flex;
+          grid-template-columns: max-content;
           justify-content: end;
         }
       }

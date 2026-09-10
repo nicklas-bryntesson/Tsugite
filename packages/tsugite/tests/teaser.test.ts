@@ -54,7 +54,8 @@ describe("Teaser", () => {
     expect(html).toMatch(/<div class="Actions">\s*<a class="Button"[^>]*href="\/post"/);
     expect(html).toMatch(/<a class="Button"[^>]*data-emphasis="primary"/);
     expect(html).toMatch(/<a class="Button"[^>]*data-size="sm"/);
-    expect(html).toMatch(/<a class="Button"[^>]*data-grow-inline="false"/);
+    // the button may grow; Teaser's Actions region decides per container state what it is given
+    expect(html).toMatch(/<a class="Button"[^>]*data-grow-inline="true"/);
     expect(html).toContain("Read more");
     expect(html).toContain('<span class="visually-hidden"> about Title</span>');
   });
