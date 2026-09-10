@@ -16,10 +16,14 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
-    "axe-playwright": "^2.2.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "astro": "7.2.9",
     "axe-core": "^4.13.0",
+    "axe-playwright": "^2.2.2",
     "jsdom": "^29.1.1",
-    "vitest": "^4.1.11",
-    "astro": "7.2.9"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "vitest": "^4.1.11"
   }
 }
