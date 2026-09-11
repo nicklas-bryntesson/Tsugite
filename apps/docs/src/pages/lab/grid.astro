@@ -8,30 +8,40 @@ import Layout from "../../layouts/Layout.astro";
 
 <Layout title="Grid lab">
   <main class="GridLab">
-    {/* Spoof use cases here. Examples to start from (uncomment one at a time):
 
-    <section class="grid-container">
+
+    <section class="grid-container ProseWithMediaBlock" data-theme="neutral" data-prominence="primary">
       <div class="lab-block" data-label="main">in the main column (default)</div>
       <div class="lab-block grid-container-full" data-label="full">full bleed</div>
     </section>
 
-    <section class="grid-breakout">
+    <div class="grid-breakout CtaBlock" data-theme="brand" data-prominence="primary">
       <div class="lab-block" style="grid-column: 2 / 8" data-label="2 / 8">text</div>
       <div class="lab-block" style="grid-column: 8 / 14" data-label="8 / 14">media</div>
-    </section>
+    </div>
 
-    <section class="grid-layout">
+    <div class="grid-layout TestimonialBlock" data-theme="brand" data-prominence="primary">
+      <div class="lab-block" style="grid-column: span 4" data-label="span 4">a</div>
+      <div class="lab-block" style="grid-column: span 4" data-label="span 4">b</div>
+      <div class="lab-block" style="grid-column: span 4" data-label="span 4">c</div>
+    </div>
+
+    <section class="grid-layout " data-theme="brand" data-prominence="subtle">
       <div class="lab-block" style="grid-column: span 4" data-label="span 4">a</div>
       <div class="lab-block" style="grid-column: span 4" data-label="span 4">b</div>
       <div class="lab-block" style="grid-column: span 4" data-label="span 4">c</div>
     </section>
 
-    */}
   </main>
 </Layout>
 
+<script>
+  // Nicklas's debug panel: grid overlay, tier indicators, container debugger.
+  import { init } from "../../lib/debugPanel";
+  init();
+</script>
+
 <style is:global>
-  /* Lab-only helpers. Not part of the system. */
   .GridLab {
     min-block-size: 40vh;
   }
@@ -53,5 +63,25 @@ import Layout from "../../layouts/Layout.astro";
       color: var(--color-text-secondary);
       background-color: var(--color-surface-inset);
     }
+  }
+
+
+  .ProseWithMediaBlock,
+  .CtaBlock,
+  .TestimonialBlock {
+    background-color: var(--theme-cell-primary-surface);
+  }
+  /* Think section in landingpage, prob comming from a blockbuilder in a CMS */  
+  .ProseWithMediaBlock {
+
+  }
+
+  .CtaBlock {
+
+  }
+
+
+  .TestimonialBlock {
+
   }
 </style>
