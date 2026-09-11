@@ -58,6 +58,32 @@ makes it impossible to reason about, for a person and for a model alike.
   ADR; every component has a suite that measures rendered DOM. The same
   DOM from Astro, React and Vue, byte for byte.
 
+## The order of work: from the worst case backwards
+
+Most projects start with the simple case — one colour axis, the component
+in its prettiest state — and add the rest later. Every later state then
+becomes an override of the first: dark mode as `.dark .Button`, contrast as
+another layer, the phone as "the mobile version". The pretty case is the
+base and everything else is a deviation from it. That is base-plus-override,
+and it is the four examples above. Drift is not carelessness; it is the
+consequence of the order.
+
+Tsugite works the other way round. The full state space is laid out first:
+every colour axis that can exist (voice, volume, four modes, forced colours),
+every layout state (viewport tier, container state), every axis a component
+can carry — and, for each axis, **who decides**: the region owns the voice,
+the child owns its footprint, the composition owns placement. Then the
+hardest state is built first and the simplest last. Light mode is one
+column of four, not the default. The stacked Teaser is one container state
+of two, not the mobile version. The pretty case is just a cell, and there is
+no base left to override.
+
+The counterweight, so this does not become thirty cells nobody uses: the
+*shape* of the space is enumerated up front, the *values* of its cells are
+written when a real case needs them (ADR-0005 rule 3), and a cell the
+combination law does not whitelist does not exist (ADR-0006 §6). Every axis
+known and every owner named from day one; not every cell filled.
+
 The result: "where does this come from?" always has a one-line answer.
 That is the whole point.
 
