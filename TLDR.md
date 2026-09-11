@@ -68,6 +68,18 @@ base and everything else is a deviation from it. That is base-plus-override,
 and it is the four examples above. Drift is not carelessness; it is the
 consequence of the order.
 
+The same order shows up in component APIs as **prop explosion**. Each
+state that arrives late becomes a prop: `dark`, `compact`, `inverse`,
+`fullWidthOnMobile`, `variant="hero-dark-compact"`. Props that encode a
+combination multiply with every state added, each one a special case with
+its own CSS, until nobody can say which combinations are meant to exist.
+In Tsugite a prop is an axis with an owner, never a combination, and never
+a context: `data-grow-inline="true"` is a permission, the container state
+that decides what the button is given lives in the parent's CSS, and the
+user's dark mode lives in a media gate. The prop count is the number of
+axes, not the number of situations, and a combination that must not exist
+is refused where the axes live.
+
 Tsugite works the other way round. The full state space is laid out first:
 every colour axis that can exist (voice, volume, four modes, forced colours),
 every layout state (viewport tier, container state), every axis a component
