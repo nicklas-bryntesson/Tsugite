@@ -78,6 +78,19 @@ column of four, not the default. The stacked Teaser is one container state
 of two, not the mobile version. The pretty case is just a cell, and there is
 no base left to override.
 
+Within that space the building order is still primitives first — inputs,
+buttons, text — out to compositions of primitives, to regions that host
+them, to page layout. That is atomic design's shape with one difference:
+the tiers are sorted by **ownership**, not size. A primitive owns its
+vocabulary and is content; a composition owns arrangement and theme claims
+and no vocabulary; a region governs a capability over what it hosts. So
+when a component lacks a capability you need, that is a contract question
+with three outcomes, none of them CSS: it is a variant of something that
+exists, so a new cell on an existing axis, with its gate; or it is not, so a
+new name, a verb, a list of what it refuses, assembled from the primitives;
+or someone wants to bend the old one, and the old one's refusal is what
+protects it.
+
 The counterweight, so this does not become thirty cells nobody uses: the
 *shape* of the space is enumerated up front, the *values* of its cells are
 written when a real case needs them (ADR-0005 rule 3), and a cell the
