@@ -1,36 +1,144 @@
 ---
-// /lab/grid — an empty stage between the site's header and footer for spoofing
-// grid use cases. Not on the map, not a docs page: a scratch surface for the
-// grid-region discussion. Drop markup into <main>; the .lab-block helper draws
-// an outline and a label so placement is visible without inspecting.
+// /lab/grid — a stage between the site's header and footer for spoofing the content
+// blocks a content-heavy front page is made of. Not on the map, not a docs page.
+//
+// The blocks below were lifted from another Astro project (stealing/) and converted
+// to this system's form: page bands are Surfaces (voice, rhythm, adjacency collapse
+// for free), every axis is a data-* word with a gate per value, every var() is a
+// registry name, and no rule names another component's class. What could not be
+// converted without a decision carries a TODO(lab).
 import Layout from "../../layouts/Layout.astro";
+import Surface from "tsugite/components/Surface/Surface.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import Prose from "tsugite/components/Prose/Prose.astro";
+import LinkButton from "tsugite/components/Button/LinkButton.astro";
+import amal from "tsugite/fixtures/media/amal-s.jpg";
+import david from "tsugite/fixtures/media/david-becker.jpg";
+import jean from "tsugite/fixtures/media/jean-philippe.jpg";
 ---
 
 <Layout title="Grid lab">
   <main class="GridLab">
 
+    {/* 1. Prose beside media, on the container grid: text in the main column, media
+        may break out. The draft §6 composition without a name yet. */}
+    <Surface element="section" theme="neutral" capInline={false}>
+      <div class="ProseWithMedia grid-container" data-media-side="end" data-media-ratio="landscape" data-text-valign="start">
+        <article class="text">
+          <Heading element="h2" size="2" text="Prose beside media" />
+          <Prose variant="basic">
+            <p>The text sits in the main column; the media takes the outer half of the breakout. Flip <code>data-media-side</code> to move it.</p>
+          </Prose>
+        </article>
+        <figure class="media">
+          <img src={amal.src} width={amal.width} height={amal.height} alt="" loading="lazy" />
+        </figure>
+      </div>
+    </Surface>
 
-    <section class="grid-container ProseWithMediaBlock" data-theme="neutral" data-prominence="primary">
-      <div class="lab-block" data-label="main">in the main column (default)</div>
-      <div class="lab-block grid-container-full" data-label="full">full bleed</div>
-    </section>
+    {/* 2. CTA on the breakout grid: 14 tracks, text 2–8, media 8–14. */}
+    <Surface element="section" theme="brand" capInline={false}>
+      <div class="CtaWithMedia grid-breakout" data-media-side="end">
+        <div class="text">
+          <Heading element="h2" size="3" text="Find the answer to your question" />
+          <Prose variant="basic">
+            <p>We collected the questions teachers ask most. Someone may already have asked yours.</p>
+          </Prose>
+          <div class="actions">
+            <LinkButton href="#">Search questions</LinkButton>
+            <LinkButton href="#" emphasis="secondary">Contact us</LinkButton>
+          </div>
+        </div>
+        <figure class="media">
+          <img src={david.src} width={david.width} height={david.height} alt="" loading="lazy" />
+        </figure>
+      </div>
+    </Surface>
 
-    <div class="grid-breakout CtaBlock" data-theme="brand" data-prominence="primary">
-      <div class="lab-block" style="grid-column: 2 / 8" data-label="2 / 8">text</div>
-      <div class="lab-block" style="grid-column: 8 / 14" data-label="8 / 14">media</div>
-    </div>
+    {/* 3. Testimonial on the layout grid: quote spans 8, portrait spans 4. */}
+    <Surface element="section" theme="brand" prominence="subtle" capInline={false}>
+      <figure class="Testimonial grid-layout" data-media-side="start">
+        <div class="media grid-stack">
+          <img class="grid-stack-item" src={jean.src} width={jean.width} height={jean.height} alt="" loading="lazy" />
+        </div>
+        <blockquote class="quote">
+          <p>Working with this team completely transformed our digital presence. The results exceeded every expectation we had.</p>
+        </blockquote>
+        <figcaption class="source">
+          <span class="name">Sarah Johnson</span>
+          <span class="org">Acme Corp</span>
+        </figcaption>
+      </figure>
+    </Surface>
 
-    <div class="grid-layout TestimonialBlock" data-theme="brand" data-prominence="primary">
-      <div class="lab-block" style="grid-column: span 4" data-label="span 4">a</div>
-      <div class="lab-block" style="grid-column: span 4" data-label="span 4">b</div>
-      <div class="lab-block" style="grid-column: span 4" data-label="span 4">c</div>
-    </div>
+    {/* 4. Three-up on the layout grid, same voice as the previous band: the second
+        Surface drops its start padding (generated adjacency, ADR-0016). */}
+    <Surface element="section" theme="brand" prominence="subtle" capInline={false}>
+      <div class="ThreeUp grid-layout">
+        <div class="lab-block" data-label="span 4">a</div>
+        <div class="lab-block" data-label="span 4">b</div>
+        <div class="lab-block" data-label="span 4">c</div>
+      </div>
+    </Surface>
 
-    <section class="grid-layout " data-theme="brand" data-prominence="subtle">
-      <div class="lab-block" style="grid-column: span 4" data-label="span 4">a</div>
-      <div class="lab-block" style="grid-column: span 4" data-label="span 4">b</div>
-      <div class="lab-block" style="grid-column: span 4" data-label="span 4">c</div>
-    </section>
+    {/* 5. A pull quote in the flow: an RTE block, no band of its own. */}
+    <Surface element="section">
+      <figure class="PullQuote" data-size="md">
+        <svg class="mark" aria-hidden="true" focusable="false"><use href="#icon-quote"></use></svg>
+        <div class="portrait grid-stack">
+          <img class="grid-stack-item foreground" src={amal.src} width={amal.width} height={amal.height} alt="" loading="lazy" />
+          <img class="grid-stack-item blur" src={amal.src} width={64} height={64} alt="" aria-hidden="true" loading="lazy" />
+        </div>
+        <blockquote>
+          <p>Words can be like X-rays, if you use them properly — they'll go through anything. You read and you're pierced.</p>
+        </blockquote>
+        <figcaption>Aldous Huxley</figcaption>
+      </figure>
+    </Surface>
+
+    {/* 6. A CTA aside: heading, prose, two actions. */}
+    <Surface element="aside" theme="accent">
+      <div class="CtaAside">
+        <Heading element="h3" size="3" text="Let's talk" />
+        <Prose variant="basic">
+          <p>We'd love to hear about your project. Drop us a line and we'll get back to you within 24 hours.</p>
+        </Prose>
+        <div class="actions">
+          <LinkButton href="/contact">Get in touch</LinkButton>
+          <LinkButton href="/book" emphasis="secondary">Book a call</LinkButton>
+        </div>
+      </div>
+    </Surface>
+
+    {/* 7. Text with image: the draft §6 axes as written — layout, media side, media
+        ratio, text valign — on the layout grid (wide) or the breakout grid (full). */}
+    <Surface element="section" capInline={false}>
+      <div class="TextWithMedia" data-layout="wide" data-media-side="start" data-media-ratio="portrait" data-text-valign="start">
+        <div class="text">
+          <Heading element="h2" size="2" text="Text with image" />
+          <Prose variant="basic">
+            <p>Lorem ipsum dolor sit amet. Sed sunt accusantium et quae galisum ea consequatur veritatis est dolorem omnis id sequi exercitationem. Ut beatae quod et corporis nobis, reiciendis galisum est error ipsum.</p>
+            <p>More text.</p>
+          </Prose>
+          <div class="actions">
+            <LinkButton href="/">CTA Button</LinkButton>
+            <LinkButton href="/" emphasis="secondary">CTA Button</LinkButton>
+          </div>
+        </div>
+        <figure class="media grid-stack">
+          <img class="grid-stack-item foreground" src={david.src} width={david.width} height={david.height} alt="" loading="lazy" />
+          <img class="grid-stack-item blur" src={david.src} width={64} height={64} alt="" aria-hidden="true" loading="lazy" />
+        </figure>
+      </div>
+    </Surface>
+
+    {/* 8. A full-bleed image in the flow. */}
+    <Surface element="section" capInline={false}>
+      <figure class="Image grid-container">
+        <img class="grid-container-full" src={jean.src} width={jean.width} height={jean.height} alt="" loading="lazy" />
+        <figcaption>A caption, centred under the image.</figcaption>
+      </figure>
+    </Surface>
 
   </main>
 </Layout>
@@ -42,6 +150,7 @@ import Layout from "../../layouts/Layout.astro";
 </script>
 
 <style is:global>
+  /* ── Lab helpers. Not part of the system. ───────────────────────────────── */
   .GridLab {
     min-block-size: 40vh;
   }
@@ -65,23 +174,347 @@ import Layout from "../../layouts/Layout.astro";
     }
   }
 
+  /* Surface today wraps content in .content with a measure cap; capInline={false}
+     lifts the cap so the grid recipes can run edge to edge. When Surface takes the
+     grid recipe itself (the Grid spike), these wrappers and the utility classes go. */
 
-  .ProseWithMediaBlock,
-  .CtaBlock,
-  .TestimonialBlock {
-    background-color: var(--theme-cell-primary-surface);
+  /* ── 1. ProseWithMedia — container grid, media may break out ───────────── */
+  .ProseWithMedia {
+    /* TODO(lab): the vertical rhythm inside a band; --size-lg until sections have rhythm tokens. */
+    row-gap: var(--size-lg);
+
+    & .text {
+      grid-column: main;
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-md);
+    }
+
+    & .media {
+      margin: 0;
+      overflow: hidden;
+      border-radius: var(--ui-radius);
+
+      & img {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+      }
+    }
+
+    &[data-media-ratio="landscape"] .media { aspect-ratio: 16 / 9; }
+    &[data-media-ratio="portrait"]  .media { aspect-ratio: 3 / 4; }
+    &[data-media-ratio="square"]    .media { aspect-ratio: 1; }
+    &[data-media-ratio="golden"]    .media { aspect-ratio: 1.618 / 1; }
+
+    &[data-text-valign="start"]  .text { justify-content: start; }
+    &[data-text-valign="center"] .text { justify-content: center; }
+    &[data-text-valign="end"]    .text { justify-content: end; }
+
+    /* Below the desktop tier both stack in the main column. */
+    @media (max-width: 48.74rem) {
+      &[data-media-side="start"] .media,
+      &[data-media-side="end"]   .media { grid-column: main; }
+    }
+
+    @media (min-width: 48.75rem) {
+      & .text  { grid-row: 1; }
+      & .media { grid-row: 1; }
+
+      /* The container grid has only two named regions; the split is made inside
+         main by giving text a max measure and letting media take the rest. */
+      /* TODO(lab): real side-by-side needs the breakout or layout grid — the container
+         grid has no columns to place on. This block belongs on breakout; kept here to
+         show the limit. */
+      &[data-media-side="end"]   .media { grid-column: main-end / full-end; }
+      &[data-media-side="start"] .media { grid-column: full-start / main-start; }
+    }
   }
-  /* Think section in landingpage, prob comming from a blockbuilder in a CMS */  
-  .ProseWithMediaBlock {
 
+  /* ── 2. CtaWithMedia — breakout grid, 14 tracks ─────────────────────────── */
+  .CtaWithMedia {
+    row-gap: var(--size-lg);
+
+    & .text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-md);
+      grid-column: 2 / 14;
+    }
+
+    & .media {
+      margin: 0;
+      overflow: hidden;
+      border-radius: var(--ui-radius);
+      grid-column: 2 / 14;
+
+      & img {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+      }
+    }
+
+    & .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-sm);
+    }
+
+    @media (min-width: 48.75rem) {
+      & .text,
+      & .media { grid-row: 1; }
+
+      &[data-media-side="end"]   .text  { grid-column: 2 / 8; }
+      &[data-media-side="end"]   .media { grid-column: 8 / 14; }
+      &[data-media-side="start"] .media { grid-column: 2 / 8; }
+      &[data-media-side="start"] .text  { grid-column: 8 / 14; }
+    }
   }
 
-  .CtaBlock {
+  /* ── 3. Testimonial — layout grid, quote 8 + portrait 4 ─────────────────── */
+  .Testimonial {
+    margin: 0;
+    row-gap: var(--size-md);
+    align-items: center;
 
+    & .media {
+      border-radius: var(--ui-radius);
+      overflow: hidden;
+      aspect-ratio: 1;
+
+      & img {
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+      }
+    }
+
+    & .quote {
+      margin: 0;
+
+      & p {
+        margin: 0;
+        /* TODO(token): a quote voice. Borrowing the heading ramp's h3 stop is the old
+           project's habit; the typography family has no "quote" voice yet. */
+        font-family: var(--fontFamily-body);
+        font-size: var(--fontSize-h3);
+        line-height: var(--lineHeight-heading);
+        font-style: italic;
+      }
+    }
+
+    & .source {
+      display: flex;
+      flex-direction: column;
+      font-family: var(--fontFamily-label);
+      font-size: var(--fontSize-label);
+      color: var(--theme-textMuted, var(--color-text-secondary));
+
+      & .name { font-weight: var(--fontWeight-body-bold); }
+    }
+
+    & .media, & .quote, & .source { grid-column: 1 / -1; }
+
+    @media (min-width: 48.75rem) {
+      & .media  { grid-row: 1 / 3; }
+      & .quote  { grid-row: 1; align-self: end; }
+      & .source { grid-row: 2; align-self: start; }
+
+      &[data-media-side="start"] .media { grid-column: 1 / 5; }
+      &[data-media-side="start"] .quote,
+      &[data-media-side="start"] .source { grid-column: 6 / 13; }
+
+      &[data-media-side="end"] .media { grid-column: 9 / 13; }
+      &[data-media-side="end"] .quote,
+      &[data-media-side="end"] .source { grid-column: 1 / 8; }
+    }
   }
 
+  /* ── 4. ThreeUp — layout grid, three equal spans ────────────────────────── */
+  .ThreeUp {
+    row-gap: var(--size-md);
 
-  .TestimonialBlock {
+    & > * { grid-column: 1 / -1; }
 
+    @media (min-width: 48.75rem) {
+      & > * { grid-column: span 4; }
+    }
+  }
+
+  /* ── 5. PullQuote — a figure in the flow with a stacked portrait ────────── */
+  .PullQuote {
+    --_pq-markSize: var(--size-xl);
+    --_pq-portraitSize: 10rem;
+
+    margin: 0;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "quote portrait"
+      "source portrait";
+    column-gap: var(--size-lg);
+    padding: var(--size-xl);
+    border-inline-start: 0.3em solid var(--theme-border, var(--color-border-default));
+
+    & .mark {
+      display: none;
+      inline-size: var(--_pq-markSize);
+      block-size: var(--_pq-markSize);
+    }
+
+    & .portrait {
+      grid-area: portrait;
+      inline-size: var(--_pq-portraitSize);
+      aspect-ratio: 1;
+    }
+
+    & blockquote {
+      grid-area: quote;
+      margin: 0;
+
+      & p {
+        margin: 0;
+        font-family: var(--fontFamily-body);
+        font-style: italic;
+        line-height: var(--lineHeight-heading);
+      }
+    }
+
+    & figcaption {
+      grid-area: source;
+      margin-block-start: 1em;
+      font-family: var(--fontFamily-label);
+      font-size: var(--fontSize-label);
+      color: var(--theme-textMuted, var(--color-text-secondary));
+    }
+
+    /* TODO(decide): the old block sized its quote with the heading ramp (h4/h3/h2).
+       Kept as a size axis with the family's three stops; whether a quote is its own
+       voice is a typography-family question. */
+    &[data-size="sm"] blockquote p { font-size: var(--fontSize-h4); }
+    &[data-size="md"] blockquote p { font-size: var(--fontSize-h3); }
+    &[data-size="lg"] blockquote p { font-size: var(--fontSize-h2); }
+  }
+
+  /* ── 6. CtaAside — heading, prose, actions ──────────────────────────────── */
+  .CtaAside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-md);
+
+    & .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-sm);
+    }
+  }
+
+  /* ── 7. TextWithMedia — the draft §6 axes ───────────────────────────────── */
+  .TextWithMedia {
+    display: grid;
+    row-gap: var(--size-lg);
+
+    &[data-layout="wide"] {
+      grid-template-columns: var(--grid-layout-columns);
+      column-gap: var(--grid-layout-gap);
+    }
+
+    &[data-layout="full"] {
+      grid-template-columns: var(--grid-breakout-columns);
+      column-gap: var(--grid-breakout-gap);
+    }
+
+    & .text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-md);
+      grid-column: 1 / -1;
+    }
+
+    & .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-sm);
+    }
+
+    & .media {
+      margin: 0;
+      grid-column: 1 / -1;
+      inline-size: 100%;
+      margin-block: auto;
+      border-radius: var(--ui-radius);
+      overflow: hidden;
+    }
+
+    &[data-media-ratio="landscape"] .media { aspect-ratio: 16 / 9; }
+    &[data-media-ratio="portrait"]  .media { aspect-ratio: 3 / 4; }
+    &[data-media-ratio="square"]    .media { aspect-ratio: 1; }
+    &[data-media-ratio="golden"]    .media { aspect-ratio: 1.618 / 1; }
+
+    &[data-text-valign="start"]  .text { justify-content: start; }
+    &[data-text-valign="center"] .text { justify-content: center; }
+    &[data-text-valign="end"]    .text { justify-content: end; }
+
+    @media (min-width: 48.75rem) {
+      & .text,
+      & .media { grid-row: 1; }
+
+      /* wide: 12 tracks. full: 14 tracks with fluid outer columns, so placements shift by one. */
+      &[data-layout="wide"][data-media-side="end"]   .text  { grid-column: 1 / 7; }
+      &[data-layout="wide"][data-media-side="end"]   .media { grid-column: 8 / 13; }
+      &[data-layout="wide"][data-media-side="start"] .media { grid-column: 1 / 6; }
+      &[data-layout="wide"][data-media-side="start"] .text  { grid-column: 7 / 13; }
+
+      &[data-layout="full"][data-media-side="end"]   .text  { grid-column: 3 / 8; }
+      &[data-layout="full"][data-media-side="end"]   .media { grid-column: 11 / 15; }
+      &[data-layout="full"][data-media-side="start"] .media { grid-column: 1 / 5; }
+      &[data-layout="full"][data-media-side="start"] .text  { grid-column: 6 / 12; }
+    }
+  }
+
+  /* ── The blurred-image stack, shared by 5 and 7 ─────────────────────────── */
+  /* TODO(decide): this is a candidate primitive — Picture with a blurred echo
+     behind it. It is a stack recipe (grid-stack) plus two rules, and two blocks
+     already want it. */
+  .grid-stack > .foreground {
+    position: relative;
+    z-index: 1;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .grid-stack > .blur {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    padding: 10%;
+    translate: 0 10%;
+    opacity: 0.7;
+    filter: blur(20px);
+  }
+
+  /* ── 8. Image — full bleed on the container grid ────────────────────────── */
+  .Image {
+    margin: 0;
+    row-gap: var(--size-sm);
+
+    & img {
+      display: block;
+      inline-size: 100%;
+      block-size: auto;
+    }
+
+    & figcaption {
+      grid-column: main;
+      text-align: center;
+      font-family: var(--fontFamily-label);
+      font-size: var(--fontSize-label-small);
+      color: var(--theme-textMuted, var(--color-text-secondary));
+    }
   }
 </style>
