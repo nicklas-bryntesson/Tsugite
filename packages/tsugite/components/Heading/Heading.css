@@ -1,0 +1,196 @@
+/*
+ * Heading — the loud voices of the typography family.
+ *
+ * The root carries the voice (data-variant) and size (data-size); the inner
+ * container (.heading-text or .heading-link) receives the resolved font-size,
+ * line-height and the cap-to-baseline trim. The engine below is shared word for
+ * word with Text and TextBlock (ADR-0012); a change here is a change in three
+ * files.
+ *
+ * Gates:
+ *   data-variant   heading | display | body, the voice bundle.
+ *   data-size      per voice: 1–6, 1–3, sm | md | lg.
+ *   data-run       block | inline, derived from the element (ADR-0012 §3).
+ *   data-align     left | center | right.
+ *   data-wrap      balance | pretty | stable | nowrap.
+ */
+
+/* TODO(decide): the part classes (.heading-text, .heading-link) follow the family's
+   prefixed-lowercase scheme; Notice and Card use bare part names (.icon, .content).
+   Two schemes for inner parts. Family-wide, decide once. */
+/* TODO(decide): the engine slots (--_fontSize, --_lineHeight, --_emBox, ...) are shared
+   by Heading, Text and TextBlock. ADR-0013 left the family prefix open. */
+.Heading {
+  /* TODO(dead): word-wrap is the legacy alias of overflow-wrap; both are declared.
+     Same in Text and TextBlock, remove family-wide. */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin-block: 0;
+
+  & .heading-link,
+  & .heading-text {
+    font-size: var(--_fontSize);
+    line-height: var(--_lineHeight);
+
+    /* ADR-0012 §4, voice sovereignty: an unvoiced inline element inherits the
+       run's metrics. In the loud voices that includes strong and em; partial
+       bolding of a heading is drift, deliberately flattened. A voiced child
+       (data-variant) and everything inside it owns its own bundle. */
+    & :where(a, span, strong, em, b, i):where(:not([data-variant], [data-variant] *)) {
+      font: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+    }
+  }
+
+  /* ADR-0012 §3: block runs own their display; inline runs keep the UA's inline
+     flow, and receive nothing here. */
+  &[data-run="block"] > .heading-link,
+  &[data-run="block"] > .heading-text {
+    display: block;
+  }
+
+  &[data-variant="heading"] {
+    --_lineHeight: var(--lineHeight-heading);
+    --_baselineOffset: var(--baseline-offset-heading);
+    --_emBox: var(--fontEmBox-heading);
+    --_capGap: var(--fontCapGap-heading);
+    --_descent: var(--fontDescent-heading);
+
+    font-family: var(--fontFamily-heading);
+    font-weight: var(--fontWeight-heading);
+    letter-spacing: var(--letterSpacing-heading);
+    font-feature-settings: var(--fontFeatureSettings-heading);
+
+    &[data-size="1"] {
+      --_fontSize: var(--fontSize-h1);
+    }
+
+    &[data-size="2"] {
+      --_fontSize: var(--fontSize-h2);
+    }
+
+    &[data-size="3"] {
+      --_fontSize: var(--fontSize-h3);
+    }
+
+    &[data-size="4"] {
+      --_fontSize: var(--fontSize-h4);
+    }
+
+    &[data-size="5"] {
+      --_fontSize: var(--fontSize-h5);
+    }
+
+    &[data-size="6"] {
+      --_fontSize: var(--fontSize-h6);
+    }
+  }
+
+  &[data-variant="display"] {
+    --_lineHeight: var(--lineHeight-display);
+    --_baselineOffset: var(--baseline-offset-display);
+    --_emBox: var(--fontEmBox-display);
+    --_capGap: var(--fontCapGap-display);
+    --_descent: var(--fontDescent-display);
+
+    font-family: var(--fontFamily-display);
+    font-weight: var(--fontWeight-display);
+    letter-spacing: var(--letterSpacing-display);
+    font-feature-settings: var(--fontFeatureSettings-display);
+
+    &[data-size="1"] {
+      --_fontSize: var(--fontSize-display-1);
+    }
+
+    &[data-size="2"] {
+      --_fontSize: var(--fontSize-display-2);
+    }
+
+    &[data-size="3"] {
+      --_fontSize: var(--fontSize-display-3);
+    }
+  }
+
+  &[data-variant="body"] {
+    --_lineHeight: var(--lineHeight-body);
+    --_baselineOffset: var(--baseline-offset-body);
+    --_emBox: var(--fontEmBox-body);
+    --_capGap: var(--fontCapGap-body);
+    --_descent: var(--fontDescent-body);
+
+    font-family: var(--fontFamily-body);
+    font-weight: var(--fontWeight-body);
+    letter-spacing: var(--letterSpacing-body);
+    font-feature-settings: var(--fontFeatureSettings-body);
+
+    &[data-size="sm"] {
+      --_fontSize: var(--fontSize-body-small);
+    }
+
+    &[data-size="md"] {
+      --_fontSize: var(--fontSize-body);
+    }
+
+    &[data-size="lg"] {
+      --_fontSize: var(--fontSize-body-large);
+    }
+  }
+
+  &[data-align="left"] {
+    text-align: left;
+  }
+
+  &[data-align="center"] {
+    text-align: center;
+  }
+
+  &[data-align="right"] {
+    text-align: right;
+  }
+
+  &[data-wrap="balance"] {
+    text-wrap: balance;
+  }
+
+  &[data-wrap="pretty"] {
+    text-wrap: pretty;
+  }
+
+  &[data-wrap="stable"] {
+    text-wrap: stable;
+  }
+
+  &[data-wrap="nowrap"] {
+    text-wrap: nowrap;
+  }
+
+  /* Text trim (ADR-0012 §3): a block concept, so both branches sit behind the
+     data-run gate and an inline run receives neither. Isolated, removable in
+     one sweep. */
+  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+    &[data-run="block"] > .heading-link,
+    &[data-run="block"] > .heading-text {
+      text-box-trim: trim-both;
+      text-box-edge: cap alphabetic;
+      margin-block: 0;
+    }
+  }
+
+  @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
+    &[data-run="block"] > .heading-link,
+    &[data-run="block"] > .heading-text {
+      /* Emulates text-box-edge: cap alphabetic. The line box's content area is
+         the real em box (ascent + descent, 1.19 to 1.36em for our faces, never
+         1), so the shave is half of (emBox - lineHeight) plus the cap gap above
+         and the descent below. baselineOffset is the artistic nudge on top. */
+      /* TODO(dead): the `, 1` and `, 0` fallbacks can never fire, every variant sets
+         the slots. Doctrine §2 forbids them. Same in Text and TextBlock. */
+      --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
+      --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
+
+      margin-block-start: var(--_marginBlockStart);
+      margin-block-end: var(--_marginBlockEnd);
+    }
+  }
+}
