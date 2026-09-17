@@ -1,28 +1,10 @@
 ---
-// Text — authored single-run UI text (the missing family member next to
-// Heading and Prose; tasks/notes-typography-components.md).
-//
-// The family rule: one door per look. Text owns the QUIET voices (body,
-// label) on plain text elements; Heading owns the LOUD voices (heading,
-// display). Prose is the donut for flowing content nobody authors
-// element by element. The litmus: do you author the element? → family
-// component. A flow you don't control? → Prose.
-//
-// Same two-axis machine as Heading: element (technical) × variant
-// (visual voice) × size — every value resolved through the typography
-// role bundles, never raw.
-
-// Element farms and voices come from the family contract — the door law
-// is enforced by tests/typographyFamily.test.ts, never re-declared here.
-import { FAMILY, VOICE_SIZES } from "../../lib/typographyFamily.ts";
-
-const VOICES = FAMILY.Text.voices;
-const VALID_ELEMENTS = [...new Set(Object.values(VOICES).flat())];
-const VALID_VARIANTS = Object.keys(VOICES);
-const DEFAULT_SIZE = "md";
-
-const VALID_ALIGNS = ["left", "center", "right"];
-const VALID_WRAPS = ["balance", "pretty", "stable", "nowrap"];
+// Text — the QUIET voices (body, label) on plain text elements: authored single-run
+// UI text, the family member next to Heading and Prose. The recipe lives in
+// lib/typography.ts; this file renders it in Astro.
+import "./Text.css";
+import DevError from "../DevError/DevError.astro";
+import { resolveTypography } from "../../lib/typography";
 
 interface Props {
   text?: string;
@@ -35,219 +17,23 @@ interface Props {
   [key: string]: unknown;
 }
 
-const {
-  text,
-  element: elementProp = "p",
-  variant: variantProp,
-  size: sizeProp,
-  align = "left",
-  wrap = "pretty",
-  class: className,
-  ...rest
-} = Astro.props;
-
-const isDev = import.meta.env.DEV;
-
-const escapeHtml = (s: string) =>
-  s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-
-// ── Guards ──────────────────────────────────────────
+const { text, element, variant, size, align, wrap, class: className, ...rest } = Astro.props;
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
 const hasChildContent = childHtml.trim().length > 0;
-const hasText = !!text;
 
-let mode: "render" | "suppress" | "error" = "render";
-let errorMessage = "";
+const t = resolveTypography("Text", { text, element, variant, size, align, wrap, class: className, hasChildContent });
 
-if (!hasText && !hasChildContent) {
-  mode = "suppress";
-} else if (hasText && hasChildContent) {
-  mode = "error";
-  errorMessage = "use text OR child content, not both";
-}
+// ADR-0012 §1: child content passes through the same engine container as prop text.
+const inner = t.mode === "render" ? `<span class="${t.container.className}">${hasChildContent ? childHtml : t.innerHtml}</span>` : "";
 
-const element = VALID_ELEMENTS.includes(elementProp.toLowerCase())
-  ? elementProp.toLowerCase()
-  : "p";
-const variant = VALID_VARIANTS.includes((variantProp ?? "").toLowerCase())
-  ? variantProp!.toLowerCase()
-  : "body";
-const size = sizeProp && VOICE_SIZES[variant].includes(sizeProp.toLowerCase())
-  ? sizeProp.toLowerCase()
-  : DEFAULT_SIZE;
-
-const alignAttr = VALID_ALIGNS.includes(align.toLowerCase()) ? align.toLowerCase() : undefined;
-const wrapAttr = VALID_WRAPS.includes(wrap.toLowerCase()) ? wrap.toLowerCase() : undefined;
-
-const cssClass = className && String(className).trim() ? `Text ${className}` : "Text";
-
-// Run engine law (a): child content passes through the same engine
-// container as prop text — no path bypasses size/leading/trim.
-const inner =
-  mode === "render"
-    ? `<span class="text-content">${hasChildContent ? childHtml : escapeHtml(text!)}</span>`
-    : "";
-
-// Run engine law (c): the element shape decides the engine mode — a span
-// is an inline run (flows on the line, trim is the line host's business),
-// everything else is a block run that owns its trim.
-const runMode = element === "span" ? "inline" : "block";
-
-const Tag = element as "p";
+const Tag = t.tag as "p";
 ---
 
 {
-  mode === "render" ? (
-    <Tag
-      class={cssClass}
-      data-variant={variant}
-      data-size={size}
-      data-run={runMode}
-      data-align={alignAttr}
-      data-wrap={wrapAttr}
-      {...rest}
-      set:html={inner}
-    />
-  ) : mode === "error" && isDev ? (
-    <div style="color:red;" set:html={`<!-- Text: ${errorMessage} --><span>&times;</span>`} />
+  t.mode === "render" ? (
+    <Tag class={t.className} {...t.attrs} {...rest} set:html={inner} />
+  ) : t.mode === "error" ? (
+    <DevError name="Text" message={t.errorMessage} />
   ) : null
 }
-
-<style is:global>
-/* =====================================================
-   TEXT COMPONENT — the quiet voices (body, label)
-===================================================== */
-
-.Text {
-  /* reset */
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  margin-block: 0;
-
-  /* ================================================
-     TEXT CONTAINER (Typography Engine)
-  ================================================= */
-
-  .text-content {
-    font-size: var(--_fontSize);
-    line-height: var(--_lineHeight);
-
-    /* Law (d) — voice sovereignty: an UNVOICED inline element inherits
-       the run's metrics; a voiced child (data-variant) — and everything
-       inside it — owns its own bundle. The whole voiced subtree is
-       exempt, at zero added specificity: nearest voice wins by
-       inheritance, never by specificity. */
-    & :where(a, span, strong, em, b, i):where(:not([data-variant], [data-variant] *)) {
-      font: inherit;
-      line-height: inherit;
-      letter-spacing: inherit;
-    }
-
-    /* Law (b) — inline emphasis keeps its semantics in the quiet
-       voices: strong takes the role convention's strong weight (F2:
-       body-bold, no new stop), em stays italic. The loud voices
-       (Heading) deliberately flatten instead. */
-    & :where(strong, b):where(:not([data-variant] *)) { font-weight: var(--fontWeight-body-bold); }
-    & :where(em, i):where(:not([data-variant] *)) { font-style: italic; }
-  }
-
-  /* Law (c) — the engine mode is gated on the run shape: block runs own
-     their display; inline runs keep the UA's inline flow (absence is
-     the contract). */
-  &[data-run="block"] > .text-content {
-    display: block;
-  }
-
-  /* =====================================================
-     VARIANT LAYER (voice + baseline offset)
-  ===================================================== */
-
-  &[data-variant="body"] {
-    --_lineHeight: var(--lineHeight-body);
-    --_baselineOffset: var(--baseline-offset-body);
-    --_emBox: var(--fontEmBox-body);
-    --_capGap: var(--fontCapGap-body);
-    --_descent: var(--fontDescent-body);
-
-    font-family: var(--fontFamily-body);
-    font-weight: var(--fontWeight-body);
-    letter-spacing: var(--letterSpacing-body);
-    font-feature-settings: var(--fontFeatureSettings-body);
-
-    &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-body); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); }
-  }
-
-  &[data-variant="label"] {
-    --_lineHeight: var(--lineHeight-label);
-    --_baselineOffset: var(--baseline-offset-label);
-    --_emBox: var(--fontEmBox-label);
-    --_capGap: var(--fontCapGap-label);
-    --_descent: var(--fontDescent-label);
-
-    font-family: var(--fontFamily-label);
-    font-weight: var(--fontWeight-label);
-    letter-spacing: var(--letterSpacing-label);
-    font-feature-settings: var(--fontFeatureSettings-label);
-
-    &[data-size="sm"] { --_fontSize: var(--fontSize-label-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-label); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-label-large); }
-  }
-
-  /* =====================================================
-     ALIGNMENT
-  ===================================================== */
-
-  &[data-align="left"]   { text-align: left; }
-  &[data-align="center"] { text-align: center; }
-  &[data-align="right"]  { text-align: right; }
-
-  /* =====================================================
-     WRAP STRATEGIES
-  ===================================================== */
-
-  &[data-wrap="balance"] { text-wrap: balance; }
-  &[data-wrap="pretty"]  { text-wrap: pretty; }
-  &[data-wrap="stable"]  { text-wrap: stable; }
-
-  /* =====================================================
-     FEATURE LAYER — TEXT TRIM
-     Same gates as Heading. Removable in one sweep.
-     Law (c): trim is a block concept — inline runs sit on a shared
-     line whose metrics the host and the browser's baseline negotiate.
-  ===================================================== */
-
-  /* Native trim branch */
-  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-    &[data-run="block"] > .text-content {
-      text-box-trim: trim-both;
-      text-box-edge: cap alphabetic;
-      margin-block: 0;
-    }
-  }
-
-  /* Fallback branch */
-  @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
-    &[data-run="block"] > .text-content {
-      /* Emulates text-box-edge: cap alphabetic. The line box's content
-         area is the REAL em box (ascent+descent — 1.19-1.36em for our
-         faces, never 1), so the shave is half of (emBox - lineHeight)
-         plus the cap gap above / the descent below. baselineOffset stays
-         as the artistic nudge on top (factor x font size). */
-      --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
-      --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
-
-      margin-block-start: var(--_marginBlockStart);
-      margin-block-end: var(--_marginBlockEnd);
-    }
-  }
-}
-</style>

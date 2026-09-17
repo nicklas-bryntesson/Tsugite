@@ -1,0 +1,107 @@
+/* =====================================================
+   TEXTBLOCK COMPONENT — plain multiline text (textarea contract)
+===================================================== */
+
+.TextBlock {
+  /* reset */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin-block: 0;
+
+  /* ================================================
+     TEXT CONTAINER (Typography Engine)
+  ================================================= */
+
+  .textblock-content {
+    display: block;
+    font-size: var(--_fontSize);
+    line-height: var(--_lineHeight);
+    /* the contract: line breaks from the plain field are honored,
+       runs of spaces collapse */
+    white-space: pre-line;
+  }
+
+  /* =====================================================
+     VARIANT LAYER (voice + baseline offset)
+  ===================================================== */
+
+  &[data-variant="preamble"] {
+    --_lineHeight: var(--lineHeight-preamble);
+    --_baselineOffset: var(--baseline-offset-preamble);
+    --_emBox: var(--fontEmBox-preamble);
+    --_capGap: var(--fontCapGap-preamble);
+    --_descent: var(--fontDescent-preamble);
+
+    font-family: var(--fontFamily-preamble);
+    font-weight: var(--fontWeight-preamble);
+    letter-spacing: var(--letterSpacing-preamble);
+    font-feature-settings: var(--fontFeatureSettings-preamble);
+
+    &[data-size="sm"] { --_fontSize: var(--fontSize-preamble-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-preamble); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-preamble-large); }
+  }
+
+  &[data-variant="body"] {
+    --_lineHeight: var(--lineHeight-body);
+    --_baselineOffset: var(--baseline-offset-body);
+    --_emBox: var(--fontEmBox-body);
+    --_capGap: var(--fontCapGap-body);
+    --_descent: var(--fontDescent-body);
+
+    font-family: var(--fontFamily-body);
+    font-weight: var(--fontWeight-body);
+    letter-spacing: var(--letterSpacing-body);
+    font-feature-settings: var(--fontFeatureSettings-body);
+
+    &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-body); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); }
+  }
+
+  /* =====================================================
+     ALIGNMENT
+  ===================================================== */
+
+  &[data-align="left"]   { text-align: left; }
+  &[data-align="center"] { text-align: center; }
+  &[data-align="right"]  { text-align: right; }
+
+  /* =====================================================
+     WRAP STRATEGIES
+  ===================================================== */
+
+  &[data-wrap="balance"] { text-wrap: balance; }
+  &[data-wrap="pretty"]  { text-wrap: pretty; }
+  &[data-wrap="stable"]  { text-wrap: stable; }
+
+  /* =====================================================
+     FEATURE LAYER — TEXT TRIM
+     Same gates as Heading/Text. Removable in one sweep.
+  ===================================================== */
+
+  /* Native trim branch */
+  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+    > .textblock-content {
+      text-box-trim: trim-both;
+      text-box-edge: cap alphabetic;
+      margin-block: 0;
+    }
+  }
+
+  /* Fallback branch */
+  @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
+    > .textblock-content {
+      /* Emulates text-box-edge: cap alphabetic. The line box's content
+         area is the REAL em box (ascent+descent — 1.19-1.36em for our
+         faces, never 1), so the shave is half of (emBox - lineHeight)
+         plus the cap gap above / the descent below. baselineOffset stays
+         as the artistic nudge on top (factor x font size). */
+      --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
+      --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
+
+      margin-block-start: var(--_marginBlockStart);
+      margin-block-end: var(--_marginBlockEnd);
+    }
+  }
+}

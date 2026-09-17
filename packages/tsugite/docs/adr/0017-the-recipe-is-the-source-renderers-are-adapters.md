@@ -1,8 +1,9 @@
 # ADR-0017: The recipe is the source; renderers are adapters
 
-**Status:** Proposed · 2026-09-10 — spiked on Card (Astro + React + Vue, byte-identical
-markup under test, one CSS gating all three on the docs page). Accepted when Nicklas
-says so; a second component on the pattern is the natural next proof.
+**Status:** Accepted · 2026-09-17. Proposed 2026-09-10, spiked on Card (Astro +
+React + Vue, byte-identical markup under test, one CSS gating all three on the docs
+page); accepted once Notice, Button, the typography family, Teaser and Picture stood
+on the pattern and decision 6 was added.
 
 ## Context
 
@@ -22,7 +23,7 @@ same component. That makes a second framework cheap, and it makes a
 cross-reference the wrong mechanism: three source files held together by
 a comment are three truths.
 
-`lib/buttonShared.ts` already showed the alternative: one framework-free
+`lib/buttonShared.ts` (since `lib/button.ts`) already showed the alternative: one framework-free
 function resolves props to attributes, and two Astro components render it.
 
 ## Decision
@@ -53,6 +54,14 @@ function resolves props to attributes, and two Astro components render it.
 5. **React renders on the server only** in the docs app: the integration
    exists to show and test the renderer, not to hydrate anything. A
    `client:` directive on a Tsugite component is a separate decision.
+6. **A composition expresses its parts in their recipes.** Teaser's frame
+   is Card input (`bordered` is `{ padding: "none", border: true }`), and
+   Card's recipe produces the frame's markup; the same for its Button.
+   A composition never writes another component's class or `data-*`
+   attributes itself, in any renderer. Where that happens, the drift the
+   recipe exists to prevent comes back through the side door: the
+   composition's copy of the part goes stale the day the part's recipe
+   gains an attribute.
 
 ## Alternatives rejected
 
@@ -70,9 +79,16 @@ function resolves props to attributes, and two Astro components render it.
   `Card.astro`, `Card.tsx`, `Card.vue`, `Card.css`, `tests/card-renderers.test.ts`,
   and `apps/docs/tests/e2e/card-renderers.e2e.test.js` against the
   Renderers example on `/docs/card`.
-- The rule "one `.css` per component" joins the cleanup conventions;
-  Notice, Heading, Teaser and Surface still carry their CSS in the
-  `.astro` file.
+- Decision 1 says forbidden combinations live in the recipe. The next ADR
+  narrows that: the recipe declares only *absences* (cells the CSS has no
+  answer for); closures a project wants are its configuration, not the
+  system's. Recipes as data, and the split, are that ADR's subject.
+- The rule "one `.css` per component" joins the cleanup conventions.
+  On the pattern now (recipe in `lib/`, CSS in its own file): Card, Quote,
+  Notice, Button (both kinds), Heading, Text, TextBlock, Teaser, Picture.
+  React renderers exist for Card, Quote, Notice, Button and Heading.
+  Surface waits on Nicklas's investigation; the Field components wait on
+  the end-state decision (the FOUC finding).
 - Vue joined the spike as one SFC plus a row in the equality test; its SSR
   slot markers are comments and the normaliser strips them. Svelte is the
   same move. Not started.

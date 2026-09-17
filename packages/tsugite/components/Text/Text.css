@@ -1,0 +1,130 @@
+/* =====================================================
+   TEXT COMPONENT — the quiet voices (body, label)
+===================================================== */
+
+.Text {
+  /* reset */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin-block: 0;
+
+  /* ================================================
+     TEXT CONTAINER (Typography Engine)
+  ================================================= */
+
+  .text-content {
+    font-size: var(--_fontSize);
+    line-height: var(--_lineHeight);
+
+    /* Law (d) — voice sovereignty: an UNVOICED inline element inherits
+       the run's metrics; a voiced child (data-variant) — and everything
+       inside it — owns its own bundle. The whole voiced subtree is
+       exempt, at zero added specificity: nearest voice wins by
+       inheritance, never by specificity. */
+    & :where(a, span, strong, em, b, i):where(:not([data-variant], [data-variant] *)) {
+      font: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+    }
+
+    /* Law (b) — inline emphasis keeps its semantics in the quiet
+       voices: strong takes the role convention's strong weight (F2:
+       body-bold, no new stop), em stays italic. The loud voices
+       (Heading) deliberately flatten instead. */
+    & :where(strong, b):where(:not([data-variant] *)) { font-weight: var(--fontWeight-body-bold); }
+    & :where(em, i):where(:not([data-variant] *)) { font-style: italic; }
+  }
+
+  /* Law (c) — the engine mode is gated on the run shape: block runs own
+     their display; inline runs keep the UA's inline flow (absence is
+     the contract). */
+  &[data-run="block"] > .text-content {
+    display: block;
+  }
+
+  /* =====================================================
+     VARIANT LAYER (voice + baseline offset)
+  ===================================================== */
+
+  &[data-variant="body"] {
+    --_lineHeight: var(--lineHeight-body);
+    --_baselineOffset: var(--baseline-offset-body);
+    --_emBox: var(--fontEmBox-body);
+    --_capGap: var(--fontCapGap-body);
+    --_descent: var(--fontDescent-body);
+
+    font-family: var(--fontFamily-body);
+    font-weight: var(--fontWeight-body);
+    letter-spacing: var(--letterSpacing-body);
+    font-feature-settings: var(--fontFeatureSettings-body);
+
+    &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-body); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); }
+  }
+
+  &[data-variant="label"] {
+    --_lineHeight: var(--lineHeight-label);
+    --_baselineOffset: var(--baseline-offset-label);
+    --_emBox: var(--fontEmBox-label);
+    --_capGap: var(--fontCapGap-label);
+    --_descent: var(--fontDescent-label);
+
+    font-family: var(--fontFamily-label);
+    font-weight: var(--fontWeight-label);
+    letter-spacing: var(--letterSpacing-label);
+    font-feature-settings: var(--fontFeatureSettings-label);
+
+    &[data-size="sm"] { --_fontSize: var(--fontSize-label-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-label); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-label-large); }
+  }
+
+  /* =====================================================
+     ALIGNMENT
+  ===================================================== */
+
+  &[data-align="left"]   { text-align: left; }
+  &[data-align="center"] { text-align: center; }
+  &[data-align="right"]  { text-align: right; }
+
+  /* =====================================================
+     WRAP STRATEGIES
+  ===================================================== */
+
+  &[data-wrap="balance"] { text-wrap: balance; }
+  &[data-wrap="pretty"]  { text-wrap: pretty; }
+  &[data-wrap="stable"]  { text-wrap: stable; }
+
+  /* =====================================================
+     FEATURE LAYER — TEXT TRIM
+     Same gates as Heading. Removable in one sweep.
+     Law (c): trim is a block concept — inline runs sit on a shared
+     line whose metrics the host and the browser's baseline negotiate.
+  ===================================================== */
+
+  /* Native trim branch */
+  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+    &[data-run="block"] > .text-content {
+      text-box-trim: trim-both;
+      text-box-edge: cap alphabetic;
+      margin-block: 0;
+    }
+  }
+
+  /* Fallback branch */
+  @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
+    &[data-run="block"] > .text-content {
+      /* Emulates text-box-edge: cap alphabetic. The line box's content
+         area is the REAL em box (ascent+descent — 1.19-1.36em for our
+         faces, never 1), so the shave is half of (emBox - lineHeight)
+         plus the cap gap above / the descent below. baselineOffset stays
+         as the artistic nudge on top (factor x font size). */
+      --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
+      --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
+
+      margin-block-start: var(--_marginBlockStart);
+      margin-block-end: var(--_marginBlockEnd);
+    }
+  }
+}

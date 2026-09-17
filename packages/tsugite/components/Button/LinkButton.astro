@@ -1,9 +1,9 @@
 ---
-// Port of AiPoc TagHelpers/LinkButtonTagHelper.cs
-// Renders <a class="Button">. No intent — links are always intent-neutral.
+// LinkButton — a Button that is a link: <a class="Button">, intent-neutral. The recipe
+// lives in lib/button.ts and is shared with ActionButton and Button.tsx.
 import "./Button.css";
 import DevError from "../DevError/DevError.astro";
-import { sharedButtonAttributes, renderIcon } from "../../lib/buttonShared";
+import { resolveButton, buttonIconHtml } from "../../lib/button";
 
 interface Props {
   href?: string;
@@ -23,59 +23,31 @@ interface Props {
 const {
   href,
   target,
-  emphasis = "primary",
-  pill = false,
-  growInline = false,
-  size = "md",
+  emphasis,
+  pill,
+  growInline,
+  size,
   icon,
-  "icon-position": iconPosition = "right",
+  "icon-position": iconPosition,
   "aria-label": ariaLabel,
   class: className,
   ...rest
 } = Astro.props;
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
-const hasChildContent = childHtml.trim().length > 0;
-const hasIcon = !!icon;
-const hasAriaLabel = !!ariaLabel;
+const hasText = childHtml.trim().length > 0;
 
-const suppress = !hasChildContent && !hasIcon && !hasAriaLabel;
-
-const cssClass = className && String(className).trim() ? `Button ${className}` : "Button";
-
-const sharedAttrs = sharedButtonAttributes({
-  emphasis,
-  intent: null,
-  pill,
-  growInline,
-  size,
-  icon,
-  iconPosition,
-  ariaLabel,
-});
-
-const iconOnly = hasIcon && !hasChildContent;
-// Forbidden combination (ADR-0015): a square icon button never spans a row.
-const forbidden = iconOnly && growInline;
+const b = resolveButton({ kind: "link", href, target, emphasis, pill, growInline, size, icon, iconPosition, ariaLabel, class: className, hasText });
 
 let inner = "";
-if (hasChildContent) inner += `<span class="Button-text">${childHtml}</span>`;
-if (hasIcon) inner += renderIcon(icon!);
+if (hasText) inner += `<span class="Button-text">${childHtml}</span>`;
+if (b.iconName) inner += buttonIconHtml(b.iconName);
 ---
 
 {
-  forbidden ? (
-    <DevError name="LinkButton" message="icon-only buttons cannot grow: growInline requires a label" />
-  ) : !suppress && (
-    <a
-      class={cssClass}
-      href={href || undefined}
-      target={target || undefined}
-      rel={target === "_blank" ? "noopener noreferrer" : undefined}
-      {...sharedAttrs}
-      data-icon-only={iconOnly ? "true" : undefined}
-      {...rest}
-      set:html={inner}
-    />
-  )
+  b.mode === "render" ? (
+    <a class={b.className} {...b.attrs} {...rest} set:html={inner} />
+  ) : b.mode === "error" ? (
+    <DevError name="LinkButton" message={b.errorMessage} />
+  ) : null
 }
