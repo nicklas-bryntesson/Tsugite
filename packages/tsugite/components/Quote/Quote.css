@@ -1,0 +1,164 @@
+/*
+ * Quote — attributes words to a source.
+ *
+ * Gates (all derived from the content by lib/quote.ts, except size):
+ *   data-media       a portrait is present; the layout gains a thumbnail track.
+ *   data-source      a figcaption is present.
+ *   data-size        sm | md | lg, the size of the words.
+ *   data-cap-inline  the box is held to a reading measure.
+ *
+ * Layout is container-driven: one column below 30rem, the portrait beside the words
+ * above it. Without container queries everything stacks in one column. The root is
+ * the container and .body carries the grid: a container query resolves against an
+ * ancestor, so the root cannot gate on its own width. The root is inline-size: 100%
+ * because an inline-size container has no intrinsic width of its own.
+ *
+ * TODO(token): the 30rem switch and the 7rem thumbnail are raw values.
+ * TODO(token): the words borrow the heading ramp (h4 / h3 / h2); a quote voice is a
+ *   typography-family question.
+ * TODO(decide): the blurred echo behind the portrait is the second block that wants
+ *   it (lab TextWithMedia is the other) — a candidate data-echo axis on Picture.
+ */
+
+.Quote {
+  --_qt-markSize: var(--size-xl);
+  --_qt-thumbnailSize: 7rem;
+  --_qt-gap: var(--size-md);
+  --_qt-maxInlineSize: 48rem;
+  --_qt-radius: var(--ui-radius);
+
+  margin: 0;
+  inline-size: 100%;
+  color: var(--theme-text, var(--color-text-primary));
+
+  & .body {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--_qt-gap);
+  }
+
+  &[data-cap-inline="false"] {
+    max-inline-size: none;
+  }
+
+  &[data-cap-inline="true"] {
+    max-inline-size: var(--_qt-maxInlineSize);
+  }
+
+  & .mark {
+    inline-size: var(--_qt-markSize);
+    block-size: var(--_qt-markSize);
+    color: var(--theme-text, var(--color-text-primary));
+  }
+
+  & .quote {
+    margin: 0;
+    font-family: var(--fontFamily-body);
+    line-height: var(--lineHeight-heading);
+    overflow-wrap: break-word;
+    hyphens: auto;
+    text-wrap: pretty;
+
+    & p {
+      margin: 0;
+    }
+  }
+
+  &[data-size="sm"] .quote {
+    font-size: var(--fontSize-h4);
+  }
+
+  &[data-size="md"] .quote {
+    font-size: var(--fontSize-h3);
+  }
+
+  &[data-size="lg"] .quote {
+    font-size: var(--fontSize-h2);
+  }
+
+  & .source {
+    font-family: var(--fontFamily-label);
+    font-size: var(--fontSize-label);
+    font-weight: var(--fontWeight-body-bold);
+    color: var(--theme-textMuted, var(--color-text-secondary));
+  }
+
+  /* The portrait and its echo share one cell; the echo sits behind, blurred. */
+  & .thumbnail {
+    display: grid;
+    grid-template: [stack] 1fr / [stack] 1fr;
+    inline-size: var(--_qt-thumbnailSize);
+    aspect-ratio: 1;
+    border-radius: var(--_qt-radius);
+    overflow: hidden;
+
+    & > * {
+      grid-area: stack;
+    }
+
+    & .portrait {
+      z-index: 1;
+      margin: 0;
+
+      & img {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+      }
+    }
+
+    & .echo {
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+      padding: 10%;
+      translate: 0 10%;
+      opacity: 0.7;
+      filter: blur(20px);
+    }
+  }
+
+  @supports (container-type: inline-size) {
+    container-type: inline-size;
+
+    & .body {
+      display: grid;
+      column-gap: var(--_qt-gap);
+      row-gap: var(--_qt-gap);
+    }
+
+    & .mark { grid-area: mark; }
+    & .quote { grid-area: quote; }
+    & .thumbnail { grid-area: thumbnail; }
+    & .source { grid-area: source; margin-block: auto; }
+
+    &[data-media="false"] .body {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "mark"
+        "quote"
+        "source";
+    }
+
+    /* Narrow: the portrait sits beside the source under the words. */
+    &[data-media="true"] .body {
+      grid-template-columns: var(--_qt-thumbnailSize) 1fr;
+      grid-template-areas:
+        "mark mark"
+        "quote quote"
+        "thumbnail source";
+    }
+
+    /* Wide: the portrait sits beside the words. */
+    @container (min-width: 30rem) {
+      &[data-media="true"] .body {
+        grid-template-areas:
+          ". mark"
+          "thumbnail quote"
+          "thumbnail source";
+      }
+    }
+  }
+}
