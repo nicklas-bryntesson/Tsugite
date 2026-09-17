@@ -30,7 +30,7 @@ test('variants tint the icon with distinct accents', async ({ page }) => {
 })
 
 test('base default has no border; data-border adds a full accent border', async ({ page }) => {
-  const base = page.locator('#Notice .Notice[data-variant="error"]:not([data-border]):not([data-emphasis])').first()
+  const base = page.locator('#Notice .Notice[data-variant="error"][data-border="false"][data-emphasis="false"]').first()
   const bordered = page.locator('#Notice .Notice[data-border="true"]').first()
   await base.scrollIntoViewIfNeeded()
   const w = (loc) => loc.evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth))
@@ -39,7 +39,7 @@ test('base default has no border; data-border adds a full accent border', async 
 })
 
 test('data-emphasis adds a leading accent bar the base lacks', async ({ page }) => {
-  const base = page.locator('#Notice .Notice[data-variant="error"]:not([data-emphasis])').first()
+  const base = page.locator('#Notice .Notice[data-variant="error"][data-emphasis="false"]').first()
   const emph = page.locator('#Notice .Notice[data-emphasis="true"]').first()
   await base.scrollIntoViewIfNeeded()
   const lead = (loc) => loc.evaluate((el) => parseFloat(getComputedStyle(el).borderInlineStartWidth))

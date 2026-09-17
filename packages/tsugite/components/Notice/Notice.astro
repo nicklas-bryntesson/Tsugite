@@ -1,9 +1,13 @@
 ---
-type Variant = "error" | "warning" | "success" | "info" | "neutral";
+// Notice — a presentational message with a severity. The recipe (attributes, icon)
+// lives in lib/notice.ts and is shared by every renderer; this file renders it in Astro.
+import "./Notice.css";
+import DevError from "../DevError/DevError.astro";
+import { resolveNotice } from "../../lib/notice";
 
 // TODO: do we need an id prop, yes we probably do don't we, and possibly som aria?
 interface Props {
-  variant?: Variant;
+  variant?: string;
   /** false drops the icon and collapses the grid to one column */
   icon?: boolean;
   /** full border in the accent colour */
@@ -20,216 +24,25 @@ interface Props {
   [key: string]: unknown;
 }
 
-const {
-  variant = "neutral",
-  icon = true,
-  border = false,
-  emphasis = false,
-  growInline = true,
-  capInline = true,
-  title,
-  class: className,
-  ...rest
-} = Astro.props;
+const { variant, icon, border, emphasis, growInline, capInline, title, class: className, ...rest } = Astro.props;
 
-// TODO(decide): Should these icons actually point to a js "icon registry" that is global for the whole site?
-const ICONS: Record<Variant, string> = {
-  error:
-    '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
-  warning:
-    '<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
-  success:
-    '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
-  info:
-    '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
-  neutral:
-    '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
-};
-
-// TODO(markup): data-border and data-emphasis write undefined when false; the gate
-// pattern wants every data-* always present, like data-icon is.
-const cssClass = className && String(className).trim() ? `Notice ${className}` : "Notice";
+const n = resolveNotice({ variant, icon, border, emphasis, growInline, capInline, class: className });
 ---
 
-<div
-  class={cssClass}
-  data-variant={variant}
-  data-icon={icon ? "true" : "false"}
-  data-border={border ? "true" : undefined}
-  data-emphasis={emphasis ? "true" : undefined}
-  data-grow-inline={growInline ? "true" : "false"}
-  data-cap-inline={capInline ? "true" : "false"}
-  {...rest}
->
-  {
-    icon && (
-      <div class="icon">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          focusable="false"
-          set:html={ICONS[variant]}
-        />
+{
+  n.mode === "render" ? (
+    <div class={n.className} {...n.attrs} {...rest}>
+      {n.icon && (
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false" set:html={n.iconPath} />
+        </div>
+      )}
+      <div class="content">
+        {title && <strong class="title">{title}</strong>}
+        <slot />
       </div>
-    )
-  }
-  <div class="content">
-    {title && <strong class="title">{title}</strong>}
-    <slot />
-  </div>
-</div>
-
-<style is:global>
-/*
- * Notice — a presentational message (severity + icon + text).
- *
- * Payload only: no live role, no announcement, no dismissal. To announce it,
- * the context renders it into a persistent live region that is present and
- * empty at load, and swaps the content in.
- *
- * Three independent boolean gates over one tinted base:
- *   data-icon       the icon and its column. Severity is carried by the icon
- *                   (shape + colour), never by chrome alone.
- *   data-border     a full border in the accent colour.
- *   data-emphasis   a stronger visual weight.
- *   data-grow-inline  may the box take more inline space than its content.
- *   data-cap-inline   a reading ceiling on the inline size (--_nt-maxInlineSize).
- *
- * Icons are inline stroke SVG drawn with currentColor, which .icon points at
- * the accent, so the mark re-tints with the variant.
- */
-
-.Notice {
-  --_nt-accent: var(--ui-surface-foreground);
-  /* TODO(token): the tint is mixed here. It should be a precomputed semantic token per
-     intent (a feedback surface, four modes); the feedback families already have the steps. */
-  --_nt-backgroundColor: color-mix(in srgb, var(--_nt-accent) 8%, var(--ui-surface));
-  --_nt-textColor: var(--ui-surface-foreground);
-  --_nt-titleColor: currentColor;
-  --_nt-borderWidth: 1px;
-  --_nt-barWidth: 0.25rem;
-  --_nt-radius: 0.375rem;
-  --_nt-padding: var(--size-md);
-  --_nt-gap: var(--size-md);
-  --_nt-contentGap: 0.25rem;
-  --_nt-iconSize: 1.5rem;
-  --_nt-maxInlineSize: 50rem;
-
-  display: grid;
-  padding: var(--_nt-padding);
-  border-radius: var(--_nt-radius);
-  background-color: var(--_nt-backgroundColor);
-  color: var(--_nt-textColor);
-
-  & .content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--_nt-contentGap);
-    /* let long words wrap instead of overflowing the column */
-    min-inline-size: 0;
-  }
-
-  & .title {
-    color: var(--_nt-titleColor);
-    font-weight: var(--ui-font-weight-strong);
-  }
-
-  /* Icon: two columns, and the icon itself. The element only renders in this state. */
-  &[data-icon="true"] {
-    grid-template-columns: auto 1fr;
-    column-gap: var(--_nt-gap);
-
-    & .icon {
-      color: var(--_nt-accent);
-      display: flex;
-      align-items: flex-start;
-
-      & svg {
-        display: block;
-        inline-size: var(--_nt-iconSize);
-        block-size: var(--_nt-iconSize);
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-    }
-  }
-
-  &[data-icon="false"] {
-    grid-template-columns: 1fr;
-  }
-
-  &[data-grow-inline="false"] {
-    inline-size: fit-content;
-  }
-
-  /* 100%, not auto: in a grid or flex parent that aligns its items to the start,
-     auto shrinks to the content and the box would never grow. */
-  &[data-grow-inline="true"] {
-    inline-size: 100%;
-  }
-
-  &[data-cap-inline="false"] {
-    max-inline-size: none;
-  }
-
-  &[data-cap-inline="true"] {
-    max-inline-size: var(--_nt-maxInlineSize);
-  }
-
-  &[data-border="true"] {
-    border: var(--_nt-borderWidth) solid var(--_nt-accent);
-  }
-
-  &[data-emphasis="true"] {
-    border-inline-start: var(--_nt-barWidth) solid var(--_nt-accent);
-  }
-
-  /* Variants set only the accent; tint, icon and chrome derive from it. */
-  &[data-variant="error"] {
-    --_nt-accent: var(--ui-destructive);
-  }
-
-  &[data-variant="warning"] {
-    --_nt-accent: var(--ui-warning);
-  }
-
-  &[data-variant="success"] {
-    --_nt-accent: var(--ui-success);
-  }
-
-  &[data-variant="info"] {
-    --_nt-accent: var(--ui-info);
-  }
-
-  /* TODO(dead): variant defaults to "neutral" in the frontmatter, so the attribute
-     is never absent and :not() can never match. */
-  &[data-variant="neutral"],
-  &:not([data-variant]) {
-    --_nt-accent: var(--ui-surface-foreground);
-  }
-
-  /* The tint is this box's only edge, and it vanishes in forced colours and the
-     contrast modes. A border regardless of data-border; the token picks the colour. */
-  @media (forced-colors: active), (prefers-contrast: more) {
-    border: var(--_nt-borderWidth) solid var(--ui-border);
-  }
-
-  /* TODO(token): system colours stay here until the factory maps the semantic layer
-     to them under forced colours; then this block goes. SVG stroke is not forced by
-     the UA, so the icon must be told. */
-  @media (forced-colors: active) {
-    &[data-emphasis="true"] {
-      border-inline-start-color: CanvasText;
-    }
-
-    &[data-icon="true"] .icon {
-      color: CanvasText;
-    }
-  }
+    </div>
+  ) : (
+    <DevError name="Notice" message={n.errorMessage} />
+  )
 }
-</style>
