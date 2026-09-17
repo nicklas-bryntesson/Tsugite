@@ -12,6 +12,7 @@ import Surface from "tsugite/components/Surface/Surface.astro";
 import Heading from "tsugite/components/Heading/Heading.astro";
 import Prose from "tsugite/components/Prose/Prose.astro";
 import LinkButton from "tsugite/components/Button/LinkButton.astro";
+import Quote from "tsugite/components/Quote/Quote.astro";
 import amal from "tsugite/fixtures/media/amal-s.jpg";
 import david from "tsugite/fixtures/media/david-becker.jpg";
 import jean from "tsugite/fixtures/media/jean-philippe.jpg";
@@ -55,20 +56,11 @@ import jean from "tsugite/fixtures/media/jean-philippe.jpg";
       </div>
     </Surface>
 
-    {/* 3. Testimonial on the layout grid: quote spans 8, portrait spans 4. */}
-    <Surface element="section" theme="brand" prominence="subtle" capInline={false}>
-      <figure class="Testimonial grid-layout" data-media-side="start">
-        <div class="media grid-stack">
-          <img class="grid-stack-item" src={jean.src} width={jean.width} height={jean.height} alt="" loading="lazy" />
-        </div>
-        <blockquote class="quote">
-          <p>Working with this team completely transformed our digital presence. The results exceeded every expectation we had.</p>
-        </blockquote>
-        <figcaption class="source">
-          <span class="name">Sarah Johnson</span>
-          <span class="org">Acme Corp</span>
-        </figcaption>
-      </figure>
+    {/* 3. A testimonial: Quote, large words and a portrait, on a brand · subtle band.
+        The band is the host; Quote lays itself out from its own width. */}
+    <Surface element="section" theme="brand" prominence="subtle">
+      <Quote id="lab-testimonial" size="lg" source="Sarah Johnson, Acme Corp" image={jean} alt="Portrait of Sarah Johnson"
+        quote="Working with this team completely transformed our digital presence. The results exceeded every expectation we had." />
     </Surface>
 
     {/* 4. Three-up on the layout grid, same voice as the previous band: the second
@@ -81,19 +73,11 @@ import jean from "tsugite/fixtures/media/jean-philippe.jpg";
       </div>
     </Surface>
 
-    {/* 5. A pull quote in the flow: an RTE block, no band of its own. */}
+    {/* 5. A pull quote in the flow: an RTE block, no band of its own, the page ground. */}
     <Surface element="section">
-      <figure class="PullQuote" data-size="md">
-        <svg class="mark" aria-hidden="true" focusable="false"><use href="#icon-quote"></use></svg>
-        <div class="portrait grid-stack">
-          <img class="grid-stack-item foreground" src={amal.src} width={amal.width} height={amal.height} alt="" loading="lazy" />
-          <img class="grid-stack-item blur" src={amal.src} width={64} height={64} alt="" aria-hidden="true" loading="lazy" />
-        </div>
-        <blockquote>
-          <p>Words can be like X-rays, if you use them properly — they'll go through anything. You read and you're pierced.</p>
-        </blockquote>
-        <figcaption>Aldous Huxley</figcaption>
-      </figure>
+      <Quote id="lab-pullquote" source="Aldous Huxley" image={amal} alt="">
+        <p>Words can be like X-rays, if you use them properly — they'll go through anything. You read and you're pierced.</p>
+      </Quote>
     </Surface>
 
     {/* 6. A CTA aside: heading, prose, two actions. */}
@@ -274,65 +258,6 @@ import jean from "tsugite/fixtures/media/jean-philippe.jpg";
     }
   }
 
-  /* ── 3. Testimonial — layout grid, quote 8 + portrait 4 ─────────────────── */
-  .Testimonial {
-    margin: 0;
-    row-gap: var(--size-md);
-    align-items: center;
-
-    & .media {
-      border-radius: var(--ui-radius);
-      overflow: hidden;
-      aspect-ratio: 1;
-
-      & img {
-        inline-size: 100%;
-        block-size: 100%;
-        object-fit: cover;
-      }
-    }
-
-    & .quote {
-      margin: 0;
-
-      & p {
-        margin: 0;
-        /* TODO(token): a quote voice. Borrowing the heading ramp's h3 stop is the old
-           project's habit; the typography family has no "quote" voice yet. */
-        font-family: var(--fontFamily-body);
-        font-size: var(--fontSize-h3);
-        line-height: var(--lineHeight-heading);
-        font-style: italic;
-      }
-    }
-
-    & .source {
-      display: flex;
-      flex-direction: column;
-      font-family: var(--fontFamily-label);
-      font-size: var(--fontSize-label);
-      color: var(--theme-textMuted, var(--color-text-secondary));
-
-      & .name { font-weight: var(--fontWeight-body-bold); }
-    }
-
-    & .media, & .quote, & .source { grid-column: 1 / -1; }
-
-    @media (min-width: 48.75rem) {
-      & .media  { grid-row: 1 / 3; }
-      & .quote  { grid-row: 1; align-self: end; }
-      & .source { grid-row: 2; align-self: start; }
-
-      &[data-media-side="start"] .media { grid-column: 1 / 5; }
-      &[data-media-side="start"] .quote,
-      &[data-media-side="start"] .source { grid-column: 6 / 13; }
-
-      &[data-media-side="end"] .media { grid-column: 9 / 13; }
-      &[data-media-side="end"] .quote,
-      &[data-media-side="end"] .source { grid-column: 1 / 8; }
-    }
-  }
-
   /* ── 4. ThreeUp — layout grid, three equal spans ────────────────────────── */
   .ThreeUp {
     row-gap: var(--size-md);
@@ -342,62 +267,6 @@ import jean from "tsugite/fixtures/media/jean-philippe.jpg";
     @media (min-width: 48.75rem) {
       & > * { grid-column: span 4; }
     }
-  }
-
-  /* ── 5. PullQuote — a figure in the flow with a stacked portrait ────────── */
-  .PullQuote {
-    --_pq-markSize: var(--size-xl);
-    --_pq-portraitSize: 10rem;
-
-    margin: 0;
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-      "quote portrait"
-      "source portrait";
-    column-gap: var(--size-lg);
-    padding: var(--size-xl);
-    border-inline-start: 0.3em solid var(--theme-border, var(--color-border-default));
-
-    & .mark {
-      display: none;
-      inline-size: var(--_pq-markSize);
-      block-size: var(--_pq-markSize);
-    }
-
-    & .portrait {
-      grid-area: portrait;
-      inline-size: var(--_pq-portraitSize);
-      aspect-ratio: 1;
-    }
-
-    & blockquote {
-      grid-area: quote;
-      margin: 0;
-
-      & p {
-        margin: 0;
-        font-family: var(--fontFamily-body);
-        font-style: italic;
-        line-height: var(--lineHeight-heading);
-      }
-    }
-
-    & figcaption {
-      grid-area: source;
-      margin-block-start: 1em;
-      font-family: var(--fontFamily-label);
-      font-size: var(--fontSize-label);
-      color: var(--theme-textMuted, var(--color-text-secondary));
-    }
-
-    /* TODO(decide): the old block sized its quote with the heading ramp (h4/h3/h2).
-       Kept as a size axis with the family's three stops; whether a quote is its own
-       voice is a typography-family question. */
-    &[data-size="sm"] blockquote p { font-size: var(--fontSize-h4); }
-    &[data-size="md"] blockquote p { font-size: var(--fontSize-h3); }
-    &[data-size="lg"] blockquote p { font-size: var(--fontSize-h2); }
   }
 
   /* ── 6. CtaAside — heading, prose, actions ──────────────────────────────── */
