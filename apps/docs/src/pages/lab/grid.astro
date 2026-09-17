@@ -13,6 +13,7 @@ import Heading from "tsugite/components/Heading/Heading.astro";
 import Prose from "tsugite/components/Prose/Prose.astro";
 import LinkButton from "tsugite/components/Button/LinkButton.astro";
 import Quote from "tsugite/components/Quote/Quote.astro";
+import QuoteReact from "tsugite/components/Quote/Quote.tsx";
 import amal from "tsugite/fixtures/media/amal-s.jpg";
 import david from "tsugite/fixtures/media/david-becker.jpg";
 import jean from "tsugite/fixtures/media/jean-philippe.jpg";
@@ -78,6 +79,17 @@ import jean from "tsugite/fixtures/media/jean-philippe.jpg";
       <Quote id="lab-pullquote" source="Aldous Huxley" image={amal} alt="">
         <p>Words can be like X-rays, if you use them properly — they'll go through anything. You read and you're pierced.</p>
       </Quote>
+    </Surface>
+
+    {/* 5b. The same quote twice: rendered by Quote.astro and by Quote.tsx, one recipe,
+        one CSS (ADR-0017). React renders on the server, nothing hydrates. */}
+    <Surface element="section" theme="neutral" prominence="subtle">
+      <div class="Renderers">
+        <Quote id="lab-astro" data-renderer="astro" source="Rendered by Quote.astro" image={david} alt=""
+          quote="The contract is the rendered DOM. Whoever writes it is an adapter." />
+        <QuoteReact id="lab-react" data-renderer="react" source="Rendered by Quote.tsx" image={{ src: david.src, width: david.width, height: david.height }} alt=""
+          quote="The contract is the rendered DOM. Whoever writes it is an adapter." />
+      </div>
     </Surface>
 
     {/* 6. A CTA aside: heading, prose, two actions. */}
@@ -267,6 +279,13 @@ import jean from "tsugite/fixtures/media/jean-philippe.jpg";
     @media (min-width: 48.75rem) {
       & > * { grid-column: span 4; }
     }
+  }
+
+  /* ── 5b. Renderers — two Quotes side by side ────────────────────────────── */
+  .Renderers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: var(--size-lg);
   }
 
   /* ── 6. CtaAside — heading, prose, actions ──────────────────────────────── */
