@@ -64,6 +64,7 @@ export const manifest: ManifestEntry[] = [
 
   // ── Compositions ────────────────────────────────────────────────────────────
   { slug: "teaser", title: "Teaser", pillar: "composition", origin: "aipoc", section: "TeaserSection", published: true },
+  { slug: "quote", title: "Quote", pillar: "composition", origin: "own", section: "QuoteSection", adrs: ["0015", "0017"], published: true },
   { slug: "cover-composition", title: "CoverComposition", pillar: "composition", origin: "own", demoHref: "/", suite: "tests/e2e/themes.e2e.test.js", adrs: ["0005", "0006"], published: true },
 
   // ── Regions ─────────────────────────────────────────────────────────────────
