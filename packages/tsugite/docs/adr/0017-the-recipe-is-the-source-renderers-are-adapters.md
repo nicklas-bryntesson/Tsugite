@@ -22,7 +22,7 @@ same component. That makes a second framework cheap, and it makes a
 cross-reference the wrong mechanism: three source files held together by
 a comment are three truths.
 
-`lib/buttonShared.ts` already showed the alternative: one framework-free
+`lib/buttonShared.ts` (since `lib/button.ts`) already showed the alternative: one framework-free
 function resolves props to attributes, and two Astro components render it.
 
 ## Decision
@@ -70,9 +70,12 @@ function resolves props to attributes, and two Astro components render it.
   `Card.astro`, `Card.tsx`, `Card.vue`, `Card.css`, `tests/card-renderers.test.ts`,
   and `apps/docs/tests/e2e/card-renderers.e2e.test.js` against the
   Renderers example on `/docs/card`.
-- The rule "one `.css` per component" joins the cleanup conventions;
-  Notice, Heading, Teaser and Surface still carry their CSS in the
-  `.astro` file.
+- The rule "one `.css` per component" joins the cleanup conventions.
+  On the pattern now (recipe in `lib/`, CSS in its own file): Card, Quote,
+  Notice, Button (both kinds), Heading, Text, TextBlock, Teaser, Picture.
+  React renderers exist for Card, Quote, Notice, Button and Heading.
+  Surface waits on Nicklas's investigation; the Field components wait on
+  the end-state decision (the FOUC finding).
 - Vue joined the spike as one SFC plus a row in the equality test; its SSR
   slot markers are comments and the normaliser strips them. Svelte is the
   same move. Not started.
