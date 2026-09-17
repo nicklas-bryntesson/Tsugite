@@ -1,9 +1,9 @@
 ---
-// Port of AiPoc TagHelpers/ActionButtonTagHelper.cs
-// Renders <button class="Button">. Supports intent for destructive/success states.
+// ActionButton — a Button that acts: <button class="Button">, with intent. The recipe
+// lives in lib/button.ts and is shared with LinkButton and Button.tsx.
 import "./Button.css";
 import DevError from "../DevError/DevError.astro";
-import { sharedButtonAttributes, renderIcon } from "../../lib/buttonShared";
+import { resolveButton, buttonIconHtml } from "../../lib/button";
 
 interface Props {
   "button-type"?: string;
@@ -22,61 +22,34 @@ interface Props {
 }
 
 const {
-  "button-type": buttonType = "button",
-  disabled = false,
-  emphasis = "primary",
+  "button-type": buttonType,
+  disabled,
+  emphasis,
   intent = "neutral",
-  pill = false,
-  growInline = false,
-  size = "md",
+  pill,
+  growInline,
+  size,
   icon,
-  "icon-position": iconPosition = "right",
+  "icon-position": iconPosition,
   "aria-label": ariaLabel,
   class: className,
   ...rest
 } = Astro.props;
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
-const hasChildContent = childHtml.trim().length > 0;
-const hasIcon = !!icon;
-const hasAriaLabel = !!ariaLabel;
+const hasText = childHtml.trim().length > 0;
 
-const suppress = !hasChildContent && !hasIcon && !hasAriaLabel;
-
-const cssClass = className && String(className).trim() ? `Button ${className}` : "Button";
-
-const sharedAttrs = sharedButtonAttributes({
-  emphasis,
-  intent,
-  pill,
-  growInline,
-  size,
-  icon,
-  iconPosition,
-  ariaLabel,
-});
-
-const iconOnly = hasIcon && !hasChildContent;
-// Forbidden combination (ADR-0015): a square icon button never spans a row.
-const forbidden = iconOnly && growInline;
+const b = resolveButton({ kind: "action", buttonType, disabled, emphasis, intent, pill, growInline, size, icon, iconPosition, ariaLabel, class: className, hasText });
 
 let inner = "";
-if (hasChildContent) inner += `<span class="Button-text">${childHtml}</span>`;
-if (hasIcon) inner += renderIcon(icon!);
+if (hasText) inner += `<span class="Button-text">${childHtml}</span>`;
+if (b.iconName) inner += buttonIconHtml(b.iconName);
 ---
 
 {
-  forbidden ? (
-    <DevError name="ActionButton" message="icon-only buttons cannot grow: growInline requires a label" />
-  ) : !suppress && (
-    <button
-      type={buttonType}
-      disabled={disabled ? "disabled" : undefined}
-      class={cssClass}
-      {...sharedAttrs}
-      data-icon-only={iconOnly ? "true" : undefined}
-      {...rest}
-      set:html={inner}
-    />
-  )
+  b.mode === "render" ? (
+    <button class={b.className} {...b.attrs} disabled={b.disabled} {...rest} set:html={inner} />
+  ) : b.mode === "error" ? (
+    <DevError name="ActionButton" message={b.errorMessage} />
+  ) : null
 }
