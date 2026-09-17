@@ -16,6 +16,7 @@ import MotionRegionSection from "tsugite/fixtures/MotionRegionSection.astro";
 import NoticeSection from "tsugite/fixtures/NoticeSection.astro";
 import PicklistSection from "tsugite/fixtures/PicklistSection.astro";
 import ProseSection from "tsugite/fixtures/ProseSection.astro";
+import QuoteSection from "tsugite/fixtures/QuoteSection.astro";
 import RangeFieldSection from "tsugite/fixtures/RangeFieldSection.astro";
 import RangeGroupSection from "tsugite/fixtures/RangeGroupSection.astro";
 import RangeScaleSection from "tsugite/fixtures/RangeScaleSection.astro";
@@ -47,6 +48,7 @@ export const sections: Record<string, any> = {
   NoticeSection,
   PicklistSection,
   ProseSection,
+  QuoteSection,
   RangeFieldSection,
   RangeGroupSection,
   RangeScaleSection,

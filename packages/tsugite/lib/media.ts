@@ -63,6 +63,12 @@ export const PRESETS: Record<string, PicturePreset> = {
     ],
   },
 
+  // One square picture for a thumbnail beside a quote (Quote's --_qt-thumbnailSize)
+  quote: {
+    loading: "lazy",
+    groups: [{ sources: [{ cropAlias: "horizontal", widths: [224, 448], sizes: "7rem" }] }],
+  },
+
   // Single picture, HTML art direction via media queries
   hero: {
     loading: "eager",

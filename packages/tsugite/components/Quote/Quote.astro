@@ -1,0 +1,72 @@
+---
+// Quote — attributes words to a source. The recipe (element, gates, ids) lives in
+// lib/quote.ts and is shared by every renderer; this file renders it in Astro.
+import "./Quote.css";
+import DevError from "../DevError/DevError.astro";
+import type { ImageMetadata } from "astro";
+import { getImage } from "astro:assets";
+import { PRESETS, buildFigureHtml } from "../../lib/media";
+import { resolveQuote } from "../../lib/quote";
+
+interface Props {
+  /** the words, as a string; or pass them as children for markup (line breaks, emphasis) */
+  quote?: string;
+  /** who said it; absent makes the quote an <aside> when there is no portrait either */
+  source?: string;
+  image?: ImageMetadata | null;
+  alt?: string;
+  /** sm | md | lg — the size of the words */
+  size?: string;
+  /** root id; the aside is labelled by `${id}-quote` */
+  id?: string;
+  /** is the box held to a reading measure? (ADR-0015) */
+  capInline?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { quote, source, image = null, alt, size, id, capInline, class: className, ...rest } = Astro.props;
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const hasChildContent = childHtml.trim().length > 0;
+const hasQuote = hasChildContent || !!quote?.trim();
+
+const q = resolveQuote({ id, size, source, hasMedia: image != null, hasQuote, capInline });
+const Tag = q.tag as "figure";
+const cssClass = className && String(className).trim() ? `Quote ${className}` : "Quote";
+
+// The portrait: a square picture through the media pipeline, and a tiny copy of the
+// same image that the CSS blurs behind it (the echo).
+const figureHtml = image
+  ? await buildFigureHtml({ image, preset: PRESETS["quote"], altText: alt ?? "", figureClass: "portrait" })
+  : "";
+const echo = image ? await getImage({ src: image, width: 64, height: 64, fit: "cover", format: "webp" }) : null;
+---
+
+{
+  q.mode === "render" ? (
+    <Tag class={cssClass} {...q.attrs} {...rest}>
+      <div class="body">
+      <svg class="mark" aria-hidden="true" focusable="false"><use href="#icon-quote"></use></svg>
+      {q.tag === "aside" ? (
+        <p class="quote" id={q.quoteId ?? undefined}>
+          {hasChildContent ? <Fragment set:html={childHtml} /> : quote}
+        </p>
+      ) : (
+        <blockquote class="quote">
+          {hasChildContent ? <Fragment set:html={childHtml} /> : <p>{quote}</p>}
+        </blockquote>
+      )}
+      {image && (
+        <div class="thumbnail">
+          <Fragment set:html={figureHtml} />
+          <img class="echo" src={echo!.src} width="64" height="64" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        </div>
+      )}
+      {q.hasSource && <figcaption class="source">{source}</figcaption>}
+      </div>
+    </Tag>
+  ) : q.mode === "error" ? (
+    <DevError name="Quote" message={q.errorMessage} />
+  ) : null
+}
