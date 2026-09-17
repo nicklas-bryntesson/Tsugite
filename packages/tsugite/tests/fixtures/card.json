@@ -1,0 +1,78 @@
+{
+  "$comment": "Card — the contract as data. Language-neutral: any renderer in any language reads this file, runs each case, and compares. TS (lib/card.ts) is the reference until the recipe itself is generated; hasContent is what a renderer detects, given here as input so the recipe is testable alone. Attribute order is part of the contract.",
+  "component": "Card",
+  "attrOrder": ["data-border", "data-padding", "data-elevation"],
+  "cases": [
+    {
+      "name": "defaults",
+      "input": { "hasContent": true },
+      "expect": {
+        "mode": "render", "tag": "div", "className": "Card",
+        "attrs": { "data-border": "false", "data-padding": "md", "data-elevation": "none" }
+      }
+    },
+    {
+      "name": "bordered lg",
+      "input": { "border": true, "padding": "lg", "hasContent": true },
+      "expect": {
+        "mode": "render", "tag": "div", "className": "Card",
+        "attrs": { "data-border": "true", "data-padding": "lg", "data-elevation": "none" }
+      }
+    },
+    {
+      "name": "elevated article",
+      "input": { "element": "article", "elevation": "md", "hasContent": true },
+      "expect": {
+        "mode": "render", "tag": "article", "className": "Card",
+        "attrs": { "data-border": "false", "data-padding": "md", "data-elevation": "md" }
+      }
+    },
+    {
+      "name": "li sm no border",
+      "input": { "element": "li", "padding": "sm", "border": false, "hasContent": true },
+      "expect": {
+        "mode": "render", "tag": "li", "className": "Card",
+        "attrs": { "data-border": "false", "data-padding": "sm", "data-elevation": "none" }
+      }
+    },
+    {
+      "name": "invalid element falls back to div",
+      "input": { "element": "nav", "hasContent": true },
+      "expect": {
+        "mode": "render", "tag": "div", "className": "Card",
+        "attrs": { "data-border": "false", "data-padding": "md", "data-elevation": "none" }
+      }
+    },
+    {
+      "name": "values are case-insensitive",
+      "input": { "element": "Article", "padding": "LG", "elevation": "Sm", "hasContent": true },
+      "expect": {
+        "mode": "render", "tag": "article", "className": "Card",
+        "attrs": { "data-border": "false", "data-padding": "lg", "data-elevation": "sm" }
+      }
+    },
+    {
+      "name": "extra class is appended",
+      "input": { "class": "extra", "hasContent": true },
+      "expect": {
+        "mode": "render", "tag": "div", "className": "Card extra",
+        "attrs": { "data-border": "false", "data-padding": "md", "data-elevation": "none" }
+      }
+    },
+    {
+      "name": "invalid padding is an error",
+      "input": { "padding": "huge", "hasContent": true },
+      "expect": { "mode": "error", "errorMessage": "invalid padding \"huge\" — expected none | sm | md | lg" }
+    },
+    {
+      "name": "invalid elevation is an error",
+      "input": { "elevation": "xl", "hasContent": true },
+      "expect": { "mode": "error", "errorMessage": "invalid elevation \"xl\" — expected none | sm | md | lg" }
+    },
+    {
+      "name": "empty content is suppressed",
+      "input": { "border": true, "hasContent": false },
+      "expect": { "mode": "suppress" }
+    }
+  ]
+}
