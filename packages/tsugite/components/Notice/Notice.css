@@ -1,0 +1,158 @@
+/*
+ * Notice — a presentational message (severity + icon + text).
+ *
+ * Payload only: no live role, no announcement, no dismissal. To announce it,
+ * the context renders it into a persistent live region that is present and
+ * empty at load, and swaps the content in.
+ *
+ * Three independent boolean gates over one tinted base:
+ *   data-icon       the icon and its column. Severity is carried by the icon
+ *                   (shape + colour), never by chrome alone.
+ *   data-border     a full border in the accent colour.
+ *   data-emphasis   a stronger visual weight.
+ *   data-grow-inline  may the box take more inline space than its content.
+ *   data-cap-inline   a reading ceiling on the inline size (--_nt-maxInlineSize).
+ *
+ * Icons are inline stroke SVG drawn with currentColor, which .icon points at
+ * the accent, so the mark re-tints with the variant.
+ */
+
+.Notice {
+  --_nt-accent: var(--ui-surface-foreground);
+  /* TODO(token): the tint is mixed here. It should be a precomputed semantic token per
+     intent (a feedback surface, four modes); the feedback families already have the steps. */
+  --_nt-backgroundColor: color-mix(in srgb, var(--_nt-accent) 8%, var(--ui-surface));
+  --_nt-textColor: var(--ui-surface-foreground);
+  --_nt-titleColor: currentColor;
+  --_nt-borderWidth: 1px;
+  --_nt-barWidth: 0.25rem;
+  --_nt-radius: 0.375rem;
+  --_nt-padding: var(--size-md);
+  --_nt-gap: var(--size-md);
+  --_nt-contentGap: 0.25rem;
+  --_nt-iconSize: 1.5rem;
+  --_nt-maxInlineSize: 50rem;
+
+  display: grid;
+  padding: var(--_nt-padding);
+  border-radius: var(--_nt-radius);
+  background-color: var(--_nt-backgroundColor);
+  color: var(--_nt-textColor);
+
+  & .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_nt-contentGap);
+    /* let long words wrap instead of overflowing the column */
+    min-inline-size: 0;
+  }
+
+  & .title {
+    color: var(--_nt-titleColor);
+    font-weight: var(--ui-font-weight-strong);
+  }
+
+  &[data-icon="false"] {
+    grid-template-columns: 1fr;
+  }
+
+  /* Icon: two columns, and the icon itself. The element only renders in this state. */
+  &[data-icon="true"] {
+    grid-template-columns: auto 1fr;
+    column-gap: var(--_nt-gap);
+
+    & .icon {
+      color: var(--_nt-accent);
+      display: flex;
+      align-items: flex-start;
+
+      & svg {
+        display: block;
+        inline-size: var(--_nt-iconSize);
+        block-size: var(--_nt-iconSize);
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    }
+  }
+
+  &[data-grow-inline="false"] {
+    inline-size: fit-content;
+  }
+
+  /* 100%, not auto: in a grid or flex parent that aligns its items to the start,
+     auto shrinks to the content and the box would never grow. */
+  &[data-grow-inline="true"] {
+    inline-size: 100%;
+  }
+
+  &[data-cap-inline="false"] {
+    max-inline-size: none;
+  }
+
+  &[data-cap-inline="true"] {
+    max-inline-size: var(--_nt-maxInlineSize);
+  }
+
+  &[data-border="false"] {
+    border: none;
+  }
+
+  &[data-border="true"] {
+    border: var(--_nt-borderWidth) solid var(--_nt-accent);
+  }
+
+  &[data-emphasis="false"] {
+    border-inline-start-width: var(--_nt-borderWidth);
+  }
+
+  &[data-emphasis="true"] {
+    border-inline-start: var(--_nt-barWidth) solid var(--_nt-accent);
+  }
+
+  /* Variants set only the accent; tint, icon and chrome derive from it. */
+  &[data-variant="error"] {
+    --_nt-accent: var(--ui-destructive);
+  }
+
+  &[data-variant="warning"] {
+    --_nt-accent: var(--ui-warning);
+  }
+
+  &[data-variant="success"] {
+    --_nt-accent: var(--ui-success);
+  }
+
+  &[data-variant="info"] {
+    --_nt-accent: var(--ui-info);
+  }
+
+  /* TODO(dead): variant defaults to "neutral" in the frontmatter, so the attribute
+     is never absent and :not() can never match. */
+  &[data-variant="neutral"],
+  &:not([data-variant]) {
+    --_nt-accent: var(--ui-surface-foreground);
+  }
+
+  /* The tint is this box's only edge, and it vanishes in forced colours and the
+     contrast modes. A border regardless of data-border; the token picks the colour. */
+  @media (forced-colors: active), (prefers-contrast: more) {
+    border: var(--_nt-borderWidth) solid var(--ui-border);
+  }
+
+  /* TODO(token): system colours stay here until the factory maps the semantic layer
+     to them under forced colours; then this block goes. SVG stroke is not forced by
+     the UA, so the icon must be told. */
+  @media (forced-colors: active) {
+    &[data-emphasis="true"] {
+      border-inline-start-color: CanvasText;
+    }
+
+    &[data-icon="true"] .icon {
+      color: CanvasText;
+    }
+  }
+}

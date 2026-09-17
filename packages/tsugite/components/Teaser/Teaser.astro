@@ -1,6 +1,8 @@
 ---
 // Teaser — transports the reader to one destination. Image, heading, excerpt and
-// child content in a Card frame; the whole card is the link, or a button is.
+// child content in a Card frame; the whole card is the link, or a button is. The
+// recipe (frame, element, gates, content plan) lives in lib/teaser.ts.
+import "./Teaser.css";
 import Card from "../Card/Card.astro";
 import Heading from "../Heading/Heading.astro";
 import Prose from "../Prose/Prose.astro";
@@ -8,14 +10,8 @@ import LinkButton from "../Button/LinkButton.astro";
 import DevError from "../DevError/DevError.astro";
 import type { ImageMetadata } from "astro";
 import { PRESETS, buildFigureHtml } from "../../lib/media";
-import { escapeHtml } from "../../lib/buttonShared";
-
-const VALID_ELEMENTS = ["article", "div", "li", "section"];
-// TODO(decide): should the permitted frames be defined in the theme setup (JS) rather
-// than in the component? Same question as Card's FORBIDDEN_COMBINATIONS, but this is a
-// POSITIVE list. Direction: the brand forbids, the component guards, so this should
-// become a negative list too.
-const VALID_FRAMES = ["bordered", "elevated", "bare"];
+import { escapeHtml } from "../../lib/html";
+import { resolveTeaser } from "../../lib/teaser";
 
 interface Props {
   image?: ImageMetadata | null;
@@ -39,27 +35,16 @@ const {
   href,
   excerpt,
   button = false,
-  "button-label": buttonLabel = "Read more",
-  frame: frameProp = "bordered",
-  element: elementProp = "article",
+  "button-label": buttonLabel,
+  frame,
+  element,
 } = Astro.props;
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
 const hasChildContent = childHtml.trim().length > 0;
-const hasExcerpt = !!excerpt?.trim();
-const hasHref = !!href?.trim();
-const hasHeading = !!heading?.trim();
 const hasMedia = image != null;
 
-const invalid = button && !hasHref;
-
-const frame = VALID_FRAMES.includes(frameProp.toLowerCase()) ? frameProp.toLowerCase() : "bordered";
-const element = VALID_ELEMENTS.includes(elementProp.toLowerCase())
-  ? elementProp.toLowerCase()
-  : "article";
-
-// The card is the link unless a button is.
-const headingIsLink = hasHref && !button;
+const t = resolveTeaser({ heading, href, excerpt, button, buttonLabel, frame, element, hasMedia, hasChildContent });
 
 const figureHtml = hasMedia
   ? await buildFigureHtml({
@@ -71,27 +56,22 @@ const figureHtml = hasMedia
     })
   : "";
 
-const Tag = element as "article";
-
-// Teaser owns the permitted Card combinations; bare renders no frame at all.
-const Frame = frame === "bare" ? Fragment : Card;
-const frameProps =
-  frame === "bare"
-    ? {}
-    : { element: "div", padding: "none", border: frame !== "elevated", elevation: frame === "elevated" ? "sm" : "none" };
+const Tag = t.tag as "article";
+const Frame = t.card ? Card : Fragment;
+const frameProps = t.card ?? {};
 ---
 
 {
-  invalid ? (
-    <DevError name="Teaser" message={'button="true" requires href'} />
+  t.mode === "error" ? (
+    <DevError name="Teaser" message={t.errorMessage} />
   ) : (
     <Frame {...frameProps}>
-      <Tag class="Teaser" data-button={button ? "true" : "false"} data-media={hasMedia ? "true" : "false"}>
+      <Tag class="Teaser" {...t.attrs}>
         <div class="LayoutContainer">
           {hasMedia && <Fragment set:html={figureHtml} />}
-          {hasHeading && (
+          {t.hasHeading && (
             <div class="HeadingContainer">
-              {headingIsLink ? (
+              {t.headingIsLink ? (
                 <a class="Teaser-link" href={href}>
                   <Heading element="h2" size="4" text={heading} />
                 </a>
@@ -100,15 +80,15 @@ const frameProps =
               )}
             </div>
           )}
-          {(hasExcerpt || hasChildContent || button) && (
+          {t.hasBody && (
             <div class="ContentContainer">
-              {hasExcerpt && <Prose variant="basic" size="sm" content={`<p>${escapeHtml(excerpt!)}</p>`} />}
+              {t.hasExcerpt && <Prose variant="basic" size="sm" content={`<p>${escapeHtml(excerpt!)}</p>`} />}
               {hasChildContent && <Fragment set:html={childHtml} />}
-              {button && (
+              {t.button && (
                 <div class="Actions">
                   <LinkButton href={href} size="sm" growInline={true}>
-                    {buttonLabel}
-                    {hasHeading && <span class="visually-hidden"> about {heading}</span>}
+                    {t.buttonLabel}
+                    {t.hasHeading && <span class="visually-hidden"> about {heading}</span>}
                   </LinkButton>
                 </div>
               )}
@@ -120,219 +100,3 @@ const frameProps =
   )
 }
 
-<style is:global>
-/*
- * Teaser — image, heading and body in a card that transports to one destination.
- *
- * Layout is container-driven: one column below 25rem, media beside text above it.
- * Locked layouts belong to a parent composition, not to Teaser. The support gate
- * and both container states nest inside the root; the @supports-not branch is an
- * axis swap (flow instead of container states), not a mirror of the modern one.
- *
- * Gates:
- *   data-button   false: the heading's link is stretched over the whole card.
- *                 true: the heading is plain and a button in .Actions carries the link,
- *                 bottom-start when stacked, bottom-end beside media.
- *   data-media    whether a MediaContainer is present.
- *
- * Teaser styles only its own parts (LayoutContainer, MediaContainer, HeadingContainer,
- * ContentContainer, Actions, Teaser-link); the children it composes are configured
- * through their props (ADR-0015).
- */
-
-/* TODO(decide): "visually-hidden" is Teaser's own sr-only part; ThemeSwitch carries the
-   same rule, and the docs app has a .ScreenReaderText. One kernel utility, or one per
-   component? */
-.Teaser {
-  /* TODO(token): raw values. The media minimum and the media radius should be tokens. */
-  --_te-minMediaSize: 12rem;
-  --_te-mediaRadius: 0.3em;
-
-  /* stretched-link anchor */
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex: 1;
-  padding: var(--size-md);
-
-  & .LayoutContainer {
-    flex: 1;
-  }
-
-  & .MediaContainer {
-    border-radius: var(--_te-mediaRadius);
-    overflow: hidden;
-
-    & .Media.StackedSources {
-      overflow: hidden;
-    }
-
-    & .Media.HorizontalSources {
-      overflow: hidden;
-    }
-  }
-
-  & .Teaser-link {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  & .visually-hidden {
-    position: absolute;
-    inline-size: 1px;
-    block-size: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
-  &[data-button="false"] .Teaser-link {
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      cursor: pointer;
-    }
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  /* No container query support: viewport flow, media first, one column. */
-  @supports not (container-type: inline-size) {
-    & .LayoutContainer {
-      gap: var(--size-md);
-
-      & .MediaContainer {
-        inline-size: 100%;
-        margin-block-end: var(--size-md);
-
-        & .Media.StackedSources {
-          display: block;
-
-          & img {
-            inline-size: 100%;
-            block-size: auto;
-          }
-        }
-
-        & .Media.HorizontalSources {
-          display: none;
-        }
-      }
-
-      & .ContentContainer {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--size-md);
-        margin-block-start: var(--size-md);
-      }
-    }
-  }
-
-  @supports (container-type: inline-size) {
-    container-type: inline-size;
-
-    & .LayoutContainer {
-      display: grid;
-      column-gap: var(--size-md);
-
-      & .MediaContainer {
-        grid-area: media;
-      }
-
-      & .HeadingContainer {
-        grid-area: heading;
-        margin-block-end: var(--size-md);
-      }
-
-      & .ContentContainer {
-        grid-area: body;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--size-md);
-
-        /* The button may grow (growInline); this region decides what it is given: one
-           track, sized to the label in both states. The button never learns which state
-           it is in. */
-        /* TODO(decide): when should the button span the row (a 1fr track)? Stacked alone
-           is not it: a 3-up grid on desktop is stacked too. Candidate: the mobile viewport
-           tier, gated here. Decide with a real design in front of us. */
-        & .Actions {
-          align-self: stretch;
-          display: grid;
-          grid-template-columns: max-content;
-        }
-      }
-    }
-
-    /* TODO(token): the 25rem switch is a raw container threshold. */
-    /* State A, one column: media, heading, body; the button sits at the start. */
-    @container (max-width: 24.999rem) {
-      & .LayoutContainer {
-        grid-template-areas:
-          "media"
-          "heading"
-          "body";
-
-        & .MediaContainer {
-          margin-block-end: var(--size-md);
-
-          & .Media.StackedSources {
-            display: block;
-          }
-
-          & .Media.HorizontalSources {
-            display: none;
-          }
-        }
-      }
-    }
-
-    /* State B, media beside text; the button sits at the bottom, end-aligned. */
-    @container (min-width: 25rem) {
-      & .LayoutContainer {
-        grid-template-columns: minmax(var(--_te-minMediaSize), 1fr) 2fr;
-        grid-template-rows: auto auto 1fr;
-        grid-template-areas:
-          "media heading"
-          "media body"
-          "media body";
-        block-size: 100%;
-        align-items: stretch;
-
-        & .MediaContainer {
-          min-block-size: var(--_te-minMediaSize);
-
-          & .Media.StackedSources {
-            display: none;
-          }
-
-          & .Media.HorizontalSources {
-            display: block;
-            position: relative;
-            aspect-ratio: 1 / 1;
-
-            & img {
-              position: absolute;
-              inset: 0;
-              inline-size: 100%;
-              block-size: 100%;
-              object-fit: cover;
-            }
-          }
-        }
-
-        & .ContentContainer .Actions {
-          margin-block-start: auto;
-          justify-content: end;
-        }
-      }
-    }
-  }
-}
-</style>

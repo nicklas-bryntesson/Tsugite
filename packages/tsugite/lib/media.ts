@@ -6,7 +6,7 @@
 // figure.Media > picture.Media-picture(.CssClass) > source(avif/webp/fallback) + img
 import { getImage } from "astro:assets";
 import type { ImageMetadata } from "astro";
-import { escapeHtml } from "./buttonShared";
+import { escapeHtml } from "./html";
 
 // ── Records ──────────────────────────────────────────────────────────────────
 

@@ -1,0 +1,214 @@
+/*
+ * Teaser — image, heading and body in a card that transports to one destination.
+ *
+ * Layout is container-driven: one column below 25rem, media beside text above it.
+ * Locked layouts belong to a parent composition, not to Teaser. The support gate
+ * and both container states nest inside the root; the @supports-not branch is an
+ * axis swap (flow instead of container states), not a mirror of the modern one.
+ *
+ * Gates:
+ *   data-button   false: the heading's link is stretched over the whole card.
+ *                 true: the heading is plain and a button in .Actions carries the link,
+ *                 bottom-start when stacked, bottom-end beside media.
+ *   data-media    whether a MediaContainer is present.
+ *
+ * Teaser styles only its own parts (LayoutContainer, MediaContainer, HeadingContainer,
+ * ContentContainer, Actions, Teaser-link); the children it composes are configured
+ * through their props (ADR-0015).
+ */
+
+/* TODO(decide): "visually-hidden" is Teaser's own sr-only part; ThemeSwitch carries the
+   same rule, and the docs app has a .ScreenReaderText. One kernel utility, or one per
+   component? */
+.Teaser {
+  /* TODO(token): raw values. The media minimum and the media radius should be tokens. */
+  --_te-minMediaSize: 12rem;
+  --_te-mediaRadius: 0.3em;
+
+  /* stretched-link anchor */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  padding: var(--size-md);
+
+  & .LayoutContainer {
+    flex: 1;
+  }
+
+  & .MediaContainer {
+    border-radius: var(--_te-mediaRadius);
+    overflow: hidden;
+
+    & .Media.StackedSources {
+      overflow: hidden;
+    }
+
+    & .Media.HorizontalSources {
+      overflow: hidden;
+    }
+  }
+
+  & .Teaser-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  & .visually-hidden {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  &[data-button="false"] .Teaser-link {
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  /* No container query support: viewport flow, media first, one column. */
+  @supports not (container-type: inline-size) {
+    & .LayoutContainer {
+      gap: var(--size-md);
+
+      & .MediaContainer {
+        inline-size: 100%;
+        margin-block-end: var(--size-md);
+
+        & .Media.StackedSources {
+          display: block;
+
+          & img {
+            inline-size: 100%;
+            block-size: auto;
+          }
+        }
+
+        & .Media.HorizontalSources {
+          display: none;
+        }
+      }
+
+      & .ContentContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--size-md);
+        margin-block-start: var(--size-md);
+      }
+    }
+  }
+
+  @supports (container-type: inline-size) {
+    container-type: inline-size;
+
+    & .LayoutContainer {
+      display: grid;
+      column-gap: var(--size-md);
+
+      & .MediaContainer {
+        grid-area: media;
+      }
+
+      & .HeadingContainer {
+        grid-area: heading;
+        margin-block-end: var(--size-md);
+      }
+
+      & .ContentContainer {
+        grid-area: body;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--size-md);
+
+        /* The button may grow (growInline); this region decides what it is given: one
+           track, sized to the label in both states. The button never learns which state
+           it is in. */
+        /* TODO(decide): when should the button span the row (a 1fr track)? Stacked alone
+           is not it: a 3-up grid on desktop is stacked too. Candidate: the mobile viewport
+           tier, gated here. Decide with a real design in front of us. */
+        & .Actions {
+          align-self: stretch;
+          display: grid;
+          grid-template-columns: max-content;
+        }
+      }
+    }
+
+    /* TODO(token): the 25rem switch is a raw container threshold. */
+    /* State A, one column: media, heading, body; the button sits at the start. */
+    @container (max-width: 24.999rem) {
+      & .LayoutContainer {
+        grid-template-areas:
+          "media"
+          "heading"
+          "body";
+
+        & .MediaContainer {
+          margin-block-end: var(--size-md);
+
+          & .Media.StackedSources {
+            display: block;
+          }
+
+          & .Media.HorizontalSources {
+            display: none;
+          }
+        }
+      }
+    }
+
+    /* State B, media beside text; the button sits at the bottom, end-aligned. */
+    @container (min-width: 25rem) {
+      & .LayoutContainer {
+        grid-template-columns: minmax(var(--_te-minMediaSize), 1fr) 2fr;
+        grid-template-rows: auto auto 1fr;
+        grid-template-areas:
+          "media heading"
+          "media body"
+          "media body";
+        block-size: 100%;
+        align-items: stretch;
+
+        & .MediaContainer {
+          min-block-size: var(--_te-minMediaSize);
+
+          & .Media.StackedSources {
+            display: none;
+          }
+
+          & .Media.HorizontalSources {
+            display: block;
+            position: relative;
+            aspect-ratio: 1 / 1;
+
+            & img {
+              position: absolute;
+              inset: 0;
+              inline-size: 100%;
+              block-size: 100%;
+              object-fit: cover;
+            }
+          }
+        }
+
+        & .ContentContainer .Actions {
+          margin-block-start: auto;
+          justify-content: end;
+        }
+      }
+    }
+  }
+}
