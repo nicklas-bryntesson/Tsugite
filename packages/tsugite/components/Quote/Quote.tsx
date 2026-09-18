@@ -5,6 +5,7 @@
 import type { ReactNode } from "react";
 import { createElement, Fragment } from "react";
 import "./Quote.css";
+import "../../kernel/css/debug.css";
 import { resolveQuote } from "../../lib/quote";
 
 export interface QuoteImage {
@@ -35,7 +36,7 @@ export default function Quote({ quote, source, image = null, alt, size, id, capI
   if (q.mode === "suppress") return null;
   if (q.mode === "error") {
     if (process.env.NODE_ENV === "production") return null;
-    return h("div", { style: { color: "red", border: "2px solid red", padding: "0.5rem" } }, `× Quote: ${q.errorMessage}`);
+    return h("div", { style: { color: "var(--debug-ink)", border: "2px solid var(--debug-ink)", padding: "0.5rem" } }, `× Quote: ${q.errorMessage}`);
   }
 
   const words = hasChildContent ? children : quote;
