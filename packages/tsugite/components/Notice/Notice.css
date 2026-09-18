@@ -1,17 +1,21 @@
 /*
  * Notice — a presentational message (severity + icon + text).
  *
- * Payload only: no live role, no announcement, no dismissal. To announce it,
+ * Payload only: no live role, no announcement, no dismissal logic. To announce it,
  * the context renders it into a persistent live region that is present and
- * empty at load, and swaps the content in.
+ * empty at load, and swaps the content in. To make it dismissible, the host
+ * places a control in the `dismiss` slot and owns what it does; Notice only
+ * places it. Buttons go in the `actions` slot; the host sizes them.
  *
- * Three independent boolean gates over one tinted base:
+ * Gates over one tinted base (recipes/notice.recipe.ts):
  *   data-icon       the icon and its column. Severity is carried by the icon
  *                   (shape + colour), never by chrome alone.
  *   data-border     a full border in the accent colour.
  *   data-emphasis   a stronger visual weight.
  *   data-grow-inline  may the box take more inline space than its content.
  *   data-cap-inline   a reading ceiling on the inline size (--_nt-maxInlineSize).
+ *   data-actions    derived: the host placed buttons under the body.
+ *   data-dismiss    derived: the host placed a dismiss control; a third column opens.
  *
  * Icons are inline stroke SVG drawn with currentColor, which .icon points at
  * the accent, so the mark re-tints with the variant.
@@ -52,15 +56,46 @@
     font-weight: var(--ui-font-weight-strong);
   }
 
-  &[data-icon="false"] {
+  /* The columns: a placement table over the two parts that open one — icon at the
+     start, dismiss at the end. Four closed branches, no formula. */
+  &[data-icon="false"][data-dismiss="false"] {
     grid-template-columns: 1fr;
   }
 
-  /* Icon: two columns, and the icon itself. The element only renders in this state. */
-  &[data-icon="true"] {
+  &[data-icon="true"][data-dismiss="false"] {
     grid-template-columns: auto 1fr;
-    column-gap: var(--_nt-gap);
+  }
 
+  &[data-icon="false"][data-dismiss="true"] {
+    grid-template-columns: 1fr auto;
+  }
+
+  &[data-icon="true"][data-dismiss="true"] {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  &[data-icon="true"],
+  &[data-dismiss="true"] {
+    column-gap: var(--_nt-gap);
+  }
+
+  /* The dismiss corner: whatever the host put there sits at the top end. */
+  & .dismiss {
+    align-self: start;
+    justify-self: end;
+  }
+
+  /* The actions region: the host's buttons, wrapped, under the body. Notice arranges
+     and spaces them; their size and emphasis are the host's (ADR-0015). */
+  & .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--size-sm);
+    margin-block-start: var(--size-xs);
+  }
+
+  /* Icon: the icon itself. The element only renders in this state. */
+  &[data-icon="true"] {
     & .icon {
       color: var(--_nt-accent);
       display: flex;

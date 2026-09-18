@@ -1,48 +1,50 @@
 ---
-// Notice — a presentational message with a severity. The recipe (attributes, icon)
-// lives in lib/notice.ts and is shared by every renderer; this file renders it in Astro.
+// Notice — a message with a severity. The table is recipes/notice.recipe.ts, read by
+// lib/recipe.ts (ADR-0018); this file renders it in Astro. It owns no live role, no
+// lifetime and no destination: the host's region announces, the host places a dismiss
+// control in the `dismiss` slot and owns what it does, and buttons go in `actions`.
 import "./Notice.css";
 import DevError from "../DevError/DevError.astro";
-import { resolveNotice } from "../../lib/notice";
+import { notice } from "../../recipes/notice.recipe";
+import { resolve, type InputOf } from "../../lib/recipe";
+import { noticeDerive, NOTICE_ICONS } from "../../lib/notice";
 
 // TODO: do we need an id prop, yes we probably do don't we, and possibly som aria?
-interface Props {
-  variant?: string;
-  /** false drops the icon and collapses the grid to one column */
-  icon?: boolean;
-  /** full border in the accent colour */
-  border?: boolean;
-  /** a stronger visual weight, drawn in the accent colour */
-  emphasis?: boolean;
-  /** optional bold title above the body */
-  title?: string;
-  /** may the box take more inline space than its content? (ADR-0015) */
-  growInline?: boolean;
-  /** is there a reading ceiling on the inline size? (ADR-0015) */
-  capInline?: boolean;
-  class?: string;
-  [key: string]: unknown;
-}
+type Props = InputOf<typeof notice> & { [key: string]: unknown };
 
-const { variant, icon, border, emphasis, growInline, capInline, title, class: className, ...rest } = Astro.props;
-
-const n = resolveNotice({ variant, icon, border, emphasis, growInline, capInline, class: className });
+const bodyHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const n = resolve(notice, Astro.props, {
+  slots: { body: bodyHtml.trim().length > 0, actions: Astro.slots.has("actions"), dismiss: Astro.slots.has("dismiss") },
+  derive: noticeDerive,
+});
+const variant = n.attrs["data-variant"] as string;
+const Tag = n.tag as "div";
 ---
 
 {
   n.mode === "render" ? (
-    <div class={n.className} {...n.attrs} {...rest}>
-      {n.icon && (
+    <Tag class={n.className} {...n.attrs} {...n.rest}>
+      {n.attrs["data-icon"] === "true" && (
         <div class="icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false" set:html={n.iconPath} />
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false" set:html={NOTICE_ICONS[variant]} />
         </div>
       )}
       <div class="content">
-        {title && <strong class="title">{title}</strong>}
-        <slot />
+        {n.parts.title && <strong class="title">{n.parts.title}</strong>}
+        <Fragment set:html={bodyHtml} />
+        {n.parts.actions && (
+          <div class="actions">
+            <slot name="actions" />
+          </div>
+        )}
       </div>
-    </div>
+      {n.parts.dismiss && (
+        <div class="dismiss">
+          <slot name="dismiss" />
+        </div>
+      )}
+    </Tag>
   ) : (
-    <DevError name="Notice" message={n.errorMessage} />
+    <DevError name={notice.name} message={n.errorMessage} />
   )
 }

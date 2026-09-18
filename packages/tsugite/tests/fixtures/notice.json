@@ -1,0 +1,264 @@
+{
+  "$comment": "Notice — the contract as data. `body`, `actions` and `dismiss` are slot presence the renderer reports (default slot, named slots; node props in React). Every gate is written every time, off values included; the two derived flags say what the host placed. No absences: every cell renders.",
+  "component": "Notice",
+  "cases": [
+    {
+      "name": "defaults: every gate written, off values included",
+      "input": {
+        "body": true,
+        "actions": false,
+        "dismiss": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Notice",
+        "attrs": {
+          "data-variant": "neutral",
+          "data-icon": "true",
+          "data-border": "false",
+          "data-emphasis": "false",
+          "data-grow-inline": "true",
+          "data-cap-inline": "true",
+          "data-actions": "false",
+          "data-dismiss": "false"
+        }
+      }
+    },
+    {
+      "name": "error with a title",
+      "input": {
+        "variant": "error",
+        "title": "Saved",
+        "body": true,
+        "actions": false,
+        "dismiss": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Notice",
+        "attrs": {
+          "data-variant": "error",
+          "data-icon": "true",
+          "data-border": "false",
+          "data-emphasis": "false",
+          "data-grow-inline": "true",
+          "data-cap-inline": "true",
+          "data-actions": "false",
+          "data-dismiss": "false"
+        },
+        "parts": {
+          "title": "Saved"
+        }
+      }
+    },
+    {
+      "name": "no icon",
+      "input": {
+        "variant": "info",
+        "icon": false,
+        "body": true,
+        "actions": false,
+        "dismiss": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Notice",
+        "attrs": {
+          "data-variant": "info",
+          "data-icon": "false",
+          "data-border": "false",
+          "data-emphasis": "false",
+          "data-grow-inline": "true",
+          "data-cap-inline": "true",
+          "data-actions": "false",
+          "data-dismiss": "false"
+        }
+      }
+    },
+    {
+      "name": "border and emphasis",
+      "input": {
+        "variant": "warning",
+        "border": true,
+        "emphasis": true,
+        "body": true,
+        "actions": false,
+        "dismiss": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Notice",
+        "attrs": {
+          "data-variant": "warning",
+          "data-icon": "true",
+          "data-border": "true",
+          "data-emphasis": "true",
+          "data-grow-inline": "true",
+          "data-cap-inline": "true",
+          "data-actions": "false",
+          "data-dismiss": "false"
+        }
+      }
+    },
+    {
+      "name": "footprint off",
+      "input": {
+        "growInline": false,
+        "capInline": false,
+        "body": true,
+        "actions": false,
+        "dismiss": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Notice",
+        "attrs": {
+          "data-variant": "neutral",
+          "data-icon": "true",
+          "data-border": "false",
+          "data-emphasis": "false",
+          "data-grow-inline": "false",
+          "data-cap-inline": "false",
+          "data-actions": "false",
+          "data-dismiss": "false"
+        }
+      }
+    },
+    {
+      "name": "the host placed actions",
+      "input": {
+        "variant": "success",
+        "body": true,
+        "actions": true,
+        "dismiss": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Notice",
+        "attrs": {
+          "data-variant": "success",
+          "data-icon": "true",
+          "data-border": "false",
+          "data-emphasis": "false",
+          "data-grow-inline": "true",
+          "data-cap-inline": "true",
+          "data-actions": "true",
+          "data-dismiss": "false"
+        }
+      }
+    },
+    {
+      "name": "the host placed a dismiss control",
+      "input": {
+        "body": true,
+        "actions": false,
+        "dismiss": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Notice",
+        "attrs": {
+          "data-variant": "neutral",
+          "data-icon": "true",
+          "data-border": "false",
+          "data-emphasis": "false",
+          "data-grow-inline": "true",
+          "data-cap-inline": "true",
+          "data-actions": "false",
+          "data-dismiss": "true"
+        }
+      }
+    },
+    {
+      "name": "actions and dismiss, no icon",
+      "input": {
+        "icon": false,
+        "body": true,
+        "actions": true,
+        "dismiss": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Notice",
+        "attrs": {
+          "data-variant": "neutral",
+          "data-icon": "false",
+          "data-border": "false",
+          "data-emphasis": "false",
+          "data-grow-inline": "true",
+          "data-cap-inline": "true",
+          "data-actions": "true",
+          "data-dismiss": "true"
+        }
+      }
+    },
+    {
+      "name": "an empty notice still renders — the host decides",
+      "input": {
+        "body": false,
+        "actions": false,
+        "dismiss": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Notice",
+        "attrs": {
+          "data-variant": "neutral",
+          "data-icon": "true",
+          "data-border": "false",
+          "data-emphasis": "false",
+          "data-grow-inline": "true",
+          "data-cap-inline": "true",
+          "data-actions": "false",
+          "data-dismiss": "false"
+        }
+      }
+    },
+    {
+      "name": "extra class",
+      "input": {
+        "class": "extra",
+        "body": true,
+        "actions": false,
+        "dismiss": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Notice extra",
+        "attrs": {
+          "data-variant": "neutral",
+          "data-icon": "true",
+          "data-border": "false",
+          "data-emphasis": "false",
+          "data-grow-inline": "true",
+          "data-cap-inline": "true",
+          "data-actions": "false",
+          "data-dismiss": "false"
+        }
+      }
+    },
+    {
+      "name": "an unknown variant is an error",
+      "input": {
+        "variant": "loud",
+        "body": true,
+        "actions": false,
+        "dismiss": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid variant \"loud\" — expected error | warning | success | info | neutral"
+      }
+    }
+  ]
+}
