@@ -1,6 +1,9 @@
 ---
-// Shared error rendering — mirrors the RenderError helpers in the AiPoc
-// TagHelpers: visible red box in dev, suppressed output in prod.
+// Shared error rendering: a visible box in development, nothing in production. Its
+// colours are the kernel's debug palette (kernel/css/debug.css), not brand tokens — a
+// diagnosis looks the same on every brand. The React and Vue renderers mirror this box.
+import "../../kernel/css/debug.css";
+
 interface Props {
   name: string;
   message: string;
@@ -13,7 +16,7 @@ const isDev = import.meta.env.DEV;
 {
   isDev && (
     <div
-      style="color:red; border: 2px solid red; padding: 0.5rem;"
+      style="color: var(--debug-ink); border: 2px solid var(--debug-ink); padding: 0.5rem;"
       set:html={`<!-- ${name}: ${message} --><span>&times; ${name}: ${message}</span>`}
     />
   )

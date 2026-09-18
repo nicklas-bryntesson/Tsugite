@@ -4,6 +4,7 @@
 import type { ReactNode } from "react";
 import { createElement } from "react";
 import "./Button.css";
+import "../../kernel/css/debug.css";
 import { button } from "../../recipes/button.recipe";
 import { resolve, type InputOf } from "../../lib/recipe";
 import { buttonDerive } from "../../lib/button";
@@ -31,7 +32,7 @@ function render(element: "a" | "button", name: string, props: Record<string, unk
   if (b.mode === "suppress") return null;
   if (b.mode === "error") {
     if (process.env.NODE_ENV === "production") return null;
-    return h("div", { style: { color: "red", border: "2px solid red", padding: "0.5rem" } }, `× ${name}: ${b.errorMessage}`);
+    return h("div", { style: { color: "var(--debug-ink)", border: "2px solid var(--debug-ink)", padding: "0.5rem" } }, `× ${name}: ${b.errorMessage}`);
   }
   return h(
     b.tag,
