@@ -23,6 +23,8 @@ import NoIcon from "../../examples/notice/NoIcon.astro";
 import noIconSrc from "../../examples/notice/NoIcon.astro?raw";
 import Footprint from "../../examples/notice/Footprint.astro";
 import footprintSrc from "../../examples/notice/Footprint.astro?raw";
+import Actions from "../../examples/notice/Actions.astro";
+import actionsSrc from "../../examples/notice/Actions.astro?raw";
 
 const entry = entryFor("notice");
 ---
@@ -76,6 +78,16 @@ const entry = entryFor("notice");
       source={footprintSrc}
     >
       <Footprint />
+    </Example>
+
+    <Example
+      id="actions"
+      title="Actions and dismiss"
+      lead="Two slots the host fills. Buttons go in actions, under the body; a dismiss control goes in dismiss, in the top-end corner, where a third column opens. Notice places them and nothing more: the buttons keep their own size and emphasis, and what the dismiss control does belongs to the host, never to Notice — it owns no lifetime, as it owns no live role."
+      source={actionsSrc}
+      block
+    >
+      <Actions />
     </Example>
 
     <section class="doc-bench" id="test-bench">

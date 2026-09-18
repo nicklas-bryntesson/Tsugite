@@ -1,0 +1,18 @@
+---
+import Notice from "tsugite/components/Notice/Notice.astro";
+import LinkButton from "tsugite/components/Button/LinkButton.astro";
+import ActionButton from "tsugite/components/Button/ActionButton.astro";
+---
+{/* Two slots the host fills: `actions` under the body, `dismiss` in the top-end corner.
+    Notice places them and nothing more — the buttons' size and emphasis are the host's,
+    and what the dismiss control does is the host's (or the kernel's), never Notice's. */}
+<Notice variant="info" title="A new version is available">
+  <p>Version 4.2 fixes the export and adds the calendar view. Reload to get it.</p>
+  <LinkButton slot="actions" href="#" size="sm" icon="icon-info" icon-position="left">Release notes</LinkButton>
+  <ActionButton slot="actions" size="sm" emphasis="secondary">Reload</ActionButton>
+  <ActionButton slot="dismiss" size="sm" emphasis="tertiary" icon="cancel" aria-label="Dismiss" />
+</Notice>
+<Notice variant="warning" icon={false}>
+  <p>Your session ends in five minutes.</p>
+  <ActionButton slot="dismiss" size="sm" emphasis="tertiary" icon="cancel" aria-label="Dismiss" />
+</Notice>

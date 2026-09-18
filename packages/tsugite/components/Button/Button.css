@@ -366,12 +366,6 @@
     inline-size: 100%;
   }
 
-  &[data-icon-only="true"] {
-    --_buttonColumns: auto;
-    --_buttonAreas: "icon";
-    padding-inline: var(--_paddingBlock);
-  }
-
   &:not([data-icon-position]) {
     --_buttonColumns: auto;
     --_buttonAreas: "text";
@@ -391,6 +385,20 @@
     --_marginStart: var(--_iconMargin);
 
     gap: var(--_marginStart);
+  }
+
+  /* Icon-only: one area, square padding. After the position rules on purpose — an
+     icon-only button still carries data-icon-position, and this must win. */
+  &[data-icon-only="true"] {
+    --_buttonColumns: auto;
+    --_buttonAreas: "icon";
+    padding-inline: var(--_paddingBlock);
+
+    /* No label line to sit within: the icon carries the height itself, and the
+       button is a square of padding around it. */
+    & > .Button-icon {
+      margin-block: 0;
+    }
   }
 
   & > .Button-text {
@@ -427,16 +435,17 @@
     white-space: nowrap;
   }
 
+  /* The icon: a sprite <use> in an svg that has no size of its own (the browser would
+     give it 300×150), so the size is the size slot on both axes, and it sits in the
+     icon area of the button's grid. The negative block margin keeps it from adding
+     height beyond the label's line. */
   & > .Button-icon {
-    display: inline;
+    grid-area: icon;
+    display: block;
+    inline-size: var(--_iconSize);
     block-size: var(--_iconSize);
-    inline-size: auto;
-    width: auto;
-    max-width: fit-content;
     position: relative;
-    /* force icon to not take up any height */
-
-    margin-block: calc((var(--_iconSize) / 2 ) * -1);
+    margin-block: calc((var(--_iconSize) / 2) * -1);
   }
 }
 
