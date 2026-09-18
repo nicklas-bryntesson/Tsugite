@@ -1,126 +1,150 @@
-// TSUGITE RAW COLOR PALETTE — 55 tokens, sju familjer, 100% oklch.
+// TSUGITE RAW COLOR PALETTE — authored as FAMILIES (ADR-0020), 100% oklch.
 //
-// Familjerna:
-//   SUMI    墨  neutralrampen, varm greige (hue 74) — washi → yakisugi
-//   AI      藍  indigo — varumärkesröst, interaktion, och feedback-info
-//   HINOKI  檜  cypress/trä — accentröst. Hue glider 77 → 48, förankrad i
-//               fotograferat cederträ (Kusatsu hue 43–53, ranma-bandet 55–61)
-//   YU      湯  onsenvatten — ROLL OBESTÄMD, se anteckning nedast
-//   KAKI    柿  persimon — feedback-error
-//   MATCHA  抹茶            — feedback-success
-//   KOHAKU  琥珀 bärnsten   — feedback-warning
-//
-// L-stegen i SUMI och AI är avsiktligt identiska med de gamla N- och B-ramperna.
-// Bara hue och chroma byts, så kontrastrelationerna i det semantiska lagret
-// överlever bytet mekaniskt.
-//
-// Statusfamiljerna har fyra steg var — ett per lägesrad — så feedback-tokens
-// blir pekare i stället för mix()-recept. Se FEEDBACK_SHAPE längst ned.
+// A family is authoring form and UI grouping, nothing more: a key (the system's id),
+// a label (free text — brand-blue, AI-50, Ocean, whatever a brand calls it), and an
+// ordered list of steps. The order is the author's and may be wrong on purpose; the
+// step labels are free. The system requires only that (family, step) is addressable.
+// One family or twenty deliver the same CSS: the flat map `rawColorTokens` below is
+// DERIVED from this structure, and the CSS names (--COLOR-<KEY>-<STEP>) with it —
+// they are never authored. Roles are assigned in the semantic and voice factories,
+// by pointing at a step; the palette knows nothing about roles.
 
-export const rawColorTokens = {
-  // ── SUMI 墨 — neutralrampen, hue 74 ────────────────────────────────────────
-  // Chroman toppar i midtonerna (0.020) och tunnas ut mot båda ändarna:
-  // SUMI-00 är rent papper, SUMI-95 är varm yakisugi-svart.
-  "--COLOR-SUMI-00": "oklch(100% 0 74)",
-  "--COLOR-SUMI-05": "oklch(98.5% 0.004 74)",
-  "--COLOR-SUMI-10": "oklch(97% 0.007 74)",
-  "--COLOR-SUMI-15": "oklch(95% 0.010 74)",
-  "--COLOR-SUMI-20": "oklch(93% 0.013 74)",
-  "--COLOR-SUMI-25": "oklch(89% 0.016 74)",
-  "--COLOR-SUMI-30": "oklch(85% 0.018 74)",
-  "--COLOR-SUMI-35": "oklch(80% 0.019 74)",
-  "--COLOR-SUMI-40": "oklch(75% 0.020 74)",
-  "--COLOR-SUMI-45": "oklch(70% 0.020 74)",
-  "--COLOR-SUMI-50": "oklch(65% 0.020 74)",
-  "--COLOR-SUMI-55": "oklch(58.97% 0.019 74)",
-  "--COLOR-SUMI-60": "oklch(52.94% 0.018 74)",
-  "--COLOR-SUMI-65": "oklch(46.91% 0.017 74)",
-  "--COLOR-SUMI-70": "oklch(40.88% 0.016 74)",
-  "--COLOR-SUMI-75": "oklch(34.85% 0.015 74)",
-  "--COLOR-SUMI-80": "oklch(28.82% 0.014 74)",
-  "--COLOR-SUMI-85": "oklch(22.79% 0.013 74)",
-  "--COLOR-SUMI-90": "oklch(16.76% 0.011 74)",
-  "--COLOR-SUMI-95": "oklch(11.24% 0.010 74)",
-
-  // ── AI 藍 — indigo ─────────────────────────────────────────────────────────
-  // Chroman ned från B:s 0.21 till 0.145 på mittsteget: indigo är ett färgat
-  // blått, inte ett skärmblått. AI-60 bär vit text på 7.0:1 där gamla B50 låg
-  // runt 4.2 — det är därför feedback-info flyttar från 50 till 60.
-  "--COLOR-AI-05": "oklch(96.63% 0.014 258)",
-  "--COLOR-AI-10": "oklch(91.11% 0.035 256)",
-  "--COLOR-AI-20": "oklch(83.67% 0.065 254)",
-  "--COLOR-AI-30": "oklch(74.76% 0.098 256)",
-  "--COLOR-AI-40": "oklch(67.38% 0.125 258)",
-  "--COLOR-AI-50": "oklch(61.48% 0.145 260)",
-  "--COLOR-AI-60": "oklch(46.65% 0.135 262)",
-  "--COLOR-AI-70": "oklch(38.13% 0.115 263)",
-  "--COLOR-AI-80": "oklch(27.26% 0.085 264)",
-  "--COLOR-AI-90": "oklch(18.34% 0.060 264)",
-  "--COLOR-AI-95": "oklch(11.28% 0.040 265)",
-
-  // ── HINOKI 檜 — trä, accentrösten ─────────────────────────────────────────
-  // Hue glider 77 → 48: värmen fördjupas när den mörknar, som riktigt trä gör.
-  "--COLOR-HINOKI-05": "oklch(97% 0.020 77)",
-  "--COLOR-HINOKI-20": "oklch(90% 0.060 70)",
-  "--COLOR-HINOKI-40": "oklch(79% 0.096 64)",
-  "--COLOR-HINOKI-60": "oklch(62% 0.098 57)",
-  "--COLOR-HINOKI-80": "oklch(42% 0.078 52)",
-  "--COLOR-HINOKI-95": "oklch(23% 0.048 48)",
-
-  // ── YU 湯 — onsenvatten ───────────────────────────────────────────────────
-  // ROLL OBESTÄMD. Info bor i AI, och water som röst förkastades. Kvar är
-  // dekor: glöd, illustration, dataviz-accent. Sex steg är mycket för det —
-  // krymp familjen eller ge den ett jobb innan den flyttar in på riktigt.
-  "--COLOR-YU-05": "oklch(96.5% 0.016 205)",
-  "--COLOR-YU-10": "oklch(93% 0.028 204)",
-  "--COLOR-YU-25": "oklch(86% 0.055 203)",
-  "--COLOR-YU-50": "oklch(66% 0.095 206)",
-  "--COLOR-YU-70": "oklch(45% 0.070 209)",
-  "--COLOR-YU-85": "oklch(27% 0.042 212)",
-
-  // ── Statusfamiljer — fyra steg, ett per lägesrad ──────────────────────────
-  // 10 blek ton · 30 lyft · 50 solid · 80 djup
-  "--COLOR-KAKI-10": "oklch(93% 0.032 40)",
-  "--COLOR-KAKI-30": "oklch(80% 0.115 38)",
-  "--COLOR-KAKI-50": "oklch(58% 0.190 32)",
-  "--COLOR-KAKI-80": "oklch(41% 0.145 30)",
-
-  "--COLOR-MATCHA-10": "oklch(94% 0.040 148)",
-  "--COLOR-MATCHA-30": "oklch(80% 0.090 150)",
-  "--COLOR-MATCHA-50": "oklch(55% 0.105 148)",
-  "--COLOR-MATCHA-80": "oklch(40% 0.080 150)",
-
-  // KOHAKU hårdnar UPPÅT. Under ungefär L 65 slutar bärnsten vara bärnsten och
-  // blir brons, så warning behåller mörk ink i alla fyra rader och låter steget
-  // vandra mot ljusare i kontrastläget. KOHAKU-80 är därför TEXT på den bleka
-  // tonen, inte en fyllning som sina syskon.
-  "--COLOR-KOHAKU-10": "oklch(96% 0.045 88)",
-  "--COLOR-KOHAKU-30": "oklch(88% 0.115 85)",
-  "--COLOR-KOHAKU-50": "oklch(78% 0.145 78)",
-  "--COLOR-KOHAKU-80": "oklch(45% 0.095 70)",
+export const palette = {
+  sumi: {
+    label: "SUMI",
+    glyph: "墨",
+    note: "The neutral ramp: warm greige, hue 74. Chroma peaks in the midtones (0.020) and thins toward both ends — SUMI-00 is plain paper, SUMI-95 warm yakisugi black. The L steps match the old N ramp, so the semantic layer's contrast relations survived the rename mechanically.",
+    steps: [
+      ["00", "oklch(100% 0 74)"],
+      ["05", "oklch(98.5% 0.004 74)"],
+      ["10", "oklch(97% 0.007 74)"],
+      ["15", "oklch(95% 0.010 74)"],
+      ["20", "oklch(93% 0.013 74)"],
+      ["25", "oklch(89% 0.016 74)"],
+      ["30", "oklch(85% 0.018 74)"],
+      ["35", "oklch(80% 0.019 74)"],
+      ["40", "oklch(75% 0.020 74)"],
+      ["45", "oklch(70% 0.020 74)"],
+      ["50", "oklch(65% 0.020 74)"],
+      ["55", "oklch(58.97% 0.019 74)"],
+      ["60", "oklch(52.94% 0.018 74)"],
+      ["65", "oklch(46.91% 0.017 74)"],
+      ["70", "oklch(40.88% 0.016 74)"],
+      ["75", "oklch(34.85% 0.015 74)"],
+      ["80", "oklch(28.82% 0.014 74)"],
+      ["85", "oklch(22.79% 0.013 74)"],
+      ["90", "oklch(16.76% 0.011 74)"],
+      ["95", "oklch(11.24% 0.010 74)"],
+    ],
+  },
+  ai: {
+    label: "AI",
+    glyph: "藍",
+    note: "Indigo: the brand voice, interaction, and feedback-info. Chroma down from 0.21 to 0.145 on the middle step — a coloured blue, not a screen blue. AI-60 carries white text at 7.0:1, which is why feedback-info moved from 50 to 60. L steps match the old B ramp.",
+    steps: [
+      ["05", "oklch(96.63% 0.014 258)"],
+      ["10", "oklch(91.11% 0.035 256)"],
+      ["20", "oklch(83.67% 0.065 254)"],
+      ["30", "oklch(74.76% 0.098 256)"],
+      ["40", "oklch(67.38% 0.125 258)"],
+      ["50", "oklch(61.48% 0.145 260)"],
+      ["60", "oklch(46.65% 0.135 262)"],
+      ["70", "oklch(38.13% 0.115 263)"],
+      ["80", "oklch(27.26% 0.085 264)"],
+      ["90", "oklch(18.34% 0.060 264)"],
+      ["95", "oklch(11.28% 0.040 265)"],
+    ],
+  },
+  hinoki: {
+    label: "HINOKI",
+    glyph: "檜",
+    note: "Cypress: the accent voice. The hue slides 77 → 48 as it darkens, anchored in photographed cedar — the warmth deepens the way real wood does.",
+    steps: [
+      ["05", "oklch(97% 0.020 77)"],
+      ["20", "oklch(90% 0.060 70)"],
+      ["40", "oklch(79% 0.096 64)"],
+      ["60", "oklch(62% 0.098 57)"],
+      ["80", "oklch(42% 0.078 52)"],
+      ["95", "oklch(23% 0.048 48)"],
+    ],
+  },
+  yu: {
+    label: "YU",
+    glyph: "湯",
+    note: "Onsen water. No role points at it today: info is AI, and water as a voice overreached. Decor, glow, illustration, data-viz accent — or it shrinks. Deliberately left in the map.",
+    steps: [
+      ["05", "oklch(96.5% 0.016 205)"],
+      ["10", "oklch(93% 0.028 204)"],
+      ["25", "oklch(86% 0.055 203)"],
+      ["50", "oklch(66% 0.095 206)"],
+      ["70", "oklch(45% 0.070 209)"],
+      ["85", "oklch(27% 0.042 212)"],
+    ],
+  },
+  kaki: {
+    label: "KAKI",
+    glyph: "柿",
+    note: "Persimmon: feedback-error. Four steps, one per mode row, so the feedback tokens are pointers instead of mix() recipes.",
+    steps: [
+      ["10", "oklch(93% 0.032 40)"],
+      ["30", "oklch(80% 0.115 38)"],
+      ["50", "oklch(58% 0.190 32)"],
+      ["80", "oklch(41% 0.145 30)"],
+    ],
+  },
+  matcha: {
+    label: "MATCHA",
+    glyph: "抹茶",
+    note: "Matcha: feedback-success. Four steps, one per mode row.",
+    steps: [
+      ["10", "oklch(94% 0.040 148)"],
+      ["30", "oklch(80% 0.090 150)"],
+      ["50", "oklch(55% 0.105 148)"],
+      ["80", "oklch(40% 0.080 150)"],
+    ],
+  },
+  kohaku: {
+    label: "KOHAKU",
+    glyph: "琥珀",
+    note: "Amber: feedback-warning. Four steps, one per mode row; KOHAKU-80 is a dark bronze used as text.",
+    steps: [
+      ["10", "oklch(96% 0.045 88)"],
+      ["30", "oklch(88% 0.115 85)"],
+      ["50", "oklch(78% 0.145 78)"],
+      ["80", "oklch(45% 0.095 70)"],
+    ],
+  },
 };
 
+/** The CSS name of a step: derived from the family key and the step label, never authored. */
+export const rawName = (familyKey, step) => `--COLOR-${familyKey.toUpperCase()}-${step}`;
+
+/** The flat map every consumer reads — the delivered form, derived from the families in
+    authoring order so the generated CSS is stable. */
+export const rawColorTokens = Object.fromEntries(
+  Object.entries(palette).flatMap(([key, family]) => family.steps.map(([step, value]) => [rawName(key, step), value])),
+);
+
 // ─────────────────────────────────────────────────────────────────────────────
-// VALFRITT: härdningen av CONST→Semantic-seamen.
-// Ta bort allt nedanför om du vill ha enbart paletten.
+// The hardening of the RAW→semantic seam: one grammar, one lookup, one guard.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Den ENDA definitionen av hur en RAW-referens ser ut. Grammatik: FAMILJ-STEG,
-    versaler och bindestreck. collector.asColorLiteral, docs/color.astro:paintable
-    och tokens.test.ts ska alla importera den här i stället för att hålla var sin
-    kopia av /^var\(\(--COLOR-[A-Z0-9]+\)\)$/ — den matchar inte längre. */
+/** The ONE definition of what a RAW reference looks like: FAMILY-STEP, upper case,
+    a hyphen between. collector.asColorLiteral, docs/color.astro:paintable and
+    tokens.test.ts import this instead of keeping copies. The name is derived from
+    the palette's structure (family key + step label), never authored. */
 export const RAW_REF = /^var\((--COLOR-[A-Z]+-\d{2})\)$/;
 
-/** Plockar ut RAW-namnet ur ett var()-uttryck, eller null om det inte är ett. */
+/** The RAW name inside a var() expression, or null when it is not one. */
 export function rawRefName(value) {
   if (typeof value !== "string") return null;
   const m = value.match(RAW_REF);
   return m && m[1] in rawColorTokens ? m[1] : null;
 }
 
-/** Authoring-helper: raw("SUMI-40") → "var(--COLOR-SUMI-40)".
-    Kastar på okänt namn, vilket är hela poängen — resolveValue släpper idag
-    igenom vilken sträng som helst orörd, så ett stavfel dör först i webbläsaren. */
+/** Authoring helper: raw("SUMI-40") → "var(--COLOR-SUMI-40)". Throws on an unknown
+    step — that is the point: resolveValue passes any string through untouched, so a
+    typo would otherwise die in the browser. */
 export function raw(step) {
   const name = `--COLOR-${step}`;
   if (!(name in rawColorTokens)) {
@@ -128,82 +152,25 @@ export function raw(step) {
       .filter((n) => n.startsWith(`--COLOR-${String(step).split("-")[0]}`))
       .join(", ");
     throw new Error(
-      `raw(): "${step}" finns inte i paletten.` + (near ? ` Familjen har: ${near}` : ""),
+      `raw(): "${step}" is not in the palette.` + (near ? ` The family has: ${near}` : ""),
     );
   }
   return `var(${name})`;
 }
 
-/** Varje --COLOR-referens i en fabrik måste peka på något som finns.
-    Kör den i validateTokens() och validateVoices(). */
+/** Every --COLOR- reference in a factory must point at something that exists.
+    Run in validateTokens() and validateVoices(). */
 export function assertRawReferences(factoryName, table) {
   const problems = [];
   const walk = (node, path) => {
     if (typeof node === "string") {
       for (const hit of node.match(/--COLOR-[A-Za-z0-9-]+/g) ?? []) {
-        if (!(hit in rawColorTokens)) problems.push(`${path}: "${hit}" finns inte i paletten`);
+        if (!(hit in rawColorTokens)) problems.push(`${path}: "${hit}" is not in the palette`);
       }
     } else if (node && typeof node === "object") {
       for (const [k, v] of Object.entries(node)) walk(v, `${path}/${k}`);
     }
   };
   walk(table, factoryName);
-  if (problems.length) throw new Error(`Trasiga RAW-referenser:\n${problems.join("\n")}`);
+  if (problems.length) throw new Error(`Broken RAW references:\n${problems.join("\n")}`);
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// MIGRERING — gammalt namn → nytt. Använd den här, inte sed.
-// ─────────────────────────────────────────────────────────────────────────────
-
-export const LEGACY_MAP = {
-  // N → SUMI, 1:1 på alla 20 steg
-  ...Object.fromEntries(
-    ["00","05","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95"]
-      .map((s) => [`--COLOR-N${s}`, `--COLOR-SUMI-${s}`]),
-  ),
-  // B → AI, 1:1
-  ...Object.fromEntries(
-    ["05","10","20","30","40","50","60","70","80","90","95"]
-      .map((s) => [`--COLOR-B${s}`, `--COLOR-AI-${s}`]),
-  ),
-  // PI → HINOKI. INTE 1:1 — fem steg blir sex och inget stegnummer är gemensamt.
-  // Mappat på närmaste L: PI10 L96→HINOKI-05 L97, PI25 L88→20 L90,
-  // PI50 L67→60 L62, PI70 L34→80 L42, PI85 L24→95 L23.
-  // HINOKI-40 (L79) är nytt och har ingen PI-motsvarighet.
-  "--COLOR-PI10": "--COLOR-HINOKI-05",
-  "--COLOR-PI25": "--COLOR-HINOKI-20",
-  "--COLOR-PI50": "--COLOR-HINOKI-60",
-  "--COLOR-PI70": "--COLOR-HINOKI-80",
-  "--COLOR-PI85": "--COLOR-HINOKI-95",
-  // Status. OBS att siffran ändras på warning.
-  "--COLOR-R50": "--COLOR-KAKI-50",
-  "--COLOR-G50": "--COLOR-MATCHA-50",
-  "--COLOR-Y80": "--COLOR-KOHAKU-50", // ⚠️ 80 → 50. KOHAKU-80 är en helt annan
-                                      //    färg (mörk brons) och används som TEXT.
-};
-
-/** Tokens som försvinner utan ersättare. Ingen fabrik refererar dem idag. */
-export const RETIRED = ["--COLOR-YE05", "--COLOR-YE20", "--COLOR-YE50", "--COLOR-YE70", "--COLOR-YE95"];
-
-// ─────────────────────────────────────────────────────────────────────────────
-// FEEDBACK — den enda semantiska formen som ändras.
-// Tolv mix()-recept blir fyra pekare per roll. onWarning är NYTT.
-// ─────────────────────────────────────────────────────────────────────────────
-
-export const FEEDBACK_SHAPE = `
-"--color-feedback-error":   { light: raw("KAKI-50"),   dark: raw("KAKI-30"),
-                              "light-contrast": raw("KAKI-80"),   "dark-contrast": raw("KAKI-10") },
-"--color-feedback-success": { light: raw("MATCHA-50"), dark: raw("MATCHA-30"),
-                              "light-contrast": raw("MATCHA-80"), "dark-contrast": raw("MATCHA-10") },
-"--color-feedback-info":    { light: raw("AI-60"),     dark: raw("AI-30"),
-                              "light-contrast": raw("AI-80"),     "dark-contrast": raw("AI-10") },
-
-// Warning hårdnar uppåt: samma ink i alla fyra rader, steget flyttar.
-"--color-feedback-warning": { light: raw("KOHAKU-50"), dark: raw("KOHAKU-30"),
-                              "light-contrast": raw("KOHAKU-10"), "dark-contrast": raw("KOHAKU-10") },
-
-// NYTT — warning är den enda rollen vars ink inte är vit i ljust läge.
-// Kräver också --ui-warning-foreground i seam.ui.tokens.js.
-"--color-feedback-onWarning": { light: raw("SUMI-95"), dark: raw("SUMI-95"),
-                                "light-contrast": raw("SUMI-95"), "dark-contrast": raw("SUMI-95") },
-`;

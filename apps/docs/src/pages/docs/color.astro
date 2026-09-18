@@ -7,7 +7,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/components/Heading/Heading.astro";
 import Prose from "tsugite/components/Prose/Prose.astro";
-import { rawColorTokens, rawRefName } from "tsugite/theme-default/raw.color.tokens.js";
+import { palette, rawColorTokens, rawName, rawRefName } from "tsugite/theme-default/raw.color.tokens.js";
 import { semanticColorTokens } from "tsugite/theme-default/semantic.color.tokens.js";
 import { themeVoices, voiceMatrix } from "tsugite/theme-default/theme.voices.tokens.js";
 import { resolveValue } from "tsugite/engine/color-engine.js";
@@ -26,10 +26,18 @@ function paintable(value: unknown): string | null {
   return css;
 }
 
-const raws = Object.entries(rawColorTokens).map(([name, literal]) => ({
-  name,
-  literal,
-  hex: toSrgbHex(oklch(literal)),
+// The RAW palette, per family (ADR-0020): the structure is the source, the names are derived.
+const families = Object.entries(palette).map(([key, family]) => ({
+  key,
+  label: family.label,
+  glyph: family.glyph,
+  note: family.note,
+  steps: family.steps.map(([step, literal]) => ({
+    step,
+    name: rawName(key, step),
+    literal,
+    hex: toSrgbHex(oklch(literal)),
+  })),
 }));
 
 const semantics = Object.entries(semanticColorTokens).map(([name, modes]) => ({
@@ -63,17 +71,30 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
       </Prose>
 
       <Heading element="h2" size="3" text="RAW palette" />
-      <p class="note">Authored in oklch. Hex is the build-computed sRGB rendering.</p>
-      <ul class="raw-grid">
-        {raws.map((r) => (
-          <li class="raw-card">
-            <span class="raw-swatch" style={`background: ${r.literal}`}></span>
-            <code class="raw-name">{r.name.replace("--COLOR-", "")}</code>
-            <code class="raw-val">{r.literal}</code>
-            <code class="raw-val">{r.hex}</code>
-          </li>
-        ))}
-      </ul>
+      <p class="note">
+        Authored in oklch, as families (ADR-0020). A family is a label and an ordered ladder of
+        steps; the CSS names are derived from it. Hex is the build-computed sRGB rendering.
+      </p>
+      {families.map((f) => (
+        <section class="family" aria-labelledby={`family-${f.key}`}>
+          <header class="family-head">
+            <Heading element="h3" size="5" id={`family-${f.key}`} text={f.label} />
+            {f.glyph && <span class="family-glyph" aria-hidden="true">{f.glyph}</span>}
+            <span class="family-count">{f.steps.length} steps</span>
+          </header>
+          {f.note && <p class="family-note">{f.note}</p>}
+          <ul class="ramp">
+            {f.steps.map((r) => (
+              <li class="raw-card">
+                <span class="raw-swatch" style={`background: ${r.literal}`}></span>
+                <code class="raw-name">{f.label}-{r.step}</code>
+                <code class="raw-val">{r.literal}</code>
+                <code class="raw-val">{r.hex}</code>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
 
       <Heading element="h2" size="3" text="Semantic roles" />
       <div class="table-scroll">
@@ -148,13 +169,30 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
 
   & .note { margin: 0; color: var(--color-text-secondary); font-size: var(--fontSize-label); }
 
-  & .raw-grid {
+  & .family {
+    display: grid;
+    gap: 0.5rem;
+    inline-size: 100%;
+  }
+
+  & .family-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  & .family-glyph { color: var(--color-text-secondary); }
+  & .family-count { margin-inline-start: auto; color: var(--color-text-secondary); font-size: var(--fontSize-label-small); }
+  & .family-note { margin: 0; color: var(--color-text-secondary); font-size: var(--fontSize-label); max-inline-size: 72ch; }
+
+  & .ramp {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(11rem, 100%), 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(9rem, 100%), 1fr));
+    gap: 0.5rem;
     inline-size: 100%;
   }
 
