@@ -9,6 +9,10 @@ export interface EnumAxis {
   readonly values: readonly string[];
   readonly default: string;
   readonly when?: When;
+  /** a composition's axis whose values are another recipe's INPUT (Teaser's frame is Card
+   *  input). The CSS never reads it, so no attribute is written; the renderer hands
+   *  `resolution.maps[name]` to the part's component (ADR-0017 decision 6). */
+  readonly maps?: { readonly to: string; readonly values: Readonly<Record<string, unknown>> };
 }
 
 export interface BooleanAxis {
@@ -36,7 +40,16 @@ export type HostAttr =
 /** A named child (ADR-0013). `slot`: the renderer hosts it and reports whether it is
  *  filled. `name`: an open string written to an attribute (an icon's sprite id). `text`:
  *  a string the renderer writes inside a part element. */
-export type Part = { readonly kind: "slot" } | { readonly kind: "name"; readonly attr: string } | { readonly kind: "text" };
+export type Part = (
+  | { readonly kind: "slot" }
+  | { readonly kind: "name"; readonly attr: string }
+  | { readonly kind: "text"; readonly default?: string }
+) & {
+  /** the recipe this part is rendered through, and the fixed input the composition gives it.
+   *  Data for the renderer; the interpreter does not act on it. */
+  readonly uses?: string;
+  readonly with?: Readonly<Record<string, unknown>>;
+};
 
 /** A flag the CSS reads that comes from content, not props. The recipe names it and what
  *  it depends on; the renderer supplies the formula through `ctx.derive` (the hole). */
@@ -125,6 +138,8 @@ export interface Resolution {
   attrs: Record<string, string | true>;
   /** the parts as resolved: slot presence, name and text values */
   parts: Record<string, string | boolean | null>;
+  /** for each mapped axis, the other recipe's input its value stands for (null = no part) */
+  maps: Record<string, unknown>;
   /** props the recipe does not know, for the renderer to pass through (id, style, aria-*) */
   rest: Record<string, unknown>;
 }
@@ -170,6 +185,7 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
   const host: Record<string, string | boolean | null> = {};
   const parts: Record<string, string | boolean | null> = {};
   const axes: Record<string, string | boolean> = {};
+  const maps: Record<string, unknown> = {};
 
   // ── host attributes: this element's, then what belongs to another element ──
   for (const [name, spec] of Object.entries(hostAll)) {
@@ -201,7 +217,7 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
     if (part.kind === "slot") parts[name] = ctx.slots?.[name] ?? ctx.hasContent ?? false;
     else if (part.kind === "name") parts[name] = stringOf(props[name]);
     // a text part keeps its spacing: " about Widgets" begins with the space that separates it
-    else parts[name] = typeof props[name] === "string" && (props[name] as string).trim() ? (props[name] as string) : null;
+    else parts[name] = typeof props[name] === "string" && (props[name] as string).trim() ? (props[name] as string) : (part.default ?? null);
     if (part.kind === "name" && typeof parts[name] === "string") attrs[part.attr] = parts[name] as string;
   }
 
@@ -227,7 +243,8 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
     const value = raw == null ? axis.default : String(raw).toLowerCase();
     if (!axis.values.includes(value)) fail(`invalid ${name} "${raw}" — expected ${axis.values.join(" | ")}`);
     axes[name] = value;
-    attrs[attr] = value;
+    if (axis.maps) maps[name] = axis.values.includes(value) ? (axis.maps.values[value] ?? null) : null;
+    else attrs[attr] = value;
   }
 
   // ── derived flags: named in the table, computed by the hole ────────────────
@@ -257,5 +274,5 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
     }
   }
 
-  return { mode, errorMessage, tag, className, attrs, parts, rest };
+  return { mode, errorMessage, tag, className, attrs, parts, maps, rest };
 }

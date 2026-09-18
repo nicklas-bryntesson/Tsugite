@@ -10,16 +10,14 @@
  *   data-button   false: the heading's link is stretched over the whole card.
  *                 true: the heading is plain and a button in .Actions carries the link,
  *                 bottom-start when stacked, bottom-end beside media.
- *   data-media    whether a MediaContainer is present.
+ *   data-media    whether a Picture (figure.Media) is present.
  *
- * Teaser styles only its own parts (LayoutContainer, MediaContainer, HeadingContainer,
- * ContentContainer, Actions, Teaser-link); the children it composes are configured
- * through their props (ADR-0015).
+ * Teaser styles only its own parts (LayoutContainer, HeadingContainer, ContentContainer,
+ * Actions, Teaser-link) and PLACES the parts it composes — the Picture's figure and its
+ * two pictures are shown or hidden per container state here, because which picture fits
+ * is arrangement; the children themselves are configured through their props (ADR-0015).
  */
 
-/* TODO(decide): "visually-hidden" is Teaser's own sr-only part; ThemeSwitch carries the
-   same rule, and the docs app has a .ScreenReaderText. One kernel utility, or one per
-   component? */
 .Teaser {
   /* TODO(token): raw values. The media minimum and the media radius should be tokens. */
   --_te-minMediaSize: 12rem;
@@ -37,15 +35,15 @@
     flex: 1;
   }
 
-  & .MediaContainer {
+  & .Media {
     border-radius: var(--_te-mediaRadius);
     overflow: hidden;
 
-    & .Media.StackedSources {
+    & .Media-picture.StackedSources {
       overflow: hidden;
     }
 
-    & .Media.HorizontalSources {
+    & .Media-picture.HorizontalSources {
       overflow: hidden;
     }
   }
@@ -53,15 +51,6 @@
   & .Teaser-link {
     text-decoration: none;
     color: inherit;
-  }
-
-  & .visually-hidden {
-    position: absolute;
-    inline-size: 1px;
-    block-size: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
   }
 
   &[data-button="false"] .Teaser-link {
@@ -82,11 +71,11 @@
     & .LayoutContainer {
       gap: var(--size-md);
 
-      & .MediaContainer {
+      & .Media {
         inline-size: 100%;
         margin-block-end: var(--size-md);
 
-        & .Media.StackedSources {
+        & .Media-picture.StackedSources {
           display: block;
 
           & img {
@@ -95,7 +84,7 @@
           }
         }
 
-        & .Media.HorizontalSources {
+        & .Media-picture.HorizontalSources {
           display: none;
         }
       }
@@ -117,7 +106,7 @@
       display: grid;
       column-gap: var(--size-md);
 
-      & .MediaContainer {
+      & .Media {
         grid-area: media;
       }
 
@@ -156,14 +145,14 @@
           "heading"
           "body";
 
-        & .MediaContainer {
+        & .Media {
           margin-block-end: var(--size-md);
 
-          & .Media.StackedSources {
+          & .Media-picture.StackedSources {
             display: block;
           }
 
-          & .Media.HorizontalSources {
+          & .Media-picture.HorizontalSources {
             display: none;
           }
         }
@@ -182,14 +171,14 @@
         block-size: 100%;
         align-items: stretch;
 
-        & .MediaContainer {
+        & .Media {
           min-block-size: var(--_te-minMediaSize);
 
-          & .Media.StackedSources {
+          & .Media-picture.StackedSources {
             display: none;
           }
 
-          & .Media.HorizontalSources {
+          & .Media-picture.HorizontalSources {
             display: block;
             position: relative;
             aspect-ratio: 1 / 1;
