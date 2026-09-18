@@ -1,0 +1,262 @@
+{
+  "$comment": "Text — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. Both quiet voices share three elements and three sizes, md by default; the element never decides the size. Attribute order: the axes in table order, the derived run last.",
+  "component": "Text",
+  "cases": [
+    {
+      "name": "default: p, body md, pretty, block run",
+      "input": {
+        "text": "Hello",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "body sm",
+      "input": {
+        "text": "T",
+        "size": "sm",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "sm",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "label voice, lg",
+      "input": {
+        "text": "T",
+        "variant": "label",
+        "size": "lg",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "lg",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "a span is an inline run",
+      "input": {
+        "text": "T",
+        "element": "span",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "inline"
+        }
+      }
+    },
+    {
+      "name": "a div is a block run",
+      "input": {
+        "text": "T",
+        "element": "div",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "the element never decides the size",
+      "input": {
+        "text": "T",
+        "element": "span",
+        "variant": "label",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "inline"
+        }
+      }
+    },
+    {
+      "name": "align and wrap",
+      "input": {
+        "text": "T",
+        "align": "center",
+        "wrap": "balance",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "center",
+          "data-wrap": "balance",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "an invalid element falls back to p",
+      "input": {
+        "text": "T",
+        "element": "h2",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "extra class",
+      "input": {
+        "text": "T",
+        "class": "extra",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "Text extra",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "children pass through the engine container",
+      "input": {
+        "children": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "no words: suppressed",
+      "input": {
+        "children": false
+      },
+      "expect": {
+        "mode": "suppress"
+      }
+    },
+    {
+      "name": "text and children together",
+      "input": {
+        "text": "X",
+        "children": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "use text OR child content, not both"
+      }
+    },
+    {
+      "name": "a size outside the voice's set",
+      "input": {
+        "text": "T",
+        "size": "1",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid size \"1\" for variant \"body\" — expected sm | md | lg"
+      }
+    },
+    {
+      "name": "an unknown voice",
+      "input": {
+        "text": "T",
+        "variant": "heading",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid variant \"heading\" — expected body | label"
+      }
+    },
+    {
+      "name": "an invalid wrap is refused, not dropped",
+      "input": {
+        "text": "T",
+        "wrap": "loose",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid wrap \"loose\" — expected balance | pretty | stable | nowrap"
+      }
+    }
+  ]
+}

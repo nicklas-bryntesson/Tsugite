@@ -13,6 +13,10 @@
 //   plaintext  — a plain multiline string (the textarea contract):
 //                line breaks respected, sub-markup unrepresentable
 
+/** Law (c), ADR-0012 §3: run mode follows element shape — a span is an inline run
+ *  (flows on the line, no trim), every other element a block run. */
+export const runOf = (tag: string): "inline" | "block" => (tag === "span" ? "inline" : "block");
+
 export const VOICE_SIZES: Record<string, readonly string[]> = {
   heading: ["1", "2", "3", "4", "5", "6"],
   display: ["1", "2", "3"],
