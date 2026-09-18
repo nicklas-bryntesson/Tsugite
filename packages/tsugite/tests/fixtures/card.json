@@ -60,6 +60,27 @@
       }
     },
     {
+      "name": "a bare boolean attribute means true",
+      "input": { "border": "", "hasContent": true },
+      "expect": {
+        "mode": "render", "tag": "div", "className": "Card",
+        "attrs": { "data-border": "true", "data-padding": "md", "data-elevation": "none" }
+      }
+    },
+    {
+      "name": "boolean strings are read as booleans",
+      "input": { "border": "false", "hasContent": true },
+      "expect": {
+        "mode": "render", "tag": "div", "className": "Card",
+        "attrs": { "data-border": "false", "data-padding": "md", "data-elevation": "none" }
+      }
+    },
+    {
+      "name": "any other boolean value is an error",
+      "input": { "border": "yes", "hasContent": true },
+      "expect": { "mode": "error", "errorMessage": "invalid border \"yes\" — expected true | false" }
+    },
+    {
       "name": "invalid padding is an error",
       "input": { "padding": "huge", "hasContent": true },
       "expect": { "mode": "error", "errorMessage": "invalid padding \"huge\" — expected none | sm | md | lg" }

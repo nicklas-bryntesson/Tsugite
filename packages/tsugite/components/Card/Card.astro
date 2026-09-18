@@ -1,40 +1,23 @@
 ---
-// Card — a visual frame around other components. The recipe (tag, class, data-*)
-// lives in lib/card.ts and is shared by every renderer; this file renders it in Astro.
+// Card — a visual frame around other components. The recipe is the table in
+// recipes/card.recipe.ts, read by lib/recipe.ts (ADR-0018); this file renders it in Astro.
 import "./Card.css";
 import DevError from "../DevError/DevError.astro";
-import { resolveCard } from "../../lib/card";
+import { card } from "../../recipes/card.recipe";
+import { resolve, type InputOf } from "../../lib/recipe";
 
 // TODO: do we ever need to pass an ID to the card, or an aria-described property?
-interface Props {
-  element?: string;
-  padding?: string;
-  border?: boolean;
-  elevation?: string;
-  class?: string;
-  [key: string]: unknown;
-}
-
-const { element, padding, border, elevation, class: className, ...rest } = Astro.props;
+type Props = InputOf<typeof card> & { [key: string]: unknown };
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
-
-const card = resolveCard({
-  element,
-  padding,
-  border,
-  elevation,
-  class: className,
-  hasContent: childHtml.trim().length > 0,
-});
-
-const Tag = card.tag as "div";
+const r = resolve(card, Astro.props, { hasContent: childHtml.trim().length > 0 });
+const Tag = r.tag as "div";
 ---
 
 {
-  card.mode === "render" ? (
-    <Tag class={card.className} {...card.attrs} {...rest} set:html={childHtml} />
-  ) : card.mode === "error" ? (
-    <DevError name="Card" message={card.errorMessage} />
+  r.mode === "render" ? (
+    <Tag class={r.className} {...r.attrs} {...r.rest} set:html={childHtml} />
+  ) : r.mode === "error" ? (
+    <DevError name={card.name} message={r.errorMessage} />
   ) : null
 }
