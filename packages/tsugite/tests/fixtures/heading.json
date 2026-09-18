@@ -1,0 +1,358 @@
+{
+  "$comment": "Heading — the contract as data. `children` is the default slot's presence, reported by the renderer; text, href and highlight are text parts. The size set depends on the voice and the default size on the element (lib/heading.ts fills that hole). Attribute order: the axes in table order, the highlight style only when there are words to mark, the derived run last.",
+  "component": "Heading",
+  "cases": [
+    {
+      "name": "default: h2, heading 2, block run",
+      "input": {
+        "text": "Hello",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h2",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "2",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "h4 infers size 4",
+      "input": {
+        "text": "T",
+        "element": "h4",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h4",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "4",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "display defaults to size 2",
+      "input": {
+        "text": "T",
+        "element": "h1",
+        "variant": "display",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h1",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "display",
+          "data-size": "2",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "display size 1",
+      "input": {
+        "text": "T",
+        "element": "h1",
+        "variant": "display",
+        "size": "1",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h1",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "display",
+          "data-size": "1",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "body on h3 defaults to md",
+      "input": {
+        "text": "T",
+        "element": "h3",
+        "variant": "body",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h3",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "a span is an inline run",
+      "input": {
+        "text": "T",
+        "element": "span",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "2",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-run": "inline"
+        }
+      }
+    },
+    {
+      "name": "link: the run becomes a link",
+      "input": {
+        "text": "Latest posts",
+        "element": "h3",
+        "href": "/blog",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h3",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "3",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-run": "block"
+        },
+        "parts": {
+          "href": "/blog"
+        }
+      }
+    },
+    {
+      "name": "highlight, marked by default",
+      "input": {
+        "text": "Build better with Tsugite",
+        "highlight": "Tsugite",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h2",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "2",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-highlight-style": "mark",
+          "data-run": "block"
+        },
+        "parts": {
+          "highlight": "Tsugite"
+        }
+      }
+    },
+    {
+      "name": "highlight, underlined",
+      "input": {
+        "text": "Build better with Tsugite",
+        "highlight": "Tsugite",
+        "highlightStyle": "underline",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h2",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "2",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-highlight-style": "underline",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "align and wrap",
+      "input": {
+        "text": "T",
+        "align": "center",
+        "wrap": "pretty",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h2",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "2",
+          "data-align": "center",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "an invalid element falls back to h2",
+      "input": {
+        "text": "T",
+        "element": "table",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h2",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "2",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "extra class",
+      "input": {
+        "text": "T",
+        "class": "extra",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h2",
+        "className": "Heading extra",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "2",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "children pass through the engine container",
+      "input": {
+        "children": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h2",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "2",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "no words: suppressed",
+      "input": {
+        "children": false
+      },
+      "expect": {
+        "mode": "suppress"
+      }
+    },
+    {
+      "name": "body does not speak through a span",
+      "input": {
+        "text": "T",
+        "element": "span",
+        "variant": "body",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "variant \"body\" does not allow element \"span\""
+      }
+    },
+    {
+      "name": "text and children together",
+      "input": {
+        "text": "X",
+        "children": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid combination of text, href, and child content"
+      }
+    },
+    {
+      "name": "href without text",
+      "input": {
+        "href": "/x",
+        "children": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid combination of text, href, and child content"
+      }
+    },
+    {
+      "name": "a size outside the voice's set",
+      "input": {
+        "text": "T",
+        "size": "lg",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid size \"lg\" for variant \"heading\" — expected 1 | 2 | 3 | 4 | 5 | 6"
+      }
+    },
+    {
+      "name": "an invalid align is refused, not dropped",
+      "input": {
+        "text": "T",
+        "align": "middle",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid align \"middle\" — expected left | center | right"
+      }
+    },
+    {
+      "name": "a highlight style without words to mark",
+      "input": {
+        "text": "T",
+        "highlightStyle": "underline",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "highlightStyle does not exist on a Heading without highlight"
+      }
+    }
+  ]
+}
