@@ -1,92 +1,75 @@
 ---
-// Teaser — transports the reader to one destination. Image, heading, excerpt and
-// child content in a Card frame; the whole card is the link, or a button is. The
-// recipe (frame, element, gates, content plan) lives in lib/teaser.ts.
+// Teaser — transports the reader to one destination. The table is recipes/teaser.recipe.ts
+// (ADR-0018): the frame is Card input, the media a Picture, the action a Button, and this
+// file hands each part to its component and styles only its own arrangement (ADR-0015).
 import "./Teaser.css";
 import Card from "../Card/Card.astro";
 import Heading from "../Heading/Heading.astro";
 import Prose from "../Prose/Prose.astro";
+import Picture from "../Picture/Picture.astro";
 import LinkButton from "../Button/LinkButton.astro";
 import DevError from "../DevError/DevError.astro";
 import type { ImageMetadata } from "astro";
-import { resolveMedia, mediaPlanHtml } from "../../lib/media";
-import { astroImageResolver, mediaTables } from "../../lib/media.astro";
+import { teaser } from "../../recipes/teaser.recipe";
+import { resolve, type InputOf } from "../../lib/recipe";
+import { teaserDerive, teaserPlan } from "../../lib/teaser";
 import { escapeHtml } from "../../lib/html";
-import { resolveTeaser } from "../../lib/teaser";
 
-interface Props {
+// TODO(decide): kebab prop names ("button-label") against the camelCase of growInline.
+// One convention for props; until then the front door translates.
+type Props = Omit<InputOf<typeof teaser>, "buttonLabel" | "buttonContext"> & {
   image?: ImageMetadata | null;
   alt?: string;
-  heading?: string;
-  href?: string;
-  excerpt?: string;
-  /** true: a button carries the link and the heading is plain; false: the card is the link */
-  button?: boolean;
-  // TODO(decide): kebab prop names ("button-label", Button's "icon-position") against the
-  // camelCase of growInline/capInline. One convention for props.
   "button-label"?: string;
-  frame?: string;
-  element?: string;
-}
+  [key: string]: unknown;
+};
 
-const {
-  image = null,
-  alt,
-  heading,
-  href,
-  excerpt,
-  button = false,
-  "button-label": buttonLabel,
-  frame,
-  element,
-} = Astro.props;
+const { image = null, alt, "button-label": buttonLabel, ...props } = Astro.props;
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
-const hasChildContent = childHtml.trim().length > 0;
-const hasMedia = image != null;
 
-const t = resolveTeaser({ heading, href, excerpt, button, buttonLabel, frame, element, hasMedia, hasChildContent });
-
-// TODO(ADR-0018): Teaser reaches past Picture into the tables here; it becomes
-// parts.media { uses: "Picture" } when Teaser moves onto its own table.
-const plan = hasMedia
-  ? await resolveMedia({ image, preset: "teaser", alt, className: "MediaContainer", pictureClass: "Media" }, mediaTables, astroImageResolver)
-  : null;
-const figureHtml = plan?.mode === "render" ? mediaPlanHtml(plan) : "";
-
+const t = resolve(
+  teaser,
+  { ...props, buttonLabel },
+  { slots: { media: image != null, body: childHtml.trim().length > 0, action: false }, derive: teaserDerive },
+);
+const plan = teaserPlan(t);
 const Tag = t.tag as "article";
-const Frame = t.card ? Card : Fragment;
-const frameProps = t.card ?? {};
+const frame = t.maps.frame as Record<string, unknown> | null;
+const Frame = frame ? Card : Fragment;
+const headingWith = teaser.parts.heading.with;
+const excerptWith = teaser.parts.excerpt.with;
+const mediaWith = teaser.parts.media.with;
+const actionWith = teaser.parts.action.with;
 ---
 
 {
   t.mode === "error" ? (
-    <DevError name="Teaser" message={t.errorMessage} />
+    <DevError name={teaser.name} message={t.errorMessage} />
   ) : (
-    <Frame {...frameProps}>
-      <Tag class="Teaser" {...t.attrs}>
+    <Frame {...(frame ?? {})}>
+      <Tag class={t.className} {...t.attrs} {...t.rest}>
         <div class="LayoutContainer">
-          {hasMedia && <Fragment set:html={figureHtml} />}
-          {t.hasHeading && (
+          {t.parts.media && <Picture image={image} alt={alt ?? ""} {...mediaWith} />}
+          {plan.heading && (
             <div class="HeadingContainer">
-              {t.headingIsLink ? (
-                <a class="Teaser-link" href={href}>
-                  <Heading element="h2" size="4" text={heading} />
+              {plan.headingIsLink ? (
+                <a class="Teaser-link" href={plan.href!}>
+                  <Heading {...headingWith} text={plan.heading} />
                 </a>
               ) : (
-                <Heading element="h2" size="4" text={heading} />
+                <Heading {...headingWith} text={plan.heading} />
               )}
             </div>
           )}
-          {t.hasBody && (
+          {plan.hasBody && (
             <div class="ContentContainer">
-              {t.hasExcerpt && <Prose variant="basic" size="sm" content={`<p>${escapeHtml(excerpt!)}</p>`} />}
-              {hasChildContent && <Fragment set:html={childHtml} />}
-              {t.button && (
+              {t.parts.excerpt && <Prose {...excerptWith} content={`<p>${escapeHtml(t.parts.excerpt as string)}</p>`} />}
+              {t.parts.body && <Fragment set:html={childHtml} />}
+              {t.attrs["data-button"] === "true" && (
                 <div class="Actions">
-                  <LinkButton href={href} size="sm" growInline={true}>
-                    {t.buttonLabel}
-                    {t.hasHeading && <span class="visually-hidden"> about {heading}</span>}
+                  <LinkButton href={plan.href!} {...actionWith} srText={plan.buttonSrText ?? undefined}>
+                    {plan.buttonLabel}
                   </LinkButton>
                 </div>
               )}
@@ -97,4 +80,3 @@ const frameProps = t.card ?? {};
     </Frame>
   )
 }
-

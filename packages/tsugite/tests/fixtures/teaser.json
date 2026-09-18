@@ -1,0 +1,192 @@
+{
+  "$comment": "Teaser — the contract as data. A composition: its own root carries two attributes, and its frame axis MAPS to Card input instead of being written (the CSS never reads it). `media` and `body` are slot presence the renderer reports; the other inputs are text parts the composition hands to its parts. Absence: a button needs a destination.",
+  "component": "Teaser",
+  "cases": [
+    {
+      "name": "defaults: a bordered, unpadded, flat Card around article.Teaser",
+      "input": {
+        "heading": "Post",
+        "href": "#",
+        "media": false,
+        "body": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "article",
+        "className": "Teaser",
+        "attrs": {
+          "data-button": "false",
+          "data-media": "false"
+        },
+        "maps": {
+          "frame": {
+            "element": "div",
+            "padding": "none",
+            "border": true,
+            "elevation": "none"
+          }
+        },
+        "parts": {
+          "buttonLabel": "Read more",
+          "buttonContext": " about "
+        }
+      }
+    },
+    {
+      "name": "elevated frame maps to Card with elevation sm and no border",
+      "input": {
+        "frame": "elevated",
+        "heading": "T",
+        "href": "#",
+        "media": false,
+        "body": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "article",
+        "className": "Teaser",
+        "attrs": {
+          "data-button": "false",
+          "data-media": "false"
+        },
+        "maps": {
+          "frame": {
+            "element": "div",
+            "padding": "none",
+            "border": false,
+            "elevation": "sm"
+          }
+        }
+      }
+    },
+    {
+      "name": "bare frame maps to no Card",
+      "input": {
+        "frame": "bare",
+        "heading": "T",
+        "href": "#",
+        "media": false,
+        "body": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "article",
+        "className": "Teaser",
+        "attrs": {
+          "data-button": "false",
+          "data-media": "false"
+        },
+        "maps": {
+          "frame": null
+        }
+      }
+    },
+    {
+      "name": "media present",
+      "input": {
+        "heading": "T",
+        "href": "#",
+        "media": true,
+        "body": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "article",
+        "className": "Teaser",
+        "attrs": {
+          "data-button": "false",
+          "data-media": "true"
+        }
+      }
+    },
+    {
+      "name": "button mode with a custom label",
+      "input": {
+        "heading": "T",
+        "href": "/post",
+        "button": true,
+        "buttonLabel": "Read the post",
+        "media": false,
+        "body": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "article",
+        "className": "Teaser",
+        "attrs": {
+          "data-button": "true",
+          "data-media": "false"
+        },
+        "parts": {
+          "buttonLabel": "Read the post",
+          "href": "/post"
+        }
+      }
+    },
+    {
+      "name": "li element",
+      "input": {
+        "element": "li",
+        "heading": "T",
+        "href": "#",
+        "media": false,
+        "body": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "li",
+        "className": "Teaser",
+        "attrs": {
+          "data-button": "false",
+          "data-media": "false"
+        }
+      }
+    },
+    {
+      "name": "an invalid element falls back to article",
+      "input": {
+        "element": "nav",
+        "heading": "T",
+        "href": "#",
+        "media": false,
+        "body": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "article",
+        "className": "Teaser",
+        "attrs": {
+          "data-button": "false",
+          "data-media": "false"
+        }
+      }
+    },
+    {
+      "name": "an unknown frame is an error",
+      "input": {
+        "frame": "glass",
+        "heading": "T",
+        "href": "#",
+        "media": false,
+        "body": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid frame \"glass\" — expected bordered | elevated | bare"
+      }
+    },
+    {
+      "name": "a button needs a destination",
+      "input": {
+        "heading": "T",
+        "button": true,
+        "media": false,
+        "body": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "button=\"true\" requires href"
+      }
+    }
+  ]
+}

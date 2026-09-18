@@ -57,7 +57,8 @@ describe("Teaser", () => {
     // the button may grow; Teaser's Actions region decides per container state what it is given
     expect(html).toMatch(/<a class="Button"[^>]*data-grow-inline="true"/);
     expect(html).toContain("Read more");
-    expect(html).toContain('<span class="visually-hidden"> about Title</span>');
+    // the sr-only context is Button's part now: Teaser supplies the words, Button the hiding
+    expect(html).toContain('<span class="Button-text">Read more<span class="Button-srText"> about Title</span></span>');
   });
 
   it("custom button label", async () => {
@@ -72,13 +73,19 @@ describe("Teaser", () => {
     expect(html).toContain("<p>A taste</p>");
   });
 
-  it("image renders MediaContainer figure with teaser preset pictures", async () => {
+  it("image renders a Picture (figure.Media) with the teaser preset's two pictures", async () => {
     const image = { src: "/img/a.jpg", width: 1600, height: 900, format: "jpg" } as const;
     const html = await render({ heading: "T", href: "#", image, alt: "Alt" });
     expect(html).toMatch(/<article class="Teaser"[^>]*data-media="true"/);
-    expect(html).toContain('<figure class="MediaContainer">');
-    expect(html).toContain('class="Media StackedSources"');
-    expect(html).toContain('class="Media HorizontalSources"');
+    expect(html).toContain('<figure class="Media">');
+    expect(html).toContain('class="Media-picture StackedSources"');
+    expect(html).toContain('class="Media-picture HorizontalSources"');
+  });
+
+  it("an unknown frame is refused (ADR-0019), not silently bordered", async () => {
+    const html = await render({ heading: "T", href: "#", frame: "glass" });
+    expect(html).toContain('invalid frame "glass"');
+    expect(html).not.toContain('class="Teaser"');
   });
 
   it("child content lands in ContentContainer", async () => {
