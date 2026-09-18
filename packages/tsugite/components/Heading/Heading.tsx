@@ -1,45 +1,40 @@
-// Heading — the React renderer of the typography recipe (lib/typography.ts). Same
-// recipe, same markup; the run's HTML from the text prop (escaped, highlighted) goes
-// in with dangerouslySetInnerHTML, children go in as children.
+// Heading — the React renderer of recipes/heading.recipe.ts. Same table, same markup; the
+// run's HTML from the text prop (escaped, highlighted) goes in with dangerouslySetInnerHTML,
+// children go in as children.
 import type { ReactNode } from "react";
 import { createElement } from "react";
 import "./Heading.css";
-import { resolveTypography } from "../../lib/typography";
+import { heading } from "../../recipes/heading.recipe";
+import { resolve, type InputOf } from "../../lib/recipe";
+import { headingDefaults, headingDerive, headingPlan } from "../../lib/heading";
 
-export interface HeadingProps {
-  text?: string;
-  highlight?: string;
-  href?: string;
-  element?: string;
-  size?: string;
-  variant?: string;
-  align?: string;
-  wrap?: string;
+export type HeadingProps = Omit<InputOf<typeof heading>, "class"> & {
   className?: string;
   children?: ReactNode;
   [key: string]: unknown;
-}
+};
 
 const h = createElement;
 
-export default function Heading({ text, highlight, href, element, size, variant, align, wrap, className, children, ...rest }: HeadingProps) {
-  const hasChildContent = children != null && children !== false && children !== "";
-  const t = resolveTypography("Heading", { text, highlight, href, element, size, variant, align, wrap, class: className, hasChildContent });
+export default function Heading({ className, children, ...props }: HeadingProps) {
+  const hasChildren = children != null && children !== false && children !== "";
+  const t = resolve(heading, { ...props, class: className }, { slots: { children: hasChildren }, derive: headingDerive, defaults: headingDefaults });
 
   if (t.mode === "suppress") return null;
   if (t.mode === "error") {
     if (process.env.NODE_ENV === "production") return null;
-    return h("div", { style: { color: "red", border: "2px solid red", padding: "0.5rem" } }, `× Heading: ${t.errorMessage}`);
+    return h("div", { style: { color: "red", border: "2px solid red", padding: "0.5rem" } }, `× ${heading.name}: ${t.errorMessage}`);
   }
 
-  const container = hasChildContent
-    ? h("span", { className: t.container.className }, children)
-    : h(t.container.tag, {
+  const plan = headingPlan(t);
+  const container = hasChildren
+    ? h("span", { className: plan.container.className }, children)
+    : h(plan.container.tag, {
         // the link writes href before class, as the Astro renderer and the contract tests do
-        ...(t.container.href ? { href: t.container.href } : {}),
-        className: t.container.className,
-        dangerouslySetInnerHTML: { __html: t.innerHtml ?? "" },
+        ...(plan.container.href ? { href: plan.container.href } : {}),
+        className: plan.container.className,
+        dangerouslySetInnerHTML: { __html: plan.innerHtml ?? "" },
       });
 
-  return h(t.tag, { className: t.className, ...t.attrs, ...rest }, container);
+  return h(t.tag, { className: t.className, ...t.attrs, ...t.rest }, container);
 }

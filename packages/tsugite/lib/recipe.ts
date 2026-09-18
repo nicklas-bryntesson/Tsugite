@@ -6,8 +6,13 @@
 // is the only place the error rule (ADR-0019) is implemented.
 
 export interface EnumAxis {
-  readonly values: readonly string[];
-  readonly default: string;
+  /** the closed set; or, when the set depends on another axis's value, `valuesBy` */
+  readonly values?: readonly string[];
+  /** one lookup: the value set for this axis, by another axis's value (size by variant) */
+  readonly valuesBy?: { readonly axis: string; readonly values: Readonly<Record<string, readonly string[]>> };
+  /** the default, or a named hole the renderer fills through `ctx.defaults` when the
+   *  default needs a formula (a heading's size follows its element) */
+  readonly default: string | { readonly hole: true };
   readonly when?: When;
   /** a composition's axis whose values are another recipe's INPUT (Teaser's frame is Card
    *  input). The CSS never reads it, so no attribute is written; the renderer hands
@@ -51,15 +56,18 @@ export type Part = (
   readonly with?: Readonly<Record<string, unknown>>;
 };
 
-/** A flag the CSS reads that comes from content, not props. The recipe names it and what
- *  it depends on; the renderer supplies the formula through `ctx.derive` (the hole). */
+/** A value the CSS reads that comes from content or shape, not props: a boolean flag
+ *  (icon-only) or a closed string (a run is inline or block by its element). The recipe
+ *  names it and what it depends on; the renderer supplies the formula through
+ *  `ctx.derive` (the hole). */
 export interface Derived {
   readonly attr: string;
   readonly from: readonly string[];
 }
 
-/** A cell the CSS has no answer for. Matched against resolved axes, derived flags, and
- *  host-attribute presence (`null` means absent). The system declares these; a project
+/** A cell the CSS has no answer for. Matched against the element, resolved axes, derived
+ *  values, parts and host attributes: a value means equality, `null` means absent, and
+ *  `true` on a part or host attribute means present. The system declares these; a project
  *  closes cells that render but are unwanted (ADR-0018 §5). */
 export interface Absent {
   readonly cells: Readonly<Record<string, unknown>>;
@@ -88,7 +96,12 @@ export interface Recipe {
   readonly content: { readonly empty: "suppress" | "render"; readonly unless?: readonly string[] };
 }
 
-type AxisInput<A> = A extends BooleanAxis ? boolean : A extends EnumAxis ? A["values"][number] : never;
+type EnumValues<A> = A extends { values: readonly (infer V)[] }
+  ? V
+  : A extends { valuesBy: { values: Readonly<Record<string, readonly (infer W)[]>> } }
+    ? W
+    : never;
+type AxisInput<A> = A extends BooleanAxis ? boolean : A extends EnumAxis ? EnumValues<A> : never;
 type HostInput<H> = H extends "boolean" ? boolean : string;
 type PartInput<P> = P extends { kind: "slot" } ? never : string;
 type HostAttrsOf<R extends Recipe> = R["host"] extends Readonly<Record<string, Readonly<Record<string, HostAttr>>>>
@@ -114,8 +127,10 @@ export interface Context {
   hasContent?: boolean;
   /** per slot part: whether the renderer has content for it */
   slots?: Readonly<Record<string, boolean>>;
-  /** the handwritten formulas for the recipe's derived flags, by name */
-  derive?: Readonly<Record<string, (view: View) => boolean>>;
+  /** the handwritten formulas for the recipe's derived values, by name */
+  derive?: Readonly<Record<string, (view: View) => boolean | string>>;
+  /** the handwritten formulas for axis defaults declared as holes, by axis name */
+  defaults?: Readonly<Record<string, (view: View) => string>>;
 }
 
 /** What a derived formula and an absent cell may look at. */
@@ -240,21 +255,32 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
       attrs[attr] = axes[name] ? "true" : "false";
       continue;
     }
-    const value = raw == null ? axis.default : String(raw).toLowerCase();
-    if (!axis.values.includes(value)) fail(`invalid ${name} "${raw}" — expected ${axis.values.join(" | ")}`);
+    const values = axis.valuesBy ? (axis.valuesBy.values[String(axes[axis.valuesBy.axis])] ?? []) : (axis.values ?? []);
+    let fallback: string;
+    if (typeof axis.default === "string") fallback = axis.default;
+    else {
+      const formula = ctx.defaults?.[name];
+      if (!formula) throw new Error(`${recipe.name}: no formula for the default of "${name}" — the renderer must supply ctx.defaults.${name}`);
+      fallback = formula({ tag, axes, parts, host });
+    }
+    const value = raw == null ? fallback : String(raw).toLowerCase();
+    if (!values.includes(value)) {
+      const scope = axis.valuesBy ? ` for ${axis.valuesBy.axis} "${axes[axis.valuesBy.axis]}"` : "";
+      fail(`invalid ${name} "${raw}"${scope} — expected ${values.join(" | ")}`);
+    }
     axes[name] = value;
-    if (axis.maps) maps[name] = axis.values.includes(value) ? (axis.maps.values[value] ?? null) : null;
+    if (axis.maps) maps[name] = values.includes(value) ? (axis.maps.values[value] ?? null) : null;
     else attrs[attr] = value;
   }
 
   // ── derived flags: named in the table, computed by the hole ────────────────
   const view: View = { tag, axes, parts, host };
-  const derived: Record<string, boolean> = {};
+  const derived: Record<string, boolean | string> = {};
   for (const [name, spec] of Object.entries(recipe.derived ?? {})) {
     const formula = ctx.derive?.[name];
-    if (!formula) throw new Error(`${recipe.name}: no formula for derived flag "${name}" — the renderer must supply ctx.derive.${name}`);
+    if (!formula) throw new Error(`${recipe.name}: no formula for derived value "${name}" — the renderer must supply ctx.derive.${name}`);
     derived[name] = formula(view);
-    attrs[spec.attr] = derived[name] ? "true" : "false";
+    attrs[spec.attr] = typeof derived[name] === "string" ? (derived[name] as string) : derived[name] ? "true" : "false";
   }
 
   // ── content: nothing to host, nothing to announce → suppress ───────────────
@@ -264,9 +290,12 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
 
   // ── absent cells ───────────────────────────────────────────────────────────
   if (mode === "render") {
-    const cellView: Record<string, unknown> = { ...host, ...parts, ...axes, ...derived };
+    const cellView: Record<string, unknown> = { element: tag, ...host, ...parts, ...axes, ...derived };
+    const present = (k: string) => cellView[k] != null && cellView[k] !== false;
+    const matches = (k: string, v: unknown) =>
+      v === null ? !present(k) : v === true && typeof cellView[k] !== "boolean" ? present(k) : cellView[k] === v;
     for (const { cells, message } of recipe.absent ?? []) {
-      const hit = Object.entries(cells).every(([k, v]) => (v === null ? cellView[k] == null || cellView[k] === false : cellView[k] === v));
+      const hit = Object.entries(cells).every(([k, v]) => matches(k, v));
       if (hit) {
         fail(message);
         break;

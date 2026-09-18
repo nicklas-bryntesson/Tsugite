@@ -54,9 +54,25 @@ describe("Heading", () => {
     expect(html).toContain('<a href="/blog" class="heading-link">Latest posts</a>');
   });
 
-  it("wraps highlight words in <mark>", async () => {
+  it("wraps highlight words in <mark>, marked by default", async () => {
     const html = await render({ text: "Build better with AiPoc", highlight: "AiPoc" });
     expect(html).toContain("<mark>AiPoc</mark>");
+    expect(html).toContain('data-highlight-style="mark"');
+  });
+
+  it("highlightStyle picks how the marked words show", async () => {
+    const html = await render({ text: "Build better with AiPoc", highlight: "AiPoc", highlightStyle: "underline" });
+    expect(html).toContain('data-highlight-style="underline"');
+  });
+
+  it("no highlight style without words to mark (ADR-0019)", async () => {
+    const html = await render({ text: "T", highlightStyle: "underline" });
+    expect(html).toContain("highlightStyle does not exist");
+  });
+
+  it("refuses a size outside the voice's set (ADR-0019)", async () => {
+    const html = await render({ text: "T", size: "lg" });
+    expect(html).toContain('invalid size "lg" for variant "heading"');
   });
 
   it("wraps slot content in the engine container (run engine law a)", async () => {

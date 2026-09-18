@@ -1,10 +1,14 @@
 ---
 import Heading from "tsugite/components/Heading/Heading.astro";
 ---
-{/* highlight marks the listed words (comma-separated) with <mark>. */}
+{/* highlight marks the listed words (comma-separated); highlightStyle says how.
+    The list of styles is open: a value is a row in the table and a rule in Heading.css. */}
 <Heading
-  text="Deterministic over clever, closed branches over cascading fallbacks"
+  text="A deterministic system is built from closed branches, not clever ones."
   highlight="deterministic, closed branches"
-  element="h2"
-  size="2"
+/>
+<Heading
+  text="A deterministic system is built from closed branches, not clever ones."
+  highlight="deterministic, closed branches"
+  highlightStyle="underline"
 />
