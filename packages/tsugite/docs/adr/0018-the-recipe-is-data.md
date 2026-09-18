@@ -1,9 +1,11 @@
 # ADR-0018: The recipe is data
 
-**Status:** Proposed · 2026-09-17. The decision is taken; the proof is Card
-on `recipes/card.recipe.ts` read by `lib/recipe.ts`, its three renderers
-unchanged in behaviour and `tests/fixtures/card.json` still green.
-Accepted when that lands.
+**Status:** Accepted · 2026-09-18. Proposed 2026-09-17. The proof went
+past Card: Card (PR #47), Button (#48), Picture with the media split (#49)
+and Teaser as the composition (#50) all run on `lib/recipe.ts`, each with
+a language-neutral fixture file the recipe and every renderer are held to.
+The unit and fixture suites carry the acceptance; the e2e suite runs on
+the chain next.
 
 ## Context
 
@@ -287,11 +289,15 @@ were never about the same thing.
 
 ## Consequences
 
-- `recipes/` is a new top-level folder in the package. `lib/card.ts`,
-  `lib/notice.ts` and their kin retire as Card, Notice, Button, Teaser
-  and Picture move over, one branch each; `lib/recipe.ts` arrives with
-  Card. Deleting a component (ADR-0009) is deleting its recipe, its CSS
-  and its renderers; nothing generated to clean up.
+- `recipes/` is a top-level folder in the package. On the table:
+  Card, Button, Picture, Teaser. `lib/card.ts` and `lib/picture.ts` are
+  gone; `lib/button.ts` and `lib/teaser.ts` survive as the holes — the
+  derived formulas the table names but cannot express, plus Teaser's
+  content plan — and nothing else. Notice waits (it may need Button as a
+  primitive first); Heading, Text, TextBlock and Quote still carry their
+  ADR-0017 resolvers and move when touched. Deleting a component
+  (ADR-0009) is deleting its recipe, its CSS and its renderers; nothing
+  generated to clean up.
 - Whatever can be derived from the table is derived by whoever needs it,
   when they need it: the prop types by TypeScript, the props table on a
   docs page by the docs app at build (as `tokens.generated.md` is derived
@@ -302,16 +308,35 @@ were never about the same thing.
 - The project configuration is a second section of the future create
   rig's blob, next to tokens. It can also emit CMS field options from the
   computed whitelist, so an editor cannot pick a closed value.
-- Button gains a `srText` part: a visually hidden suffix to the label
-  that extends the accessible name ("Read more" + " about {heading}").
-  Button owns the hiding, in `Button.css`. Today `Teaser.astro` writes a
-  `visually-hidden` span into Button's slot — the slot-side version of
-  the drift decision 6 of ADR-0017 forbids on the attribute side. It moves
-  when Teaser moves.
-- Order of work: `lib/recipe.ts` and `recipes/card.recipe.ts` with Card's
-  three renderers on them (acceptance of this ADR); Notice; Button with
-  its `iconOnly` hole and `srText` part; Picture with the media split;
-  Teaser with `maps`, `parts.media` and `srText`.
+- Button has a `srText` part: a visually hidden suffix to the label that
+  extends the accessible name ("Read more" + " about {heading}"). Button
+  owns the hiding, in `Button.css`; Teaser composes the words (its
+  `buttonContext` text part, default `" about "`, is copy and so an input)
+  and no longer writes a span into Button's slot. The `visually-hidden`
+  rule and its TODO left `Teaser.css` with PR #50.
+- The schema grew by exactly what the four components asked for, all of
+  it data: a host attribute may carry a `default` or an `implies` lookup
+  (`target: _blank` implies `rel`); a boolean host attribute resolves to
+  `true` in `attrs`, because Astro drops an empty-string attribute in a
+  spread while React writes it, and each host writes the boolean in its
+  idiom; `content.unless` names what counts as something to press; a text
+  part may carry a `default` and is never trimmed (" about Widgets" begins
+  with the space that separates it); a part records `uses` and `with` as
+  data the renderer reads; a mapped axis (`maps`) writes no attribute and
+  hands its value to the part's component. Nothing conditional was added.
+- ADR-0019 landed with the passes: Button refuses an invalid emphasis and
+  an intent on a link, Teaser refuses an unknown frame; the docs Intent
+  example changed accordingly.
+- Media came apart as decision 7 says: `theme-default/media.presets.ts`,
+  `lib/media.ts` (shape, plan, string pen), `lib/media.astro.ts` (the one
+  resolver), `Picture.tsx` taking a finished plan. Teaser renders
+  `<Picture>` and places its figure and pictures per container state.
+  `tests/fixtures/picture.json` fixes the plan per preset against a
+  URL-template resolver, in no language.
+- Two host idioms the equality tests normalise, recorded so no one
+  chases them again: React's static markup writes `srcSet` camel-cased
+  and closes void elements with `/>`; Astro writes a boolean attribute
+  bare where React writes `disabled=""`. Same DOM in every case.
 - The draft component model, §7, gets a dated note pointing here; the
   passage itself is left as the record of where the thought stood on
   2026-09-01.
@@ -324,9 +349,17 @@ were never about the same thing.
   the first time a component would write an inline style that carries a
   value; the CSS doctrine rules on it before the axis exists. The
   alternative is a second `img` element.
-- Whether visually hidden text is a Button part's own CSS or a kernel
-  utility (the `Teaser.css` comment about two identical rules and the
-  docs app's `.ScreenReaderText`). Decided when `srText` lands.
+- **The hero preset's `figureCssClass: "grid-container-full"`** is a
+  layout class injected by a media preset. Picture's table refuses
+  "layout of its own" and calls the class a debt; it stays until the
+  block owns placement and takes it.
+- **Teaser's `voice`** as an axis mapping to Surface input (the same form
+  as `frame` → Card) waits for the block work: Surface owns no padding,
+  the adjacency collapse of ADR-0016 §5 moves to the block with a
+  per-instance boolean, and the voice mapping lands once that is settled.
+- Visually hidden text is a Button part's own CSS (decided with #48).
+  ThemeSwitch and the docs app's `.ScreenReaderText` still carry their own
+  rules; a kernel utility remains possible but is not needed for this.
 - The lint's thresholds (when is a narrowed axis "a disguised enum"?).
   Decided when a project configuration exists to lint.
 - Tweakable scales in the project configuration (typography, grid column
