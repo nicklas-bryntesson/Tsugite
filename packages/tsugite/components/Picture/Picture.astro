@@ -1,29 +1,27 @@
 ---
-// Picture — a responsive image through the media pipeline, by preset. The recipe
-// (image and preset validation) lives in lib/picture.ts; the pipeline is Astro's.
+// Picture — a responsive image through the media pipeline, by preset. The table is
+// recipes/picture.recipe.ts; the plan is lib/media.ts with Astro's resolver
+// (lib/media.astro.ts); this file resolves at the host boundary and writes the plan.
 import "./Picture.css";
 import DevError from "../DevError/DevError.astro";
 import type { ImageMetadata } from "astro";
-import { buildFigureHtml } from "../../lib/media";
-import { resolvePicture } from "../../lib/picture";
+import { picture } from "../../recipes/picture.recipe";
+import { resolve, type InputOf } from "../../lib/recipe";
+import { resolveMedia, mediaPlanHtml } from "../../lib/media";
+import { astroImageResolver, mediaTables } from "../../lib/media.astro";
 
-interface Props {
+type Props = InputOf<typeof picture> & {
   image?: ImageMetadata | null;
   preset?: string;
   alt?: string;
-  /** overrides preset default */
+  /** overrides the preset's default */
   loading?: string;
-  class?: string;
-}
+  [key: string]: unknown;
+};
 
-const { image, preset = "", alt, loading, class: className } = Astro.props;
-
-const pic = resolvePicture({ hasImage: image != null, preset });
-const html =
-  pic.mode === "render"
-    ? await buildFigureHtml({ image: image!, preset: pic.preset!, altText: alt ?? "", loading, extraClass: className })
-    : "";
+const { image, preset, alt, loading, ...props } = Astro.props;
+const r = resolve(picture, props, { hasContent: true });
+const plan = await resolveMedia({ image, preset, alt, loading, className: r.className }, mediaTables, astroImageResolver);
 ---
 
-{pic.mode === "render" ? <Fragment set:html={html} /> : <DevError name="Picture" message={pic.errorMessage} />}
-
+{plan.mode === "render" ? <Fragment set:html={mediaPlanHtml(plan)} /> : <DevError name={picture.name} message={plan.errorMessage} />}

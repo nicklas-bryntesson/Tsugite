@@ -1,0 +1,102 @@
+{
+  "$comment": "Picture — the media plan as data. The resolver is the host's; here it is a URL template so the plan is checkable in any language: {w} and {h} are the rendered size, {f} the format (avif | webp | jpg). Each case names a preset from theme-default/media.presets and gives the exact plan resolveMedia must build.",
+  "component": "Picture",
+  "resolver": "/img/{w}x{h}.{f}",
+  "cases": [
+    {
+      "name": "teaser: two pictures, resolution switching, lazy",
+      "input": { "preset": "teaser", "alt": "Test" },
+      "expect": {
+        "mode": "render",
+        "className": "Media",
+        "pictures": [
+          {
+            "className": "Media-picture StackedSources",
+            "sources": [
+              { "type": "image/avif", "media": null, "srcset": "/img/400x225.avif 400w, /img/800x450.avif 800w", "sizes": "100%" },
+              { "type": "image/webp", "media": null, "srcset": "/img/400x225.webp 400w, /img/800x450.webp 800w", "sizes": "100%" },
+              { "type": null, "media": null, "srcset": "/img/400x225.jpg 400w, /img/800x450.jpg 800w", "sizes": "100%" }
+            ],
+            "img": { "src": "/img/400x225.jpg", "srcset": "/img/400x225.jpg 400w, /img/800x450.jpg 800w", "sizes": "100%", "alt": "Test", "loading": "lazy" }
+          },
+          {
+            "className": "Media-picture HorizontalSources",
+            "sources": [
+              { "type": "image/avif", "media": null, "srcset": "/img/320x320.avif 320w, /img/640x640.avif 640w", "sizes": "12rem" },
+              { "type": "image/webp", "media": null, "srcset": "/img/320x320.webp 320w, /img/640x640.webp 640w", "sizes": "12rem" },
+              { "type": null, "media": null, "srcset": "/img/320x320.jpg 320w, /img/640x640.jpg 640w", "sizes": "12rem" }
+            ],
+            "img": { "src": "/img/320x320.jpg", "srcset": "/img/320x320.jpg 320w, /img/640x640.jpg 640w", "sizes": "12rem", "alt": "Test", "loading": "lazy" }
+          }
+        ]
+      }
+    },
+    {
+      "name": "hero: one art-directed picture, eager, the preset adds a figure class",
+      "input": { "preset": "hero", "alt": "Hero" },
+      "expect": {
+        "mode": "render",
+        "className": "Media grid-container-full",
+        "pictures": [
+          {
+            "className": "Media-picture",
+            "sources": [
+              { "type": "image/avif", "media": "(max-width: 21.24999rem)", "srcset": "/img/380x214.avif 380w, /img/760x428.avif 760w", "sizes": "100vw" },
+              { "type": "image/webp", "media": "(max-width: 21.24999rem)", "srcset": "/img/380x214.webp 380w, /img/760x428.webp 760w", "sizes": "100vw" },
+              { "type": null, "media": "(max-width: 21.24999rem)", "srcset": "/img/380x214.jpg 380w, /img/760x428.jpg 760w", "sizes": "100vw" },
+              { "type": "image/avif", "media": "(max-width: 48rem)", "srcset": "/img/440x550.avif 440w, /img/880x1100.avif 880w", "sizes": "100vw" },
+              { "type": "image/webp", "media": "(max-width: 48rem)", "srcset": "/img/440x550.webp 440w, /img/880x1100.webp 880w", "sizes": "100vw" },
+              { "type": null, "media": "(max-width: 48rem)", "srcset": "/img/440x550.jpg 440w, /img/880x1100.jpg 880w", "sizes": "100vw" },
+              { "type": "image/avif", "media": "(max-width: 64rem)", "srcset": "/img/740x493.avif 740w, /img/1480x986.avif 1480w", "sizes": "100vw" },
+              { "type": "image/webp", "media": "(max-width: 64rem)", "srcset": "/img/740x493.webp 740w, /img/1480x986.webp 1480w", "sizes": "100vw" },
+              { "type": null, "media": "(max-width: 64rem)", "srcset": "/img/740x493.jpg 740w, /img/1480x986.jpg 1480w", "sizes": "100vw" },
+              { "type": "image/avif", "media": "(min-width: 64rem)", "srcset": "/img/1280x720.avif 1280w, /img/1512x851.avif 1512w, /img/1728x972.avif 1728w", "sizes": "60vw" },
+              { "type": "image/webp", "media": "(min-width: 64rem)", "srcset": "/img/1280x720.webp 1280w, /img/1512x851.webp 1512w, /img/1728x972.webp 1728w", "sizes": "60vw" },
+              { "type": null, "media": "(min-width: 64rem)", "srcset": "/img/1280x720.jpg 1280w, /img/1512x851.jpg 1512w, /img/1728x972.jpg 1728w", "sizes": "60vw" }
+            ],
+            "img": { "src": "/img/1280x720.jpg", "srcset": null, "sizes": null, "alt": "Hero", "loading": "eager" }
+          }
+        ]
+      }
+    },
+    {
+      "name": "loading overrides the preset",
+      "input": { "preset": "quote", "alt": "", "loading": "eager" },
+      "expect": {
+        "mode": "render",
+        "className": "Media",
+        "pictures": [
+          {
+            "className": "Media-picture",
+            "sources": [
+              { "type": "image/avif", "media": null, "srcset": "/img/224x224.avif 224w, /img/448x448.avif 448w", "sizes": "7rem" },
+              { "type": "image/webp", "media": null, "srcset": "/img/224x224.webp 224w, /img/448x448.webp 448w", "sizes": "7rem" },
+              { "type": null, "media": null, "srcset": "/img/224x224.jpg 224w, /img/448x448.jpg 448w", "sizes": "7rem" }
+            ],
+            "img": { "src": "/img/224x224.jpg", "srcset": "/img/224x224.jpg 224w, /img/448x448.jpg 448w", "sizes": "7rem", "alt": "", "loading": "eager" }
+          }
+        ]
+      }
+    },
+    {
+      "name": "the caller's class comes after the root and before the preset's",
+      "input": { "preset": "hero", "alt": "", "className": "Media extra" },
+      "expectClassName": "Media extra grid-container-full"
+    },
+    {
+      "name": "no image is an error",
+      "input": { "preset": "hero", "image": null },
+      "expect": { "mode": "error", "errorMessage": "image is required" }
+    },
+    {
+      "name": "an unknown preset is an error",
+      "input": { "preset": "banner" },
+      "expect": { "mode": "error", "errorMessage": "unknown preset \"banner\" — expected: teaser | quote | hero" }
+    },
+    {
+      "name": "an invalid loading is an error",
+      "input": { "preset": "hero", "loading": "soon" },
+      "expect": { "mode": "error", "errorMessage": "invalid loading \"soon\" — expected lazy | eager" }
+    }
+  ]
+}
