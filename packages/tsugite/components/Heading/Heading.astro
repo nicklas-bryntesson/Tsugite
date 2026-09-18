@@ -1,44 +1,34 @@
 ---
-// Heading — the LOUD voices (heading, display) of the typography family, plus body
-// on heading elements. The recipe lives in lib/typography.ts and is shared by Text,
-// TextBlock and every renderer; this file renders it in Astro. The door law (one
-// component per voice × element × input) is enforced by tests/typographyFamily.test.ts.
+// Heading — the LOUD voices (heading, display) of the typography family, plus body on
+// heading-shaped elements. The table is recipes/heading.recipe.ts, read by lib/recipe.ts
+// (ADR-0018); lib/heading.ts fills its holes; this file renders it in Astro. The door law
+// (one component per voice × element × input) is enforced by tests/typographyFamily.test.ts.
 import "./Heading.css";
 import DevError from "../DevError/DevError.astro";
-import { resolveTypography } from "../../lib/typography";
+import { heading } from "../../recipes/heading.recipe";
+import { resolve, type InputOf } from "../../lib/recipe";
+import { headingDefaults, headingDerive, headingPlan } from "../../lib/heading";
 
 // TODO(decide): the first codebase had a colour axis (primary | dark | light) here.
 // Removed: colour is not a value in this system (ADR-0006: voice × volume × four
 // modes, all on the region, inherited). If a heading ever needs its own ink, it
 // re-enters as a CHANNEL choice, text or textMuted, resolved through the voice.
-interface Props {
-  text?: string;
-  /** comma-separated words to wrap in <mark> */
-  highlight?: string;
-  /** the run becomes a link */
-  href?: string;
-  element?: string;
-  size?: string;
-  variant?: string;
-  align?: string;
-  wrap?: string;
-  class?: string;
-  [key: string]: unknown;
-}
-
-const { text, highlight, href, element, size, variant, align, wrap, class: className, ...rest } = Astro.props;
+type Props = InputOf<typeof heading> & { [key: string]: unknown };
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
-const hasChildContent = childHtml.trim().length > 0;
-
-const t = resolveTypography("Heading", { text, highlight, href, element, size, variant, align, wrap, class: className, hasChildContent });
+const t = resolve(heading, Astro.props, {
+  slots: { children: childHtml.trim().length > 0 },
+  derive: headingDerive,
+  defaults: headingDefaults,
+});
+const plan = headingPlan(t);
 
 // ADR-0012 §1: child content passes through the same engine container as prop text.
 const inner =
   t.mode === "render"
-    ? t.container.tag === "a"
-      ? `<a href="${t.container.href!.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" class="${t.container.className}">${t.innerHtml}</a>`
-      : `<span class="${t.container.className}">${hasChildContent ? childHtml : t.innerHtml}</span>`
+    ? plan.container.tag === "a"
+      ? `<a href="${plan.container.href!.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" class="${plan.container.className}">${plan.innerHtml}</a>`
+      : `<span class="${plan.container.className}">${t.parts.children ? childHtml : plan.innerHtml}</span>`
     : "";
 
 const Tag = t.tag as "h2";
@@ -46,8 +36,8 @@ const Tag = t.tag as "h2";
 
 {
   t.mode === "render" ? (
-    <Tag class={t.className} {...t.attrs} {...rest} set:html={inner} />
+    <Tag class={t.className} {...t.attrs} {...t.rest} set:html={inner} />
   ) : t.mode === "error" ? (
-    <DevError name="Heading" message={t.errorMessage} />
+    <DevError name={heading.name} message={t.errorMessage} />
   ) : null
 }

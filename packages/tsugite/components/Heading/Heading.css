@@ -13,6 +13,9 @@
  *   data-run       block | inline, derived from the element (ADR-0012 §3).
  *   data-align     left | center | right.
  *   data-wrap      balance | pretty | stable | nowrap.
+ *   data-highlight-style  mark | underline — how the marked words show; written only
+ *                  when there are words to mark. An open list: a value is a row in the
+ *                  table and a rule below.
  */
 
 /* TODO(decide): the part classes (.heading-text, .heading-link) follow the family's
@@ -41,6 +44,29 @@
       line-height: inherit;
       letter-spacing: inherit;
     }
+  }
+
+  /* The marked words. A mark inherits the run's metrics; each style answers one
+     value of data-highlight-style, on the interactive pair the Button consumes. */
+  & mark {
+    font: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+  }
+
+  &[data-highlight-style="mark"] mark {
+    color: var(--color-interactive-onPrimary);
+    background-color: var(--color-interactive-primary);
+    padding-inline: 0.12em;
+    box-decoration-break: clone;
+  }
+
+  &[data-highlight-style="underline"] mark {
+    color: inherit;
+    background-color: transparent;
+    text-decoration: underline wavy var(--color-interactive-primary);
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.12em;
   }
 
   /* ADR-0012 §3: block runs own their display; inline runs keep the UA's inline
