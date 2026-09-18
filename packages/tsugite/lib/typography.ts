@@ -1,19 +1,17 @@
-// The typography family — the ADR-0017 resolver for the two members not yet on a table:
-//   Text      the quiet voices (body, label) on plain text elements
+// The typography family — the ADR-0017 resolver for the one member not yet on a table:
 //   TextBlock the textarea contract: a plain multiline string, never markup
-// Heading moved to recipes/heading.recipe.ts + lib/heading.ts (ADR-0018); Text and
-// TextBlock follow when touched. Element farms and voices come from
+// Heading and Text moved to recipes/*.recipe.ts + lib/heading.ts, lib/text.ts (ADR-0018);
+// TextBlock follows when touched, and this file goes with it. Element farms and voices come from
 // lib/typographyFamily.ts (the door law); the run engine laws are ADR-0012.
 import { FAMILY, VOICE_SIZES } from "./typographyFamily.ts";
 import { escapeHtml } from "./html";
 
-export type FamilyMemberName = "Text" | "TextBlock";
+export type FamilyMemberName = "TextBlock";
 
 export const TYPO_ALIGNS = ["left", "center", "right"] as const;
 export const TYPO_WRAPS = ["balance", "pretty", "stable", "nowrap"] as const;
 
 const DEFAULTS: Record<FamilyMemberName, { element: string; variant: string; wrap: string; contentClass: string }> = {
-  Text: { element: "p", variant: "body", wrap: "pretty", contentClass: "text-content" },
   TextBlock: { element: "p", variant: "preamble", wrap: "pretty", contentClass: "textblock-content" },
 };
 
@@ -61,11 +59,6 @@ export function resolveTypography(member: FamilyMemberName, input: TypographyInp
     } else if (!hasText) {
       mode = "suppress";
     }
-  } else if (!hasText && !hasChild) {
-    mode = "suppress";
-  } else if (member === "Text" && hasText && hasChild) {
-    mode = "error";
-    errorMessage = "use text OR child content, not both";
   }
 
   const variant = validVariants.includes((input.variant ?? "").toLowerCase()) ? input.variant!.toLowerCase() : d.variant;

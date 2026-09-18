@@ -1,6 +1,7 @@
 // Heading — the holes in the table (ADR-0018): the default size, the run mode, the
 // highlight, and the plan a renderer follows for the engine container (ADR-0012 §1).
 import type { Resolution, View } from "./recipe";
+import { runOf } from "./typographyFamily.ts";
 import { escapeHtml } from "./html";
 
 const ELEMENT_SIZE: Record<string, string> = { h1: "1", h2: "2", h3: "3", h4: "4", h5: "5", h6: "6" };
@@ -10,9 +11,9 @@ export const headingDefaults = {
   size: ({ tag, axes }: View) => (axes.variant === "display" ? "2" : axes.variant === "body" ? "md" : (ELEMENT_SIZE[tag] ?? "2")),
 };
 
-/** Derived values. ADR-0012 §3: a span is an inline run; every other element is a block run. */
+/** Derived values. The run mode follows the element (ADR-0012 §3). */
 export const headingDerive = {
-  run: ({ tag }: View) => (tag === "span" ? "inline" : "block"),
+  run: ({ tag }: View) => runOf(tag),
 };
 
 const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
