@@ -1,197 +1,172 @@
-// Port of AiPoc TagHelpers/MediaHelper.cs
+// Media — the plan (ADR-0018 §7). Three things used to live in one file: the brand's
+// tables (crops, presets — now theme-default/media.presets.ts), URL resolution (Astro's
+// getImage — now lib/media.astro.ts) and markup emission (an HTML string). This file is
+// what is left when those are taken out: the SHAPE of a preset, and `resolveMedia`, which
+// turns a preset, an image and a resolver into a plan — plain data with finished srcsets —
+// that every renderer writes in its own idiom. `mediaPlanHtml` is the string pen.
 //
-// Umbraco crop URLs are replaced by astro:assets getImage() (sharp, fit: cover).
-// Crop aspect ratios come from the Umbraco Image Cropper data type config.
-// The markup produced by buildFigureHtml mirrors MediaHelper.BuildFigureHtml exactly:
-// figure.Media > picture.Media-picture(.CssClass) > source(avif/webp/fallback) + img
-import { getImage } from "astro:assets";
-import type { ImageMetadata } from "astro";
+// The resolver is the only thing that varies, and it varies with the asset pipeline a site
+// runs on, not with the UI framework: a Vue Picture and a React Picture in the same Astro
+// site share the same resolver.
 import { escapeHtml } from "./html";
 
-// ── Records ──────────────────────────────────────────────────────────────────
+// ── The shape of a preset (the system's) ──────────────────────────────────────
 
-/** One source group within a picture element — one format triplet (avif/webp/jpg) at one breakpoint. */
+/** One source group within a picture element — one format triplet (avif/webp/fallback) at one breakpoint. */
 export interface SourceDefinition {
-  cropAlias: string;
-  widths: number[];
-  sizes: string;
-  /** media query for art direction; null/undefined = resolution switching */
-  media?: string | null;
+  readonly cropAlias: string;
+  readonly widths: readonly number[];
+  readonly sizes: string;
+  /** media query for art direction; absent = resolution switching */
+  readonly media?: string | null;
 }
 
 /** One picture element — one or more source definitions. */
 export interface PictureGroup {
-  sources: SourceDefinition[];
+  readonly sources: readonly SourceDefinition[];
   /** CSS class on the picture element */
-  cssClass?: string | null;
+  readonly cssClass?: string | null;
 }
 
 /** Full preset — what a single Picture call resolves to. */
 export interface PicturePreset {
-  groups: PictureGroup[];
+  readonly groups: readonly PictureGroup[];
   /** extra class on the figure */
-  figureCssClass?: string | null;
-  loading: "lazy" | "eager";
+  readonly figureCssClass?: string | null;
+  readonly loading: "lazy" | "eager";
 }
 
-// ── Crop definitions (from Umbraco Image Cropper config) ─────────────────────
+export type CropTable = Readonly<Record<string, { readonly width: number; readonly height: number }>>;
 
-export const CROPS: Record<string, { width: number; height: number }> = {
-  stacked: { width: 1600, height: 900 }, // 16:9
-  horizontal: { width: 640, height: 640 }, // 1:1
-  portrait: { width: 880, height: 1100 }, // 4:5
-  mid: { width: 1480, height: 986 }, // 3:2
-  wide: { width: 1728, height: 972 }, // 16:9
-  mobile: { width: 760, height: 428 }, // 16:9
-};
+// ── The resolver (the host's) ──────────────────────────────────────────────────
 
-// ── Presets ───────────────────────────────────────────────────────────────────
+export type ImageFormat = "avif" | "webp" | null;
 
-export const PRESETS: Record<string, PicturePreset> = {
-  // Two pictures, CSS/container-query driven visibility (Teaser responsive)
-  teaser: {
-    loading: "lazy",
-    groups: [
-      {
-        sources: [{ cropAlias: "stacked", widths: [400, 800], sizes: "100%" }],
-        cssClass: "StackedSources",
-      },
-      {
-        sources: [{ cropAlias: "horizontal", widths: [320, 640], sizes: "12rem" }],
-        cssClass: "HorizontalSources",
-      },
-    ],
-  },
+/** Given an image, a rendered size and a format: a URL. Astro assets, a CDN, a folder. */
+export type UrlResolver<Image> = (image: Image, width: number, height: number, format: ImageFormat) => Promise<string>;
 
-  // One square picture for a thumbnail beside a quote (Quote's --_qt-thumbnailSize)
-  quote: {
-    loading: "lazy",
-    groups: [{ sources: [{ cropAlias: "horizontal", widths: [224, 448], sizes: "7rem" }] }],
-  },
+// ── The plan (what renderers write) ───────────────────────────────────────────
 
-  // Single picture, HTML art direction via media queries
-  hero: {
-    loading: "eager",
-    figureCssClass: "grid-container-full",
-    groups: [
-      {
-        sources: [
-          { cropAlias: "mobile", widths: [380, 760], sizes: "100vw", media: "(max-width: 21.24999rem)" },
-          { cropAlias: "portrait", widths: [440, 880], sizes: "100vw", media: "(max-width: 48rem)" },
-          { cropAlias: "mid", widths: [740, 1480], sizes: "100vw", media: "(max-width: 64rem)" },
-          { cropAlias: "wide", widths: [1280, 1512, 1728], sizes: "60vw", media: "(min-width: 64rem)" },
-        ],
-      },
-    ],
-  },
-};
-
-// ── Crop URL via astro:assets ─────────────────────────────────────────────────
-
-async function cropUrl(
-  image: ImageMetadata,
-  cropAlias: string,
-  width: number,
-  format: "avif" | "webp" | null,
-): Promise<string> {
-  const crop = CROPS[cropAlias];
-  const height = Math.round((width * crop.height) / crop.width);
-
-  const result = await getImage({
-    src: image,
-    width,
-    height,
-    format: format ?? "jpg",
-    fit: "cover",
-  });
-
-  return result.src;
+export interface MediaSource {
+  /** "image/avif", "image/webp", or null for the fallback source */
+  readonly type: string | null;
+  readonly media: string | null;
+  readonly srcset: string;
+  readonly sizes: string;
 }
 
-async function buildSrcset(
-  source: SourceDefinition,
-  image: ImageMetadata,
-  format: "avif" | "webp" | null,
-): Promise<string> {
-  const entries = await Promise.all(
-    source.widths.map(async (w) => `${await cropUrl(image, source.cropAlias, w, format)} ${w}w`),
-  );
-  return entries.join(", ");
+export interface MediaPicture {
+  readonly className: string;
+  readonly sources: readonly MediaSource[];
+  readonly img: {
+    readonly src: string;
+    /** null under art direction: the sources carry the candidates */
+    readonly srcset: string | null;
+    readonly sizes: string | null;
+    readonly alt: string;
+    readonly loading: "lazy" | "eager";
+  };
 }
 
-// ── Figure builder ────────────────────────────────────────────────────────────
+export interface MediaPlan {
+  readonly mode: "render";
+  readonly className: string;
+  readonly pictures: readonly MediaPicture[];
+}
 
-/**
- * Renders a complete figure element with all picture/source/img elements.
- * Mirrors MediaHelper.BuildFigureHtml — loading overrides the preset default,
- * extraClass is appended to the figure class list, figureClass/pictureClass
- * set the base classes.
- */
-export async function buildFigureHtml(options: {
-  image: ImageMetadata;
-  preset: PicturePreset;
-  altText: string;
+export interface MediaError {
+  readonly mode: "error";
+  readonly errorMessage: string;
+}
+
+export interface MediaInput<Image> {
+  image: Image | null | undefined;
+  /** the preset NAME; the tables decide what it means */
+  preset: string | undefined;
+  alt?: string | null;
+  /** overrides the preset's default */
   loading?: string | null;
-  extraClass?: string | null;
-  figureClass?: string;
+  /** the figure's class as the recipe resolved it ("Media", "Media extra"); the preset may add one */
+  className?: string;
+  /** the picture elements' base class */
   pictureClass?: string;
-}): Promise<string> {
-  const {
-    image,
-    preset,
-    altText,
-    loading = null,
-    extraClass = null,
-    figureClass = "Media",
-    pictureClass = "Media-picture",
-  } = options;
-
-  const resolvedLoading = loading ?? preset.loading;
-  const encodedAlt = escapeHtml(altText);
-
-  let inner = "";
-  for (const group of preset.groups) {
-    inner += await renderPictureGroup(group, image, resolvedLoading, encodedAlt, pictureClass);
-  }
-
-  const classes = [figureClass, preset.figureCssClass, extraClass]
-    .filter((c): c is string => !!c && c.trim().length > 0)
-    .join(" ");
-
-  return `<figure class="${classes}">${inner}</figure>`;
 }
 
-// ── Private helpers ───────────────────────────────────────────────────────────
+export interface MediaTables {
+  readonly presets: Readonly<Record<string, PicturePreset>>;
+  readonly crops: CropTable;
+}
 
-async function renderPictureGroup(
-  group: PictureGroup,
-  image: ImageMetadata,
-  loading: string,
-  altText: string,
-  pictureBaseClass = "Media-picture",
-): Promise<string> {
-  const isArtDirection = group.sources.some((s) => s.media != null);
-  const lastSource = group.sources[group.sources.length - 1];
-  const pictureClass = group.cssClass ? `${pictureBaseClass} ${group.cssClass}` : pictureBaseClass;
+// ── resolveMedia ──────────────────────────────────────────────────────────────
 
-  let html = `<picture class="${pictureClass}">`;
-
-  for (const source of group.sources) {
-    const media = source.media != null ? ` media="${source.media}"` : "";
-
-    html += `<source type="image/avif"${media} srcset="${await buildSrcset(source, image, "avif")}" sizes="${source.sizes}">`;
-    html += `<source type="image/webp"${media} srcset="${await buildSrcset(source, image, "webp")}" sizes="${source.sizes}">`;
-    html += `<source${media} srcset="${await buildSrcset(source, image, null)}" sizes="${source.sizes}">`;
+export async function resolveMedia<Image>(
+  input: MediaInput<Image>,
+  tables: MediaTables,
+  resolver: UrlResolver<Image>,
+): Promise<MediaPlan | MediaError> {
+  const name = input.preset ?? "";
+  if (input.image == null) return { mode: "error", errorMessage: "image is required" };
+  const preset = tables.presets[name];
+  if (!preset) return { mode: "error", errorMessage: `unknown preset "${name}" — expected: ${Object.keys(tables.presets).join(" | ")}` };
+  const loading = input.loading ?? preset.loading;
+  if (loading !== "lazy" && loading !== "eager") return { mode: "error", errorMessage: `invalid loading "${input.loading}" — expected lazy | eager` };
+  for (const group of preset.groups) for (const source of group.sources) {
+    if (!tables.crops[source.cropAlias]) return { mode: "error", errorMessage: `unknown crop "${source.cropAlias}" in preset "${name}"` };
   }
 
-  const imgSrc = await cropUrl(image, lastSource.cropAlias, lastSource.widths[0], null);
+  const image = input.image;
+  const alt = input.alt ?? "";
+  const url = (source: SourceDefinition, width: number, format: ImageFormat) => {
+    const crop = tables.crops[source.cropAlias];
+    return resolver(image, width, Math.round((width * crop.height) / crop.width), format);
+  };
+  const srcset = async (source: SourceDefinition, format: ImageFormat) =>
+    (await Promise.all(source.widths.map(async (w) => `${await url(source, w, format)} ${w}w`))).join(", ");
 
-  if (isArtDirection) {
-    html += `<img src="${imgSrc}" alt="${altText}" loading="${loading}" decoding="async">`;
-  } else {
-    html += `<img src="${imgSrc}" srcset="${await buildSrcset(lastSource, image, null)}" sizes="${lastSource.sizes}" alt="${altText}" loading="${loading}" decoding="async">`;
+  const pictureBase = input.pictureClass ?? "Media-picture";
+  const pictures: MediaPicture[] = [];
+  for (const group of preset.groups) {
+    const artDirection = group.sources.some((s) => s.media != null);
+    const last = group.sources[group.sources.length - 1];
+    const sources: MediaSource[] = [];
+    for (const source of group.sources) {
+      const media = source.media ?? null;
+      sources.push({ type: "image/avif", media, srcset: await srcset(source, "avif"), sizes: source.sizes });
+      sources.push({ type: "image/webp", media, srcset: await srcset(source, "webp"), sizes: source.sizes });
+      sources.push({ type: null, media, srcset: await srcset(source, null), sizes: source.sizes });
+    }
+    pictures.push({
+      className: group.cssClass ? `${pictureBase} ${group.cssClass}` : pictureBase,
+      sources,
+      img: {
+        src: await url(last, last.widths[0], null),
+        srcset: artDirection ? null : await srcset(last, null),
+        sizes: artDirection ? null : last.sizes,
+        alt,
+        loading,
+      },
+    });
   }
 
-  html += "</picture>";
-  return html;
+  const className = [input.className ?? "Media", preset.figureCssClass].filter((c): c is string => !!c && c.trim().length > 0).join(" ");
+  return { mode: "render", className, pictures };
+}
+
+// ── The string pen, for string-building renderers ─────────────────────────────
+
+export function mediaPlanHtml(plan: MediaPlan): string {
+  let html = `<figure class="${escapeHtml(plan.className)}">`;
+  for (const picture of plan.pictures) {
+    html += `<picture class="${escapeHtml(picture.className)}">`;
+    for (const s of picture.sources) {
+      const type = s.type ? ` type="${s.type}"` : "";
+      const media = s.media ? ` media="${escapeHtml(s.media)}"` : "";
+      html += `<source${type}${media} srcset="${escapeHtml(s.srcset)}" sizes="${escapeHtml(s.sizes)}">`;
+    }
+    const { img } = picture;
+    const srcset = img.srcset ? ` srcset="${escapeHtml(img.srcset)}" sizes="${escapeHtml(img.sizes ?? "")}"` : "";
+    html += `<img src="${escapeHtml(img.src)}"${srcset} alt="${escapeHtml(img.alt)}" loading="${img.loading}" decoding="async">`;
+    html += "</picture>";
+  }
+  return html + "</figure>";
 }

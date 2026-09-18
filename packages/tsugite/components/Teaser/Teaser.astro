@@ -9,7 +9,8 @@ import Prose from "../Prose/Prose.astro";
 import LinkButton from "../Button/LinkButton.astro";
 import DevError from "../DevError/DevError.astro";
 import type { ImageMetadata } from "astro";
-import { PRESETS, buildFigureHtml } from "../../lib/media";
+import { resolveMedia, mediaPlanHtml } from "../../lib/media";
+import { astroImageResolver, mediaTables } from "../../lib/media.astro";
 import { escapeHtml } from "../../lib/html";
 import { resolveTeaser } from "../../lib/teaser";
 
@@ -46,15 +47,12 @@ const hasMedia = image != null;
 
 const t = resolveTeaser({ heading, href, excerpt, button, buttonLabel, frame, element, hasMedia, hasChildContent });
 
-const figureHtml = hasMedia
-  ? await buildFigureHtml({
-      image: image!,
-      preset: PRESETS["teaser"],
-      altText: alt ?? "",
-      figureClass: "MediaContainer",
-      pictureClass: "Media",
-    })
-  : "";
+// TODO(ADR-0018): Teaser reaches past Picture into the tables here; it becomes
+// parts.media { uses: "Picture" } when Teaser moves onto its own table.
+const plan = hasMedia
+  ? await resolveMedia({ image, preset: "teaser", alt, className: "MediaContainer", pictureClass: "Media" }, mediaTables, astroImageResolver)
+  : null;
+const figureHtml = plan?.mode === "render" ? mediaPlanHtml(plan) : "";
 
 const Tag = t.tag as "article";
 const Frame = t.card ? Card : Fragment;
