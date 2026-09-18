@@ -9,6 +9,7 @@
 // converted without a decision carries a TODO(lab).
 import Layout from "../../layouts/Layout.astro";
 import Surface from "tsugite/components/Surface/Surface.astro";
+import Card from "tsugite/components/Card/Card.astro";
 import Heading from "tsugite/components/Heading/Heading.astro";
 import Prose from "tsugite/components/Prose/Prose.astro";
 import LinkButton from "tsugite/components/Button/LinkButton.astro";
@@ -135,6 +136,39 @@ import jean from "tsugite/fixtures/media/jean-philippe.jpg";
         <figcaption>A caption, centred under the image.</figcaption>
       </figure>
     </Surface>
+
+    {/* 9. SHADOW LAB — a voiced Card on a band of another voice, casting a shadow tinted
+        by its own surface and mixed with the ground it lies on. The stress test of the
+        "one knob, turned where the base becomes known" rule: the card's surface is known
+        at build, the ground only at runtime (inherited from the Surface), so the tint is
+        a runtime color-mix behind a @supports gate, and the everywhere form is the plain
+        neutral shadow. The trick that makes the ground readable: the Surface publishes
+        its ground under a name the voice blocks never touch (--surface-ground), computed
+        on the Surface element, so the voiced card inherits the band's literal even though
+        it overrides --theme-surface for itself. Lab-only CSS below; if it holds, the one
+        line moves into Surface. */}
+    {[
+      { theme: "brand", prominence: "primary", label: "brand · primary" },
+      { theme: "neutral", prominence: "subtle", label: "neutral · subtle" },
+    ].map((band) => (
+      <Surface element="section" theme={band.theme} prominence={band.prominence} capInline={false}>
+        <div class="ShadowLab grid-layout">
+          <p class="ShadowLab-label">Ground: {band.label}</p>
+          <Card elevation="md" padding="md" class="ShadowLab-card">
+            <Heading element="h3" size="5" text="No voice" />
+            <p>The band's ink and ground; the neutral shadow every Card has today.</p>
+          </Card>
+          <Card elevation="md" padding="md" class="ShadowLab-card ShadowLab-voiced" data-theme="accent" data-prominence="primary">
+            <Heading element="h3" size="5" text="Accent voice, neutral shadow" />
+            <p>The card paints its own voice; the shadow still knows nothing about it.</p>
+          </Card>
+          <Card elevation="md" padding="md" class="ShadowLab-card ShadowLab-voiced ShadowLab-tinted" data-theme="accent" data-prominence="primary">
+            <Heading element="h3" size="5" text="Accent voice, tinted shadow" />
+            <p>The shadow is the card's surface mixed with the ground beneath, then let through at half strength.</p>
+          </Card>
+        </div>
+      </Surface>
+    ))}
 
   </main>
 </Layout>
@@ -403,6 +437,55 @@ import jean from "tsugite/fixtures/media/jean-philippe.jpg";
       font-family: var(--fontFamily-label);
       font-size: var(--fontSize-label-small);
       color: var(--theme-textMuted, var(--color-text-secondary));
+    }
+  }
+  /* ── 9. Shadow lab ────────────────────────────────────────────────────────── */
+  /* The Surface publishes its ground under a name no voice block touches. Declared
+     here on the Surface, the var() is substituted at computed-value time, so every
+     descendant inherits the band's LITERAL — a voiced card included, even though it
+     overrides --theme-surface for itself. Lab-only; the real home is Surface.astro. */
+  .GridLab .Surface {
+    --surface-ground: var(--theme-surface, var(--color-surface-page));
+  }
+
+  .ShadowLab {
+    row-gap: var(--size-md);
+    padding-block: var(--size-md);
+
+    & > * { grid-column: 1 / -1; }
+    @media (min-width: 48.75rem) {
+      & > .ShadowLab-card { grid-column: span 4; }
+    }
+  }
+
+  .ShadowLab-label {
+    margin: 0;
+    font: var(--fontWeight-label) 0.75rem var(--fontFamily-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--theme-textMuted, var(--color-text-secondary));
+  }
+
+  .ShadowLab-card {
+    /* an unvoiced card sits on the band's ground and ink; a voiced one paints its own */
+    background-color: var(--theme-surface, var(--color-surface-page));
+    color: var(--theme-text, var(--color-text-primary));
+    & p { margin: 0; }
+  }
+
+  /* The tinted shadow. Geometry from Card's md elevation; only the colour changes.
+     Everywhere form: the neutral shadow Card already has (nothing to do). Enhanced
+     form: tint = the card's own surface mixed 55/45 with the ground it lies on, then
+     that tint at 55% over transparent — a coloured shadow that belongs to BOTH the
+     card and the floor. */
+  @supports (color: color-mix(in oklab, red 50%, blue)) {
+    .ShadowLab-tinted[data-elevation="md"] {
+      --_lab-shadowTint: color-mix(in oklab, var(--theme-surface) 55%, var(--surface-ground));
+      --_lab-shadowColor: color-mix(in oklab, var(--_lab-shadowTint) 55%, transparent);
+      --_lab-shadowColorSoft: color-mix(in oklab, var(--_lab-shadowTint) 30%, transparent);
+      box-shadow:
+        0 4px 12px var(--_lab-shadowColor),
+        0 1px 3px var(--_lab-shadowColorSoft);
     }
   }
 </style>
