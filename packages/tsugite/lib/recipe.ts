@@ -57,6 +57,9 @@ export interface Resolution {
 
 const kebab = (s: string) => s.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 
+const booleanOf = (v: unknown): boolean | null =>
+  v === true || v === "" || v === "true" ? true : v === false || v === "false" ? false : null;
+
 export function resolve<R extends Recipe>(recipe: R, props: Record<string, unknown>, ctx: Context): Resolution {
   const known = new Set(["element", "class", ...Object.keys(recipe.axes)]);
   const rest: Record<string, unknown> = {};
@@ -75,7 +78,19 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
   for (const [name, axis] of Object.entries(recipe.axes)) {
     const raw = props[name];
     if ("type" in axis) {
-      attrs[`data-${kebab(name)}`] = (raw ?? axis.default) ? "true" : "false";
+      // A boolean arrives as a boolean (Astro, React), as "true"/"false" (a CMS, a string
+      // template) or as "" (a bare attribute in a Vue template — presence means true, as in
+      // HTML). Anything else is a value outside the set (ADR-0019).
+      const flag = raw == null ? axis.default : booleanOf(raw);
+      if (flag === null) {
+        if (mode === "render") {
+          mode = "error";
+          errorMessage = `invalid ${name} "${raw}" — expected true | false`;
+        }
+        attrs[`data-${kebab(name)}`] = axis.default ? "true" : "false";
+        continue;
+      }
+      attrs[`data-${kebab(name)}`] = flag ? "true" : "false";
       continue;
     }
     const value = raw == null ? axis.default : String(raw).toLowerCase();
