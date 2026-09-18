@@ -94,8 +94,20 @@ describe("ActionButton", () => {
     expect(html).toContain('data-intent="destructive"');
   });
 
-  it("ignores invalid intent", async () => {
+  it("refuses an invalid intent (ADR-0019)", async () => {
     const html = await renderAction({ intent: "evil" }, { default: "x" });
-    expect(html).not.toContain("data-intent");
+    expect(html).toContain('invalid intent "evil"');
+    expect(html).not.toContain('class="Button"');
+  });
+
+  it("refuses intent on a link (ADR-0019)", async () => {
+    const html = await renderLink({ href: "/x", intent: "destructive" }, { default: "x" });
+    expect(html).toContain("intent does not exist on <a>");
+    expect(html).not.toContain('class="Button"');
+  });
+
+  it("writes the hidden suffix that extends the accessible name", async () => {
+    const html = await renderLink({ href: "/x", srText: " about Widgets" }, { default: "Read more" });
+    expect(html).toContain('<span class="Button-text">Read more<span class="Button-srText"> about Widgets</span></span>');
   });
 });

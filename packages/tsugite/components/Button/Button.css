@@ -346,6 +346,17 @@
     hyphens: auto;
   }
 
+  /* srText: the hidden suffix that extends the accessible name ("Read more" + " about
+     {heading}"). Button owns the hiding; a composition only supplies the words. */
+  & .Button-srText {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   & > .Button-icon {
     display: inline;
     block-size: var(--_iconSize);

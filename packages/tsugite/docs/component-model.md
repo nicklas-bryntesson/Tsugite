@@ -454,4 +454,13 @@ kitchen sink) visar röster × volymer × lägen live.
     utgångsantagandet som håller axeln ärlig; enstaka hörn får saknas
     via matrisen, men en axel där nästan inget kombinerar är en
     förklädd enum.
+    **Note 2026-09-17 (ADR-0018):** the whitelist form above stands for
+    the factory floor and for the *delivered* form. For the component
+    floor, ADR-0018 separates *absence* (a cell the CSS has no answer for;
+    the system declares it) from *closure* (a cell that renders and a
+    project does not want; the project subtracts it). Subtraction is the
+    authoring form, the computed whitelist is the delivered form, after
+    ADR-0003's pattern. The totality rule survives as a lint on the
+    project configuration. Parked question 7 is answered the same way
+    as here: runtime refusal is the doctrine, ADR-0019 states the rule.
 

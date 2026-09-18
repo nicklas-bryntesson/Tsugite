@@ -3,6 +3,9 @@
 A reference for deterministic front-end systems, built like joinery:
 pieces meet through contracts that fit exactly — and refuse what doesn't.
 
+New here? Start with [TLDR.md](TLDR.md): the problem, in blunt examples,
+and what this system does about it.
+
 - **`packages/tsugite`** — the system (the proof): kernel, components,
   the color engine and token generator, conformance suites, ADR ledger.
 - **`apps/docs`** — the documentation site (the argument): the map, the

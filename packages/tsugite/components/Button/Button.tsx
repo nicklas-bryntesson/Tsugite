@@ -1,50 +1,50 @@
-// Button — the React renderers of lib/button.ts: LinkButton (<a>) and ActionButton
-// (<button>). Same recipe, same markup; React idioms only where the host differs.
+// Button — the React front doors to recipes/button.recipe.ts: LinkButton (<a>) and
+// ActionButton (<button>). Same table, same markup; React idioms only where the host
+// differs (children instead of a slot, className, camelCase attribute props).
 import type { ReactNode } from "react";
 import { createElement } from "react";
 import "./Button.css";
-import { resolveButton, type ButtonInput } from "../../lib/button";
+import { button } from "../../recipes/button.recipe";
+import { resolve, type InputOf } from "../../lib/recipe";
+import { buttonDerive } from "../../lib/button";
 
-interface SharedProps {
-  emphasis?: string;
-  pill?: boolean;
-  growInline?: boolean;
-  size?: string;
-  icon?: string;
-  iconPosition?: string;
+type Input = InputOf<typeof button>;
+type Shared = Omit<Input, "element" | "class" | "aria-label" | "href" | "target" | "type" | "disabled" | "intent"> & {
   ariaLabel?: string;
   className?: string;
   children?: ReactNode;
   [key: string]: unknown;
-}
-export interface LinkButtonProps extends SharedProps { href?: string; target?: string; }
-export interface ActionButtonProps extends SharedProps { buttonType?: string; disabled?: boolean; intent?: string; }
+};
+export type LinkButtonProps = Shared & { href?: string; target?: string };
+export type ActionButtonProps = Shared & { buttonType?: string; disabled?: boolean; intent?: Input["intent"] };
 
 const h = createElement;
+const hasContent = (c: ReactNode) => c != null && c !== false && c !== "";
 
-function render(input: ButtonInput, name: string, children: ReactNode, rest: Record<string, unknown>) {
-  const b = resolveButton(input);
+function render(element: "a" | "button", name: string, props: Record<string, unknown>, children: ReactNode) {
+  const { ariaLabel, className, buttonType, ...rest } = props;
+  const b = resolve(
+    button,
+    { ...rest, element, class: className, "aria-label": ariaLabel, type: buttonType },
+    { slots: { text: hasContent(children) }, derive: buttonDerive },
+  );
   if (b.mode === "suppress") return null;
   if (b.mode === "error") {
     if (process.env.NODE_ENV === "production") return null;
     return h("div", { style: { color: "red", border: "2px solid red", padding: "0.5rem" } }, `× ${name}: ${b.errorMessage}`);
   }
-  const attrs: Record<string, unknown> = { className: b.className, ...b.attrs, ...rest };
-  if (b.disabled) attrs.disabled = true;
   return h(
     b.tag,
-    attrs,
-    input.hasText && h("span", { className: "Button-text" }, children),
-    b.iconName && h("svg", { className: "Button-icon", "aria-hidden": "true", focusable: "false" }, h("use", { href: `#${b.iconName}` })),
+    { className: b.className, ...b.attrs, ...b.rest },
+    b.parts.text && h("span", { className: "Button-text" }, children, b.parts.srText && h("span", { className: "Button-srText" }, b.parts.srText)),
+    b.parts.icon && h("svg", { className: "Button-icon", "aria-hidden": "true", focusable: "false" }, h("use", { href: `#${b.parts.icon}` })),
   );
 }
 
-const hasContent = (c: ReactNode) => c != null && c !== false && c !== "";
-
-export function LinkButton({ href, target, emphasis, pill, growInline, size, icon, iconPosition, ariaLabel, className, children, ...rest }: LinkButtonProps) {
-  return render({ kind: "link", href, target, emphasis, pill, growInline, size, icon, iconPosition, ariaLabel, class: className, hasText: hasContent(children) }, "LinkButton", children, rest);
+export function LinkButton({ children, ...props }: LinkButtonProps) {
+  return render("a", "LinkButton", props, children);
 }
 
-export function ActionButton({ buttonType, disabled, emphasis, intent = "neutral", pill, growInline, size, icon, iconPosition, ariaLabel, className, children, ...rest }: ActionButtonProps) {
-  return render({ kind: "action", buttonType, disabled, emphasis, intent, pill, growInline, size, icon, iconPosition, ariaLabel, class: className, hasText: hasContent(children) }, "ActionButton", children, rest);
+export function ActionButton({ children, ...props }: ActionButtonProps) {
+  return render("button", "ActionButton", props, children);
 }

@@ -1,5 +1,5 @@
-// The renderers are adapters; the recipe is the contract (ADR-0017). The contract is
-// data: tests/fixtures/card.json lists inputs and the exact resolution each must
+// The renderers are adapters; the recipe is the contract (ADR-0017), and the recipe is a
+// table read by lib/recipe.ts (ADR-0018). tests/fixtures/card.json lists inputs and the exact resolution each must
 // produce. This file holds the recipe to it, then holds Astro, React and Vue to the
 // recipe — byte-identical markup for the same props, nothing for an empty card, the
 // same message for an invalid one. A renderer in another language reads the same file.
@@ -10,7 +10,8 @@ import { createElement } from "react";
 import { describe, it, expect } from "vitest";
 import { createSSRApp, h } from "vue";
 import { renderToString as renderVue } from "vue/server-renderer";
-import { resolveCard, type CardInput } from "../lib/card";
+import { resolve } from "../lib/recipe";
+import { card } from "../recipes/card.recipe";
 import CardAstro from "../components/Card/Card.astro";
 import CardReact from "../components/Card/Card.tsx";
 import CardVue from "../components/Card/Card.vue";
@@ -20,7 +21,7 @@ interface Fixture {
   attrOrder: string[];
   cases: Array<{
     name: string;
-    input: CardInput;
+    input: Record<string, unknown> & { hasContent: boolean };
     expect: {
       mode: "render" | "suppress" | "error";
       tag?: string;
@@ -74,7 +75,7 @@ const viaVue = async (props: Record<string, unknown>, hasContent: boolean) =>
     ),
   );
 
-const propsOf = (input: CardInput): Record<string, unknown> => {
+const propsOf = (input: { hasContent: boolean }): Record<string, unknown> => {
   const { hasContent, ...props } = input;
   return props;
 };
@@ -85,7 +86,7 @@ const openingTag = (tag: string, className: string, attrs: Record<string, string
 describe(`${fixture.component}: the recipe resolves every fixture case`, () => {
   for (const { name, input, expect: want } of fixture.cases) {
     it(name, () => {
-      const got = resolveCard(input);
+      const got = resolve(card, propsOf(input), { hasContent: input.hasContent });
       expect(got.mode).toBe(want.mode);
       if (want.mode === "render") {
         expect(got.tag).toBe(want.tag);
