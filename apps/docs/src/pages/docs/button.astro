@@ -42,7 +42,7 @@ const entry = entryFor("button");
       <Emphasis />
     </Example>
 
-    <Example id="intent" title="Intent — actions only" lead="Destructive and success are things an action can be, not a link. LinkButton drops the prop before the DOM: the fourth button carries no data-intent. Known today: an intent block outranks the hover and active rules, so intent buttons do not change on hover." source={intentSrc} row>
+    <Example id="intent" title="Intent — actions only" lead="Destructive and success are things an action can be, not a link. The axis does not exist on a LinkButton: given an intent, it is refused in development rather than rendered without one (ADR-0019). Known today: an intent block outranks the hover and active rules, so intent buttons do not change on hover." source={intentSrc} row>
       <Intent />
     </Example>
 

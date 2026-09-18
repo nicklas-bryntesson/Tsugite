@@ -5,6 +5,8 @@ import type { Recipe } from "../lib/recipe";
 
 export const card = {
   name: "Card",
+  promise: "A visual frame around other components.",
+  refuses: ["content of its own", "meaning — it is not a link, a region or a section"],
   class: "Card",
   element: { values: ["div", "article", "section", "li"], default: "div" },
   axes: {
