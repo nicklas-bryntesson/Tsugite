@@ -42,7 +42,7 @@ const entry = entryFor("button");
       <Emphasis />
     </Example>
 
-    <Example id="intent" title="Intent — actions only" lead="Destructive and success are things an action can be, not a link. The axis does not exist on a LinkButton: given an intent, it is refused in development rather than rendered without one (ADR-0019). Known today: an intent block outranks the hover and active rules, so intent buttons do not change on hover." source={intentSrc} row>
+    <Example id="intent" title="Intent — actions only" lead="Destructive and success are things an action can be, not a link. The axis does not exist on a LinkButton: given an intent, it is refused in development rather than rendered without one (ADR-0019). Intent writes the same slots emphasis writes, so hover, active and focus keep working; the feedback colours take no voice on purpose, like the focus ring, so a destructive button is the same red on every band." source={intentSrc} row>
       <Intent />
     </Example>
 

@@ -4,6 +4,7 @@
 import type { ReactNode } from "react";
 import { createElement } from "react";
 import "./Heading.css";
+import "../../kernel/css/debug.css";
 import { heading } from "../../recipes/heading.recipe";
 import { resolve, type InputOf } from "../../lib/recipe";
 import { headingDefaults, headingDerive, headingPlan } from "../../lib/heading";
@@ -23,7 +24,7 @@ export default function Heading({ className, children, ...props }: HeadingProps)
   if (t.mode === "suppress") return null;
   if (t.mode === "error") {
     if (process.env.NODE_ENV === "production") return null;
-    return h("div", { style: { color: "red", border: "2px solid red", padding: "0.5rem" } }, `× ${heading.name}: ${t.errorMessage}`);
+    return h("div", { style: { color: "var(--debug-ink)", border: "2px solid var(--debug-ink)", padding: "0.5rem" } }, `× ${heading.name}: ${t.errorMessage}`);
   }
 
   const plan = headingPlan(t);

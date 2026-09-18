@@ -1,0 +1,16 @@
+/* Kernel — the debug palette. Four colours for things a developer sees and a visitor
+   never does: the dev-error box (DevError and its React/Vue mirrors) and the measuring
+   overlays behind data-test-state="debug". They are deliberately NOT brand tokens: a
+   diagnosis must look the same on every brand, in every voice, in every mode, so these
+   are authored here as raw oklch and never pass through the token factory. Imported by
+   the files that use them; deleting those deletes the need. */
+:root {
+  /* the ink of an error box: text and border */
+  --debug-ink: oklch(0.6 0.22 27);
+  /* a translucent fill marking a box model region (padding) */
+  --debug-fill: oklch(0.7 0.2 145 / 0.2);
+  /* a translucent fill marking a measured extent (text height after compensation) */
+  --debug-measure: oklch(0.65 0.18 40 / 0.2);
+  /* a dashed outline around a part */
+  --debug-outline: oklch(0.8 0.25 145 / 0.7);
+}

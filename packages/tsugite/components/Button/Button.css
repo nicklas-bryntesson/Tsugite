@@ -1,6 +1,7 @@
 /* Kept as a FILE (not inlined as <style> in one component).
    Shared contract: LinkButton, ActionButton, CtaLinkButton and Teaser's raw .Button markup all key on it.
    Inlining would duplicate it in the bundle or couple components to page composition. */
+@import "../../kernel/css/debug.css";
 /* prettier-ignore */
 .Button {
   /* TODO(decide): unprefixed slots. ADR-0013 sets --_<prefix>-<propertyCamel>; the
@@ -239,35 +240,104 @@
   }
 
   /* ── Intent ── */
+  /* An action can be destructive or successful. Intent writes the same slots emphasis
+     writes, so every state — hover ring, active, focus, disabled — keeps working; it
+     never sets a property on the element directly. The feedback colours are deliberately
+     VOICE-INDEPENDENT: like the focus ring they read the semantic roles and no theme
+     channel, so a destructive button is the same red on every band. */
+  /* TODO(token): no hover step exists for the feedback roles (--color-feedback-error-hover),
+     so the hover and focus states keep the base colour and show the ring. */
 
   &[data-emphasis="primary"][data-intent="destructive"] {
-    background-color: var(--color-feedback-error);
-    border-color: var(--color-feedback-error);
-    color: var(--color-feedback-onError);
+    --_color:                       var(--color-feedback-onError);
+    --_backgroundColor:             var(--color-feedback-error);
+    --_borderColor:                 var(--color-feedback-error);
+
+    &:hover,
+    &[data-test-state="hover"] {
+      --_backgroundColor-hover:     var(--color-feedback-error);
+      --_borderColor-hover:         var(--color-feedback-error);
+    }
+    &:active,
+    &[data-test-state="active"] {
+      --_color-active:              var(--color-feedback-onError);
+      --_backgroundColor-active:    var(--color-feedback-error);
+      --_borderColor-active:        var(--color-feedback-error);
+    }
+    &:focus-visible,
+    &[data-test-state="focus"] {
+      --_color-focus:               var(--color-feedback-onError);
+      --_backgroundColor-focus:     var(--color-feedback-error);
+      --_borderColor-focus:         var(--color-feedback-error);
+    }
   }
 
   &[data-emphasis="primary"][data-intent="success"] {
-    background-color: var(--color-feedback-success);
-    border-color: var(--color-feedback-success);
-    color: var(--color-feedback-onSuccess);
+    --_color:                       var(--color-feedback-onSuccess);
+    --_backgroundColor:             var(--color-feedback-success);
+    --_borderColor:                 var(--color-feedback-success);
+
+    &:hover,
+    &[data-test-state="hover"] {
+      --_backgroundColor-hover:     var(--color-feedback-success);
+      --_borderColor-hover:         var(--color-feedback-success);
+    }
+    &:active,
+    &[data-test-state="active"] {
+      --_color-active:              var(--color-feedback-onSuccess);
+      --_backgroundColor-active:    var(--color-feedback-success);
+      --_borderColor-active:        var(--color-feedback-success);
+    }
+    &:focus-visible,
+    &[data-test-state="focus"] {
+      --_color-focus:               var(--color-feedback-onSuccess);
+      --_backgroundColor-focus:     var(--color-feedback-success);
+      --_borderColor-focus:         var(--color-feedback-success);
+    }
   }
 
-  &[data-emphasis="secondary"][data-intent="destructive"] {
-    border-color: var(--color-feedback-error);
-    color: var(--color-feedback-error);
-  }
-
-  &[data-emphasis="secondary"][data-intent="success"] {
-    border-color: var(--color-feedback-success);
-    color: var(--color-feedback-success);
-  }
-
+  /* Secondary and tertiary keep their emphasis surfaces (transparent, the hover surface)
+     and take the feedback colour as ink and border. */
+  &[data-emphasis="secondary"][data-intent="destructive"],
   &[data-emphasis="tertiary"][data-intent="destructive"] {
-    color: var(--color-feedback-error);
+    --_color:                       var(--color-feedback-error);
+    --_borderColor:                 var(--color-feedback-error);
+
+    &:hover,
+    &[data-test-state="hover"] {
+      --_borderColor-hover:         var(--color-feedback-error);
+    }
+    &:active,
+    &[data-test-state="active"] {
+      --_color-active:              var(--color-feedback-error);
+      --_borderColor-active:        var(--color-feedback-error);
+    }
+    &:focus-visible,
+    &[data-test-state="focus"] {
+      --_color-focus:               var(--color-feedback-error);
+      --_borderColor-focus:         var(--color-feedback-error);
+    }
   }
 
+  &[data-emphasis="secondary"][data-intent="success"],
   &[data-emphasis="tertiary"][data-intent="success"] {
-    color: var(--color-feedback-success);
+    --_color:                       var(--color-feedback-success);
+    --_borderColor:                 var(--color-feedback-success);
+
+    &:hover,
+    &[data-test-state="hover"] {
+      --_borderColor-hover:         var(--color-feedback-success);
+    }
+    &:active,
+    &[data-test-state="active"] {
+      --_color-active:              var(--color-feedback-success);
+      --_borderColor-active:        var(--color-feedback-success);
+    }
+    &:focus-visible,
+    &[data-test-state="focus"] {
+      --_color-focus:               var(--color-feedback-success);
+      --_borderColor-focus:         var(--color-feedback-success);
+    }
   }
 
   /* ── Shape ── */
@@ -370,7 +440,7 @@
   }
 }
 
-/* Developer debug styles here: */
+/* Developer debug styles: measuring overlays on the kernel's debug palette (kernel/css/debug.css). */
 :where(.Button[data-test-state="debug"]) {
   &::before {
     content: "";
@@ -379,7 +449,7 @@
     inset-block-start: 0;
     width: 100%;
     height: var(--_paddingBlock);
-    background-color: rgba(64, 190, 64, 0.2);
+    background-color: var(--debug-fill);
   }
 
   &::after {
@@ -389,12 +459,12 @@
     inset-block-end: 0;
     width: 100%;
     height: var(--_paddingBlock);
-    background-color: rgba(64, 190, 64, 0.2);
+    background-color: var(--debug-fill);
   }
 
   & > .Button-text {
     position: relative;
-    outline: 0.0625rem dashed rgba(0, 255, 0, 0.703);
+    outline: 0.0625rem dashed var(--debug-outline);
 
     &::after {
       content: "";
@@ -409,7 +479,7 @@
       transform: translateY(var(--_marginAdjustment)); /* Shift it down */
 
       width: 100%;
-      background-color: rgba(223, 79, 31, 0.2);
+      background-color: var(--debug-measure);
       z-index: 0;
     }
   }

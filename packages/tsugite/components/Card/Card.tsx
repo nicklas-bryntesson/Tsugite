@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { createElement } from "react";
 import "./Card.css";
+import "../../kernel/css/debug.css";
 import { card } from "../../recipes/card.recipe";
 import { resolve, type InputOf } from "../../lib/recipe";
 
@@ -21,7 +22,7 @@ export default function Card({ className, children, ...props }: CardProps) {
     if (process.env.NODE_ENV === "production") return null;
     return createElement(
       "div",
-      { style: { color: "red", border: "2px solid red", padding: "0.5rem" } },
+      { style: { color: "var(--debug-ink)", border: "2px solid var(--debug-ink)", padding: "0.5rem" } },
       `× ${card.name}: ${r.errorMessage}`,
     );
   }

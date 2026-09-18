@@ -6,6 +6,7 @@
 <script setup>
 import { useSlots, useAttrs } from "vue";
 import "./Card.css";
+import "../../kernel/css/debug.css";
 import { card } from "../../recipes/card.recipe";
 import { resolve } from "../../lib/recipe";
 
@@ -19,7 +20,7 @@ const r = resolve(card, useAttrs(), { hasContent: !!slots.default });
   <component v-if="r.mode === 'render'" :is="r.tag" :class="r.className" v-bind="{ ...r.attrs, ...r.rest }">
     <slot />
   </component>
-  <div v-else-if="r.mode === 'error'" style="color: red; border: 2px solid red; padding: 0.5rem">
+  <div v-else-if="r.mode === 'error'" style="color: var(--debug-ink); border: 2px solid var(--debug-ink); padding: 0.5rem">
     &times; {{ card.name }}: {{ r.errorMessage }}
   </div>
 </template>
