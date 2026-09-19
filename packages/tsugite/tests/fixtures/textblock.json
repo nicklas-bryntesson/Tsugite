@@ -1,0 +1,182 @@
+{
+  "$comment": "TextBlock — the contract as data. `children` is the default slot's presence, reported by the renderer so the table can REFUSE it: a plain field carries no markup. `text` is the field's string; the CSS honours its line breaks. Attribute order: the axes in table order, the derived run last.",
+  "component": "TextBlock",
+  "cases": [
+    {
+      "name": "default: p, preamble md, pretty, block run",
+      "input": {
+        "text": "Standfirst",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "TextBlock",
+        "attrs": {
+          "data-variant": "preamble",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "preamble lg",
+      "input": {
+        "text": "T",
+        "size": "lg",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "TextBlock",
+        "attrs": {
+          "data-variant": "preamble",
+          "data-size": "lg",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "body voice, sm, on a div",
+      "input": {
+        "text": "T",
+        "element": "div",
+        "variant": "body",
+        "size": "sm",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "div",
+        "className": "TextBlock",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "sm",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "align and wrap",
+      "input": {
+        "text": "T",
+        "align": "center",
+        "wrap": "stable",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "TextBlock",
+        "attrs": {
+          "data-variant": "preamble",
+          "data-size": "md",
+          "data-align": "center",
+          "data-wrap": "stable",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "a span is not in the farm: falls back to p, and is a block run",
+      "input": {
+        "text": "T",
+        "element": "span",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "TextBlock",
+        "attrs": {
+          "data-variant": "preamble",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "extra class",
+      "input": {
+        "text": "T",
+        "class": "extra",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "TextBlock extra",
+        "attrs": {
+          "data-variant": "preamble",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "no words: suppressed",
+      "input": {
+        "children": false
+      },
+      "expect": {
+        "mode": "suppress"
+      }
+    },
+    {
+      "name": "child content is the one thing a field cannot be",
+      "input": {
+        "children": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "TextBlock takes plain text only (the textarea contract) — use the text prop, never child content"
+      }
+    },
+    {
+      "name": "child content beside text is refused too",
+      "input": {
+        "text": "T",
+        "children": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "TextBlock takes plain text only (the textarea contract) — use the text prop, never child content"
+      }
+    },
+    {
+      "name": "a size outside the voice's set",
+      "input": {
+        "text": "T",
+        "size": "xl",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid size \"xl\" for variant \"preamble\" — expected sm | md | lg"
+      }
+    },
+    {
+      "name": "an unknown voice",
+      "input": {
+        "text": "T",
+        "variant": "label",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid variant \"label\" — expected preamble | body"
+      }
+    }
+  ]
+}

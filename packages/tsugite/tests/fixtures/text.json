@@ -1,5 +1,5 @@
 {
-  "$comment": "Text — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. Both quiet voices share three elements and three sizes, md by default; the element never decides the size. Attribute order: the axes in table order, the derived run last.",
+  "$comment": "Text — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. Both quiet voices share six elements — p, span, div, and the captions legend, figcaption, label — and three sizes, md by default; the element never decides the size. Attribute order: the axes in table order, the derived run last.",
   "component": "Text",
   "cases": [
     {
@@ -120,6 +120,69 @@
           "data-align": "left",
           "data-wrap": "pretty",
           "data-run": "inline"
+        }
+      }
+    },
+    {
+      "name": "label voice on a legend — the wizard's outer group",
+      "input": {
+        "text": "Contact details",
+        "element": "legend",
+        "variant": "label",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "legend",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "body voice on a figcaption",
+      "input": {
+        "text": "A caption",
+        "element": "figcaption",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "figcaption",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "label voice on a label element",
+      "input": {
+        "text": "Email",
+        "element": "label",
+        "variant": "label",
+        "size": "sm",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "label",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "sm",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
         }
       }
     },
