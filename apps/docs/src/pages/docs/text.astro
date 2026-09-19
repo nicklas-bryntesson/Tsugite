@@ -22,6 +22,8 @@ import Chain from "../../examples/text/Chain.astro";
 import chainSrc from "../../examples/text/Chain.astro?raw";
 import Sovereignty from "../../examples/text/Sovereignty.astro";
 import sovereigntySrc from "../../examples/text/Sovereignty.astro?raw";
+import Captions from "../../examples/text/Captions.astro";
+import captionsSrc from "../../examples/text/Captions.astro?raw";
 import AlignWrap from "../../examples/text/AlignWrap.astro";
 import alignWrapSrc from "../../examples/text/AlignWrap.astro?raw";
 
@@ -31,7 +33,7 @@ const entry = entryFor("text");
 <Layout title={entry.title}>
   <DocPage entry={entry}>
     <TextBlock
-      text="The text primitive. Authored single-run UI text in the two quiet voices — body and label — on p, span and div. The family litmus: do you author the element? Text (or Heading, for the loud voices). A flow you don't control? Prose."
+      text="The text primitive. Authored single-run UI text in the two quiet voices — body and label — on p, span and div, and on the captions: legend, figcaption and label. The family litmus: do you author the element? Text (or Heading, for the loud voices). A flow you don't control? Prose."
     />
 
     <Example id="sizes" title="Sizes" lead="The body voice has three steps, md by default. Unlike Heading, the element never decides the size." source={sizesSrc} block>
@@ -60,6 +62,10 @@ const entry = entryFor("text");
 
     <Example id="align-wrap" title="Alignment and wrapping" lead="align sets the inline alignment; wrap chooses the line-breaking strategy — pretty by default, where Heading defaults to balance." source={alignWrapSrc} block>
       <AlignWrap />
+    </Example>
+
+    <Example id="captions" title="Captions: legend, figcaption, label" lead="The element is the semantics, the voice is the look, and neither forces the other. A wizard's nested fieldset binds its group with a legend that may look like a label; a figure's caption may read like body; a form label speaks the label voice on the element that is a label. The family matrix lists these cells because the CSS has an answer for them — leaving one out would be taste, and taste is a project's to close." source={captionsSrc} block>
+      <Captions />
     </Example>
 
     <section class="doc-bench" id="test-bench">

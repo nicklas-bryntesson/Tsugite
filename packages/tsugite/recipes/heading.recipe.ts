@@ -40,10 +40,12 @@ export const heading = {
     run: { attr: "data-run", from: ["element"] },
   },
   absent: [
-    // The quiet voice on heading-shaped elements only: a body-voiced p/span/div has one door, Text.
+    // The quiet voice on heading-shaped elements only: a body-voiced anything else has one door, Text.
     { cells: { variant: "body", element: "span" }, message: 'variant "body" does not allow element "span"' },
     { cells: { variant: "body", element: "div" }, message: 'variant "body" does not allow element "div"' },
     { cells: { variant: "body", element: "p" }, message: 'variant "body" does not allow element "p"' },
+    { cells: { variant: "body", element: "legend" }, message: 'variant "body" does not allow element "legend"' },
+    { cells: { variant: "body", element: "figcaption" }, message: 'variant "body" does not allow element "figcaption"' },
     // One run, one source of words, one destination.
     { cells: { text: true, children: true }, message: "invalid combination of text, href, and child content" },
     { cells: { href: true, children: true }, message: "invalid combination of text, href, and child content" },
