@@ -1,0 +1,219 @@
+{
+  "$comment": "Quote — the contract as data. The element follows the content (a default hole): words alone are an aside, words with a source or a portrait a figure. `children` and `media` are slot presence the renderer reports; quote, source and id are text parts. data-id and aria-labelledby are derived and PRESENT OR NOT: an aside with an id is labelled by `${id}-quote`, a figure never is. Attribute order: the axes, then the derived values in table order.",
+  "component": "Quote",
+  "cases": [
+    {
+      "name": "words alone: an aside labelled by its quote",
+      "input": {
+        "id": "q",
+        "quote": "Hello",
+        "children": false,
+        "media": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "aside",
+        "className": "Quote",
+        "attrs": {
+          "data-size": "md",
+          "data-cap-inline": "true",
+          "data-media": "false",
+          "data-source": "false",
+          "data-id": "q",
+          "aria-labelledby": "q-quote"
+        }
+      }
+    },
+    {
+      "name": "words alone, no id: an aside with no label hook",
+      "input": {
+        "quote": "Hello",
+        "children": false,
+        "media": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "aside",
+        "className": "Quote",
+        "attrs": {
+          "data-size": "md",
+          "data-cap-inline": "true",
+          "data-media": "false",
+          "data-source": "false"
+        }
+      }
+    },
+    {
+      "name": "a source makes it a figure; no aria-labelledby",
+      "input": {
+        "id": "q",
+        "quote": "Hello",
+        "source": "Ada",
+        "children": false,
+        "media": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "figure",
+        "className": "Quote",
+        "attrs": {
+          "data-size": "md",
+          "data-cap-inline": "true",
+          "data-media": "false",
+          "data-source": "true",
+          "data-id": "q"
+        }
+      }
+    },
+    {
+      "name": "a portrait makes it a figure",
+      "input": {
+        "quote": "Hello",
+        "children": false,
+        "media": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "figure",
+        "className": "Quote",
+        "attrs": {
+          "data-size": "md",
+          "data-cap-inline": "true",
+          "data-media": "true",
+          "data-source": "false"
+        }
+      }
+    },
+    {
+      "name": "portrait and source",
+      "input": {
+        "quote": "Hello",
+        "source": "Ada",
+        "children": false,
+        "media": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "figure",
+        "className": "Quote",
+        "attrs": {
+          "data-size": "md",
+          "data-cap-inline": "true",
+          "data-media": "true",
+          "data-source": "true"
+        }
+      }
+    },
+    {
+      "name": "large words, no cap",
+      "input": {
+        "quote": "Hello",
+        "size": "lg",
+        "capInline": false,
+        "children": false,
+        "media": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "aside",
+        "className": "Quote",
+        "attrs": {
+          "data-size": "lg",
+          "data-cap-inline": "false",
+          "data-media": "false",
+          "data-source": "false"
+        }
+      }
+    },
+    {
+      "name": "children carry the words",
+      "input": {
+        "source": "Ada",
+        "children": true,
+        "media": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "figure",
+        "className": "Quote",
+        "attrs": {
+          "data-size": "md",
+          "data-cap-inline": "true",
+          "data-media": "false",
+          "data-source": "true"
+        }
+      }
+    },
+    {
+      "name": "extra class",
+      "input": {
+        "quote": "Hello",
+        "class": "extra",
+        "children": false,
+        "media": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "aside",
+        "className": "Quote extra",
+        "attrs": {
+          "data-size": "md",
+          "data-cap-inline": "true",
+          "data-media": "false",
+          "data-source": "false"
+        }
+      }
+    },
+    {
+      "name": "no words: suppressed",
+      "input": {
+        "source": "Ada",
+        "children": false,
+        "media": false
+      },
+      "expect": {
+        "mode": "suppress"
+      }
+    },
+    {
+      "name": "an invalid size",
+      "input": {
+        "quote": "x",
+        "size": "xl",
+        "children": false,
+        "media": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid size \"xl\" — expected sm | md | lg"
+      }
+    },
+    {
+      "name": "an aside forced onto a source",
+      "input": {
+        "element": "aside",
+        "quote": "x",
+        "source": "Ada",
+        "children": false,
+        "media": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "an aside cannot carry a source — leave the element to the content"
+      }
+    },
+    {
+      "name": "an aside forced onto a portrait",
+      "input": {
+        "element": "aside",
+        "quote": "x",
+        "children": false,
+        "media": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "an aside cannot carry a portrait — leave the element to the content"
+      }
+    }
+  ]
+}
