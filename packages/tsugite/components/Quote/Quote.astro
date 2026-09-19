@@ -1,72 +1,59 @@
 ---
-// Quote — attributes words to a source. The recipe (element, gates, ids) lives in
-// lib/quote.ts and is shared by every renderer; this file renders it in Astro.
+// Quote — attributes words to a source. The table is recipes/quote.recipe.ts, read by
+// lib/recipe.ts (ADR-0018); lib/quote.ts fills its holes; this file renders it in Astro.
+// The portrait is a Picture; the echo behind it is the same image at 64px through the
+// host's resolver, blurred by Quote.css.
 import "./Quote.css";
 import DevError from "../DevError/DevError.astro";
+import Picture from "../Picture/Picture.astro";
 import type { ImageMetadata } from "astro";
-import { getImage } from "astro:assets";
-import { resolveMedia, mediaPlanHtml } from "../../lib/media";
-import { astroImageResolver, mediaTables } from "../../lib/media.astro";
-import { resolveQuote } from "../../lib/quote";
+import { quote as recipe } from "../../recipes/quote.recipe";
+import { resolve, type InputOf } from "../../lib/recipe";
+import { quoteDefaults, quoteDerive, quotePlan } from "../../lib/quote";
+import { astroImageResolver } from "../../lib/media.astro";
 
-interface Props {
-  /** the words, as a string; or pass them as children for markup (line breaks, emphasis) */
-  quote?: string;
-  /** who said it; absent makes the quote an <aside> when there is no portrait either */
-  source?: string;
+type Props = InputOf<typeof recipe> & {
   image?: ImageMetadata | null;
   alt?: string;
-  /** sm | md | lg — the size of the words */
-  size?: string;
-  /** root id; the aside is labelled by `${id}-quote` */
-  id?: string;
-  /** is the box held to a reading measure? (ADR-0015) */
-  capInline?: boolean;
-  class?: string;
   [key: string]: unknown;
-}
+};
 
-const { quote, source, image = null, alt, size, id, capInline, class: className, ...rest } = Astro.props;
+const { image = null, alt, ...props } = Astro.props;
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
-const hasChildContent = childHtml.trim().length > 0;
-const hasQuote = hasChildContent || !!quote?.trim();
-
-const q = resolveQuote({ id, size, source, hasMedia: image != null, hasQuote, capInline });
+const q = resolve(recipe, props, {
+  slots: { children: childHtml.trim().length > 0, media: image != null },
+  derive: quoteDerive,
+  defaults: quoteDefaults,
+});
+const plan = quotePlan(q);
 const Tag = q.tag as "figure";
-const cssClass = className && String(className).trim() ? `Quote ${className}` : "Quote";
-
-// The portrait: a square picture through the media pipeline, and a tiny copy of the
-// same image that the CSS blurs behind it (the echo).
-const plan = image ? await resolveMedia({ image, preset: "quote", alt, className: "portrait" }, mediaTables, astroImageResolver) : null;
-const figureHtml = plan?.mode === "render" ? mediaPlanHtml(plan) : "";
-const echo = image ? await getImage({ src: image, width: 64, height: 64, fit: "cover", format: "webp" }) : null;
+const mediaWith = recipe.parts.media.with;
+const echoSrc = image ? await astroImageResolver(image, 64, 64, "webp") : null;
 ---
 
 {
   q.mode === "render" ? (
-    <Tag class={cssClass} {...q.attrs} {...rest}>
+    <Tag class={q.className} {...q.attrs} {...q.rest}>
       <div class="body">
-      <svg class="mark" aria-hidden="true" focusable="false"><use href="#icon-quote"></use></svg>
-      {q.tag === "aside" ? (
-        <p class="quote" id={q.quoteId ?? undefined}>
-          {hasChildContent ? <Fragment set:html={childHtml} /> : quote}
-        </p>
-      ) : (
-        <blockquote class="quote">
-          {hasChildContent ? <Fragment set:html={childHtml} /> : <p>{quote}</p>}
-        </blockquote>
-      )}
-      {image && (
-        <div class="thumbnail">
-          <Fragment set:html={figureHtml} />
-          <img class="echo" src={echo!.src} width="64" height="64" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-        </div>
-      )}
-      {q.hasSource && <figcaption class="source">{source}</figcaption>}
+        <svg class="mark" aria-hidden="true" focusable="false"><use href="#icon-quote"></use></svg>
+        {q.tag === "aside" ? (
+          <p class="quote" id={plan.quoteId ?? undefined}>
+            {q.parts.children ? <Fragment set:html={childHtml} /> : plan.words}
+          </p>
+        ) : (
+          <blockquote class="quote">{q.parts.children ? <Fragment set:html={childHtml} /> : <p>{plan.words}</p>}</blockquote>
+        )}
+        {q.parts.media && (
+          <div class="thumbnail">
+            <Picture image={image} alt={alt ?? ""} {...mediaWith} />
+            <img class="echo" src={echoSrc!} width="64" height="64" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+          </div>
+        )}
+        {q.parts.source && <figcaption class="source">{plan.source}</figcaption>}
       </div>
     </Tag>
   ) : q.mode === "error" ? (
-    <DevError name="Quote" message={q.errorMessage} />
+    <DevError name={recipe.name} message={q.errorMessage} />
   ) : null
 }
