@@ -5,21 +5,25 @@
 // (Size tokens live in SCSS constants; live rendering is the truth here.)
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/components/Heading/Heading.astro";
+import Text from "tsugite/components/Text/Text.astro";
 import Prose from "tsugite/components/Prose/Prose.astro";
 
-const typeRamp = [
-  ["--fontSize-display-1", "Display 1"],
-  ["--fontSize-display-2", "Display 2"],
-  ["--fontSize-display-3", "Display 3"],
-  ["--fontSize-h1", "Heading 1"],
-  ["--fontSize-h2", "Heading 2"],
-  ["--fontSize-h3", "Heading 3"],
-  ["--fontSize-h4", "Heading 4"],
-  ["--fontSize-h5", "Heading 5"],
-  ["--fontSize-h6", "Heading 6"],
-  ["--fontSize-body-large", "Body large"],
-  ["--fontSize-body", "Body"],
-  ["--fontSize-body-small", "Body small"],
+// Each specimen is rendered THROUGH THE FAMILY, in its own voice — display in the display
+// face, heading in the heading face, body in the body face — as an inline run on a span,
+// so what steps with the tier is the real bundle, not one face at twelve sizes.
+const typeRamp: Array<{ token: string; label: string; voice: "display" | "heading" | "body"; size: string }> = [
+  { token: "--fontSize-display-1", label: "Display 1", voice: "display", size: "1" },
+  { token: "--fontSize-display-2", label: "Display 2", voice: "display", size: "2" },
+  { token: "--fontSize-display-3", label: "Display 3", voice: "display", size: "3" },
+  { token: "--fontSize-h1", label: "Heading 1", voice: "heading", size: "1" },
+  { token: "--fontSize-h2", label: "Heading 2", voice: "heading", size: "2" },
+  { token: "--fontSize-h3", label: "Heading 3", voice: "heading", size: "3" },
+  { token: "--fontSize-h4", label: "Heading 4", voice: "heading", size: "4" },
+  { token: "--fontSize-h5", label: "Heading 5", voice: "heading", size: "5" },
+  { token: "--fontSize-h6", label: "Heading 6", voice: "heading", size: "6" },
+  { token: "--fontSize-body-large", label: "Body large", voice: "body", size: "lg" },
+  { token: "--fontSize-body", label: "Body", voice: "body", size: "md" },
+  { token: "--fontSize-body-small", label: "Body small", voice: "body", size: "sm" },
 ];
 
 const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl", "--size-2xl"];
@@ -40,10 +44,16 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
 
       <Heading element="h2" size="3" text="Type ramp" />
       <ul class="ramp">
-        {typeRamp.map(([token, label]) => (
+        {typeRamp.map(({ token, label, voice, size }) => (
           <li class="specimen">
             <code class="specimen-token">{token}</code>
-            <span class="specimen-text" style={`font-size: var(${token})`}>{label}</span>
+            <span class="specimen-text">
+              {voice === "body" ? (
+                <Text element="span" variant="body" size={size} text={label} />
+              ) : (
+                <Heading element="span" variant={voice} size={size} text={label} />
+              )}
+            </span>
             <output class="specimen-value" data-measure={token}></output>
           </li>
         ))}
@@ -132,11 +142,9 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
   }
 
   & .specimen-token { font-size: var(--fontSize-label-small); color: var(--color-text-secondary); }
+  /* the specimen's face, weight and leading are the component's; the row only keeps it on one line */
   & .specimen-text {
-    font-family: var(--fontFamily-heading);
-    font-weight: var(--fontWeight-heading);
     color: var(--color-text-primary);
-    line-height: var(--lineHeight-heading);
     white-space: nowrap;
   }
   & .specimen-value { font-family: var(--fontFamily-code); font-size: var(--fontSize-label-small); color: var(--color-text-secondary); }
