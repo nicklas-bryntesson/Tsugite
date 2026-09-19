@@ -1,17 +1,33 @@
 // THE TYPOGRAPHY FAMILY CONTRACT — the wiring, as data.
 //
-// Components are born from the technical axis (element farms + input
-// contracts); voices live in the token grammar. This module is the one
-// place the combinations are declared, and tests/typographyFamily.test.ts
-// enforces the door law: for any (voice × element × input shape) there is
-// exactly ONE component to reach for. Same move as the theme voiceMatrix
-// (ADR-0006 §6): a forbidden combination has no row and therefore does
-// not exist.
+// Four axes that look like one, kept apart on purpose:
+//   1. VOICE            the look bundle: heading, display, body, label, preamble
+//                       (data-variant, each with its own size stops). Five siblings;
+//                       none is a kind of another. Display is not "a heading of type
+//                       display": the two happen to share a door.
+//   2. ELEMENT FARM     the markup shape: h1–h6, p, span, div, legend, figcaption,
+//                       label. Semantics pick the element; design picks the voice; the
+//                       two never force each other. A legend may be a heading, a
+//                       figcaption a label — nested fieldsets in a wizard need every
+//                       trick to bind things semantically that look alike.
+//   3. INPUT CONTRACT   authored (text prop or child markup, written in code) or
+//                       plaintext (a plain multiline string the way a CMS field
+//                       delivers it: line breaks respected, sub-markup unrepresentable)
+//   4. EMPHASIS LAW     semantic (strong bold, em italic) · flattened (a loud voice
+//                       levels inline emphasis, ADR-0012 law b) · none (plaintext)
 //
-// Input shapes:
-//   authored   — text prop or child markup, written in code
-//   plaintext  — a plain multiline string (the textarea contract):
-//                line breaks respected, sub-markup unrepresentable
+// Components are born from axes 2–4, never from voice; voices are then assigned to
+// doors. This module is the one place the combinations are declared, and
+// tests/typographyFamily.test.ts enforces the door law: for any (voice × element ×
+// input shape) there is exactly ONE component to reach for. The recipe tables
+// (recipes/heading, text, textblock) are held to these rows cell for cell.
+//
+// The rows are the UNIVERSE (ADR-0018 §5): a (voice, element) cell is left out only
+// when there is no CSS answer for it — never as taste. A project closes cells in its
+// own configuration. One choice recorded here rather than pretended to be a law:
+// preamble speaks through the plaintext door only. An ingress with an <em> in it
+// cannot exist today. When a real case arrives (an RTE-fed standfirst), the change is
+// a row under Text plus a decision on its emphasis law, not a rebuild.
 
 /** Law (c), ADR-0012 §3: run mode follows element shape — a span is an inline run
  *  (flows on the line, no trim), every other element a block run. */
@@ -26,7 +42,10 @@ export const VOICE_SIZES: Record<string, readonly string[]> = {
 };
 
 const HEADING_SHAPED = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
+/** every element a loud voice may speak through */
 const HEADING_FARM = [...HEADING_SHAPED, "span", "div", "p", "legend", "figcaption"] as const;
+/** every element a quiet voice may speak through: text shapes and the form/figure captions */
+const TEXT_FARM = ["p", "span", "div", "legend", "figcaption", "label"] as const;
 
 // The run engine laws (enforced in the components' shared engine CSS):
 //   (a) child content passes through the engine container — no path
@@ -57,17 +76,17 @@ export const FAMILY: Record<string, FamilyMember> = {
     voices: {
       heading: HEADING_FARM,
       display: HEADING_FARM,
-      // The quiet voice on heading-shaped elements only — a body-voiced
-      // p/span/div has ONE door, and it is Text.
-      body: [...HEADING_SHAPED, "legend", "figcaption"],
+      // The quiet voice on heading-shaped elements only — a body-voiced anything
+      // else has ONE door, and it is Text.
+      body: HEADING_SHAPED,
     },
   },
   Text: {
     input: "authored",
     emphasis: "semantic",
     voices: {
-      body: ["p", "span", "div"],
-      label: ["p", "span", "div"],
+      body: TEXT_FARM,
+      label: TEXT_FARM,
     },
   },
   TextBlock: {

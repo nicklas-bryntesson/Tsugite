@@ -1,38 +1,29 @@
 ---
 // TextBlock — the textarea contract: a PLAIN MULTILINE STRING the way a CMS field
-// delivers it, never markup. Voices: preamble (the standfirst, default) and body.
-// The recipe lives in lib/typography.ts; this file renders it in Astro.
+// delivers it, never markup. Voices: preamble (the standfirst, default) and body. The
+// table is recipes/textblock.recipe.ts, read by lib/recipe.ts (ADR-0018); lib/textblock.ts
+// fills its holes; this file renders it in Astro.
 import "./TextBlock.css";
 import DevError from "../DevError/DevError.astro";
-import { resolveTypography } from "../../lib/typography";
+import { textblock } from "../../recipes/textblock.recipe";
+import { resolve, type InputOf } from "../../lib/recipe";
+import { textBlockDerive, textBlockPlan } from "../../lib/textblock";
 
-interface Props {
-  text?: string;
-  element?: string;
-  variant?: string;
-  size?: string;
-  align?: string;
-  wrap?: string;
-  class?: string;
-  [key: string]: unknown;
-}
+type Props = InputOf<typeof textblock> & { [key: string]: unknown };
 
-const { text, element, variant, size, align, wrap, class: className, ...rest } = Astro.props;
-
+// Child content is reported, never rendered: the table refuses it.
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
-const hasChildContent = childHtml.trim().length > 0;
+const t = resolve(textblock, Astro.props, { slots: { children: childHtml.trim().length > 0 }, derive: textBlockDerive });
+const plan = textBlockPlan(t);
 
-const t = resolveTypography("TextBlock", { text, element, variant, size, align, wrap, class: className, hasChildContent });
-
-const inner = t.mode === "render" ? `<span class="${t.container.className}">${t.innerHtml}</span>` : "";
-
+const inner = t.mode === "render" ? `<span class="${plan.containerClass}">${plan.innerHtml}</span>` : "";
 const Tag = t.tag as "p";
 ---
 
 {
   t.mode === "render" ? (
-    <Tag class={t.className} {...t.attrs} {...rest} set:html={inner} />
+    <Tag class={t.className} {...t.attrs} {...t.rest} set:html={inner} />
   ) : t.mode === "error" ? (
-    <DevError name="TextBlock" message={t.errorMessage} />
+    <DevError name={textblock.name} message={t.errorMessage} />
   ) : null
 }
