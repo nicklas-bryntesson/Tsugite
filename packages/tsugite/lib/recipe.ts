@@ -56,10 +56,11 @@ export type Part = (
   readonly with?: Readonly<Record<string, unknown>>;
 };
 
-/** A value the CSS reads that comes from content or shape, not props: a boolean flag
- *  (icon-only) or a closed string (a run is inline or block by its element). The recipe
- *  names it and what it depends on; the renderer supplies the formula through
- *  `ctx.derive` (the hole). */
+/** A value the CSS or the accessibility tree reads that comes from content or shape, not
+ *  props: a boolean flag (icon-only), a closed string (a run is inline or block by its
+ *  element), or an attribute that is present or not (aria-labelledby on an aside only —
+ *  the formula returns null to write nothing). The recipe names it and what it depends
+ *  on; the renderer supplies the formula through `ctx.derive` (the hole). */
 export interface Derived {
   readonly attr: string;
   readonly from: readonly string[];
@@ -82,8 +83,10 @@ export interface Recipe {
   readonly refuses?: readonly string[];
   /** the root class the CSS gates on */
   readonly class: string;
-  /** the permitted tags; an invalid one falls back to the default (ADR-0019), unless required */
-  readonly element: { readonly values: readonly string[]; readonly default?: string; readonly required?: true };
+  /** the permitted tags; an invalid one falls back to the default (ADR-0019), unless required.
+   *  The default may be a hole when the element follows the content (Quote: words alone are
+   *  an aside, words with a source or a portrait a figure); the formula sees the parts. */
+  readonly element: { readonly values: readonly string[]; readonly default?: string | { readonly hole: true }; readonly required?: true };
   /** open-valued attributes per element; "*" for every element */
   readonly host?: Readonly<Record<string, Readonly<Record<string, HostAttr>>>>;
   readonly parts?: Readonly<Record<string, Part>>;
@@ -128,12 +131,13 @@ export interface Context {
   /** per slot part: whether the renderer has content for it */
   slots?: Readonly<Record<string, boolean>>;
   /** the handwritten formulas for the recipe's derived values, by name */
-  derive?: Readonly<Record<string, (view: View) => boolean | string>>;
+  derive?: Readonly<Record<string, (view: View) => boolean | string | null>>;
   /** the handwritten formulas for axis defaults declared as holes, by axis name */
   defaults?: Readonly<Record<string, (view: View) => string>>;
 }
 
-/** What a derived formula and an absent cell may look at. */
+/** What a derived formula, a default hole and an absent cell may look at. For an element
+ *  hole `tag` is still empty. */
 export interface View {
   readonly tag: string;
   readonly axes: Readonly<Record<string, string | boolean>>;
@@ -176,6 +180,15 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
     }
   };
 
+  // ── parts, first: the element may follow them ──────────────────────────────
+  const parts: Record<string, string | boolean | null> = {};
+  for (const [name, part] of Object.entries(recipe.parts ?? {})) {
+    if (part.kind === "slot") parts[name] = ctx.slots?.[name] ?? ctx.hasContent ?? false;
+    else if (part.kind === "name") parts[name] = stringOf(props[name]);
+    // a text part keeps its spacing: " about Widgets" begins with the space that separates it
+    else parts[name] = typeof props[name] === "string" && (props[name] as string).trim() ? (props[name] as string) : (part.default ?? null);
+  }
+
   // ── element ────────────────────────────────────────────────────────────────
   const elementProp = typeof props.element === "string" ? props.element.toLowerCase() : null;
   let tag: string;
@@ -183,6 +196,10 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
   else if (recipe.element.required) {
     fail(`element is required — expected ${recipe.element.values.join(" | ")}`);
     tag = recipe.element.values[0];
+  } else if (typeof recipe.element.default === "object") {
+    const formula = ctx.defaults?.element;
+    if (!formula) throw new Error(`${recipe.name}: no formula for the element — the renderer must supply ctx.defaults.element`);
+    tag = formula({ tag: "", axes: {}, parts, host: {} });
   } else tag = recipe.element.default ?? recipe.element.values[0];
 
   // ── what the recipe knows, so the rest can be separated ────────────────────
@@ -198,7 +215,6 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
 
   const attrs: Record<string, string | true> = {};
   const host: Record<string, string | boolean | null> = {};
-  const parts: Record<string, string | boolean | null> = {};
   const axes: Record<string, string | boolean> = {};
   const maps: Record<string, unknown> = {};
 
@@ -227,14 +243,8 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
   }
   for (const name of hostElsewhere) if (!(name in hostAll) && props[name] !== undefined) fail(`${name} is not an attribute of <${tag}>`);
 
-  // ── parts; a name part writes its attribute here, before the axes ──────────
-  for (const [name, part] of Object.entries(recipe.parts ?? {})) {
-    if (part.kind === "slot") parts[name] = ctx.slots?.[name] ?? ctx.hasContent ?? false;
-    else if (part.kind === "name") parts[name] = stringOf(props[name]);
-    // a text part keeps its spacing: " about Widgets" begins with the space that separates it
-    else parts[name] = typeof props[name] === "string" && (props[name] as string).trim() ? (props[name] as string) : (part.default ?? null);
-    if (part.kind === "name" && typeof parts[name] === "string") attrs[part.attr] = parts[name] as string;
-  }
+  // ── a name part writes its attribute here, after the host attributes, before the axes ──
+  for (const [name, part] of Object.entries(recipe.parts ?? {})) if (part.kind === "name" && typeof parts[name] === "string") attrs[part.attr] = parts[name] as string;
 
   // ── axes, in order; a gated axis is written only when its gate holds ───────
   const holds = (when: When | undefined) => !when || ("element" in when ? when.element === tag : !!parts[when.part]);
@@ -275,12 +285,14 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
 
   // ── derived flags: named in the table, computed by the hole ────────────────
   const view: View = { tag, axes, parts, host };
-  const derived: Record<string, boolean | string> = {};
+  const derived: Record<string, boolean | string | null> = {};
   for (const [name, spec] of Object.entries(recipe.derived ?? {})) {
     const formula = ctx.derive?.[name];
     if (!formula) throw new Error(`${recipe.name}: no formula for derived value "${name}" — the renderer must supply ctx.derive.${name}`);
-    derived[name] = formula(view);
-    attrs[spec.attr] = typeof derived[name] === "string" ? (derived[name] as string) : derived[name] ? "true" : "false";
+    const value = formula(view);
+    derived[name] = value;
+    if (value === null) continue; // present or not: nothing to write
+    attrs[spec.attr] = typeof value === "string" ? value : value ? "true" : "false";
   }
 
   // ── content: nothing to host, nothing to announce → suppress ───────────────
