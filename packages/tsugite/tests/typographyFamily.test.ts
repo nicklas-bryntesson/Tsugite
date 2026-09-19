@@ -4,6 +4,7 @@
 import { describe, it, expect } from "vitest";
 import { FAMILY, VOICE_SIZES } from "../lib/typographyFamily.ts";
 import { heading } from "../recipes/heading.recipe";
+import { text } from "../recipes/text.recipe";
 
 describe("the typography family contract", () => {
   it("every voice a component speaks exists in the size grammar", () => {
@@ -75,6 +76,26 @@ describe("the typography family contract", () => {
         .filter((c) => "variant" in c && "element" in c)
         .map((c) => `${c.variant}/${c.element}`);
       expect(declared.sort()).toEqual(missing.sort());
+    });
+  });
+
+  describe("the Text table agrees with the matrix", () => {
+    const member = FAMILY.Text;
+    it("speaks exactly the matrix's voices", () => {
+      expect([...text.axes.variant.values]).toEqual(Object.keys(member.voices));
+    });
+    it("offers each voice exactly its sizes", () => {
+      for (const voice of Object.keys(member.voices)) {
+        expect([...text.axes.size.valuesBy.values[voice as keyof typeof text.axes.size.valuesBy.values]], voice).toEqual([...VOICE_SIZES[voice]]);
+      }
+    });
+    it("its element farm is the union of the voices' farms, and no cell is absent", () => {
+      const farm = [...new Set(Object.values(member.voices).flat())];
+      expect([...text.element.values]).toEqual(farm);
+      const missing = Object.entries(member.voices).flatMap(([voice, elements]) => farm.filter((el) => !elements.includes(el)).map((el) => `${voice}/${el}`));
+      expect(missing).toEqual([]);
+      const declared = text.absent.map((a) => a.cells as Record<string, unknown>).filter((c) => "variant" in c && "element" in c);
+      expect(declared).toEqual([]);
     });
   });
 });
