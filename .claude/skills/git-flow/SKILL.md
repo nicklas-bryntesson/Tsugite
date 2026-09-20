@@ -33,9 +33,19 @@ directly on `main`, never force-push, never rewrite pushed history
   seven families — the theme-swap stress test"), body only when the
   subject cannot carry the reasoning alone.
 - One argument step per commit — split unrelated movements.
+- **No people in the record.** Commit messages and PR bodies describe
+  the change and its argument, never who asked for it or who did it.
+  Not "Nicklas asked", not "Nicklas noticed", not "I rendered", not
+  "I measured". The person is not the point; the reasoning is. Write
+  "the tiers ramp set one face on every size" rather than "Nicklas
+  noticed the tiers page looked odd"; "every docs route was rendered in
+  Chromium" rather than "I rendered every page". ADRs may quote a
+  question that framed a decision, but attribute it to the discussion,
+  not to a name. Authorship is what the commit metadata is for.
 
 ## Pull request
 
 - Open with `gh pr create` against `main`; the body summarizes the
-  argument of the branch, not the file list.
+  argument of the branch, not the file list — and, as in commits, names
+  no one and says nothing in the first person.
 - Merge happens on GitHub, never locally into `main`.
