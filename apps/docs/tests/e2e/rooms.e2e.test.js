@@ -26,8 +26,9 @@ test('a docs page mounts its section with metadata chips', async ({ page }) => {
   await page.goto('/docs/notice')
   await expect(page.getByRole('heading', { level: 1, name: 'Notice' })).toBeVisible()
   await expect(page.locator('.chip[data-kind="pillar"]')).toHaveText('Primitives')
-  // the section is the same component the bench mounts
-  await expect(page.locator('.doc-demo .KitchenSink-section#Notice, .doc-demo [data-component="Notice"]').first()).toBeVisible()
+  // an explicit page: its own examples first, and the fixture section mounted as the bench
+  await expect(page.locator('.Example').first()).toBeVisible()
+  await expect(page.locator('.doc-bench .KitchenSink-section#Notice')).toBeVisible()
 })
 
 test('a fields page carries the family badge and attaches its component', async ({ page }) => {
