@@ -89,25 +89,25 @@ Three recipes (container, layout, breakout) on the grid's own ladder (base · mo
 
 `--grid-container-offset`, `--grid-container-maxWidth`, `--grid-container-columns`, `--grid-layout-columns-count-base`, `--grid-layout-columns-count-mobile`, `--grid-layout-columns-count-tablet`, `--grid-layout-columns-count-desktop`, `--grid-layout-gap-base`, `--grid-layout-gap-mobile`, `--grid-layout-gap-tablet`, `--grid-layout-gap-desktop`, `--grid-layout-columns-base`, `--grid-layout-columns-mobile`, `--grid-layout-columns-tablet`, `--grid-layout-columns-desktop`, `--grid-breakout-offset`, `--grid-breakout-maxWidth`, `--grid-breakout-columns-count-base`, `--grid-breakout-columns-count-mobile`, `--grid-breakout-columns-count-tablet`, `--grid-breakout-columns-count-desktop`, `--grid-breakout-gap-base`, `--grid-breakout-gap-mobile`, `--grid-breakout-gap-tablet`, `--grid-breakout-gap-desktop`, `--grid-breakout-column-autoSize-mobile`, `--grid-breakout-content-autoPadding-mobile`, `--grid-breakout-column-autoSize-tablet`, `--grid-breakout-content-autoPadding-tablet`, `--grid-breakout-column-autoSize-desktop`, `--grid-breakout-content-autoPadding-desktop`, `--grid-breakout-columns-base`, `--grid-breakout-columns-mobile`, `--grid-breakout-columns-tablet`, `--grid-breakout-columns-desktop`, `--grid-layout-gap`, `--grid-layout-columns`, `--grid-breakout-gap`, `--grid-breakout-columns`.
 
-### Typography roles (67)
+### Typography roles (79)
 
-Voices: `heading`, `display`, `body`, `code`, `label`, `preamble`. Every voice publishes one token per
+Voices: `heading`, `display`, `body`, `code`, `label`, `button`, `preamble`. Every voice publishes one token per
 bundle property; a component reads the voice's bundle, never a family or weight
 constant. Size stops are tier ramps (ADR-0001) multiplied by `--TYPE-SCALE`.
 
 | Bundle property | Per voice |
 |---|---|
-| `--fontFamily-<voice>` | `heading`, `display`, `body`, `code`, `label`, `preamble` |
-| `--fontWeight-<voice>` | `heading`, `display`, `body`, `body-bold`, `code`, `label`, `preamble` |
-| `--lineHeight-<voice>` | `heading`, `display`, `body`, `label`, `preamble` |
-| `--letterSpacing-<voice>` | `heading`, `display`, `body`, `label`, `preamble` |
-| `--fontFeatureSettings-<voice>` | `heading`, `display`, `body`, `label`, `preamble` |
-| `--baseline-offset-<voice>` | `heading`, `display`, `body`, `label`, `preamble` |
-| `--fontEmBox-<voice>` | `heading`, `display`, `body`, `label`, `preamble` |
-| `--fontCapGap-<voice>` | `heading`, `display`, `body`, `label`, `preamble` |
-| `--fontDescent-<voice>` | `heading`, `display`, `body`, `label`, `preamble` |
+| `--fontFamily-<voice>` | `heading`, `display`, `body`, `code`, `label`, `button`, `preamble` |
+| `--fontWeight-<voice>` | `heading`, `display`, `body`, `body-bold`, `code`, `label`, `button`, `preamble` |
+| `--lineHeight-<voice>` | `heading`, `display`, `body`, `label`, `button`, `preamble` |
+| `--letterSpacing-<voice>` | `heading`, `display`, `body`, `label`, `button`, `preamble` |
+| `--fontFeatureSettings-<voice>` | `heading`, `display`, `body`, `label`, `button`, `preamble` |
+| `--baseline-offset-<voice>` | `heading`, `display`, `body`, `label`, `button`, `preamble` |
+| `--fontEmBox-<voice>` | `heading`, `display`, `body`, `label`, `button`, `preamble` |
+| `--fontCapGap-<voice>` | `heading`, `display`, `body`, `label`, `button`, `preamble` |
+| `--fontDescent-<voice>` | `heading`, `display`, `body`, `label`, `button`, `preamble` |
 
-Size stops: `--fontSize-h1`, `--fontSize-h2`, `--fontSize-h3`, `--fontSize-h4`, `--fontSize-h5`, `--fontSize-h6`, `--fontSize-display-1`, `--fontSize-display-2`, `--fontSize-display-3`, `--fontSize-body-small`, `--fontSize-body`, `--fontSize-body-large`, `--fontSize-code`, `--fontSize-label-small`, `--fontSize-label`, `--fontSize-label-large`, `--fontSize-preamble-small`, `--fontSize-preamble`, `--fontSize-preamble-large`.
+Size stops: `--fontSize-h1`, `--fontSize-h2`, `--fontSize-h3`, `--fontSize-h4`, `--fontSize-h5`, `--fontSize-h6`, `--fontSize-display-1`, `--fontSize-display-2`, `--fontSize-display-3`, `--fontSize-body-small`, `--fontSize-body`, `--fontSize-body-large`, `--fontSize-code`, `--fontSize-label-small`, `--fontSize-label`, `--fontSize-label-large`, `--fontSize-button-small`, `--fontSize-button`, `--fontSize-button-large`, `--fontSize-preamble-small`, `--fontSize-preamble`, `--fontSize-preamble-large`.
 
 ## 4. The `--ui-*` seam (21) — pointers into the semantic layer
 
@@ -138,7 +138,7 @@ appearance-free pointers. Ported components read it; it never mentions a mode.
 | `--ui-font-weight-strong` | `var(--fontWeight-body-bold)` |
 | `--SITE--PADDING` | `var(--site-offset)` |
 
-## 5. RAW constants (238) — never in a component
+## 5. RAW constants (250) — never in a component
 
 UPPERCASE names are the palette, the type stops per tier, the spacing and site
 constants and the scale knobs. Only the semantic factories may reference them
@@ -152,7 +152,7 @@ constants and the scale knobs. Only the semantic factories may reference them
 - `--INTER`, `--INTER-400`
 - `--MONOSPACE`, `--MONOSPACE-400`
 - `--NOTOS-SERIF-400`, `--NOTOS-SERIF-700`
-- `--FONTSIZE-<STOP>-<TIER>` (76), tiers `FLOOR`, `MOBILE`, `DESKTOP`, `WIDE`
+- `--FONTSIZE-<STOP>-<TIER>` (88), tiers `FLOOR`, `MOBILE`, `DESKTOP`, `WIDE`
 - `--SPACE-SCALE`
 - `--SIZE-<STOP>-<TIER>` (72), tiers `FLOOR`, `MOBILE`, `DESKTOP`, `WIDE`, `PX`
 - `--DIR-LTR`, `--DIR-RTL`

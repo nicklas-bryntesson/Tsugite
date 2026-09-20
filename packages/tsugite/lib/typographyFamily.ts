@@ -1,10 +1,11 @@
 // THE TYPOGRAPHY FAMILY CONTRACT — the wiring, as data.
 //
 // Four axes that look like one, kept apart on purpose:
-//   1. VOICE            the look bundle: heading, display, body, label, preamble
-//                       (data-variant, each with its own size stops). Five siblings;
+//   1. VOICE            the look bundle: heading, display, body, label, button, preamble
+//                       (data-variant, each with its own size stops). Six siblings;
 //                       none is a kind of another. Display is not "a heading of type
-//                       display": the two happen to share a door.
+//                       display", button is not "a kind of label": each pair happens
+//                       to share a door (Heading; Caption).
 //   2. ELEMENT FARM     the markup shape: h1–h6, p, span, div, legend, figcaption,
 //                       label. Semantics pick the element; design picks the voice; the
 //                       two never force each other. A legend may be a heading, a
@@ -14,7 +15,11 @@
 //                       plaintext (a plain multiline string the way a CMS field
 //                       delivers it: line breaks respected, sub-markup unrepresentable)
 //   4. EMPHASIS LAW     semantic (strong bold, em italic) · flattened (a loud voice
-//                       levels inline emphasis, ADR-0012 law b) · none (plaintext)
+//                       levels inline emphasis, ADR-0012 law b) · none (plaintext).
+//                       Semantic is a door, not a promise of bold: strong asks for the
+//                       voice's bold weight with one fallback to the voice's own, so a
+//                       voice a theme gives one weight (label, button here) flattens by
+//                       value, not by law. A theme that adds a bold weight opens the door.
 //
 // Components are born from axes 2–4, never from voice; voices are then assigned to
 // doors. This module is the one place the combinations are declared, and
@@ -38,14 +43,19 @@ export const VOICE_SIZES: Record<string, readonly string[]> = {
   display: ["1", "2", "3"],
   body: ["sm", "md", "lg"],
   label: ["sm", "md", "lg"],
+  button: ["sm", "md", "lg"],
   preamble: ["sm", "md", "lg"],
 };
 
 const HEADING_SHAPED = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
 /** every element a loud voice may speak through */
 const HEADING_FARM = [...HEADING_SHAPED, "span", "div", "p", "legend", "figcaption"] as const;
-/** every element a quiet voice may speak through: text shapes and the form/figure captions */
+/** every element the body voice may speak through outside the heading shapes */
 const TEXT_FARM = ["p", "span", "div", "legend", "figcaption", "label"] as const;
+/** every element a UI voice may speak through: a legend that must be a heading, a th, a
+ *  form label, a figcaption — the whole farm, because forms need every trick to bind
+ *  things semantically that look alike */
+const CAPTION_FARM = [...HEADING_SHAPED, "p", "span", "div", "legend", "figcaption", "label"] as const;
 
 // The run engine laws (enforced in the components' shared engine CSS):
 //   (a) child content passes through the engine container — no path
@@ -86,7 +96,18 @@ export const FAMILY: Record<string, FamilyMember> = {
     emphasis: "semantic",
     voices: {
       body: TEXT_FARM,
-      label: TEXT_FARM,
+    },
+  },
+  // The UI voices: what marks the interface up — labels, legends, figcaptions, table
+  // headers (label) and the pressable thing (button, which Button.css reads as tokens
+  // rather than rendering through this door). One door, two sibling voices, like
+  // Heading with heading and display.
+  Caption: {
+    input: "authored",
+    emphasis: "semantic",
+    voices: {
+      label: CAPTION_FARM,
+      button: CAPTION_FARM,
     },
   },
   TextBlock: {
