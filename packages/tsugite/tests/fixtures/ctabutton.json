@@ -1,0 +1,264 @@
+{
+  "$comment": "CtaButton — the contract as data. `element` picks the front door (a → CtaLinkButton, button → CtaActionButton); `text` is whether the renderer has label content. Attribute order: host attributes, the icon name, the axes in table order. The variant list is a project's to extend; gradient is the house's first.",
+  "component": "CtaButton",
+  "cases": [
+    {
+      "name": "link defaults: gradient, md, shadow and reflection on",
+      "input": {
+        "element": "a",
+        "href": "/signup",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "CtaButton",
+        "attrs": {
+          "href": "/signup",
+          "data-variant": "gradient",
+          "data-size": "md",
+          "data-shadow": "true",
+          "data-reflection": "true"
+        }
+      }
+    },
+    {
+      "name": "jumbo link with an icon",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "size": "jumbo",
+        "icon": "icon-info",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "CtaButton",
+        "attrs": {
+          "href": "/x",
+          "data-icon": "icon-info",
+          "data-variant": "gradient",
+          "data-size": "jumbo",
+          "data-shadow": "true",
+          "data-reflection": "true",
+          "data-icon-position": "right"
+        }
+      }
+    },
+    {
+      "name": "icon left",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "icon": "icon-info",
+        "iconPosition": "left",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "CtaButton",
+        "attrs": {
+          "href": "/x",
+          "data-icon": "icon-info",
+          "data-variant": "gradient",
+          "data-size": "md",
+          "data-shadow": "true",
+          "data-reflection": "true",
+          "data-icon-position": "left"
+        }
+      }
+    },
+    {
+      "name": "no shadow, no reflection",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "shadow": false,
+        "reflection": false,
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "CtaButton",
+        "attrs": {
+          "href": "/x",
+          "data-variant": "gradient",
+          "data-size": "md",
+          "data-shadow": "false",
+          "data-reflection": "false"
+        }
+      }
+    },
+    {
+      "name": "new tab implies rel",
+      "input": {
+        "element": "a",
+        "href": "https://x.se",
+        "target": "_blank",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "CtaButton",
+        "attrs": {
+          "href": "https://x.se",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "data-variant": "gradient",
+          "data-size": "md",
+          "data-shadow": "true",
+          "data-reflection": "true"
+        }
+      }
+    },
+    {
+      "name": "extra class",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "class": "extra",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "CtaButton extra",
+        "attrs": {
+          "href": "/x",
+          "data-variant": "gradient",
+          "data-size": "md",
+          "data-shadow": "true",
+          "data-reflection": "true"
+        }
+      }
+    },
+    {
+      "name": "action defaults",
+      "input": {
+        "element": "button",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "CtaButton",
+        "attrs": {
+          "type": "button",
+          "data-variant": "gradient",
+          "data-size": "md",
+          "data-shadow": "true",
+          "data-reflection": "true"
+        }
+      }
+    },
+    {
+      "name": "action submit, lg, disabled",
+      "input": {
+        "element": "button",
+        "type": "submit",
+        "size": "lg",
+        "disabled": true,
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "CtaButton",
+        "attrs": {
+          "type": "submit",
+          "disabled": true,
+          "data-variant": "gradient",
+          "data-size": "lg",
+          "data-shadow": "true",
+          "data-reflection": "true"
+        }
+      }
+    },
+    {
+      "name": "aria-label alone is enough to render",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "aria-label": "Start",
+        "text": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "CtaButton",
+        "attrs": {
+          "href": "/x",
+          "aria-label": "Start",
+          "data-variant": "gradient",
+          "data-size": "md",
+          "data-shadow": "true",
+          "data-reflection": "true"
+        }
+      }
+    },
+    {
+      "name": "nothing to press, nothing to announce: suppressed",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "text": false
+      },
+      "expect": {
+        "mode": "suppress"
+      }
+    },
+    {
+      "name": "an unknown variant — the list is a project's to extend, in the table",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "variant": "glow",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid variant \"glow\" — expected gradient"
+      }
+    },
+    {
+      "name": "an invalid size",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "size": "xl",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid size \"xl\" — expected md | lg | jumbo"
+      }
+    },
+    {
+      "name": "href is not an attribute of an action",
+      "input": {
+        "element": "button",
+        "href": "/x",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "href is not an attribute of <button>"
+      }
+    },
+    {
+      "name": "the element is required",
+      "input": {
+        "href": "/x",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "element is required — expected a | button"
+      }
+    }
+  ]
+}
