@@ -172,6 +172,42 @@
   initial-value: rgb(237, 231, 223);
 }
 
+@property --color-cta-gradient-1 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(78, 131, 219);
+}
+
+@property --color-cta-gradient-2 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(58, 163, 175);
+}
+
+@property --color-cta-gradient-3 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(230, 174, 120);
+}
+
+@property --color-cta-gradient-4 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(250, 210, 123);
+}
+
+@property --color-cta-ink {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(255, 255, 255);
+}
+
+@property --color-cta-reflection {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.25);
+}
+
 
 
 /* User preference pinned (data-appearance from ThemeSwitch) × OS contrast */
@@ -206,6 +242,12 @@
     --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
     --color-border-default: var(--COLOR-SUMI-30);
     --color-border-subtle: var(--COLOR-SUMI-20);
+    --color-cta-gradient-1: var(--COLOR-AI-50);
+    --color-cta-gradient-2: var(--COLOR-YU-50);
+    --color-cta-gradient-3: var(--COLOR-HINOKI-40);
+    --color-cta-gradient-4: var(--COLOR-KOHAKU-30);
+    --color-cta-ink: var(--COLOR-SUMI-00);
+    --color-cta-reflection: rgba(255, 255, 255, 0.25);
   }
 }
 
@@ -239,6 +281,12 @@
     --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
     --color-border-default: var(--COLOR-SUMI-95);
     --color-border-subtle: var(--COLOR-SUMI-95);
+    --color-cta-gradient-1: var(--COLOR-AI-80);
+    --color-cta-gradient-2: var(--COLOR-AI-80);
+    --color-cta-gradient-3: var(--COLOR-AI-80);
+    --color-cta-gradient-4: var(--COLOR-AI-80);
+    --color-cta-ink: var(--COLOR-SUMI-00);
+    --color-cta-reflection: transparent;
   }
 }
 
@@ -272,6 +320,12 @@
     --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
     --color-border-default: var(--COLOR-SUMI-60);
     --color-border-subtle: var(--COLOR-SUMI-70);
+    --color-cta-gradient-1: var(--COLOR-AI-30);
+    --color-cta-gradient-2: var(--COLOR-YU-25);
+    --color-cta-gradient-3: var(--COLOR-HINOKI-20);
+    --color-cta-gradient-4: var(--COLOR-KOHAKU-30);
+    --color-cta-ink: var(--COLOR-SUMI-95);
+    --color-cta-reflection: rgba(255, 255, 255, 0.25);
   }
 }
 
@@ -305,6 +359,12 @@
     --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
     --color-border-default: var(--COLOR-SUMI-00);
     --color-border-subtle: var(--COLOR-SUMI-00);
+    --color-cta-gradient-1: var(--COLOR-AI-10);
+    --color-cta-gradient-2: var(--COLOR-AI-10);
+    --color-cta-gradient-3: var(--COLOR-AI-10);
+    --color-cta-gradient-4: var(--COLOR-AI-10);
+    --color-cta-ink: var(--COLOR-SUMI-95);
+    --color-cta-reflection: transparent;
   }
 }
 
@@ -342,6 +402,12 @@
     --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
     --color-border-default: var(--COLOR-SUMI-30);
     --color-border-subtle: var(--COLOR-SUMI-20);
+    --color-cta-gradient-1: var(--COLOR-AI-50);
+    --color-cta-gradient-2: var(--COLOR-YU-50);
+    --color-cta-gradient-3: var(--COLOR-HINOKI-40);
+    --color-cta-gradient-4: var(--COLOR-KOHAKU-30);
+    --color-cta-ink: var(--COLOR-SUMI-00);
+    --color-cta-reflection: rgba(255, 255, 255, 0.25);
   }
 }
 
@@ -375,6 +441,12 @@
     --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
     --color-border-default: var(--COLOR-SUMI-95);
     --color-border-subtle: var(--COLOR-SUMI-95);
+    --color-cta-gradient-1: var(--COLOR-AI-80);
+    --color-cta-gradient-2: var(--COLOR-AI-80);
+    --color-cta-gradient-3: var(--COLOR-AI-80);
+    --color-cta-gradient-4: var(--COLOR-AI-80);
+    --color-cta-ink: var(--COLOR-SUMI-00);
+    --color-cta-reflection: transparent;
   }
 }
 
@@ -408,6 +480,12 @@
     --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
     --color-border-default: var(--COLOR-SUMI-60);
     --color-border-subtle: var(--COLOR-SUMI-70);
+    --color-cta-gradient-1: var(--COLOR-AI-30);
+    --color-cta-gradient-2: var(--COLOR-YU-25);
+    --color-cta-gradient-3: var(--COLOR-HINOKI-20);
+    --color-cta-gradient-4: var(--COLOR-KOHAKU-30);
+    --color-cta-ink: var(--COLOR-SUMI-95);
+    --color-cta-reflection: rgba(255, 255, 255, 0.25);
   }
 }
 
@@ -441,6 +519,12 @@
     --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
     --color-border-default: var(--COLOR-SUMI-00);
     --color-border-subtle: var(--COLOR-SUMI-00);
+    --color-cta-gradient-1: var(--COLOR-AI-10);
+    --color-cta-gradient-2: var(--COLOR-AI-10);
+    --color-cta-gradient-3: var(--COLOR-AI-10);
+    --color-cta-gradient-4: var(--COLOR-AI-10);
+    --color-cta-ink: var(--COLOR-SUMI-95);
+    --color-cta-reflection: transparent;
   }
 }
 
