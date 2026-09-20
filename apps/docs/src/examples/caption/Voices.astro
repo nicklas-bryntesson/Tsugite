@@ -1,8 +1,11 @@
 ---
-import Text from "tsugite/components/Text/Text.astro";
+import Caption from "tsugite/components/Caption/Caption.astro";
 ---
-{/* The second quiet voice. label runs on the UI face (Inter) where body
-    runs on the reading face (Noto Serif) — same three steps. */}
-<Text text="Label lg — a field group's title" variant="label" size="lg" />
-<Text text="Label md — a form label, a table header" variant="label" />
-<Text text="Label sm — a hint, a helper line under a field" variant="label" size="sm" />
+{/* Two UI voices, three steps each. label marks the interface up; button is the
+    pressable voice, which Button reads as tokens — here it speaks standalone. */}
+<Caption element="p" text="Label lg — a field group's title" size="lg" />
+<Caption element="p" text="Label md — a form label, a table header" />
+<Caption element="p" text="Label sm — a hint, a helper line under a field" size="sm" />
+<Caption element="p" variant="button" text="Button lg — the pressable voice, standalone" size="lg" />
+<Caption element="p" variant="button" text="Button md — same tokens Button.css reads" />
+<Caption element="p" variant="button" text="Button sm" size="sm" />

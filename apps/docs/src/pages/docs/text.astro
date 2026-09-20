@@ -12,8 +12,6 @@ import { entryFor } from "../../lib/manifest.ts";
 
 import Sizes from "../../examples/text/Sizes.astro";
 import sizesSrc from "../../examples/text/Sizes.astro?raw";
-import Label from "../../examples/text/Label.astro";
-import labelSrc from "../../examples/text/Label.astro?raw";
 import ElementAndRun from "../../examples/text/ElementAndRun.astro";
 import elementAndRunSrc from "../../examples/text/ElementAndRun.astro?raw";
 import Emphasis from "../../examples/text/Emphasis.astro";
@@ -22,8 +20,6 @@ import Chain from "../../examples/text/Chain.astro";
 import chainSrc from "../../examples/text/Chain.astro?raw";
 import Sovereignty from "../../examples/text/Sovereignty.astro";
 import sovereigntySrc from "../../examples/text/Sovereignty.astro?raw";
-import Captions from "../../examples/text/Captions.astro";
-import captionsSrc from "../../examples/text/Captions.astro?raw";
 import AlignWrap from "../../examples/text/AlignWrap.astro";
 import alignWrapSrc from "../../examples/text/AlignWrap.astro?raw";
 
@@ -33,26 +29,22 @@ const entry = entryFor("text");
 <Layout title={entry.title}>
   <DocPage entry={entry}>
     <TextBlock
-      text="The text primitive. Authored single-run UI text in the two quiet voices — body and label — on p, span and div, and on the captions: legend, figcaption and label. The family litmus: do you author the element? Text (or Heading, for the loud voices). A flow you don't control? Prose."
+      text="The text primitive. Authored single-run reading text in the body voice, on p, span and div and on the captions legend, figcaption and label. The family litmus: do you author the element? Text for reading, Caption for the UI voices, Heading for the loud ones. A flow you don't control? Prose."
     />
 
     <Example id="sizes" title="Sizes" lead="The body voice has three steps, md by default. Unlike Heading, the element never decides the size." source={sizesSrc} block>
       <Sizes />
     </Example>
 
-    <Example id="label" title="Label voice" lead="The second quiet voice, on the UI face. Same three steps." source={labelSrc} block>
-      <Label />
-    </Example>
-
     <Example id="element-and-run" title="Element and run mode" lead="The element is the markup shape, the voice is the look, and the two are independent. The shape decides the run mode: a span is an inline run that flows on the line and leaves trim to its host; p and div are block runs that own their trim (ADR-0012, law c)." source={elementAndRunSrc} block>
       <ElementAndRun />
     </Example>
 
-    <Example id="emphasis" title="Emphasis keeps its semantics" lead="Child content runs through the same engine as prop text. In the quiet voices strong takes the body-bold weight and em stays italic — the loud voices flatten instead (ADR-0012, law b)." source={emphasisSrc} block>
+    <Example id="emphasis" title="Emphasis keeps its semantics" lead="Child content runs through the same engine as prop text. In the body voice strong takes the body-bold weight and em stays italic — the loud voices flatten instead (ADR-0012, law b)." source={emphasisSrc} block>
       <Emphasis />
     </Example>
 
-    <Example id="chain" title="Two voices on one line" lead="A label-voiced inline run at the start of a body-voiced block. Each run resolves its own bundle; the line negotiates the baseline." source={chainSrc} block>
+    <Example id="chain" title="Two voices on one line" lead="A Caption in the label voice as an inline run at the start of a body-voiced block. Each run resolves its own bundle; the line negotiates the baseline." source={chainSrc} block>
       <Chain />
     </Example>
 
@@ -64,13 +56,9 @@ const entry = entryFor("text");
       <AlignWrap />
     </Example>
 
-    <Example id="captions" title="Captions: legend, figcaption, label" lead="The element is the semantics, the voice is the look, and neither forces the other. A wizard's nested fieldset binds its group with a legend that may look like a label; a figure's caption may read like body; a form label speaks the label voice on the element that is a label. The family matrix lists these cells because the CSS has an answer for them — leaving one out would be taste, and taste is a project's to close." source={captionsSrc} block>
-      <Captions />
-    </Example>
-
     <section class="doc-bench" id="test-bench">
       <Heading text="Test bench" element="h2" size="2" />
-      <p class="doc-note">The Text fixture — the run engine laws and every voice × element × size the family allows, mounted unchanged.</p>
+      <p class="doc-note">The Text fixture — the run engine laws and every size × element the body voice allows, mounted unchanged.</p>
       <TextSection />
     </section>
   </DocPage>

@@ -1,15 +1,26 @@
 ---
-import Text from "tsugite/components/Text/Text.astro";
+import Caption from "tsugite/components/Caption/Caption.astro";
 ---
 {/* The element is the semantics, the voice is the look, and the two never force each
-    other. A nested fieldset in a wizard binds its group with a legend; that legend may
-    look like a label. A figure's caption may read like body. A form label speaks the
-    label voice on the element that is actually a label. */}
-<fieldset>
-  <Text element="legend" variant="label" text="Contact details" />
-  <Text element="label" variant="label" size="sm" text="Email" for="captions-email" />
-  <input id="captions-email" type="email" />
+    other. A wizard's nested fieldsets bind their groups with legends: the outer one is
+    a heading semantically and looks like a label; the inner one is a legend that looks
+    like a large label; the fields carry real <label> elements. A figcaption speaks the
+    same voice on the element a caption is. */}
+{/* The field styling is not the point and is not the family's; the gaps are tokens. */}
+<fieldset style="display: grid; gap: var(--size-sm); padding: var(--size-md);">
+  <Caption element="h3" text="Contact details" />
+  <div style="display: grid; gap: var(--size-xs);">
+    <Caption element="label" size="sm" text="Email" for="elements-email" />
+    <input id="elements-email" type="email" />
+  </div>
+  <fieldset style="display: grid; gap: var(--size-sm); padding: var(--size-md);">
+    <Caption element="legend" size="lg" text="Delivery address" />
+    <div style="display: grid; gap: var(--size-xs);">
+      <Caption element="label" text="Street" for="elements-street" />
+      <input id="elements-street" type="text" />
+    </div>
+  </fieldset>
 </fieldset>
 <figure>
-  <Text element="figcaption" text="A caption in the body voice, on the element a caption is." />
+  <Caption element="figcaption" size="sm" text="Figure 1 — a caption in the label voice." />
 </figure>
