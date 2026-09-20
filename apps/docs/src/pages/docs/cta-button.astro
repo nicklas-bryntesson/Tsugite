@@ -1,0 +1,53 @@
+---
+// /docs/cta-button — explicit page. The page is the view: it imports exactly the examples
+// it shows, each one file under src/examples/cta-button/, mounted twice (Figure + Code).
+// The CtaButtonSection fixture is mounted last as the bench.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+import CtaButtonSection from "tsugite/fixtures/CtaButtonSection.astro";
+import Example from "../../components/Example/Example.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+import Gradient from "../../examples/cta-button/Gradient.astro";
+import gradientSrc from "../../examples/cta-button/Gradient.astro?raw";
+import Sizes from "../../examples/cta-button/Sizes.astro";
+import sizesSrc from "../../examples/cta-button/Sizes.astro?raw";
+import Effects from "../../examples/cta-button/Effects.astro";
+import effectsSrc from "../../examples/cta-button/Effects.astro?raw";
+import Action from "../../examples/cta-button/Action.astro";
+import actionSrc from "../../examples/cta-button/Action.astro?raw";
+
+const entry = entryFor("cta-button");
+---
+
+<Layout title={entry.title}>
+  <DocPage entry={entry}>
+    <TextBlock
+      text="One thing to press that asks to be pressed. Button grows only by axes that combine with everything — size, emphasis, pill, intent — and stays small. CtaButton is the umbrella for the buttons a designer means with 'but this one should…': it grows by variants, one look with a name, each owning its effect layers and its CSS. The list is a project's to extend; gradient is the house's first. Same anatomy as Button, same button voice as tokens — a special button may invent effects, never typography."
+    />
+
+    <Example id="gradient" title="gradient" lead="A sweep through four semantic stops — indigo, onsen water, cypress, amber: the YU family's first role — with a sheen along the top edge and the same sweep cast as a shadow toward the viewer. Hover lifts the button and hurries the sweep; prefers-reduced-motion stills both; forced colours draw a border and drop the effects." source={gradientSrc} block>
+      <Gradient />
+    </Example>
+
+    <Example id="sizes" title="Sizes" lead="md and lg are the button voice's stops; jumbo borrows the h3 stop until the theme decides a fourth. Everything else is em, so sheen, shadow and padding scale with the words." source={sizesSrc} row>
+      <Sizes />
+    </Example>
+
+    <Example id="effects" title="Shadow and reflection" lead="Two gates a variant owns, on by default. A caller turns them off where the layout has no room under the button or no light above it; the geometry does not change." source={effectsSrc} row>
+      <Effects />
+    </Example>
+
+    <Example id="action" title="Link or action, with an icon" lead="Button's shape exactly: one table, the element as the gate, CtaLinkButton and CtaActionButton as front doors. The action can be disabled; the icon sits right of the words unless asked otherwise." source={actionSrc} row>
+      <Action />
+    </Example>
+
+    <section class="doc-bench" id="test-bench">
+      <Heading text="Test bench" element="h2" size="2" />
+      <p class="doc-note">The CtaButton fixture — both front doors at three sizes, every state, and the effects toggled, mounted unchanged.</p>
+      <CtaButtonSection />
+    </section>
+  </DocPage>
+</Layout>
