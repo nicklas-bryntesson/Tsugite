@@ -1,0 +1,253 @@
+{
+  "$comment": "Caption — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. Two UI voices, label and button, three sizes each, md by default; the element is any of the family's farm, span by default (an inline run), and never decides the size. Attribute order: the axes in table order, the derived run last.",
+  "component": "Caption",
+  "cases": [
+    {
+      "name": "default: a span in the label voice, md, inline run",
+      "input": {
+        "text": "Email",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "inline"
+        }
+      }
+    },
+    {
+      "name": "a form label",
+      "input": {
+        "text": "Email",
+        "element": "label",
+        "size": "sm",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "label",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "sm",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "a legend in the label voice — the wizard's inner group",
+      "input": {
+        "text": "Address",
+        "element": "legend",
+        "size": "lg",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "legend",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "lg",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "a legend that is a heading semantically, label visually",
+      "input": {
+        "text": "Contact",
+        "element": "h3",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h3",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "a figcaption",
+      "input": {
+        "text": "Figure 1",
+        "element": "figcaption",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "figcaption",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "the button voice, standalone",
+      "input": {
+        "text": "Save",
+        "variant": "button",
+        "size": "lg",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "button",
+          "data-size": "lg",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "inline"
+        }
+      }
+    },
+    {
+      "name": "align and wrap",
+      "input": {
+        "text": "T",
+        "element": "p",
+        "align": "center",
+        "wrap": "nowrap",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align": "center",
+          "data-wrap": "nowrap",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "an unknown element falls back to span",
+      "input": {
+        "text": "T",
+        "element": "th",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "inline"
+        }
+      }
+    },
+    {
+      "name": "extra class",
+      "input": {
+        "text": "T",
+        "class": "extra",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Caption extra",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "inline"
+        }
+      }
+    },
+    {
+      "name": "children pass through the engine container",
+      "input": {
+        "element": "label",
+        "children": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "label",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "no words: suppressed",
+      "input": {
+        "children": false
+      },
+      "expect": {
+        "mode": "suppress"
+      }
+    },
+    {
+      "name": "text and children together",
+      "input": {
+        "text": "X",
+        "children": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "use text OR child content, not both"
+      }
+    },
+    {
+      "name": "body is not a UI voice",
+      "input": {
+        "text": "T",
+        "variant": "body",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid variant \"body\" — expected label | button"
+      }
+    },
+    {
+      "name": "a size outside the voice's set",
+      "input": {
+        "text": "T",
+        "size": "1",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid size \"1\" for variant \"label\" — expected sm | md | lg"
+      }
+    }
+  ]
+}

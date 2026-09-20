@@ -1,0 +1,83 @@
+---
+// Caption — the UI voices (label, button) on the whole farm. Same contract-map pattern
+// as Typography: every voice × size × element renders, so drift in the UI bundles shows
+// here first; the last table is the door law made visible against Button itself.
+import Heading from "../components/Heading/Heading.astro";
+import Prose from "../components/Prose/Prose.astro";
+import Caption from "../components/Caption/Caption.astro";
+import ActionButton from "../components/Button/ActionButton.astro";
+
+const sizes = ["lg", "md", "sm"];
+const ELEMENTS = ["label", "legend", "figcaption", "p", "span", "div", "h3"];
+const VARIANTS = ["label", "button"];
+---
+
+<section class="KitchenSink-section" id="Caption">
+  <Heading text="Caption" element="h2" size="2" />
+
+  <Prose variant="basic">
+    <p>
+      The UI voices: label marks the interface up — labels, legends, figcaptions, table
+      headers, hints; button is the pressable voice, which Button reads as tokens and
+      this door speaks standalone. One door, two sibling voices, on whatever element the
+      semantics need.
+    </p>
+  </Prose>
+
+  {
+    VARIANTS.map((variant) => (
+      <section class="component-map">
+        <header>
+          <Heading element="h3" text={`variant: ${variant}`} />
+          <Prose variant="basic" size="sm">
+            <p>the {variant} bundle · label / legend / figcaption / p / span / div / h3 · size lg–sm</p>
+          </Prose>
+        </header>
+        <table>
+          <thead>
+            <tr>
+              <th />
+              {ELEMENTS.map((el) => (
+                <th scope="col">{el}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {sizes.map((size) => (
+              <tr>
+                <th scope="row">size {size}</th>
+                {ELEMENTS.map((el) => (
+                  <td>
+                    <Caption element={el} variant={variant} size={size} text={`${variant} ${size}`} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    ))
+  }
+
+  <section class="component-map">
+    <header>
+      <Heading element="h3" text="the button voice, beside the Button" />
+      <Prose variant="basic" size="sm">
+        <p>Same tokens, two consumers: the words of a Button and a standalone run in the button voice sit on one line.</p>
+      </Prose>
+    </header>
+    <table>
+      <tbody>
+        {sizes.map((size) => (
+          <tr>
+            <th scope="row">size {size}</th>
+            <td>
+              <ActionButton size={size}>Save changes</ActionButton>
+              <Caption element="span" variant="button" size={size} text=" — the button voice, standalone" />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+</section>
