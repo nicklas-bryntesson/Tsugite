@@ -1,7 +1,9 @@
 # CI — the suites that already run before every commit, run for every pull request too.
-# Two jobs: the unit and conformance suites of both workspaces (seconds), and the
-# Playwright suites against a dev server (minutes). The ruleset on main requires the
-# first; the second reports and can be required once it has proved steady.
+# `test`: the unit and conformance suites of both workspaces, and the generated token
+# CSS checked against its sources (seconds). `e2e`: the package's Playwright suites in
+# three shards, and the docs app's own, each against a dev server the Playwright config
+# starts (minutes). The ruleset on main requires `test`; the e2e jobs report until they
+# have proved steady on the runner.
 name: CI
 
 on:
@@ -32,9 +34,15 @@ jobs:
       - run: pnpm test
 
   e2e:
-    name: e2e
+    # The package's conformance suites: 417 tests, each with axe. On a two-core runner
+    # they need sharding to finish inside a coffee; three shards, one server each.
+    name: e2e (${{ matrix.shard }}/3)
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -44,12 +52,32 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter tsugite exec playwright install --with-deps chromium
-      - run: pnpm test:e2e
+      - run: pnpm --filter tsugite exec playwright test --shard=${{ matrix.shard }}/3 --reporter=line
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: playwright-report
-          path: |
-            packages/tsugite/test-results
-            apps/docs/test-results
+          name: playwright-report-tsugite-${{ matrix.shard }}
+          path: packages/tsugite/test-results
+          retention-days: 7
+
+  e2e-docs:
+    # The docs app's own rooms: eleven tests, one server.
+    name: e2e (docs)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter docs exec playwright install --with-deps chromium
+      - run: pnpm --filter docs exec playwright test --reporter=line
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-docs
+          path: apps/docs/test-results
           retention-days: 7
