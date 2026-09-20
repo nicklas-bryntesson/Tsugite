@@ -1,5 +1,5 @@
 {
-  "$comment": "Text — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. Both quiet voices share six elements — p, span, div, and the captions legend, figcaption, label — and three sizes, md by default; the element never decides the size. Attribute order: the axes in table order, the derived run last.",
+  "$comment": "Text — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. One reading voice, body, on six elements — p, span, div, and the captions legend, figcaption, label — three sizes, md by default; the element never decides the size. The UI voices are Caption's. Attribute order: the axes in table order, the derived run last.",
   "component": "Text",
   "cases": [
     {
@@ -42,24 +42,15 @@
       }
     },
     {
-      "name": "label voice, lg",
+      "name": "label is not a reading voice — that door is Caption",
       "input": {
         "text": "T",
         "variant": "label",
-        "size": "lg",
         "children": false
       },
       "expect": {
-        "mode": "render",
-        "tag": "p",
-        "className": "Text",
-        "attrs": {
-          "data-variant": "label",
-          "data-size": "lg",
-          "data-align": "left",
-          "data-wrap": "pretty",
-          "data-run": "block"
-        }
+        "mode": "error",
+        "errorMessage": "invalid variant \"label\" — expected body"
       }
     },
     {
@@ -107,7 +98,7 @@
       "input": {
         "text": "T",
         "element": "span",
-        "variant": "label",
+        "size": "lg",
         "children": false
       },
       "expect": {
@@ -115,8 +106,8 @@
         "tag": "span",
         "className": "Text",
         "attrs": {
-          "data-variant": "label",
-          "data-size": "md",
+          "data-variant": "body",
+          "data-size": "lg",
           "data-align": "left",
           "data-wrap": "pretty",
           "data-run": "inline"
@@ -124,11 +115,10 @@
       }
     },
     {
-      "name": "label voice on a legend — the wizard's outer group",
+      "name": "body voice on a legend",
       "input": {
         "text": "Contact details",
         "element": "legend",
-        "variant": "label",
         "children": false
       },
       "expect": {
@@ -136,7 +126,7 @@
         "tag": "legend",
         "className": "Text",
         "attrs": {
-          "data-variant": "label",
+          "data-variant": "body",
           "data-size": "md",
           "data-align": "left",
           "data-wrap": "pretty",
@@ -165,11 +155,10 @@
       }
     },
     {
-      "name": "label voice on a label element",
+      "name": "body voice on a label element",
       "input": {
         "text": "Email",
         "element": "label",
-        "variant": "label",
         "size": "sm",
         "children": false
       },
@@ -178,7 +167,7 @@
         "tag": "label",
         "className": "Text",
         "attrs": {
-          "data-variant": "label",
+          "data-variant": "body",
           "data-size": "sm",
           "data-align": "left",
           "data-wrap": "pretty",
@@ -306,7 +295,7 @@
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "invalid variant \"heading\" — expected body | label"
+        "errorMessage": "invalid variant \"heading\" — expected body"
       }
     },
     {

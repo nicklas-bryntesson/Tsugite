@@ -1,14 +1,15 @@
 ---
-// Text — the quiet voices (body, label) on authored elements.
-// Same contract-map pattern as Typography: every variant × size renders,
-// so drift in the label/body bundles shows here first.
+// Text — the reading voice (body) on authored elements; the UI voices are Caption's.
+// Same contract-map pattern as Typography: every size × element renders, so drift in
+// the body bundle shows here first.
 import Heading from "../components/Heading/Heading.astro";
 import Prose from "../components/Prose/Prose.astro";
 import Text from "../components/Text/Text.astro";
+import Caption from "../components/Caption/Caption.astro";
 
 const sizes = ["lg", "md", "sm"];
-const ELEMENTS = ["p", "span", "div"];
-const VARIANTS = ["body", "label"];
+const ELEMENTS = ["p", "span", "div", "legend", "figcaption", "label"];
+const VARIANTS = ["body"];
 ---
 
 <section class="KitchenSink-section" id="Text">
@@ -16,9 +17,10 @@ const VARIANTS = ["body", "label"];
 
   <Prose variant="basic">
     <p>
-      Authored single-run UI text. Text owns the quiet voices (body,
-      label); Heading owns the loud ones. The litmus: do you author the
-      element? → family component. A flow you don't control? → Prose.
+      Authored single-run reading text. Text owns the body voice; Caption
+      owns the UI voices (label, button); Heading owns the loud ones. The
+      litmus: do you author the element? → family component. A flow you
+      don't control? → Prose.
     </p>
   </Prose>
 
@@ -45,7 +47,7 @@ const VARIANTS = ["body", "label"];
           <th scope="row">two-voice chain</th>
           <td>
             <Text element="p" variant="body" size="lg">
-              <Text element="span" variant="label" size="lg" text="Upptäckt ett fel?" /> Kontakta oss.
+              <Caption element="span" variant="label" size="lg" text="Upptäckt ett fel?" /> Kontakta oss.
             </Text>
           </td>
         </tr>
@@ -54,7 +56,7 @@ const VARIANTS = ["body", "label"];
           <td>
             <Text element="p" variant="body" size="md">
               An unvoiced <span>span inherits the run</span>; a voiced child
-              <Text element="span" variant="label" size="md" text=" owns its own bundle" />.
+              <Caption element="span" variant="label" size="md" text=" owns its own bundle" />.
             </Text>
           </td>
         </tr>
@@ -68,7 +70,7 @@ const VARIANTS = ["body", "label"];
         <header>
           <Heading element="h3" text={`variant: ${variant}`} />
           <Prose variant="basic" size="sm">
-            <p>{variant === "body" ? "the body bundle — Noto Serif" : "the label bundle — Inter"} · p / span / div · size lg–sm</p>
+            <p>the body bundle — Noto Serif · p / span / div / legend / figcaption / label · size lg–sm</p>
           </Prose>
         </header>
         <table>
