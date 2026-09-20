@@ -1,0 +1,68 @@
+---
+// NavItem — the two front doors, three sizes, every state, side by side. The bench for the
+// navigation item; Nav (the arrangement) is a later composition.
+import Heading from "../components/Heading/Heading.astro";
+import Prose from "../components/Prose/Prose.astro";
+import NavLink from "../components/NavItem/NavLink.astro";
+import NavButton from "../components/NavItem/NavButton.astro";
+
+const sizes = ["sm", "md", "lg"];
+const states = [undefined, "hover", "active", "focus"];
+---
+
+<section class="KitchenSink-section" id="NavItem">
+  <Heading text="NavItem" element="h2" size="2" />
+  <Prose variant="basic">
+    <p>
+      One item of a site's navigation: a link that takes the reader somewhere within the site,
+      or a button that opens the next level of it. One table, two front doors; the nav voice
+      as tokens; <code>current</code> on both, <code>aria-current</code> on the link only,
+      <code>aria-expanded</code> on the button only.
+    </p>
+  </Prose>
+
+  {
+    sizes.map((size) => (
+      <section class="component-map">
+        <header>
+          <Heading element="h3" text={`size: ${size}`} />
+        </header>
+        <table>
+          <thead>
+            <tr>
+              <th />
+              {states.map((s) => (
+                <th scope="col">{s ?? "rest"}</th>
+              ))}
+              <th scope="col">current</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">NavLink</th>
+              {states.map((s) => (
+                <td>
+                  <NavLink href="#" size={size} data-test-state={s}>Products</NavLink>
+                </td>
+              ))}
+              <td>
+                <NavLink href="#" size={size} current={true}>Products</NavLink>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">NavButton</th>
+              {states.map((s) => (
+                <td>
+                  <NavButton size={size} icon="icon-panel-left-open" data-test-state={s} aria-controls="bench-menu">More</NavButton>
+                </td>
+              ))}
+              <td>
+                <NavButton size={size} icon="icon-panel-left-open" current={true} expanded={true} aria-controls="bench-menu">More</NavButton>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    ))
+  }
+</section>

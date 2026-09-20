@@ -1,0 +1,147 @@
+/*
+ * NavItem — one item of a site's navigation: a link that goes somewhere within the site,
+ * or a button that opens the next level of it. It reads the NAV VOICE as tokens
+ * (typography.tokens.js) the way Button reads the button voice; Nav, when it comes,
+ * arranges items — this file styles one.
+ *
+ * Gates:
+ *   data-size           sm | md | lg, the size of the words.
+ *   data-current        here you are: the page, or the branch that contains it. Both
+ *                       elements speak it; aria-current="page" is written on a link only.
+ *   data-expanded       the disclosure is open. A button only; aria-expanded is written
+ *                       on a button always, never on a link.
+ *   data-icon-position  left | right, only with an icon.
+ *   data-test-state     hover | active | focus, the state hooks the probes and suites use.
+ */
+.NavItem {
+  /* invariants — the nav voice's bundle */
+  --_ni-fontFamily: var(--fontFamily-nav);
+  --_ni-fontWeight: var(--fontWeight-nav);
+  --_ni-lineHeight: var(--lineHeight-nav);
+  --_ni-letterSpacing: var(--letterSpacing-nav);
+  --_ni-outlineWidth: 2px;
+  --_ni-outlineOffset: 3px;
+  --_ni-outlineColor: var(--color-focus-ring);
+  --_ni-indicatorWidth: 2px;
+
+  /* own by state */
+  --_ni-color: var(--theme-text, var(--color-text-primary));
+  --_ni-indicatorColor: transparent;
+  --_ni-backgroundColor: transparent;
+
+  /* reset the two elements to one shape */
+  appearance: none;
+  border: 0;
+  margin: 0;
+  background: none;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: var(--_ni-columns, auto);
+  grid-template-areas: var(--_ni-areas, "text");
+  align-items: center;
+  gap: var(--_ni-iconMargin);
+  padding-block: var(--_ni-paddingBlock);
+  padding-inline: var(--_ni-paddingInline);
+
+  font-family: var(--_ni-fontFamily);
+  font-weight: var(--_ni-fontWeight);
+  font-size: var(--_ni-fontSize);
+  line-height: var(--_ni-lineHeight);
+  letter-spacing: var(--_ni-letterSpacing);
+  color: var(--_ni-color);
+  background-color: var(--_ni-backgroundColor);
+  /* the indicator: an inset line under the item, the same on both elements */
+  box-shadow: inset 0 calc(var(--_ni-indicatorWidth) * -1) 0 0 var(--_ni-indicatorColor);
+  transition: color 250ms ease, box-shadow 250ms ease, background-color 250ms ease;
+
+  /* ── States ── */
+  &:hover,
+  &[data-test-state="hover"] {
+    --_ni-indicatorColor: var(--color-interactive-hoverRing);
+  }
+
+  &:active,
+  &[data-test-state="active"] {
+    --_ni-indicatorColor: var(--color-interactive-primary);
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: 0;
+  }
+
+  &:focus-visible,
+  &[data-test-state="focus"] {
+    outline-style: solid;
+    outline-width: var(--_ni-outlineWidth);
+    outline-color: var(--_ni-outlineColor);
+    outline-offset: var(--_ni-outlineOffset);
+  }
+
+  /* here you are: the indicator stays, in the interactive colour, whatever the pointer does */
+  &[data-current="true"] {
+    --_ni-indicatorColor: var(--color-interactive-primary);
+    --_ni-fontWeight: var(--fontWeight-nav-bold, var(--fontWeight-nav));
+  }
+
+  &[data-current="false"] {
+    /* the resting indicator is transparent; hover and active paint it */
+  }
+
+  /* ── Sizes ── */
+  &[data-size="sm"] {
+    --_ni-fontSize: var(--fontSize-nav-small);
+    --_ni-iconSize: 1rem;
+    --_ni-iconMargin: var(--size-xs);
+    --_ni-paddingBlock: var(--size-xs);
+    --_ni-paddingInline: var(--size-sm);
+  }
+
+  &[data-size="md"] {
+    --_ni-fontSize: var(--fontSize-nav);
+    --_ni-iconSize: 1.25rem;
+    --_ni-iconMargin: var(--size-xs);
+    --_ni-paddingBlock: var(--size-sm);
+    --_ni-paddingInline: var(--size-md);
+  }
+
+  &[data-size="lg"] {
+    --_ni-fontSize: var(--fontSize-nav-large);
+    --_ni-iconSize: 1.5rem;
+    --_ni-iconMargin: var(--size-sm);
+    --_ni-paddingBlock: var(--size-sm);
+    --_ni-paddingInline: var(--size-md);
+  }
+
+  /* ── Icon layout ── */
+  &[data-icon-position="left"] {
+    --_ni-columns: auto 1fr;
+    --_ni-areas: "icon text";
+  }
+
+  &[data-icon-position="right"] {
+    --_ni-columns: 1fr auto;
+    --_ni-areas: "text icon";
+  }
+
+  & > .NavItem-text {
+    grid-area: text;
+  }
+
+  /* the sprite svg has no size of its own: the size slot on both axes, in the icon area */
+  & > .NavItem-icon {
+    grid-area: icon;
+    display: block;
+    inline-size: var(--_ni-iconSize);
+    block-size: var(--_ni-iconSize);
+    transition: transform 250ms ease;
+  }
+
+  /* an open disclosure turns its icon — the chevron convention, a rule the host can override */
+  &[data-expanded="true"] > .NavItem-icon {
+    transform: rotate(180deg);
+  }
+}

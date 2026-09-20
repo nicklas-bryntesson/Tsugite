@@ -1,0 +1,10 @@
+---
+import NavButton from "tsugite/components/NavItem/NavButton.astro";
+---
+{/* A button that opens the next level. The same table as the link, gated on the element:
+    aria-expanded is written on a button always (true or false), aria-controls names what
+    it opens, and the icon turns when expanded. A branch that contains the current page
+    is current too — without ever being the page. What the press does is the host's. */}
+<NavButton icon="icon-panel-left-open" aria-controls="menu-products">Products</NavButton>
+<NavButton icon="icon-panel-left-open" aria-controls="menu-company" expanded={true}>Company</NavButton>
+<NavButton icon="icon-panel-left-open" aria-controls="menu-docs" current={true}>Docs</NavButton>
