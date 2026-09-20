@@ -35,7 +35,7 @@ Voices and their volumes (`data-prominence`, primary | subtle): `neutral` (prima
 The layer a component's slot resolves to when no theme channel applies, and the
 only layer allowed to reference RAW.
 
-### Colour — `--color-*` (28, four-mode)
+### Colour — `--color-*` (34, four-mode)
 
 Each name switches light · dark · light-contrast · dark-contrast by itself; the
 component never mentions appearance (ADR-0004 §2).
@@ -70,6 +70,12 @@ component never mentions appearance (ADR-0004 §2).
 | `--color-shadow-popup` | Popup/elevation ink — a shadow reads as depth on light ground; on dark the same ink is invisible, so the dark rows are darker and more opaque (inherited from the reference seam's light-dark() pairs, now explicit mode rows — light-dark() leaves the generated output entirely). |
 | `--color-border-default` | Default hairline between surfaces. |
 | `--color-border-subtle` | Quieter hairline for inner divisions. |
+| `--color-cta-gradient-1` | Gradient stop 1. |
+| `--color-cta-gradient-2` | Gradient stop 2. |
+| `--color-cta-gradient-3` | Gradient stop 3. |
+| `--color-cta-gradient-4` | Gradient stop 4. |
+| `--color-cta-ink` | Ink on the CTA gradient. |
+| `--color-cta-reflection` | The reflection: the ink at a quarter, over whatever the gradient is doing. |
 
 ### Spacing — `--size-*` (19)
 

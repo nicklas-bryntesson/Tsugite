@@ -1,44 +1,79 @@
 ---
-// Port of AiPoc Views/Shared/Partials/KitchenSink/_CtaButton.cshtml
+// CtaButton — the umbrella's first variant, gradient, at three sizes and every state;
+// the two front doors side by side; shadow and reflection off for comparison.
 import Heading from "../components/Heading/Heading.astro";
 import Prose from "../components/Prose/Prose.astro";
-import CtaLinkButton from "../components/CtaLinkButton/CtaLinkButton.astro";
+import CtaLinkButton from "../components/CtaButton/CtaLinkButton.astro";
+import CtaActionButton from "../components/CtaButton/CtaActionButton.astro";
 
-const STATES = ["hover", "active", "focus", "disabled"] as const;
+const STATES = [undefined, "hover", "active", "focus", "disabled"];
+const SIZES = ["md", "lg", "jumbo"];
 ---
 
-{/* ═══════════════════════════════════════════
-    CTA LINK BUTTON
-    ═══════════════════════════════════════════ */}
+<section class="KitchenSink-section" id="CtaButton">
+  <Heading text="CtaButton" element="h2" size="2" />
+  <Prose variant="basic">
+    <p>
+      One thing to press that asks to be pressed. Button grows by axes that combine with
+      everything; CtaButton grows by variants — one look with a name, its own effects. The
+      first is <code>gradient</code>: a sweep through four semantic stops, a sheen, and the
+      sweep cast as a shadow toward the viewer. Same button voice as Button.
+    </p>
+  </Prose>
 
-<section class="component-map" style="--_colWidth: 14rem;">
-  <header>
-    <Heading element="h3" text="CTA Link Button" />
-    <Prose variant="basic" size="sm"><p>variant: glow</p></Prose>
-  </header>
-  <table>
-    <thead>
-      <tr>
-        <th></th>
-        <th scope="col">Default</th>
-        <th scope="col">Hover</th>
-        <th scope="col">Active</th>
-        <th scope="col">Focus</th>
-        <th scope="col">Disabled</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">glow</th>
-        <td><CtaLinkButton href="#">Get started</CtaLinkButton></td>
-        {
-          STATES.map((state) => (
-            <td>
-              <CtaLinkButton href="#" data-test-state={state}>Get started</CtaLinkButton>
-            </td>
-          ))
-        }
-      </tr>
-    </tbody>
-  </table>
+  {
+    SIZES.map((size) => (
+      <section class="component-map" style="--_colWidth: 16rem;">
+        <header>
+          <Heading element="h3" text={`gradient · size ${size}`} />
+        </header>
+        <table>
+          <thead>
+            <tr>
+              <th />
+              {STATES.map((s) => (
+                <th scope="col">{s ?? "rest"}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">CtaLinkButton</th>
+              {STATES.map((s) => (
+                <td style="padding-block: 2.5em;">
+                  <CtaLinkButton href="#" size={size} data-test-state={s}>Get started</CtaLinkButton>
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <th scope="row">CtaActionButton</th>
+              {STATES.map((s) => (
+                <td style="padding-block: 2.5em;">
+                  <CtaActionButton size={size} icon="icon-panel-left-open" disabled={s === "disabled"} data-test-state={s === "disabled" ? undefined : s}>Start free trial</CtaActionButton>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    ))
+  }
+
+  <section class="component-map" style="--_colWidth: 16rem;">
+    <header>
+      <Heading element="h3" text="shadow and reflection" />
+    </header>
+    <table>
+      <tbody>
+        <tr>
+          <th scope="row">both (default)</th>
+          <td style="padding-block: 2.5em;"><CtaLinkButton href="#" size="lg">Get started</CtaLinkButton></td>
+          <th scope="row">no shadow</th>
+          <td style="padding-block: 2.5em;"><CtaLinkButton href="#" size="lg" shadow={false}>Get started</CtaLinkButton></td>
+          <th scope="row">no reflection</th>
+          <td style="padding-block: 2.5em;"><CtaLinkButton href="#" size="lg" reflection={false}>Get started</CtaLinkButton></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 </section>
