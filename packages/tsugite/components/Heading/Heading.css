@@ -39,7 +39,7 @@
        run's metrics. In the loud voices that includes strong and em; partial
        bolding of a heading is drift, deliberately flattened. A voiced child
        (data-variant) and everything inside it owns its own bundle. */
-    & :where(a, span, strong, em, b, i):where(:not([data-variant], [data-variant] *)) {
+    & :where(a, span, strong, em, b, i):where(:not(:is(.Heading [data-variant]), :is(.Heading [data-variant]) *)) {
       font: inherit;
       line-height: inherit;
       letter-spacing: inherit;
