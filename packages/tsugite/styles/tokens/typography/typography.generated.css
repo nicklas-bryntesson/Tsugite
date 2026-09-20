@@ -96,6 +96,18 @@
   --FONTSIZE-BUTTON-LARGE-MOBILE: 1.25rem;
   --FONTSIZE-BUTTON-LARGE-DESKTOP: 1.375rem;
   --FONTSIZE-BUTTON-LARGE-WIDE: 1.375rem;
+  --FONTSIZE-NAV-SMALL-FLOOR: 0.75rem;
+  --FONTSIZE-NAV-SMALL-MOBILE: 0.75rem;
+  --FONTSIZE-NAV-SMALL-DESKTOP: 0.85rem;
+  --FONTSIZE-NAV-SMALL-WIDE: 0.85rem;
+  --FONTSIZE-NAV-FLOOR: 0.9375rem;
+  --FONTSIZE-NAV-MOBILE: 1rem;
+  --FONTSIZE-NAV-DESKTOP: 1.125rem;
+  --FONTSIZE-NAV-WIDE: 1.125rem;
+  --FONTSIZE-NAV-LARGE-FLOOR: 1.0625rem;
+  --FONTSIZE-NAV-LARGE-MOBILE: 1.25rem;
+  --FONTSIZE-NAV-LARGE-DESKTOP: 1.375rem;
+  --FONTSIZE-NAV-LARGE-WIDE: 1.375rem;
   --FONTSIZE-PREAMBLE-SMALL-FLOOR: 1.125rem;
   --FONTSIZE-PREAMBLE-SMALL-MOBILE: 1.25rem;
   --FONTSIZE-PREAMBLE-SMALL-DESKTOP: 1.375rem;
@@ -163,6 +175,16 @@
   --fontCapGap-button: 0.242;
   --fontDescent-button: 0.24;
 
+  --fontFamily-nav: var(--INTER);
+  --fontWeight-nav: var(--INTER-400);
+  --lineHeight-nav: 1.3;
+  --letterSpacing-nav: normal;
+  --fontFeatureSettings-nav: normal;
+  --baseline-offset-nav: 0;
+  --fontEmBox-nav: 1.21;
+  --fontCapGap-nav: 0.242;
+  --fontDescent-nav: 0.24;
+
   --fontFamily-preamble: var(--NOTO-SERIF);
   --fontWeight-preamble: var(--NOTOS-SERIF-400);
   --lineHeight-preamble: 1.35;
@@ -195,6 +217,9 @@
     --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-button: calc(var(--FONTSIZE-BUTTON-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-nav: calc(var(--FONTSIZE-NAV-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-preamble-small: calc(var(--FONTSIZE-PREAMBLE-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-preamble: calc(var(--FONTSIZE-PREAMBLE-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-preamble-large: calc(var(--FONTSIZE-PREAMBLE-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
@@ -222,6 +247,9 @@
     --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-button: calc(var(--FONTSIZE-BUTTON-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-nav: calc(var(--FONTSIZE-NAV-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-preamble-small: calc(var(--FONTSIZE-PREAMBLE-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-preamble: calc(var(--FONTSIZE-PREAMBLE-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-preamble-large: calc(var(--FONTSIZE-PREAMBLE-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
@@ -249,6 +277,9 @@
     --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-button: calc(var(--FONTSIZE-BUTTON-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-nav: calc(var(--FONTSIZE-NAV-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-preamble-small: calc(var(--FONTSIZE-PREAMBLE-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-preamble: calc(var(--FONTSIZE-PREAMBLE-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-preamble-large: calc(var(--FONTSIZE-PREAMBLE-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
@@ -276,6 +307,9 @@
     --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-button: calc(var(--FONTSIZE-BUTTON-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-WIDE) * var(--TYPE-SCALE, 1));
+    --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-WIDE) * var(--TYPE-SCALE, 1));
+    --fontSize-nav: calc(var(--FONTSIZE-NAV-WIDE) * var(--TYPE-SCALE, 1));
+    --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-preamble-small: calc(var(--FONTSIZE-PREAMBLE-SMALL-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-preamble: calc(var(--FONTSIZE-PREAMBLE-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-preamble-large: calc(var(--FONTSIZE-PREAMBLE-LARGE-WIDE) * var(--TYPE-SCALE, 1));
@@ -302,6 +336,9 @@
   --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-button: calc(var(--FONTSIZE-BUTTON-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
+  --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
+  --fontSize-nav: calc(var(--FONTSIZE-NAV-FLOOR) * var(--TYPE-SCALE, 1));
+  --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-preamble-small: calc(var(--FONTSIZE-PREAMBLE-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-preamble: calc(var(--FONTSIZE-PREAMBLE-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-preamble-large: calc(var(--FONTSIZE-PREAMBLE-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
@@ -327,6 +364,9 @@
   --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-button: calc(var(--FONTSIZE-BUTTON-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
+  --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
+  --fontSize-nav: calc(var(--FONTSIZE-NAV-MOBILE) * var(--TYPE-SCALE, 1));
+  --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-preamble-small: calc(var(--FONTSIZE-PREAMBLE-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-preamble: calc(var(--FONTSIZE-PREAMBLE-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-preamble-large: calc(var(--FONTSIZE-PREAMBLE-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
@@ -352,6 +392,9 @@
   --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-button: calc(var(--FONTSIZE-BUTTON-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
+  --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
+  --fontSize-nav: calc(var(--FONTSIZE-NAV-DESKTOP) * var(--TYPE-SCALE, 1));
+  --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-preamble-small: calc(var(--FONTSIZE-PREAMBLE-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-preamble: calc(var(--FONTSIZE-PREAMBLE-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-preamble-large: calc(var(--FONTSIZE-PREAMBLE-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
