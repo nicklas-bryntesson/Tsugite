@@ -1,23 +1,24 @@
 ---
-// Text — the reading voice (body) on plain text elements and the captions: authored
-// single-run text, the family member next to Heading, Caption and Prose. The table is recipes/text.recipe.ts,
-// read by lib/recipe.ts (ADR-0018); lib/text.ts fills its holes; this file renders it.
-import "./Text.css";
+// Caption — the UI voices (label, button) of the typography family on whatever element
+// the semantics need: a label, a legend, a figcaption, a table header, a span in a line.
+// The table is recipes/caption.recipe.ts, read by lib/recipe.ts (ADR-0018); lib/caption.ts
+// fills its holes; this file renders it in Astro.
+import "./Caption.css";
 import DevError from "../DevError/DevError.astro";
-import { text as recipe } from "../../recipes/text.recipe";
+import { caption as recipe } from "../../recipes/caption.recipe";
 import { resolve, type InputOf } from "../../lib/recipe";
-import { textDerive, textPlan } from "../../lib/text";
+import { captionDerive, captionPlan } from "../../lib/caption";
 
 type Props = InputOf<typeof recipe> & { [key: string]: unknown };
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
-const t = resolve(recipe, Astro.props, { slots: { children: childHtml.trim().length > 0 }, derive: textDerive });
-const plan = textPlan(t);
+const t = resolve(recipe, Astro.props, { slots: { children: childHtml.trim().length > 0 }, derive: captionDerive });
+const plan = captionPlan(t);
 
 // ADR-0012 §1: child content passes through the same engine container as prop text.
 const inner = t.mode === "render" ? `<span class="${plan.containerClass}">${t.parts.children ? childHtml : plan.innerHtml}</span>` : "";
 
-const Tag = t.tag as "p";
+const Tag = t.tag as "span";
 ---
 
 {

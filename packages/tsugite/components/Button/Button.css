@@ -6,11 +6,11 @@
 .Button {
   /* TODO(decide): unprefixed slots. ADR-0013 sets --_<prefix>-<propertyCamel>; the
      names already have the right form, Button only needs its prefix (own pass). */
-  /* invariants */
-  --_fontFamily:      var(--fontFamily-label);
-  --_fontWeight:      var(--fontWeight-label);
-  --_lineHeight:      var(--lineHeight-label);
-  --_fontBaselineOffset: var(--baseline-offset-label);
+  /* invariants — the button voice's bundle (typography.tokens.js), label's values today, its own knob */
+  --_fontFamily:      var(--fontFamily-button);
+  --_fontWeight:      var(--fontWeight-button);
+  --_lineHeight:      var(--lineHeight-button);
+  --_fontBaselineOffset: var(--baseline-offset-button);
   --_borderWidth: 1px;
   --_borderRadius: ;
   --_outlineWidth: 2px;
@@ -116,7 +116,7 @@
   &[data-size="sm"] {
     --_iconSize:                    1.125rem;
     --_iconMargin:                  0.5rem;
-    --_fontSize:                    var(--fontSize-label-small);
+    --_fontSize:                    var(--fontSize-button-small);
     --_paddingBlock:                var(--size-sm);
     --_paddingInline:               1.4em;
   }
@@ -124,7 +124,7 @@
   &[data-size="md"] {
     --_iconSize:                    1.5rem;
     --_iconMargin:                  0.75rem;
-    --_fontSize:                    var(--fontSize-label);
+    --_fontSize:                    var(--fontSize-button);
     --_paddingBlock:                var(--size-sm);
     --_paddingInline:               1.4em;
   }
@@ -132,7 +132,7 @@
   &[data-size="lg"] {
     --_iconSize:                    1.75rem;
     --_iconMargin:                  1rem;
-    --_fontSize:                    var(--fontSize-label-large);
+    --_fontSize:                    var(--fontSize-button-large);
     --_paddingBlock:                0.8em;
     --_paddingInline:               1.6em;
   }

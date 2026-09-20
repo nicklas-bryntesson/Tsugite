@@ -1,0 +1,8 @@
+---
+import Caption from "tsugite/components/Caption/Caption.astro";
+---
+{/* The emphasis door is open, not closed: strong asks for the voice's bold weight with
+    one fallback to the voice's own. This theme gives label one weight (Inter 400), so
+    the strong below renders flat — by value, not by law. A theme that adds a bold weight
+    to the voice opens the door without a line of CSS changing. em stays italic. */}
+<Caption element="p">A <strong>required</strong> field, with an <em>optional</em> note.</Caption>

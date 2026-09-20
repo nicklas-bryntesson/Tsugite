@@ -1,10 +1,10 @@
 /* =====================================================
-   TEXT COMPONENT — the reading voice (body)
-   The UI voices live in Caption.css; the engine is shared word for
-   word with Heading, Caption and TextBlock (ADR-0012).
+   CAPTION COMPONENT — the UI voices (label, button)
+   The engine below is shared word for word with Heading, Text and
+   TextBlock (ADR-0012); a change here is a change in four files.
 ===================================================== */
 
-.Text {
+.Caption {
   /* reset */
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -14,7 +14,7 @@
      TEXT CONTAINER (Typography Engine)
   ================================================= */
 
-  .text-content {
+  .caption-content {
     font-size: var(--_fontSize);
     line-height: var(--_lineHeight);
 
@@ -22,27 +22,26 @@
        the run's metrics; a voiced child (data-variant) — and everything
        inside it — owns its own bundle. The whole voiced subtree is
        exempt, at zero added specificity: nearest voice wins by
-       inheritance, never by specificity. The exemption names a NESTED voiced
-       child — the voiced root is an ancestor of every run, so a bare
-       [data-variant] * would exempt everything and the rule would never match. */
-    & :where(a, span, strong, em, b, i):where(:not(:is(.Text [data-variant]), :is(.Text [data-variant]) *)) {
+       inheritance, never by specificity. */
+    & :where(a, span, strong, em, b, i):where(:not(:is(.Caption [data-variant]), :is(.Caption [data-variant]) *)) {
       font: inherit;
       line-height: inherit;
       letter-spacing: inherit;
     }
 
-    /* Law (b) — inline emphasis keeps its semantics in the quiet
-       voices: strong takes the role convention's strong weight (F2:
-       body-bold, no new stop), em stays italic. The loud voices
-       (Heading) deliberately flatten instead. */
-    & :where(strong, b):where(:not(:is(.Text [data-variant]) *)) { font-weight: var(--fontWeight-body-bold); }
-    & :where(em, i):where(:not(:is(.Text [data-variant]) *)) { font-style: italic; }
+    /* Law (b), the open door: strong asks for the voice's bold weight with one
+       fallback to the voice's own (ADR-0008). A theme that gives the voice one
+       weight — Inter 400 here — gets flat emphasis by VALUE, not by law; a theme
+       that adds a bold weight opens the door without a line of CSS changing.
+       The voice's bold token is set per variant below. */
+    & :where(strong, b):where(:not(:is(.Caption [data-variant]) *)) { font-weight: var(--_boldWeight); }
+    & :where(em, i):where(:not(:is(.Caption [data-variant]) *)) { font-style: italic; }
   }
 
   /* Law (c) — the engine mode is gated on the run shape: block runs own
      their display; inline runs keep the UA's inline flow (absence is
      the contract). */
-  &[data-run="block"] > .text-content {
+  &[data-run="block"] > .caption-content {
     display: block;
   }
 
@@ -50,21 +49,40 @@
      VARIANT LAYER (voice + baseline offset)
   ===================================================== */
 
-  &[data-variant="body"] {
-    --_lineHeight: var(--lineHeight-body);
-    --_baselineOffset: var(--baseline-offset-body);
-    --_emBox: var(--fontEmBox-body);
-    --_capGap: var(--fontCapGap-body);
-    --_descent: var(--fontDescent-body);
+  &[data-variant="label"] {
+    --_lineHeight: var(--lineHeight-label);
+    --_baselineOffset: var(--baseline-offset-label);
+    --_emBox: var(--fontEmBox-label);
+    --_capGap: var(--fontCapGap-label);
+    --_descent: var(--fontDescent-label);
+    --_boldWeight: var(--fontWeight-label-bold, var(--fontWeight-label));
 
-    font-family: var(--fontFamily-body);
-    font-weight: var(--fontWeight-body);
-    letter-spacing: var(--letterSpacing-body);
-    font-feature-settings: var(--fontFeatureSettings-body);
+    font-family: var(--fontFamily-label);
+    font-weight: var(--fontWeight-label);
+    letter-spacing: var(--letterSpacing-label);
+    font-feature-settings: var(--fontFeatureSettings-label);
 
-    &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-body); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); }
+    &[data-size="sm"] { --_fontSize: var(--fontSize-label-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-label); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-label-large); }
+  }
+
+  &[data-variant="button"] {
+    --_lineHeight: var(--lineHeight-button);
+    --_baselineOffset: var(--baseline-offset-button);
+    --_emBox: var(--fontEmBox-button);
+    --_capGap: var(--fontCapGap-button);
+    --_descent: var(--fontDescent-button);
+    --_boldWeight: var(--fontWeight-button-bold, var(--fontWeight-button));
+
+    font-family: var(--fontFamily-button);
+    font-weight: var(--fontWeight-button);
+    letter-spacing: var(--letterSpacing-button);
+    font-feature-settings: var(--fontFeatureSettings-button);
+
+    &[data-size="sm"] { --_fontSize: var(--fontSize-button-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-button); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-button-large); }
   }
 
   /* =====================================================
@@ -92,7 +110,7 @@
 
   /* Native trim branch */
   @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-    &[data-run="block"] > .text-content {
+    &[data-run="block"] > .caption-content {
       text-box-trim: trim-both;
       text-box-edge: cap alphabetic;
       margin-block: 0;
@@ -101,7 +119,7 @@
 
   /* Fallback branch */
   @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
-    &[data-run="block"] > .text-content {
+    &[data-run="block"] > .caption-content {
       /* Emulates text-box-edge: cap alphabetic. The line box's content
          area is the REAL em box (ascent+descent — 1.19-1.36em for our
          faces, never 1), so the shave is half of (emBox - lineHeight)
