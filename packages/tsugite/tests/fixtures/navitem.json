@@ -1,0 +1,248 @@
+{
+  "$comment": "NavItem — the contract as data. `element` picks the front door (a → NavLink, button → NavButton); `text` is whether the renderer has label content. Attribute order: host attributes, the icon name, the axes in table order, then the derived ARIA attributes that are present or not — aria-current only on a current link, aria-expanded on a button always.",
+  "component": "NavItem",
+  "cases": [
+    {
+      "name": "link defaults",
+      "input": {
+        "element": "a",
+        "href": "/products",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "NavItem",
+        "attrs": {
+          "href": "/products",
+          "data-size": "md",
+          "data-current": "false"
+        }
+      }
+    },
+    {
+      "name": "current link says aria-current=page",
+      "input": {
+        "element": "a",
+        "href": "/products",
+        "current": true,
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "NavItem",
+        "attrs": {
+          "href": "/products",
+          "data-size": "md",
+          "data-current": "true",
+          "aria-current": "page"
+        }
+      }
+    },
+    {
+      "name": "link to a new tab implies rel",
+      "input": {
+        "element": "a",
+        "href": "https://x.se",
+        "target": "_blank",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "NavItem",
+        "attrs": {
+          "href": "https://x.se",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "data-size": "md",
+          "data-current": "false"
+        }
+      }
+    },
+    {
+      "name": "link with an icon, right by default",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "icon": "icon-panel-left-open",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "NavItem",
+        "attrs": {
+          "href": "/x",
+          "data-icon": "icon-panel-left-open",
+          "data-size": "md",
+          "data-current": "false",
+          "data-icon-position": "right"
+        }
+      }
+    },
+    {
+      "name": "small link",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "size": "sm",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "NavItem",
+        "attrs": {
+          "href": "/x",
+          "data-size": "sm",
+          "data-current": "false"
+        }
+      }
+    },
+    {
+      "name": "extra class",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "class": "extra",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "NavItem extra",
+        "attrs": {
+          "href": "/x",
+          "data-size": "md",
+          "data-current": "false"
+        }
+      }
+    },
+    {
+      "name": "button defaults: aria-expanded written, false",
+      "input": {
+        "element": "button",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "NavItem",
+        "attrs": {
+          "type": "button",
+          "data-size": "md",
+          "data-current": "false",
+          "data-expanded": "false",
+          "aria-expanded": "false"
+        }
+      }
+    },
+    {
+      "name": "open disclosure, controlling a menu",
+      "input": {
+        "element": "button",
+        "expanded": true,
+        "aria-controls": "menu-1",
+        "icon": "icon-panel-left-open",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "NavItem",
+        "attrs": {
+          "type": "button",
+          "aria-controls": "menu-1",
+          "data-icon": "icon-panel-left-open",
+          "data-size": "md",
+          "data-current": "false",
+          "data-expanded": "true",
+          "data-icon-position": "right",
+          "aria-expanded": "true"
+        }
+      }
+    },
+    {
+      "name": "a button that contains the current page is current, but never the page",
+      "input": {
+        "element": "button",
+        "current": true,
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "NavItem",
+        "attrs": {
+          "type": "button",
+          "data-size": "md",
+          "data-current": "true",
+          "data-expanded": "false",
+          "aria-expanded": "false"
+        }
+      }
+    },
+    {
+      "name": "expanded does not exist on a link",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "expanded": true,
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "expanded does not exist on <a>"
+      }
+    },
+    {
+      "name": "href is not an attribute of a button",
+      "input": {
+        "element": "button",
+        "href": "/x",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "href is not an attribute of <button>"
+      }
+    },
+    {
+      "name": "an invalid size",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "size": "xl",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid size \"xl\" — expected sm | md | lg"
+      }
+    },
+    {
+      "name": "nothing to read, nothing to announce: suppressed",
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "text": false
+      },
+      "expect": {
+        "mode": "suppress"
+      }
+    },
+    {
+      "name": "the element is required",
+      "input": {
+        "href": "/x",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "element is required — expected a | button"
+      }
+    }
+  ]
+}
