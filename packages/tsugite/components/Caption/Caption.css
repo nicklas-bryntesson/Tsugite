@@ -1,5 +1,5 @@
 /* =====================================================
-   CAPTION COMPONENT — the UI voices (label, button)
+   CAPTION COMPONENT — the UI voices (label, button, nav)
    The engine below is shared word for word with Heading, Text and
    TextBlock (ADR-0012); a change here is a change in four files.
 ===================================================== */
@@ -83,6 +83,24 @@
     &[data-size="sm"] { --_fontSize: var(--fontSize-button-small); }
     &[data-size="md"] { --_fontSize: var(--fontSize-button); }
     &[data-size="lg"] { --_fontSize: var(--fontSize-button-large); }
+  }
+
+  &[data-variant="nav"] {
+    --_lineHeight: var(--lineHeight-nav);
+    --_baselineOffset: var(--baseline-offset-nav);
+    --_emBox: var(--fontEmBox-nav);
+    --_capGap: var(--fontCapGap-nav);
+    --_descent: var(--fontDescent-nav);
+    --_boldWeight: var(--fontWeight-nav-bold, var(--fontWeight-nav));
+
+    font-family: var(--fontFamily-nav);
+    font-weight: var(--fontWeight-nav);
+    letter-spacing: var(--letterSpacing-nav);
+    font-feature-settings: var(--fontFeatureSettings-nav);
+
+    &[data-size="sm"] { --_fontSize: var(--fontSize-nav-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-nav); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-nav-large); }
   }
 
   /* =====================================================

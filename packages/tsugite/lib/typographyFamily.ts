@@ -1,8 +1,8 @@
 // THE TYPOGRAPHY FAMILY CONTRACT — the wiring, as data.
 //
 // Four axes that look like one, kept apart on purpose:
-//   1. VOICE            the look bundle: heading, display, body, label, button, preamble
-//                       (data-variant, each with its own size stops). Six siblings;
+//   1. VOICE            the look bundle: heading, display, body, label, button, nav, preamble
+//                       (data-variant, each with its own size stops). Seven siblings;
 //                       none is a kind of another. Display is not "a heading of type
 //                       display", button is not "a kind of label": each pair happens
 //                       to share a door (Heading; Caption).
@@ -44,6 +44,7 @@ export const VOICE_SIZES: Record<string, readonly string[]> = {
   body: ["sm", "md", "lg"],
   label: ["sm", "md", "lg"],
   button: ["sm", "md", "lg"],
+  nav: ["sm", "md", "lg"],
   preamble: ["sm", "md", "lg"],
 };
 
@@ -99,15 +100,17 @@ export const FAMILY: Record<string, FamilyMember> = {
     },
   },
   // The UI voices: what marks the interface up — labels, legends, figcaptions, table
-  // headers (label) and the pressable thing (button, which Button.css reads as tokens
-  // rather than rendering through this door). One door, two sibling voices, like
-  // Heading with heading and display.
+  // headers (label); the pressable thing (button); the wayfinding (nav). The controls
+  // — Button, the navigation items — read their voice as tokens rather than rendering
+  // through this door; Caption speaks every UI voice standalone so the door is total.
+  // Three sibling voices, one door, like Heading with heading and display.
   Caption: {
     input: "authored",
     emphasis: "semantic",
     voices: {
       label: CAPTION_FARM,
       button: CAPTION_FARM,
+      nav: CAPTION_FARM,
     },
   },
   TextBlock: {

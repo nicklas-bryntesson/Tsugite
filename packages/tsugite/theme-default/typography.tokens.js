@@ -122,6 +122,17 @@ export const typeVoices = {
     featureSettings: "normal",
     baselineOffset: "0",
   },
+  nav: {
+    // The wayfinding voice: what a site's navigation is set in. Label's values today,
+    // same value, separate knob — condensed navigation over airy labels is one row away.
+    // Read by the navigation controls as tokens; Caption speaks it standalone.
+    family: "--INTER",
+    weights: { default: "--INTER-400" },
+    lineHeight: "1.3",
+    letterSpacing: "normal",
+    featureSettings: "normal",
+    baselineOffset: "0",
+  },
   preamble: {
     // The standfirst voice: body's family at ingress metrics — big text
     // at body's 1.5 goes airy, so the preamble owns a tighter leading.
@@ -163,6 +174,10 @@ export const typeSizes = {
   "button-small": { floor: "0.75rem", mobile: "0.75rem", desktop: "0.85rem", wide: "0.85rem" },
   "button": { floor: "0.9375rem", mobile: "1rem", desktop: "1.125rem", wide: "1.125rem" },
   "button-large": { floor: "1.0625rem", mobile: "1.25rem", desktop: "1.375rem", wide: "1.375rem" },
+
+  "nav-small": { floor: "0.75rem", mobile: "0.75rem", desktop: "0.85rem", wide: "0.85rem" },
+  "nav": { floor: "0.9375rem", mobile: "1rem", desktop: "1.125rem", wide: "1.125rem" },
+  "nav-large": { floor: "1.0625rem", mobile: "1.25rem", desktop: "1.375rem", wide: "1.375rem" },
 
   "preamble-small": { floor: "1.125rem", mobile: "1.25rem", desktop: "1.375rem", wide: "1.375rem" },
   "preamble": { floor: "1.25rem", mobile: "1.5rem", desktop: "1.625rem", wide: "1.625rem" },
