@@ -9,7 +9,7 @@ import ActionButton from "../components/Button/ActionButton.astro";
 
 const sizes = ["lg", "md", "sm"];
 const ELEMENTS = ["label", "legend", "figcaption", "p", "span", "div", "h3"];
-const VARIANTS = ["label", "button"];
+const VARIANTS = ["label", "button", "nav"];
 ---
 
 <section class="KitchenSink-section" id="Caption">
@@ -18,9 +18,9 @@ const VARIANTS = ["label", "button"];
   <Prose variant="basic">
     <p>
       The UI voices: label marks the interface up — labels, legends, figcaptions, table
-      headers, hints; button is the pressable voice, which Button reads as tokens and
-      this door speaks standalone. One door, two sibling voices, on whatever element the
-      semantics need.
+      headers, hints; button is the pressable voice; nav is the wayfinding voice. The
+      controls read their voice as tokens; this door speaks every UI voice standalone.
+      Three sibling voices, one door, on whatever element the semantics need.
     </p>
   </Prose>
 

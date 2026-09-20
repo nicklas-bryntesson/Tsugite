@@ -1,5 +1,5 @@
 {
-  "$comment": "Caption — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. Two UI voices, label and button, three sizes each, md by default; the element is any of the family's farm, span by default (an inline run), and never decides the size. Attribute order: the axes in table order, the derived run last.",
+  "$comment": "Caption — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. Three UI voices, label, button and nav, three sizes each, md by default; the element is any of the family's farm, span by default (an inline run), and never decides the size. Attribute order: the axes in table order, the derived run last.",
   "component": "Caption",
   "cases": [
     {
@@ -125,6 +125,26 @@
       }
     },
     {
+      "name": "the nav voice, standalone",
+      "input": {
+        "text": "Products",
+        "variant": "nav",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "nav",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-run": "inline"
+        }
+      }
+    },
+    {
       "name": "align and wrap",
       "input": {
         "text": "T",
@@ -234,7 +254,7 @@
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "invalid variant \"body\" — expected label | button"
+        "errorMessage": "invalid variant \"body\" — expected label | button | nav"
       }
     },
     {
