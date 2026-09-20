@@ -1,0 +1,8 @@
+---
+import NavLink from "tsugite/components/NavItem/NavLink.astro";
+---
+{/* A link within the site, in the nav voice. `current` says here you are, and the link
+    alone also says it to assistive technology: aria-current="page". */}
+<NavLink href="#">Products</NavLink>
+<NavLink href="#" current={true}>Pricing</NavLink>
+<NavLink href="#">Docs</NavLink>

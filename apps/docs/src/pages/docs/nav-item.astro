@@ -1,0 +1,53 @@
+---
+// /docs/nav-item — explicit page. The page is the view: it imports exactly the examples
+// it shows, each one file under src/examples/nav-item/, mounted twice (Figure + Code).
+// The NavItemSection fixture is mounted last as the bench.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+import NavItemSection from "tsugite/fixtures/NavItemSection.astro";
+import Example from "../../components/Example/Example.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+import Link from "../../examples/nav-item/Link.astro";
+import linkSrc from "../../examples/nav-item/Link.astro?raw";
+import Disclosure from "../../examples/nav-item/Disclosure.astro";
+import disclosureSrc from "../../examples/nav-item/Disclosure.astro?raw";
+import Sizes from "../../examples/nav-item/Sizes.astro";
+import sizesSrc from "../../examples/nav-item/Sizes.astro?raw";
+import Refusals from "../../examples/nav-item/Refusals.astro";
+import refusalsSrc from "../../examples/nav-item/Refusals.astro?raw";
+
+const entry = entryFor("nav-item");
+---
+
+<Layout title={entry.title}>
+  <DocPage entry={entry}>
+    <TextBlock
+      text="One item of a site's navigation: a link that takes the reader somewhere within the site, or a button that opens the next level of it. Button's shape exactly — one table, the element as the gate, two front doors — because two components sharing typography by copy is the drift a table exists to stop. It reads the nav voice as tokens; Nav, when it comes, arranges items."
+    />
+
+    <Example id="link" title="NavLink" lead="A link within the site. current says here you are on both elements; the link alone also says it to assistive technology, as aria-current=&quot;page&quot; — a derived attribute that is present or not." source={linkSrc} row>
+      <Link />
+    </Example>
+
+    <Example id="disclosure" title="NavButton" lead="A button that opens the next level. aria-expanded is written on a button always, true or false, never on a link; aria-controls names what it opens; the icon turns when expanded. A branch that contains the current page is current too, without being the page. What the press does belongs to the host — this is the control." source={disclosureSrc} row>
+      <Disclosure />
+    </Example>
+
+    <Example id="sizes" title="Sizes" lead="Three steps of the nav voice, the same tokens a standalone Caption in the nav variant reads. In this theme the voice carries label's values; it is its own row in the token factory, so a brand can set navigation apart without moving labels." source={sizesSrc} row>
+      <Sizes />
+    </Example>
+
+    <Example id="refusals" title="The element is the gate" lead="expanded does not exist on a link and href is not an attribute of a button: both are refused in development (ADR-0019), not dropped." source={refusalsSrc} row>
+      <Refusals />
+    </Example>
+
+    <section class="doc-bench" id="test-bench">
+      <Heading text="Test bench" element="h2" size="2" />
+      <p class="doc-note">The NavItem fixture — both front doors at three sizes, every state, current and expanded, mounted unchanged.</p>
+      <NavItemSection />
+    </section>
+  </DocPage>
+</Layout>
