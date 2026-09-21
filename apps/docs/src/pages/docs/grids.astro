@@ -17,19 +17,23 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
 ---
 
 <Layout title="Grids">
-  <main class="Main GridsDoc grid-container">
-    <div class="content">
+  {/* main is not a grid: every child is either a grid-container of text or a demo grid
+      at full width, so each figure meets the page's edge exactly as the recipe does. */}
+  <main class="Main GridsDoc">
+    <header class="grid-container text">
       <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Foundations</nav>
       <Heading element="h1" size="1" text="Grids" />
       <Prose variant="basic">
         <p>
           Three recipes on one table of tokens: <strong>container</strong>, <strong>layout</strong>, <strong>breakout</strong>.
-          Each figure below is the real class on the real tokens, one
-          cell per track. The numbers are measured live; resize the window and watch the tracks
+          Each figure below is the real class on the real tokens, one cell per
+          track, at the page's full width. The numbers are measured live; resize the window and watch the tracks
           step. The <em>LAB</em> button bottom right lays the same grid over any page.
         </p>
       </Prose>
+    </header>
 
+    <section class="grid-container text">
       <Heading element="h2" size="3" text="Container" />
       <Prose variant="basic">
         <p>
@@ -38,20 +42,22 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
           The gutters never go below the offset; the column never grows past the max width.
         </p>
       </Prose>
-      <figure class="figure">
-        <div class="grid-container demo" data-grid-figure="container">
-          <span class="cell cell-gutter" style="grid-column: full-start / main-start"></span>
-          <span class="cell" style="grid-column: main"></span>
-          <span class="cell cell-gutter" style="grid-column: main-end / full-end"></span>
-        </div>
-        <figcaption class="readout">
-          <output data-readout="container"></output>
-          <ul class="tokens">
-            {containerTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
-          </ul>
-        </figcaption>
-      </figure>
+    </section>
+    <figure class="figure">
+      <div class="grid-container demo" data-grid-figure="container">
+        <span class="cell cell-gutter" style="grid-column: full-start / main-start"></span>
+        <span class="cell" style="grid-column: main"></span>
+        <span class="cell cell-gutter" style="grid-column: main-end / full-end"></span>
+      </div>
+      <figcaption class="grid-container readout">
+        <output data-readout="container"></output>
+        <ul class="tokens">
+          {containerTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
+        </ul>
+      </figcaption>
+    </figure>
 
+    <section class="grid-container text">
       <Heading element="h2" size="3" text="Layout" />
       <Prose variant="basic">
         <p>
@@ -59,20 +65,22 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
           Twelve cells are placed here, so below the desktop step they wrap. Count a row.
         </p>
       </Prose>
-      <figure class="figure">
-        <div class="grid-container demo">
-          <div class="grid-layout" data-grid-figure="layout">
-            {layoutCells.map(() => <span class="cell"></span>)}
-          </div>
+    </section>
+    <figure class="figure">
+      <div class="grid-container demo">
+        <div class="grid-layout" data-grid-figure="layout">
+          {layoutCells.map(() => <span class="cell"></span>)}
         </div>
-        <figcaption class="readout">
-          <output data-readout="layout"></output>
-          <ul class="tokens">
-            {layoutTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
-          </ul>
-        </figcaption>
-      </figure>
+      </div>
+      <figcaption class="grid-container readout">
+        <output data-readout="layout"></output>
+        <ul class="tokens">
+          {layoutTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
+        </ul>
+      </figcaption>
+    </figure>
 
+    <section class="grid-container text">
       <Heading element="h2" size="3" text="Breakout" />
       <Prose variant="basic">
         <p>
@@ -82,18 +90,18 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
           here; the outer two are the gutters.
         </p>
       </Prose>
-      <figure class="figure">
-        <div class="grid-breakout demo" data-grid-figure="breakout">
-          {breakoutCells.map((n) => <span class:list={["cell", { "cell-gutter": n === 1 || n === 14 }]}></span>)}
-        </div>
-        <figcaption class="readout">
-          <output data-readout="breakout"></output>
-          <ul class="tokens">
-            {breakoutTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
-          </ul>
-        </figcaption>
-      </figure>
-    </div>
+    </section>
+    <figure class="figure">
+      <div class="grid-breakout demo" data-grid-figure="breakout">
+        {breakoutCells.map((n) => <span class:list={["cell", { "cell-gutter": n === 1 || n === 14 }]}></span>)}
+      </div>
+      <figcaption class="grid-container readout">
+        <output data-readout="breakout"></output>
+        <ul class="tokens">
+          {breakoutTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
+        </ul>
+      </figcaption>
+    </figure>
   </main>
 </Layout>
 
@@ -136,10 +144,13 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
   padding-block: 3rem 4rem;
   background-color: var(--color-surface-page);
 
-  & .content {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  /* text blocks: a grid-container each, their children in main by the recipe's default */
+  & .text {
+    row-gap: 1rem;
   }
 
   & .doc-breadcrumb {
@@ -157,7 +168,6 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
 
   /* the demo grid is the real class; it only gets a floor so empty tracks are visible */
   & .demo {
-    inline-size: 100%;
     row-gap: 0.5rem;
     padding-block: 0.75rem;
     border-block: 1px dashed var(--color-border-subtle);
@@ -179,9 +189,7 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
   }
 
   & .readout {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    row-gap: 0.25rem;
     font-family: var(--fontFamily-code);
     font-size: var(--fontSize-label-small);
     color: var(--color-text-secondary);
