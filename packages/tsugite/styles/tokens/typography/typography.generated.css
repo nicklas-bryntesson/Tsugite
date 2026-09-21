@@ -121,6 +121,32 @@
   --FONTSIZE-PREAMBLE-LARGE-DESKTOP: 1.875rem;
   --FONTSIZE-PREAMBLE-LARGE-WIDE: 1.875rem;
 
+  --lineLength-h1: 30ch;
+  --lineLength-h2: 34ch;
+  --lineLength-h3: 38ch;
+  --lineLength-h4: 44ch;
+  --lineLength-h5: 50ch;
+  --lineLength-h6: 56ch;
+  --lineLength-display-1: 20ch;
+  --lineLength-display-2: 24ch;
+  --lineLength-display-3: 28ch;
+  --lineLength-body-small: 64ch;
+  --lineLength-body: 70ch;
+  --lineLength-body-large: 64ch;
+  --lineLength-code: 80ch;
+  --lineLength-label-small: 50ch;
+  --lineLength-label: 50ch;
+  --lineLength-label-large: 50ch;
+  --lineLength-button-small: 30ch;
+  --lineLength-button: 30ch;
+  --lineLength-button-large: 30ch;
+  --lineLength-nav-small: 30ch;
+  --lineLength-nav: 30ch;
+  --lineLength-nav-large: 30ch;
+  --lineLength-preamble-small: 60ch;
+  --lineLength-preamble: 56ch;
+  --lineLength-preamble-large: 52ch;
+
   --fontFamily-heading: var(--FIRA-SANS);
   --fontWeight-heading: var(--FIRA-SANS-600);
   --lineHeight-heading: 1.1;

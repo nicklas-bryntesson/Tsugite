@@ -28,6 +28,7 @@ describe("the typography tables", () => {
       families: { "--SYNTH": { stack: "'Synth', sans-serif", metrics: { ascent: 0.9, capHeight: 0.7, descent: 0.2 } } },
       weights: { "--SYNTH-400": "400" },
       sizes: { probe: { floor: "1rem", mobile: "1rem", desktop: "1rem", wide: "1rem" } },
+      lineLengths: { probe: "60ch" },
       voices: {
         probe: {
           family: "--SYNTH",

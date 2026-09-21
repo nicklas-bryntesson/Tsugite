@@ -72,13 +72,14 @@ function typographySection() {
   const voiceRe = new RegExp(`^--(.+?)-(${voices.join("|")})(-.*)?$`);
   const bundles = new Map();
   for (const n of names) {
-    if (n.startsWith("--fontSize-")) continue;
+    if (n.startsWith("--fontSize-") || n.startsWith("--lineLength-")) continue;
     const m = n.match(voiceRe);
     if (!m) continue;
     if (!bundles.has(m[1])) bundles.set(m[1], []);
     bundles.get(m[1]).push(m[2] + (m[3] ?? ""));
   }
   const sizes = names.filter((n) => n.startsWith("--fontSize-"));
+  const lineLengths = names.filter((n) => n.startsWith("--lineLength-"));
   return [
     `### Typography roles (${names.length})`,
     "",
@@ -92,6 +93,11 @@ function typographySection() {
     ),
     "",
     `Size stops: ${inlineList(sizes)}.`,
+    "",
+    "Line lengths (ADR-0021): one reading ceiling per size stop, in ch; a component's",
+    "`data-cap-inline` toggles it and reads it through `--custom-<component>-lineLength`.",
+    "",
+    `Line lengths: ${inlineList(lineLengths)}.`,
   ].join("\n");
 }
 

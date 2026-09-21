@@ -184,6 +184,28 @@ export const typeSizes = {
   "preamble-large": { floor: "1.375rem", mobile: "1.625rem", desktop: "1.875rem", wide: "1.875rem" },
 };
 
+/** LINE LENGTH — the reading ceiling per size stop, in ch (ADR-0021).
+    One value, all tiers: a ch is measured in the stop's own face and
+    size, so the ceiling already steps with the ramp and survives a
+    rebrand without a new number. A stop with no line length refuses to
+    build; the unit is ch and nothing else — a length in rem here would
+    stop reading the text it caps. Components toggle the ceiling with
+    data-cap-inline (ADR-0015) and read this value through the ownership
+    chain (ADR-0005): --custom-<component>-lineLength on the instance
+    first, the stop's token otherwise. Designer's first draft; loud
+    voices short, reading voices around 70, the UI voices nominal (their
+    doors do not cap yet). */
+export const typeLineLengths = {
+  "h1": "30ch", "h2": "34ch", "h3": "38ch", "h4": "44ch", "h5": "50ch", "h6": "56ch",
+  "display-1": "20ch", "display-2": "24ch", "display-3": "28ch",
+  "body-small": "64ch", "body": "70ch", "body-large": "64ch",
+  "code": "80ch",
+  "label-small": "50ch", "label": "50ch", "label-large": "50ch",
+  "button-small": "30ch", "button": "30ch", "button-large": "30ch",
+  "nav-small": "30ch", "nav": "30ch", "nav-large": "30ch",
+  "preamble-small": "60ch", "preamble": "56ch", "preamble-large": "52ch",
+};
+
 /** The (voice, size) → fontSize-token mapping the family contract uses:
     heading "3" → h3, display "2" → display-2, quiet voices sm/md/lg →
     <voice>-small / <voice> / <voice>-large. */
