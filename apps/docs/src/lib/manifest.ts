@@ -42,7 +42,7 @@ export const manifest: ManifestEntry[] = [
   { slug: "text-block", title: "TextBlock", pillar: "primitive", origin: "own", section: "TextBlockSection", published: true },
   { slug: "prose", title: "Prose", pillar: "primitive", origin: "aipoc", section: "ProseSection", published: true },
   { slug: "button", title: "Button", pillar: "primitive", origin: "aipoc", section: "Buttons", adrs: ["0005", "0006"], published: true },
-  { slug: "cta-button", title: "CtaButton", pillar: "primitive", origin: "aipoc", section: "CtaButtonSection", published: true },
+  { slug: "cta-button", title: "CtaButton", pillar: "primitive", origin: "own", section: "CtaButtonSection", adrs: ["0018", "0019"], published: true },
   { slug: "card", title: "Card", pillar: "primitive", origin: "aipoc", section: "CardSection", published: true },
   { slug: "picture", title: "Picture", pillar: "primitive", origin: "aipoc", section: "MediaSection", published: true },
   { slug: "notice", title: "Notice", pillar: "primitive", origin: "ref-comps", section: "NoticeSection", suite: "tests/e2e/notice.e2e.test.js", published: true },

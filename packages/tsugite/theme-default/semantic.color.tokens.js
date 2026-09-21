@@ -268,4 +268,51 @@ export const semanticColorTokens = {
     "light-contrast": "var(--COLOR-SUMI-95)",
     "dark-contrast": "var(--COLOR-SUMI-00)",
   },
+
+  // ── The CTA gradient ───────────────────────────────────────────────────────
+  // Four stops the CtaButton's animated gradient sweeps through: indigo, onsen water,
+  // cypress, amber — YU's first role. Decor, not a reading surface: the ink is tuned
+  // for the brand stops and the contrast modes collapse the sweep to one solid step.
+  /** Gradient stop 1. */
+  "--color-cta-gradient-1": {
+    light: raw("AI-50"),
+    dark: raw("AI-30"),
+    "light-contrast": raw("AI-80"),
+    "dark-contrast": raw("AI-10"),
+  },
+  /** Gradient stop 2. */
+  "--color-cta-gradient-2": {
+    light: raw("YU-50"),
+    dark: raw("YU-25"),
+    "light-contrast": raw("AI-80"),
+    "dark-contrast": raw("AI-10"),
+  },
+  /** Gradient stop 3. */
+  "--color-cta-gradient-3": {
+    light: raw("HINOKI-40"),
+    dark: raw("HINOKI-20"),
+    "light-contrast": raw("AI-80"),
+    "dark-contrast": raw("AI-10"),
+  },
+  /** Gradient stop 4. */
+  "--color-cta-gradient-4": {
+    light: raw("KOHAKU-30"),
+    dark: raw("KOHAKU-30"),
+    "light-contrast": raw("AI-80"),
+    "dark-contrast": raw("AI-10"),
+  },
+  /** Ink on the CTA gradient. */
+  "--color-cta-ink": {
+    light: raw("SUMI-00"),
+    dark: raw("SUMI-95"),
+    "light-contrast": raw("SUMI-00"),
+    "dark-contrast": raw("SUMI-95"),
+  },
+  /** The reflection: the ink at a quarter, over whatever the gradient is doing. */
+  "--color-cta-reflection": {
+    light: mix("--COLOR-SUMI-00", 25),
+    dark: mix("--COLOR-SUMI-00", 25),
+    "light-contrast": "transparent",
+    "dark-contrast": "transparent",
+  },
 };

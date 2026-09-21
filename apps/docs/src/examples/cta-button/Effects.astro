@@ -1,0 +1,10 @@
+---
+import CtaLinkButton from "tsugite/components/CtaButton/CtaLinkButton.astro";
+---
+{/* The two effects are gates, on by default. A variant owns its effects; a caller may
+    turn them off where the layout has no room under the button, or no light above it. */}
+<div style="display: flex; flex-wrap: wrap; gap: var(--size-md); padding-block-end: 2.5em;">
+  <CtaLinkButton href="#" size="lg">Both</CtaLinkButton>
+  <CtaLinkButton href="#" size="lg" shadow={false}>No shadow</CtaLinkButton>
+  <CtaLinkButton href="#" size="lg" reflection={false}>No reflection</CtaLinkButton>
+</div>

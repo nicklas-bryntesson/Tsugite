@@ -1,0 +1,12 @@
+---
+import CtaLinkButton from "tsugite/components/CtaButton/CtaLinkButton.astro";
+import CtaActionButton from "tsugite/components/CtaButton/CtaActionButton.astro";
+---
+{/* Button's shape: one table, the element as the gate, two front doors. A link goes
+    somewhere; an action does something and can be disabled. An icon sits right of the
+    words unless asked otherwise. */}
+<div style="display: flex; flex-wrap: wrap; gap: var(--size-md); padding-block-end: 2.5em;">
+  <CtaLinkButton href="#" icon="icon-panel-left-open">Start free trial</CtaLinkButton>
+  <CtaActionButton icon="icon-panel-left-open" icon-position="left">Watch the demo</CtaActionButton>
+  <CtaActionButton disabled={true}>Sold out</CtaActionButton>
+</div>

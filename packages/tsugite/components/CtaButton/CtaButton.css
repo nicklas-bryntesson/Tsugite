@@ -1,0 +1,283 @@
+/*
+ * CtaButton — one thing to press that asks to be pressed. The umbrella for the buttons a
+ * designer means with "but THIS one should…": one look per VARIANT, named, with its own
+ * effect layers and CSS, so Button stays small. It reads the BUTTON VOICE as tokens
+ * (typography.tokens.js): a special button may invent effects, never typography.
+ *
+ * Gates:
+ *   data-variant        gradient — the house's first; a project adds its own below.
+ *   data-size           md | lg | jumbo, the size of the words; everything else is em.
+ *   data-shadow         the cast shadow: the gradient itself, tilted toward the viewer,
+ *                       blurred, under the button. false keeps the geometry, hides it.
+ *   data-reflection     the sheen along the top edge.
+ *   data-icon-position  left | right, only with an icon.
+ *   data-test-state     hover | active | focus | disabled — the hooks the suites use.
+ *
+ * Motion: the gradient sweeps and the button lifts on hover; both stop under
+ * prefers-reduced-motion. Forced colours: a border, no effects.
+ */
+.CtaButton {
+  /* invariants — the button voice's bundle; the bold weight through the open door */
+  --_cta-fontFamily: var(--fontFamily-button);
+  --_cta-fontWeight: var(--fontWeight-button-bold, var(--fontWeight-button));
+  --_cta-lineHeight: var(--lineHeight-button);
+  --_cta-letterSpacing: var(--letterSpacing-button);
+  --_cta-radius: 3em;
+  --_cta-outlineWidth: 2px;
+  --_cta-outlineOffset: 3px;
+  --_cta-outlineColor: var(--color-focus-ring);
+  /* own by variant */
+  --_cta-ink: var(--color-text-primary);
+  --_cta-surface: var(--color-surface-inset);
+  --_cta-lift: 0.25em;
+  --_cta-sweep: 20s;
+  --_cta-shadowOpacity: 0;
+
+  /* reset the two elements to one shape */
+  appearance: none;
+  border: 0;
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+
+  position: relative;
+  /* the shadow is a negative-z child: isolated, it stays behind the words and above
+     whatever panel the button sits on, instead of vanishing behind that panel */
+  isolation: isolate;
+  display: inline-grid;
+  grid-template-columns: var(--_cta-columns, auto);
+  grid-template-areas: var(--_cta-areas, "text");
+  align-items: center;
+  gap: var(--_cta-iconMargin);
+  padding-block: var(--_cta-paddingBlock);
+  padding-inline: var(--_cta-paddingInline);
+  max-inline-size: fit-content;
+  border-radius: var(--_cta-radius);
+
+  font-family: var(--_cta-fontFamily);
+  font-weight: var(--_cta-fontWeight);
+  font-size: var(--_cta-fontSize);
+  line-height: var(--_cta-lineHeight);
+  letter-spacing: var(--_cta-letterSpacing);
+  text-align: center;
+  white-space: nowrap;
+  color: var(--_cta-ink);
+  background-color: var(--_cta-surface);
+  transition: transform 250ms ease, background-color 250ms ease, color 250ms ease;
+
+  & > .CtaButton-text {
+    grid-area: text;
+  }
+
+  /* the sprite svg has no size of its own: the em, in the icon area, in the ink */
+  & > .CtaButton-icon {
+    grid-area: icon;
+    display: block;
+    inline-size: var(--_cta-iconSize);
+    block-size: var(--_cta-iconSize);
+    fill: currentColor;
+  }
+
+  /* ── States shared by every variant ── */
+  &:hover,
+  &[data-test-state="hover"] {
+    transform: translateY(calc(var(--_cta-lift) * -1));
+  }
+
+  &:active,
+  &[data-test-state="active"] {
+    transform: translateY(0);
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: 0;
+  }
+
+  &:focus-visible,
+  &[data-test-state="focus"] {
+    outline-style: solid;
+    outline-width: var(--_cta-outlineWidth);
+    outline-color: var(--_cta-outlineColor);
+    outline-offset: var(--_cta-outlineOffset);
+  }
+
+  &:disabled,
+  &[data-test-state="disabled"] {
+    --_cta-ink: var(--color-disabled-text);
+    --_cta-surface: var(--color-disabled-surface);
+    --_cta-shadowOpacity: 0;
+    animation: none;
+    background-image: none;
+    transform: none;
+    cursor: not-allowed;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+
+  /* ── Sizes: the button voice's stops; jumbo borrows the h3 stop ── */
+  /* TODO(token): jumbo reads a heading size stop; a fourth button stop is a theme decision. */
+  &[data-size="md"] {
+    --_cta-fontSize: var(--fontSize-button);
+    --_cta-iconSize: 1em;
+    --_cta-iconMargin: 0.5em;
+    --_cta-paddingBlock: 0.55em;
+    --_cta-paddingInline: 1.2em;
+  }
+
+  &[data-size="lg"] {
+    --_cta-fontSize: var(--fontSize-button-large);
+    --_cta-iconSize: 1em;
+    --_cta-iconMargin: 0.5em;
+    --_cta-paddingBlock: 0.55em;
+    --_cta-paddingInline: 1.2em;
+  }
+
+  &[data-size="jumbo"] {
+    --_cta-fontSize: var(--fontSize-h3);
+    --_cta-iconSize: 1em;
+    --_cta-iconMargin: 0.5em;
+    --_cta-paddingBlock: 0.55em;
+    --_cta-paddingInline: 1.2em;
+  }
+
+  /* ── Icon layout ── */
+  &[data-icon-position="left"] {
+    --_cta-columns: auto 1fr;
+    --_cta-areas: "icon text";
+  }
+
+  &[data-icon-position="right"] {
+    --_cta-columns: 1fr auto;
+    --_cta-areas: "text icon";
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     VARIANT: gradient — a sweep through four semantic stops (YU's first role),
+     a sheen along the top, and the same sweep cast as a shadow toward the viewer.
+     ═══════════════════════════════════════════════════════════════════════════ */
+  &[data-variant="gradient"] {
+    --_cta-ink: var(--color-cta-ink);
+    --_cta-gradient: linear-gradient(
+      45deg,
+      var(--color-cta-gradient-1) 0%,
+      var(--color-cta-gradient-2) 35%,
+      var(--color-cta-gradient-3) 70%,
+      var(--color-cta-gradient-4) 100%
+    );
+    --_cta-reflection: var(--color-cta-reflection);
+
+    background-color: var(--color-cta-gradient-1);
+    background-image: var(--_cta-gradient);
+    background-size: 600%;
+    animation: cta-sweep var(--_cta-sweep) linear infinite;
+
+    /* the reflection: a sheen along the top edge */
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 0.2em;
+      inset-inline: 0.6em;
+      block-size: 25%;
+      background: linear-gradient(var(--_cta-reflection), transparent);
+      border-radius: 10em 10em 8em 10em / 10em 10em 0 0;
+      pointer-events: none;
+    }
+
+    /* the cast shadow: the sweep again, tilted toward the viewer, blurred, behind */
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      inset-block-start: 1.85em;
+      inline-size: 100%;
+      block-size: 100%;
+      border-radius: 5em;
+      background-image: var(--_cta-gradient);
+      background-size: 500%;
+      animation: cta-sweep var(--_cta-sweep) linear infinite;
+      transform: perspective(1em) rotateX(40deg) scale(1, 0.35);
+      filter: blur(0.75em);
+      opacity: var(--_cta-shadowOpacity);
+      z-index: -1;
+      pointer-events: none;
+      transition: inset-block-start 250ms ease, opacity 250ms ease;
+    }
+
+    &[data-shadow="true"] {
+      --_cta-shadowOpacity: 0.45;
+    }
+
+    &[data-shadow="false"] {
+      --_cta-shadowOpacity: 0;
+    }
+
+    &[data-reflection="false"]::before {
+      display: none;
+    }
+
+    /* the lift takes the shadow with it, a little further */
+    &:hover::after,
+    &[data-test-state="hover"]::after {
+      inset-block-start: calc(1.85em + var(--_cta-lift) * 2);
+    }
+
+    /* pressed and hovered: the sweep hurries */
+    &:hover,
+    &:active,
+    &[data-test-state="hover"],
+    &[data-test-state="active"] {
+      --_cta-sweep: 6s;
+    }
+  }
+
+  /* The variant rules carry an attribute of specificity; the stills must carry it too,
+     or the sweep outranks them. */
+  @media (prefers-reduced-motion: reduce) {
+    &,
+    &[data-variant] {
+      animation: none;
+      transition: none;
+    }
+
+    &[data-variant]::after {
+      animation: none;
+      transition: none;
+    }
+
+    &:hover,
+    &[data-variant]:hover,
+    &[data-test-state="hover"] {
+      transform: none;
+    }
+  }
+
+  /* TODO(token): system colours stay here until the factory maps the semantic layer to
+     them under forced colours; then this block goes. */
+  @media (forced-colors: active) {
+    &,
+    &[data-variant] {
+      border: 2px solid ButtonText;
+      animation: none;
+    }
+
+    &[data-variant]::before,
+    &[data-variant]::after {
+      display: none;
+    }
+  }
+}
+
+@keyframes cta-sweep {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
