@@ -1,0 +1,202 @@
+---
+// /docs/grids — Foundations: the three grids, LIVE-RENDERED. Every figure is the
+// real recipe class from styles/utils/grids on the real tokens, with one cell per
+// track, so what the page shows is exactly what the active step resolves. The
+// readout under each figure is measured from the browser, not typed. Resize and
+// watch the tracks step. The grid has its own ladder (40 / 48 / 80rem, grid.tokens.js).
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/components/Heading/Heading.astro";
+import Prose from "tsugite/components/Prose/Prose.astro";
+
+const layoutCells = Array.from({ length: 12 }, (_, i) => i + 1);
+const breakoutCells = Array.from({ length: 14 }, (_, i) => i + 1);
+
+const containerTokens = ["--grid-container-offset", "--grid-container-maxWidth"];
+const layoutTokens = ["--grid-layout-gap", "--grid-layout-columns"];
+const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
+---
+
+<Layout title="Grids">
+  <main class="Main GridsDoc grid-container">
+    <div class="content">
+      <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Foundations</nav>
+      <Heading element="h1" size="1" text="Grids" />
+      <Prose variant="basic">
+        <p>
+          Three recipes on one table of tokens: <strong>container</strong>, <strong>layout</strong>, <strong>breakout</strong>.
+          Each figure below is the real class on the real tokens, one
+          cell per track. The numbers are measured live; resize the window and watch the tracks
+          step. The <em>LAB</em> button bottom right lays the same grid over any page.
+        </p>
+      </Prose>
+
+      <Heading element="h2" size="3" text="Container" />
+      <Prose variant="basic">
+        <p>
+          A centered column between two fluid gutters. Three tracks, four named lines:
+          <code>full-start</code>, <code>main-start</code>, <code>main-end</code>, <code>full-end</code>.
+          The gutters never go below the offset; the column never grows past the max width.
+        </p>
+      </Prose>
+      <figure class="figure">
+        <div class="grid-container demo" data-grid-figure="container">
+          <span class="cell cell-gutter" style="grid-column: full-start / main-start"></span>
+          <span class="cell" style="grid-column: main"></span>
+          <span class="cell cell-gutter" style="grid-column: main-end / full-end"></span>
+        </div>
+        <figcaption class="readout">
+          <output data-readout="container"></output>
+          <ul class="tokens">
+            {containerTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
+          </ul>
+        </figcaption>
+      </figure>
+
+      <Heading element="h2" size="3" text="Layout" />
+      <Prose variant="basic">
+        <p>
+          Equal columns with a gap, centered in a container: 1, 4, 8 or 12 columns by step.
+          Twelve cells are placed here, so below the desktop step they wrap. Count a row.
+        </p>
+      </Prose>
+      <figure class="figure">
+        <div class="grid-container demo">
+          <div class="grid-layout" data-grid-figure="layout">
+            {layoutCells.map(() => <span class="cell"></span>)}
+          </div>
+        </div>
+        <figcaption class="readout">
+          <output data-readout="layout"></output>
+          <ul class="tokens">
+            {layoutTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
+          </ul>
+        </figcaption>
+      </figure>
+
+      <Heading element="h2" size="3" text="Breakout" />
+      <Prose variant="basic">
+        <p>
+          The layout's columns inside the container's gutters, as one grid: up to fourteen
+          tracks, the first and last fluid, the twelve between them named <code>main</code>.
+          A child can sit in the columns or reach into a gutter. Fourteen cells are placed
+          here; the outer two are the gutters.
+        </p>
+      </Prose>
+      <figure class="figure">
+        <div class="grid-breakout demo" data-grid-figure="breakout">
+          {breakoutCells.map((n) => <span class:list={["cell", { "cell-gutter": n === 1 || n === 14 }]}></span>)}
+        </div>
+        <figcaption class="readout">
+          <output data-readout="breakout"></output>
+          <ul class="tokens">
+            {breakoutTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
+          </ul>
+        </figcaption>
+      </figure>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Measure the real grids: tracks and gap from the computed template, tokens as the
+  // browser resolved them. Re-read on resize so the steps show as numbers.
+  const px = (v: string) => `${Math.round(parseFloat(v))}px`;
+
+  const measure = () => {
+    const cs = getComputedStyle(document.documentElement);
+
+    document.querySelectorAll<HTMLElement>("[data-grid-figure]").forEach((grid) => {
+      const name = grid.dataset.gridFigure!;
+      const style = getComputedStyle(grid);
+      // the computed template carries the line names in brackets; the tracks are the rest
+      const tracks = style.gridTemplateColumns.replace(/\[[^\]]*\]/g, " ").trim().split(/\s+/);
+      const gap = style.columnGap === "normal" ? "0px" : style.columnGap;
+      const out = document.querySelector<HTMLElement>(`[data-readout="${name}"]`);
+      if (out) out.textContent = `${tracks.length} tracks · gap ${px(gap)} · ${tracks.map(px).join(" ")}`;
+    });
+
+    document.querySelectorAll<HTMLElement>("[data-measure]").forEach((out) => {
+      const token = out.dataset.measure!;
+      const value = cs.getPropertyValue(token).trim().replace(/\s+/g, " ");
+      out.textContent = value.length > 72 ? `${value.slice(0, 72)}…` : value;
+      out.title = value;
+    });
+  };
+
+  measure();
+  let raf = 0;
+  addEventListener("resize", () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(measure);
+  });
+</script>
+
+<style is:global>
+.GridsDoc {
+  padding-block: 3rem 4rem;
+  background-color: var(--color-surface-page);
+
+  & .content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  & .doc-breadcrumb {
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+    & a { color: var(--color-interactive-secondary-text); }
+  }
+
+  & .figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* the demo grid is the real class; it only gets a floor so empty tracks are visible */
+  & .demo {
+    inline-size: 100%;
+    row-gap: 0.5rem;
+    padding-block: 0.75rem;
+    border-block: 1px dashed var(--color-border-subtle);
+  }
+
+  /* one cell per track, drawn like the size-ramp bars */
+  & .cell {
+    display: block;
+    min-inline-size: 0.25rem;
+    block-size: 2rem;
+    border-radius: 0.2rem;
+    background-color: var(--color-interactive-primary);
+  }
+
+  & .cell-gutter {
+    background-color: var(--color-surface-inset);
+    outline: 1px dashed var(--color-border-default);
+    outline-offset: -1px;
+  }
+
+  & .readout {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-family: var(--fontFamily-code);
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+    overflow-wrap: anywhere;
+  }
+
+  & .tokens {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+
+    & code { color: var(--color-text-primary); }
+  }
+}
+</style>

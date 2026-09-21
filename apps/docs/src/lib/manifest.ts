@@ -83,6 +83,7 @@ export const manifest: ManifestEntry[] = [
 export const foundations = [
   { slug: "color", title: "Color", href: "/docs/color", note: "RAW · semantic roles · voices", published: true },
   { slug: "tiers", title: "Tiers", href: "/docs/tiers", note: "FLOOR → WIDE + site offset", published: true },
+  { slug: "grids", title: "Grids", href: "/docs/grids", note: "container · layout · breakout", published: true },
 ];
 
 export const kernelModules = [
