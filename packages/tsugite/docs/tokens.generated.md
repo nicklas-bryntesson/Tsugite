@@ -95,7 +95,7 @@ Three recipes (container, layout, breakout) on the grid's own ladder (base · mo
 
 `--grid-container-offset`, `--grid-container-maxWidth`, `--grid-container-columns`, `--grid-layout-columns-count-base`, `--grid-layout-columns-count-mobile`, `--grid-layout-columns-count-tablet`, `--grid-layout-columns-count-desktop`, `--grid-layout-gap-base`, `--grid-layout-gap-mobile`, `--grid-layout-gap-tablet`, `--grid-layout-gap-desktop`, `--grid-layout-columns-base`, `--grid-layout-columns-mobile`, `--grid-layout-columns-tablet`, `--grid-layout-columns-desktop`, `--grid-breakout-offset`, `--grid-breakout-maxWidth`, `--grid-breakout-columns-count-base`, `--grid-breakout-columns-count-mobile`, `--grid-breakout-columns-count-tablet`, `--grid-breakout-columns-count-desktop`, `--grid-breakout-gap-base`, `--grid-breakout-gap-mobile`, `--grid-breakout-gap-tablet`, `--grid-breakout-gap-desktop`, `--grid-breakout-column-autoSize-mobile`, `--grid-breakout-content-autoPadding-mobile`, `--grid-breakout-column-autoSize-tablet`, `--grid-breakout-content-autoPadding-tablet`, `--grid-breakout-column-autoSize-desktop`, `--grid-breakout-content-autoPadding-desktop`, `--grid-breakout-columns-base`, `--grid-breakout-columns-mobile`, `--grid-breakout-columns-tablet`, `--grid-breakout-columns-desktop`, `--grid-layout-gap`, `--grid-layout-columns`, `--grid-breakout-gap`, `--grid-breakout-columns`.
 
-### Typography roles (91)
+### Typography roles (116)
 
 Voices: `heading`, `display`, `body`, `code`, `label`, `button`, `nav`, `preamble`. Every voice publishes one token per
 bundle property; a component reads the voice's bundle, never a family or weight
@@ -114,6 +114,11 @@ constant. Size stops are tier ramps (ADR-0001) multiplied by `--TYPE-SCALE`.
 | `--fontDescent-<voice>` | `heading`, `display`, `body`, `label`, `button`, `nav`, `preamble` |
 
 Size stops: `--fontSize-h1`, `--fontSize-h2`, `--fontSize-h3`, `--fontSize-h4`, `--fontSize-h5`, `--fontSize-h6`, `--fontSize-display-1`, `--fontSize-display-2`, `--fontSize-display-3`, `--fontSize-body-small`, `--fontSize-body`, `--fontSize-body-large`, `--fontSize-code`, `--fontSize-label-small`, `--fontSize-label`, `--fontSize-label-large`, `--fontSize-button-small`, `--fontSize-button`, `--fontSize-button-large`, `--fontSize-nav-small`, `--fontSize-nav`, `--fontSize-nav-large`, `--fontSize-preamble-small`, `--fontSize-preamble`, `--fontSize-preamble-large`.
+
+Line lengths (ADR-0021): one reading ceiling per size stop, in ch; a component's
+`data-cap-inline` toggles it and reads it through `--custom-<component>-lineLength`.
+
+Line lengths: `--lineLength-h1`, `--lineLength-h2`, `--lineLength-h3`, `--lineLength-h4`, `--lineLength-h5`, `--lineLength-h6`, `--lineLength-display-1`, `--lineLength-display-2`, `--lineLength-display-3`, `--lineLength-body-small`, `--lineLength-body`, `--lineLength-body-large`, `--lineLength-code`, `--lineLength-label-small`, `--lineLength-label`, `--lineLength-label-large`, `--lineLength-button-small`, `--lineLength-button`, `--lineLength-button-large`, `--lineLength-nav-small`, `--lineLength-nav`, `--lineLength-nav-large`, `--lineLength-preamble-small`, `--lineLength-preamble`, `--lineLength-preamble-large`.
 
 ## 4. The `--ui-*` seam (21) — pointers into the semantic layer
 

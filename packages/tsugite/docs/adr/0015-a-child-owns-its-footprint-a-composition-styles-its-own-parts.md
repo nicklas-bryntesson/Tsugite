@@ -110,3 +110,7 @@ or refuses.
   values (50rem, 30rem today); the registry has none yet.
 - `component-model.md` §2.5 gains the two words when it is next revised;
   until then this ADR is the record.
+
+## Amendment 2026-09-21 (ADR-0021)
+
+The "measure scale" this ADR promised for the value behind `data-cap-inline` exists: it is line length, one ch value per typography size stop (`--lineLength-<stop>`). Heading, Text, TextBlock and Prose carry the boolean with the default `true`. The rem ceilings on Notice, Quote, ChoiceGroup and Surface are boxes, not lines, and are unchanged.

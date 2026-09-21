@@ -57,3 +57,7 @@ utan JavaScript.
   semantiklagret genereras.
 - Kvarvarande designarbete är VÄRDEN, inte struktur: dark/contrast-raderna i
   fabrikerna är mekaniska förstautkast flaggade för smakjustering.
+
+## Amendment 2026-09-21 (ADR-0021)
+
+The `--custom-*` level is live for its first property, line length: `var(--custom-<component>-lineLength, var(--_lineLength))` in Heading, Text, TextBlock and Prose. Rule 2 holds for it: the instance points at a stop's token, never writes a number.
