@@ -48,5 +48,10 @@ const { title = "Tsugite", template, preloadImage } = Astro.props;
     </div>
 
     <SvgSprite />
+    <script>
+      // The LAB panel: grid lines, tiers and the container debugger, on every page.
+      import { init } from "../lib/debugPanel";
+      init();
+    </script>
   </body>
 </html>

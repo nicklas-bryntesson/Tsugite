@@ -1,15 +1,16 @@
 /**
  * @file
- * Debug panel — Nicklas's portable dev overlay, brought into the docs app for the
- * grid lab. Grid overlay (12 columns on the site grid), tier indicators, container
- * debugger. Adapted from AiPoc ClientApp/js/utils/debugPanel.ts: the breakpoint
- * ladder is Tsugite's viewport tiers (ADR-0001) instead of Tailwind's, the grid
- * overlay's column hiding follows grid.tokens.js (40 / 48 / 80rem). Lab tooling,
- * not part of the system; mounted only where a page imports it.
+ * The LAB panel — the docs app's overlay for reading the page against the system:
+ * grid lines (the layout grid on the site's container grid), tier indicators
+ * (the ADR-0001 viewport ladder) and a container debugger. Ported from an earlier
+ * project's dev overlay; the breakpoint ladder is Tsugite's tiers and the grid
+ * overlay's column hiding follows grid.tokens.js (40 / 48 / 80rem). Docs-app
+ * tooling, not part of the system: it ships with the site so any page can be
+ * read against the grid, and it is mounted once, by the Layout.
  *
  * Usage:
- *   import { init } from "../../lib/debugPanel";
- *   init(); // mounts on .Layout
+ *   import { init } from "../lib/debugPanel";
+ *   init(); // mounts on .Layout; a second call is a no-op
  */
 
 // =============================================================================
@@ -565,6 +566,10 @@ function applyInitialState(): void {
 function init(targetSelector?: string): void {
   const selector = targetSelector || '.' + CONFIG.ROOT_CONTAINER;
   const target = document.querySelector<HTMLElement>(selector);
+
+  // Mounted once per document: the Layout calls init, and a page that also calls it
+  // (the lab did) must not grow a second panel.
+  if (document.getElementById('debug-panel-btn')) return;
 
   if (!target) {
     console.warn(`[Debug Panel] Target element "${selector}" not found`);
