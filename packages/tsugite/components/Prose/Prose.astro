@@ -12,6 +12,8 @@ interface Props {
   element?: string;
   variant?: string;
   size?: string;
+  /** ADR-0021: the reading ceiling on the inline size, the body stop's line length; on by default */
+  capInline?: boolean;
   content?: string;
   class?: string;
   [key: string]: unknown;
@@ -21,6 +23,7 @@ const {
   element: elementProp = "div",
   variant = "default",
   size = "md",
+  capInline = true,
   content,
   class: className,
   ...rest
@@ -57,6 +60,7 @@ const inner = hasContent ? content! : childHtml;
       class={cssClass}
       data-variant={variant.toLowerCase()}
       data-size={size.toLowerCase()}
+      data-cap-inline={capInline ? "true" : "false"}
       {...rest}
       set:html={inner}
     />
@@ -81,11 +85,23 @@ const inner = hasContent ? content! : childHtml;
 :where(.Prose[data-size="md"]),
 :where(.Prose[data-size="lg"]) {
     font-size: var(--_fontSize); /* gate — only active when data-size is set */
+    /* the root speaks the body face so its ch is the paragraph's ch (the line
+       length below is measured here); headings and code set their own below */
+    font-family: var(--fontFamily-body);
 }
 
-:where(.Prose[data-size="sm"]) { --_fontSize: var(--fontSize-body-small); }
-:where(.Prose[data-size="md"]) { --_fontSize: var(--fontSize-body); }
-:where(.Prose[data-size="lg"]) { --_fontSize: var(--fontSize-body-large); }
+:where(.Prose[data-size="sm"]) { --_fontSize: var(--fontSize-body-small); --_lineLength: var(--lineLength-body-small); }
+:where(.Prose[data-size="md"]) { --_fontSize: var(--fontSize-body); --_lineLength: var(--lineLength-body); }
+:where(.Prose[data-size="lg"]) { --_fontSize: var(--fontSize-body-large); --_lineLength: var(--lineLength-body-large); }
+
+/* ── Line length (ADR-0021) ──────────────────────────────────────
+   The reading ceiling, the body stop's line length through the
+   ownership chain (ADR-0005): the instance's --custom-prose-lineLength
+   first. Measured in the Prose root's font, so it is the paragraph's
+   ch: the root carries the body size, the paragraphs inherit it. */
+
+:where(.Prose[data-cap-inline="false"]) { max-inline-size: none; }
+:where(.Prose[data-cap-inline="true"]) { max-inline-size: var(--custom-prose-lineLength, var(--_lineLength)); }
 
 /* ── Basic + Default + Rich: paragraphs ─────────────────────── */
 

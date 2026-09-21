@@ -37,9 +37,9 @@
     letter-spacing: var(--letterSpacing-preamble);
     font-feature-settings: var(--fontFeatureSettings-preamble);
 
-    &[data-size="sm"] { --_fontSize: var(--fontSize-preamble-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-preamble); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-preamble-large); }
+    &[data-size="sm"] { --_fontSize: var(--fontSize-preamble-small); --_lineLength: var(--lineLength-preamble-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-preamble); --_lineLength: var(--lineLength-preamble); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-preamble-large); --_lineLength: var(--lineLength-preamble-large); }
   }
 
   &[data-variant="body"] {
@@ -54,18 +54,29 @@
     letter-spacing: var(--letterSpacing-body);
     font-feature-settings: var(--fontFeatureSettings-body);
 
-    &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-body); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); }
+    &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); --_lineLength: var(--lineLength-body-small); }
+    &[data-size="md"] { --_fontSize: var(--fontSize-body); --_lineLength: var(--lineLength-body); }
+    &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); --_lineLength: var(--lineLength-body-large); }
   }
 
   /* =====================================================
-     ALIGNMENT
+     LINE LENGTH (ADR-0021) — the reading ceiling, the stop's
+     line length through the ownership chain (ADR-0005): the
+     instance's --custom-textblock-lineLength first, on the engine
+     container that carries the run's font size (a ch is measured
+     in the font of its own element). TextBlock is always a block run.
+  ===================================================== */
+
+  &[data-cap-inline="false"] > .textblock-content { max-inline-size: none; }
+  &[data-run="block"][data-cap-inline="true"] > .textblock-content { max-inline-size: var(--custom-textblock-lineLength, var(--_lineLength)); }
+
+  /* =====================================================
+     ALIGNMENT — the words and, once capped, the box
   ===================================================== */
 
   &[data-align="left"]   { text-align: left; }
-  &[data-align="center"] { text-align: center; }
-  &[data-align="right"]  { text-align: right; }
+  &[data-align="center"] { text-align: center; & > .textblock-content { margin-inline: auto; } }
+  &[data-align="right"]  { text-align: right; & > .textblock-content { margin-inline-start: auto; } }
 
   /* =====================================================
      WRAP STRATEGIES

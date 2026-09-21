@@ -26,6 +26,9 @@ export const text = {
     size: { valuesBy: { axis: "variant", values: { body: ["sm", "md", "lg"] } }, default: "md" },
     align: { values: ["left", "center", "right"], default: "left" },
     wrap: { values: ["balance", "pretty", "stable", "nowrap"], default: "pretty" },
+    /** ADR-0021: a reading ceiling on the inline size, the stop's line length; only a block
+        run has an inline size to cap, so the CSS applies it behind the data-run gate */
+    capInline: { type: "boolean", default: true },
   },
   derived: {
     /** ADR-0012 §3: a span is an inline run; every other element is a block run */

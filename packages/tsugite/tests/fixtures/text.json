@@ -17,6 +17,7 @@
           "data-size": "md",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -37,6 +38,7 @@
           "data-size": "sm",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -69,6 +71,7 @@
           "data-size": "md",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "inline"
         }
       }
@@ -89,6 +92,7 @@
           "data-size": "md",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -110,6 +114,7 @@
           "data-size": "lg",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "inline"
         }
       }
@@ -130,6 +135,7 @@
           "data-size": "md",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -150,6 +156,7 @@
           "data-size": "md",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -171,6 +178,7 @@
           "data-size": "sm",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -192,6 +200,7 @@
           "data-size": "md",
           "data-align": "center",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -212,6 +221,7 @@
           "data-size": "md",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -232,6 +242,7 @@
           "data-size": "md",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -250,6 +261,7 @@
           "data-size": "md",
           "data-align": "left",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -308,6 +320,48 @@
       "expect": {
         "mode": "error",
         "errorMessage": "invalid wrap \"loose\" — expected balance | pretty | stable | nowrap"
+      }
+    },
+    {
+      "name": "capInline false on a paragraph",
+      "input": {
+        "text": "Runs the width",
+        "capInline": false,
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-cap-inline": "false",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "span: the gate is written, the inline run has no inline size to cap",
+      "input": {
+        "element": "span",
+        "text": "inline",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align": "left",
+          "data-wrap": "pretty",
+          "data-cap-inline": "true",
+          "data-run": "inline"
+        }
       }
     }
   ]

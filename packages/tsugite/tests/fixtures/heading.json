@@ -17,6 +17,7 @@
           "data-size": "2",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -37,6 +38,7 @@
           "data-size": "4",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -58,6 +60,7 @@
           "data-size": "2",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -80,6 +83,7 @@
           "data-size": "1",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -101,6 +105,7 @@
           "data-size": "md",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -121,6 +126,7 @@
           "data-size": "2",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "inline"
         }
       }
@@ -142,6 +148,7 @@
           "data-size": "3",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "block"
         },
         "parts": {
@@ -165,6 +172,7 @@
           "data-size": "2",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-highlight-style": "mark",
           "data-run": "block"
         },
@@ -190,6 +198,7 @@
           "data-size": "2",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-highlight-style": "underline",
           "data-run": "block"
         }
@@ -212,6 +221,7 @@
           "data-size": "2",
           "data-align": "center",
           "data-wrap": "pretty",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -232,6 +242,7 @@
           "data-size": "2",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -252,6 +263,7 @@
           "data-size": "2",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -270,6 +282,7 @@
           "data-size": "2",
           "data-align": "left",
           "data-wrap": "balance",
+          "data-cap-inline": "true",
           "data-run": "block"
         }
       }
@@ -352,6 +365,27 @@
       "expect": {
         "mode": "error",
         "errorMessage": "highlightStyle does not exist on a Heading without highlight"
+      }
+    },
+    {
+      "name": "capInline false: the ceiling off, the run still block",
+      "input": {
+        "text": "A headline allowed to run the width",
+        "capInline": false,
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h2",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "2",
+          "data-align": "left",
+          "data-wrap": "balance",
+          "data-cap-inline": "false",
+          "data-run": "block"
+        }
       }
     }
   ]
