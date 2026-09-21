@@ -1,0 +1,8 @@
+---
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* A paragraph is capped at the body stop's line length (70ch at md), on by default; the ceiling
+    steps with the size because a ch is measured in the run's own face. capInline={false} releases it. */}
+<Text text="Seventy characters is a reading measure: long enough for a sentence to breathe, short enough for the eye to find the next line without hunting. This paragraph stops there however wide the column is." />
+<Text size="sm" text="The small stop is capped at its own length, sixty-four of its smaller characters, so it ends up narrower in pixels than the paragraph above." />
+<Text capInline={false} text="With the ceiling off the paragraph runs the whole column, which is what every Text did before the line length existed. The docs pages you read this on were set this way." />

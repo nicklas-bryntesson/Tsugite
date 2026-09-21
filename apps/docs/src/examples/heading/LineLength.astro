@@ -1,0 +1,10 @@
+---
+import Heading from "tsugite/components/Heading/Heading.astro";
+---
+{/* Every block run is capped at its stop's line length (--lineLength-h1 … h6, in ch), on by default.
+    capInline={false} lets the run take the column. The instance may claim the ceiling through the
+    ownership chain — a pointer to another stop, never a number in the markup. */}
+<Heading element="h2" size="2" text="A headline is capped at its own stop's line length, thirty-four characters of its own face here" />
+<Heading element="h2" size="2" align="center" text="Centred: the box moves to the middle of the column, not only the words inside it" />
+<Heading element="h2" size="2" capInline={false} text="With the ceiling off the headline runs the whole column, as every heading did before" />
+<Heading element="h2" size="2" style="--custom-heading-lineLength: var(--lineLength-h5);" text="An instance claiming the h5 ceiling for a longer measure, through the chain" />
