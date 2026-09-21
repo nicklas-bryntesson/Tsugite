@@ -20,6 +20,8 @@ import Escaping from "../../examples/text-block/Escaping.astro";
 import escapingSrc from "../../examples/text-block/Escaping.astro?raw";
 import AlignWrap from "../../examples/text-block/AlignWrap.astro";
 import alignWrapSrc from "../../examples/text-block/AlignWrap.astro?raw";
+import LineLength from "../../examples/text-block/LineLength.astro";
+import lineLengthSrc from "../../examples/text-block/LineLength.astro?raw";
 
 const entry = entryFor("text-block");
 ---
@@ -48,6 +50,10 @@ const entry = entryFor("text-block");
 
     <Example id="align-wrap" title="Alignment and wrapping" lead="align sets the inline alignment; wrap chooses the line-breaking strategy, pretty by default." source={alignWrapSrc} block>
       <AlignWrap />
+    </Example>
+
+    <Example id="line-length" title="Line length" lead="The standfirst is capped at the preamble stop's line length, on by default (ADR-0021); capInline={false} releases it." source={lineLengthSrc} block>
+      <LineLength />
     </Example>
 
     <section class="doc-bench" id="test-bench">

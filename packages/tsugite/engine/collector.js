@@ -24,7 +24,7 @@ import { rawColorTokens, rawRefName, assertRawReferences } from "../theme-defaul
 import { semanticColorTokens } from "../theme-default/semantic.color.tokens.js";
 import { themeVoices, themeChannels, voiceMatrix, cellName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 import { uiSeamTokens } from "../theme-default/seam.ui.tokens.js";
-import { TIERS, typeFamilies, typeWeights, typeVoices, typeSizes } from "../theme-default/typography.tokens.js";
+import { TIERS, typeFamilies, typeWeights, typeVoices, typeSizes, typeLineLengths } from "../theme-default/typography.tokens.js";
 import { spaceScale, spaceSteps, sizeConstantName, sizeTokenName } from "../theme-default/size.tokens.js";
 import { siteConstants, siteOffset, siteOffsetConstantName } from "../theme-default/site.tokens.js";
 import { GRID_STEPS, GRID_MEDIA, gridSteps, gridGapConstantName, gridColumnsConstantName } from "../theme-default/grid.tokens.js";
@@ -326,6 +326,7 @@ export function generateThemesStylesheet() {
 const TYPE_TABLES = {
   voices: typeVoices,
   sizes: typeSizes,
+  lineLengths: typeLineLengths,
   families: typeFamilies,
   weights: typeWeights,
 };
@@ -349,7 +350,7 @@ const isTierMap = (v) => typeof v === "object" && v !== null;
     trim engine's arithmetic. Incomplete tables are a build error, never
     a silent metric bug. */
 export function validateTypography(tables = TYPE_TABLES) {
-  const { voices, sizes, families, weights } = tables;
+  const { voices, sizes, families, weights, lineLengths = {} } = tables;
   const problems = [];
 
   const checkTierMap = (owner, map) => {
@@ -420,17 +421,33 @@ export function validateTypography(tables = TYPE_TABLES) {
     checkTierMap(`fontSize ${name}`, tiers);
   }
 
+  // Line length (ADR-0021): one ceiling per size stop, in ch — the unit that
+  // reads the stop's own face, so no tier map and no other unit.
+  for (const name of Object.keys(sizes)) {
+    const v = lineLengths[name];
+    if (v === undefined) problems.push(`lineLength ${name} is missing (every size stop carries its reading ceiling)`);
+    else if (!/^\d*\.?\d+ch$/.test(String(v))) problems.push(`lineLength ${name}: "${v}" must be a length in ch`);
+  }
+  for (const name of Object.keys(lineLengths)) {
+    if (!(name in sizes)) problems.push(`lineLength ${name} names no size stop`);
+  }
+
   if (problems.length) throw new Error(`The typography table is incomplete:\n${problems.join("\n")}`);
 }
 
 export function generateTypographyStylesheet(tables = TYPE_TABLES) {
   validateTypography(tables);
-  const { voices, sizes, families, weights } = tables;
+  const { voices, sizes, families, weights, lineLengths = {} } = tables;
 
   const rawSizeName = (name, tier) => `--FONTSIZE-${name.toUpperCase()}-${tier.toUpperCase()}`;
 
   const rawConstants = Object.entries(sizes)
     .flatMap(([name, tiers]) => TIERS.map((t) => `  ${rawSizeName(name, t)}: ${tiers[t]};`))
+    .join("\n");
+
+  // The reading ceiling per stop, once in :root: ch steps with the ramp by itself.
+  const lineLengthTokens = Object.entries(lineLengths)
+    .map(([name, v]) => `  --lineLength-${name}: ${v};`)
     .join("\n");
 
   // Scalar metrics live once in :root; tier-mapped metrics move into the
@@ -506,6 +523,8 @@ export function generateTypographyStylesheet(tables = TYPE_TABLES) {
     ...Object.entries(weights).map(([n, v]) => `  ${n}: ${v};`),
     "",
     rawConstants,
+    "",
+    lineLengthTokens,
     "",
     bundles,
     "}",

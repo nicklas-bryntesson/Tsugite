@@ -22,6 +22,8 @@ import Sovereignty from "../../examples/text/Sovereignty.astro";
 import sovereigntySrc from "../../examples/text/Sovereignty.astro?raw";
 import AlignWrap from "../../examples/text/AlignWrap.astro";
 import alignWrapSrc from "../../examples/text/AlignWrap.astro?raw";
+import LineLength from "../../examples/text/LineLength.astro";
+import lineLengthSrc from "../../examples/text/LineLength.astro?raw";
 
 const entry = entryFor("text");
 ---
@@ -54,6 +56,10 @@ const entry = entryFor("text");
 
     <Example id="align-wrap" title="Alignment and wrapping" lead="align sets the inline alignment; wrap chooses the line-breaking strategy — pretty by default, where Heading defaults to balance." source={alignWrapSrc} block>
       <AlignWrap />
+    </Example>
+
+    <Example id="line-length" title="Line length" lead="A paragraph is capped at the body stop's line length, on by default (ADR-0021). The ceiling is in ch, so it steps with the size; capInline={false} releases it." source={lineLengthSrc} block>
+      <LineLength />
     </Example>
 
     <section class="doc-bench" id="test-bench">

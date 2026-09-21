@@ -1,0 +1,6 @@
+---
+import TextBlock from "tsugite/components/TextBlock/TextBlock.astro";
+---
+{/* The standfirst is capped at the preamble stop's line length (56ch at md), on by default. */}
+<TextBlock text="A standfirst is read in one breath, so its measure is shorter than the body's: fifty-six characters of the preamble face at this size." />
+<TextBlock capInline={false} text="With the ceiling off the standfirst runs the whole column." />

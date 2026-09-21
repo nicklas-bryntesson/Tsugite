@@ -32,6 +32,9 @@ export const heading = {
     },
     align: { values: ["left", "center", "right"], default: "left" },
     wrap: { values: ["balance", "pretty", "stable", "nowrap"], default: "balance" },
+    /** ADR-0021: a reading ceiling on the inline size, the stop's line length; only a block
+        run has an inline size to cap, so the CSS applies it behind the data-run gate */
+    capInline: { type: "boolean", default: true },
     /** how the marked words show; an open list — a value is a row here and a rule in Heading.css */
     highlightStyle: { values: ["mark", "underline"], default: "mark", when: { part: "highlight" } },
   },

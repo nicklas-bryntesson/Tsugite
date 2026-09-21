@@ -24,6 +24,8 @@ import Link from "../../examples/heading/Link.astro";
 import linkSrc from "../../examples/heading/Link.astro?raw";
 import AlignWrap from "../../examples/heading/AlignWrap.astro";
 import alignWrapSrc from "../../examples/heading/AlignWrap.astro?raw";
+import LineLength from "../../examples/heading/LineLength.astro";
+import lineLengthSrc from "../../examples/heading/LineLength.astro?raw";
 import Emphasis from "../../examples/heading/Emphasis.astro";
 import emphasisSrc from "../../examples/heading/Emphasis.astro?raw";
 
@@ -62,6 +64,10 @@ const entry = entryFor("heading");
 
     <Example id="align-wrap" title="Alignment and wrapping" lead="align sets the inline alignment; wrap chooses the line-breaking strategy, balance by default." source={alignWrapSrc} block>
       <AlignWrap />
+    </Example>
+
+    <Example id="line-length" title="Line length" lead="Every block run is capped at its stop's line length, in ch, on by default (ADR-0021). capInline turns the ceiling off; align moves the capped box; an instance may claim another stop through the ownership chain." source={lineLengthSrc} block>
+      <LineLength />
     </Example>
 
     <Example id="emphasis" title="Emphasis is flattened" lead="Child content runs through the same engine as prop text. In the loud voices strong and em inherit the run's font — partial bolding of a heading is drift (ADR-0012)." source={emphasisSrc} block>
