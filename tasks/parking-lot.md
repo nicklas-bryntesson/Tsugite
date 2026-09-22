@@ -73,10 +73,13 @@ and did not decide. Each is a separate call.
   (21.25 / 48.75 / 90rem). Aligning it changes where columns flip on
   every grid consumer (utils/grids, CoverComposition) — threshold
   decision, measure first.
-- **`--dir` lands on descendants of `:root`.** Emitted as
+- **`--dir` lands on descendants of `:root`.** ~~Emitted as
   `:root :not([dir="rtl"])` / `:root [dir="rtl"]` because the Sass source
-  nested the selectors inside the `:root` mixin. No consumer today.
-  Decide where the sign lives (`html[dir]`?) or delete it.
+  nested the selectors inside the `:root` mixin.~~ Resolved 2026-09-22: the
+  attribute form asked whether an element *carried* `dir`, so every
+  descendant of an rtl subtree got the ltr sign. Now `:dir(ltr)` / `:dir(rtl)`
+  on the computed direction — one rule per element, a closed question. Still
+  no consumer; delete the sign if none arrives.
 - **`--MOBILE-BREAKPOINT` (48.74rem) and `--DESKTOP-BREAKPOINT` (75rem)**
   are unused and 75rem is no boundary anywhere. Delete, or make them the
   tier boundaries and have the emitter read them.
@@ -99,3 +102,48 @@ and did not decide. Each is a separate call.
   wizards need — several fieldset levels, each tied to its heading via
   aria-describedby. That primitive would own the fieldset vocabulary (ADR-0005:
   compositions own none). Later.
+
+## From the lab cleanup (2026-09-21)
+
+- **Button's empty slots are a hidden default, and tertiary lives on it.**
+  `Button.css` declares fifteen colour slots empty (`--_color: ;` …) under
+  "own by tone axis". An empty custom property is valid: `color: var(--_color)`
+  turns invalid at computed-value time and falls to `inherit`, background to
+  `transparent`, border to `currentColor`. Census of who fills them: primary and
+  secondary 14 of 15, primary + intent 11, tertiary + intent 7, **tertiary 0** —
+  it zeroes the border width, writes `background: transparent` on the element and
+  takes every other colour from the empties. That is the "tertiary unfinished"
+  of PR #31, made invisible by the empties. `--_color-hover` is declared and never
+  read; `--_borderRadius: ;` is overwritten by both `data-pill` values. Doctrine:
+  every gate sets its slots; the empties let a gate be partial. **The pass:**
+  prefix `--_bt-` (the TODO(decide) at the top of the file), delete the empties,
+  make tertiary write all fifteen with explicit `transparent`/`inherit`, give
+  tertiary + intent its backgrounds, drop the dead hover slot, rewrite the header
+  in Card's format. Before the prefix, check the e2e suites and CtaButton for
+  reads of Button's slot names; `--button--baselineOffset` (line ~406) is a
+  public knob and keeps its name. Own PR, after the lab branch closes.
+- **Fallback-first is the @supports order.** ADR-0013's gate rule (off value
+  first, on value last) applied to feature queries: the `@supports not` branch
+  before the native one. Heading and TextBlock were flipped to match Text and
+  Caption; a sentence in css-doctrine.md should say it.
+- **The trim engine is four copies.** The `@supports` pair (native
+  text-box-trim / margin fallback) is identical in Heading, Text, Caption and
+  TextBlock but for the container class and the slot prefix. Candidate:
+  `kernel/css/run.css` on `[data-run="block"] > .run`, the container renamed
+  `.run` in all four, slots read under one set of names — which decides the
+  prefix question too (the slot TODO in Heading.css). Law (d)/(b) follows later,
+  after its selector is rethought (TODOS(?) in Caption.css).
+- **Where does a block's padding live, and who holds the lever?** The grid lab
+  (lab/grid.astro, eleven layouts) proved the band cannot pad: a breakout's
+  picture must run from the band's top to its bottom, so the block padding sits
+  on the copy there and on the layout grid in a centered block, and adjacency
+  collapses only between blocks that pad at the same level (same voice,
+  sibling selector). Open: what kind of axis that is — a word on the block
+  ("media fills the band" vs "media sits inside the padding"), the block's
+  recipe, or the grid-region spike where the Surface root is the grid — and
+  where the lever sits. Lab-only CSS today (two TODO(lab) rules); an answer
+  is needed before compositions ship on Surface. Related: the `join` boolean
+  (ADR-0016 amendment), Layout.css's `align-items: flex-start` on the root
+  (dead weight: every child sets full width), the lab's `data-align-block` /
+  `data-align-inline` words.
+

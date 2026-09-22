@@ -1,4 +1,8 @@
 ---
+// TODO(plan): this file is the pre-plan Prose. It carries two margin systems on the same
+// paragraphs and a root-level line-length cap in the wrong place; the plan that replaces
+// it — a hand-written rhythm file plus a generated voice file from a proseMap, any depth,
+// a lower boundary at the first classed root, a parity test — is tasks/plan-prose.md.
 // Port of AiPoc TagHelpers/ProseTagHelper.cs
 // The IHtmlContent `content` prop becomes a pre-rendered HTML string
 // (e.g. CMS RTE output); otherwise child content is used.
@@ -79,7 +83,7 @@ const inner = hasContent ? content! : childHtml;
    class-based selectors without needing any resets here.
 ───────────────────────────────────────────────────────────────── */
 
-/* ── Size ────────────────────────────────────────────────────── */
+/* TODOS(system): since the css in the wysiwyg content is supposed to mirror the agrreded css for the components, should the content of this file be genererated rather than hand managed? esp typography stuff */
 
 :where(.Prose[data-size="sm"]),
 :where(.Prose[data-size="md"]),
