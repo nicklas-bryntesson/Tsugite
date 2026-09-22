@@ -91,15 +91,6 @@
      Same gates as Heading/Text. Removable in one sweep.
   ===================================================== */
 
-  /* Native trim branch */
-  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-    > .textblock-content {
-      text-box-trim: trim-both;
-      text-box-edge: cap alphabetic;
-      margin-block: 0;
-    }
-  }
-
   /* Fallback branch */
   @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
     > .textblock-content {
@@ -113,6 +104,15 @@
 
       margin-block-start: var(--_marginBlockStart);
       margin-block-end: var(--_marginBlockEnd);
+    }
+  }
+
+  /* Native trim branch */
+  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+    > .textblock-content {
+      text-box-trim: trim-both;
+      text-box-edge: cap alphabetic;
+      margin-block: 0;
     }
   }
 }
