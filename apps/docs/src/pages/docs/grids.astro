@@ -8,8 +8,21 @@ import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/components/Heading/Heading.astro";
 import Prose from "tsugite/components/Prose/Prose.astro";
 
-const layoutCells = Array.from({ length: 12 }, (_, i) => i + 1);
-const breakoutCells = Array.from({ length: 14 }, (_, i) => i + 1);
+// The cell counts come from the generated token CSS (the public contract), not from a
+// number typed here: the largest column count any step declares. Redefine the grids and
+// the figures follow; the browser then decides, per step, how many of the cells show.
+import baseTokens from "tsugite/styles/tokens/base/base.generated.css?raw";
+// A count token points at a RAW constant (--GRID-COLUMNS-<STEP>: 12); follow the pointer.
+const declared = new Map([...baseTokens.matchAll(/(--[\w-]+):\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
+const numberOf = (name: string, depth = 0): number => {
+  const v = declared.get(name) ?? "";
+  const ref = v.match(/^var\((--[\w-]+)\)$/);
+  return ref && depth < 4 ? numberOf(ref[1], depth + 1) : Number(v);
+};
+const maxCount = (recipe: string) =>
+  Math.max(...[...declared.keys()].filter((k) => k.startsWith(`--grid-${recipe}-columns-count-`)).map((k) => numberOf(k)).filter((n) => !Number.isNaN(n)));
+const layoutCells = Array.from({ length: maxCount("layout") }, (_, i) => i + 1);
+const breakoutColumns = Array.from({ length: maxCount("breakout") }, (_, i) => i + 1);
 
 const containerTokens = ["--grid-container-offset", "--grid-container-maxWidth"];
 const layoutTokens = ["--grid-layout-gap", "--grid-layout-columns"];
@@ -28,7 +41,9 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
           Three recipes on one table of tokens: <strong>container</strong>, <strong>layout</strong>, <strong>breakout</strong>.
           Each figure below is the real class on the real tokens, one cell per
           track, at the page's full width. The numbers are measured live; resize the window and watch the tracks
-          step. The <em>LAB</em> button bottom right lays the same grid over any page.
+          step. The <em>LAB</em> button bottom right lays the same grid over any page,
+          and <a href="/lab/grid">the grid lab</a> shows the three recipes in use: eleven
+          page layouts placed on them, copy and pictures as sketch strokes.
         </p>
       </Prose>
     </header>
@@ -44,10 +59,12 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
       </Prose>
     </section>
     <figure class="figure">
-      <div class="grid-container demo" data-grid-figure="container">
-        <span class="cell cell-gutter" style="grid-column: full-start / main-start"></span>
-        <span class="cell" style="grid-column: main"></span>
-        <span class="cell cell-gutter" style="grid-column: main-end / full-end"></span>
+      <div class="demo">
+        <div class="grid-container" data-grid-figure="container">
+          <span class="cell cell-gutter" style="grid-column: full-start / main-start"></span>
+          <span class="cell" style="grid-column: main"></span>
+          <span class="cell cell-gutter" style="grid-column: main-end / full-end"></span>
+        </div>
       </div>
       <figcaption class="grid-container readout">
         <output data-readout="container"></output>
@@ -61,13 +78,15 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
       <Heading element="h2" size="3" text="Layout" />
       <Prose variant="basic">
         <p>
-          Equal columns with a gap, centered in a container: 1, 4, 8 or 12 columns by step.
-          Twelve cells are placed here, so below the desktop step they wrap. Count a row.
+          Equal columns with a gap, centered in a container; the count steps with the
+          grid's own ladder. As many cells as the widest step has columns are placed, and
+          the ones beyond the current step's count fall into a row of no height, so what
+          you see is one cell per column, whatever the step.
         </p>
       </Prose>
     </section>
     <figure class="figure">
-      <div class="grid-container demo">
+      <div class="demo grid-container">
         <div class="grid-layout" data-grid-figure="layout">
           {layoutCells.map(() => <span class="cell"></span>)}
         </div>
@@ -84,16 +103,24 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
       <Heading element="h2" size="3" text="Breakout" />
       <Prose variant="basic">
         <p>
-          The layout's columns inside the container's gutters, as one grid: up to fourteen
-          tracks, the first and last fluid, the twelve between them named <code>main</code>.
-          A child can sit in the columns or reach into a gutter. Fourteen cells are placed
-          here; the outer two are the gutters.
+          The layout's columns inside the container's gutters, as one grid: the columns
+          named <code>main</code> between a fluid first and last track. Every track is
+          placeable, the outer two included; that is the point of breakout, a child can run
+          from the screen's edge into the centred columns. One cell per track; the outer two
+          are pinned to the first and last track.
         </p>
       </Prose>
     </section>
     <figure class="figure">
-      <div class="grid-breakout demo" data-grid-figure="breakout">
-        {breakoutCells.map((n) => <span class:list={["cell", { "cell-gutter": n === 1 || n === 14 }]}></span>)}
+      <div class="demo">
+        <div class="grid-breakout" data-grid-figure="breakout">
+          {/* the outer tracks are placeable like any other — that is what breakout is for — so
+              their cells look like the rest; they come first in source, pinned to the first and
+              last track, so the auto-placed columns cannot take the last track first */}
+          <span class="cell" style="grid-column: 1"></span>
+          <span class="cell" style="grid-column: -2"></span>
+          {breakoutColumns.map(() => <span class="cell"></span>)}
+        </div>
       </div>
       <figcaption class="grid-container readout">
         <output data-readout="breakout"></output>
@@ -146,11 +173,10 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
 
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--size-lg);
 
-  /* text blocks: a grid-container each, their children in main by the recipe's default */
   & .text {
-    row-gap: 1rem;
+    row-gap: var(--size-lg);
   }
 
   & .doc-breadcrumb {
@@ -166,14 +192,22 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
     gap: 0.75rem;
   }
 
-  /* the demo grid is the real class; it only gets a floor so empty tracks are visible */
   & .demo {
-    row-gap: 0.5rem;
     padding-block: 0.75rem;
     border-block: 1px dashed var(--color-border-subtle);
   }
 
-  /* one cell per track, drawn like the size-ramp bars */
+  & [data-grid-figure] {
+    grid-template-rows: auto;
+    grid-auto-rows: 0;
+    row-gap: 0;
+    overflow: clip;
+  }
+
+  & [data-grid-figure="breakout"] {
+    grid-auto-flow: dense;
+  }
+
   & .cell {
     display: block;
     min-inline-size: 0.25rem;
