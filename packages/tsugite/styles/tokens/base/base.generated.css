@@ -156,10 +156,14 @@
   --grid-breakout-columns-desktop:              [full-start] minmax(var(--grid-breakout-content-autoPadding-desktop), 1fr) [main-start] repeat(var(--grid-breakout-columns-count-desktop), [main] minmax(0, var(--grid-breakout-column-autoSize-desktop))) [main-end] minmax(var(--grid-breakout-content-autoPadding-desktop), 1fr) [full-end];
 }
 
-/* Writing direction as a sign, for mirrored offsets. Ported as emitted by
-   the Sass source: descendant selectors under :root (see ADR-0011). */
-:root :not([dir="rtl"]) { --dir: var(--DIR-LTR); }
-:root [dir="rtl"] { --dir: var(--DIR-RTL); }
+/* Writing direction as a sign, for mirrored offsets. :dir() asks for the
+   element's computed direction — the nearest dir attribute, dir=auto, or the
+   document's default — so every element matches exactly one rule: a closed
+   question per element, no base and no override. (An attribute selector asked
+   whether the element CARRIED dir, and gave every descendant of an rtl subtree
+   the ltr sign.) */
+:dir(ltr) { --dir: var(--DIR-LTR); }
+:dir(rtl) { --dir: var(--DIR-RTL); }
 
 @media (max-width: 21.24999rem) {
   :root {
