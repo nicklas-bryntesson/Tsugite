@@ -16,39 +16,30 @@
 }
 
 body {
-  /* 4. Add accessible line-height */
-  line-height: var(--lineHeight-body, 1.5);
-  /* 5. Improve text rendering */
+  /* 4. Improve text rendering. No line-height here: every run sets its own
+     from its voice, and the raw text an editor delivers gets it from Prose. */
   -webkit-font-smoothing: antialiased;
 }
 
-/* 6. Improve media defaults */
+/* 5. Improve media defaults */
 img, picture, video, canvas, svg {
   display: block;
   max-width: 100%;
 }
 
-/* 7. Inherit fonts for form controls */
+/* 6. Inherit fonts for form controls */
 input, button, textarea, select {
   font: inherit;
 }
 
-/* 8. Avoid text overflows */
-p, h1, h2, h3, h4, h5, h6 {
-  overflow-wrap: break-word;
-}
+/* 7. Wrapping is not the reset's to decide. The typography components answer it
+   per run (data-wrap, overflow-wrap in Heading, Text, Caption, TextBlock), and the
+   one place raw p and h1–h6 exist without a component — a Prose field fed by an
+   editor — answers it in Prose. A row here was a second truth under every heading
+   on the site (removed 2026-09-22). */
 
-/* 9. Improve line wrapping */
-p {
-  text-wrap: pretty;
-}
-h1, h2, h3, h4, h5, h6 {
-  text-wrap: balance;
-}
-
-/*
-  10. Create a root stacking context
-*/
-#root, #__next {
+/* 8. Create a root stacking context — the app's root, not the source reset's
+   React and Next ids */
+#App {
   isolation: isolate;
 }
