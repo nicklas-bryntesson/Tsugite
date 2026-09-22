@@ -1,22 +1,32 @@
-/* =====================================================
-   CAPTION COMPONENT — the UI voices (label, button, nav)
-   The engine below is shared word for word with Heading, Text and
-   TextBlock (ADR-0012); a change here is a change in four files.
-===================================================== */
+/*
+ * Caption — the UI voices of the typography family: label, button and nav.
+ * It owns one run's bundle (face, weight, size, leading, tracking, trim) and
+ * how the run sits on its line, nothing about what the words mean or what
+ * they mark up. The controls read the same voices as tokens; this is the door
+ * that speaks them standalone.
+ *
+ * Five gates over one engine:
+ *   data-variant   label | button | nav, the voice bundle.
+ *   data-size      sm | md | lg, the voice's size stop.
+ *   data-run       block | inline, derived from the element (ADR-0012 §3):
+ *                  a span flows on the line and is never trimmed.
+ *   data-align     left | center | right.
+ *   data-wrap      balance | pretty | stable | nowrap.
+ *
+ * The engine (.caption-content, laws b–d, the trim branches) is shared word
+ * for word with Heading, Text and TextBlock; a change here is a change in
+ * four files.
+ */
 
 .Caption {
-  /* reset */
   word-wrap: break-word;
   overflow-wrap: break-word;
   margin-block: 0;
 
-  /* ================================================
-     TEXT CONTAINER (Typography Engine)
-  ================================================= */
-
+  /* TODOS() I think we can do better than this... */
   .caption-content {
-    font-size: var(--_fontSize);
-    line-height: var(--_lineHeight);
+    font-size: var(--_cp-fontSize);
+    line-height: var(--_cp-lineHeight);
 
     /* Law (d) — voice sovereignty: an UNVOICED inline element inherits
        the run's metrics; a voiced child (data-variant) — and everything
@@ -34,7 +44,7 @@
        weight — Inter 400 here — gets flat emphasis by VALUE, not by law; a theme
        that adds a bold weight opens the door without a line of CSS changing.
        The voice's bold token is set per variant below. */
-    & :where(strong, b):where(:not(:is(.Caption [data-variant]) *)) { font-weight: var(--_boldWeight); }
+    & :where(strong, b):where(:not(:is(.Caption [data-variant]) *)) { font-weight: var(--_cp-boldWeight); }
     & :where(em, i):where(:not(:is(.Caption [data-variant]) *)) { font-style: italic; }
   }
 
@@ -45,86 +55,129 @@
     display: block;
   }
 
-  /* =====================================================
-     VARIANT LAYER (voice + baseline offset)
-  ===================================================== */
 
   &[data-variant="label"] {
-    --_lineHeight: var(--lineHeight-label);
-    --_baselineOffset: var(--baseline-offset-label);
-    --_emBox: var(--fontEmBox-label);
-    --_capGap: var(--fontCapGap-label);
-    --_descent: var(--fontDescent-label);
-    --_boldWeight: var(--fontWeight-label-bold, var(--fontWeight-label));
+    --_cp-lineHeight: var(--lineHeight-label);
+    --_cp-baselineOffset: var(--baseline-offset-label);
+    --_cp-emBox: var(--fontEmBox-label);
+    --_cp-capGap: var(--fontCapGap-label);
+    --_cp-descent: var(--fontDescent-label);
+    --_cp-boldWeight: var(--fontWeight-label-bold, var(--fontWeight-label));
 
     font-family: var(--fontFamily-label);
     font-weight: var(--fontWeight-label);
     letter-spacing: var(--letterSpacing-label);
     font-feature-settings: var(--fontFeatureSettings-label);
 
-    &[data-size="sm"] { --_fontSize: var(--fontSize-label-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-label); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-label-large); }
+    &[data-size="sm"] {
+      --_cp-fontSize: var(--fontSize-label-small);
+    }
+
+    &[data-size="md"] {
+      --_cp-fontSize: var(--fontSize-label);
+    }
+
+    &[data-size="lg"] {
+      --_cp-fontSize: var(--fontSize-label-large);
+    }
   }
 
   &[data-variant="button"] {
-    --_lineHeight: var(--lineHeight-button);
-    --_baselineOffset: var(--baseline-offset-button);
-    --_emBox: var(--fontEmBox-button);
-    --_capGap: var(--fontCapGap-button);
-    --_descent: var(--fontDescent-button);
-    --_boldWeight: var(--fontWeight-button-bold, var(--fontWeight-button));
+    --_cp-lineHeight: var(--lineHeight-button);
+    --_cp-baselineOffset: var(--baseline-offset-button);
+    --_cp-emBox: var(--fontEmBox-button);
+    --_cp-capGap: var(--fontCapGap-button);
+    --_cp-descent: var(--fontDescent-button);
+    --_cp-boldWeight: var(--fontWeight-button-bold, var(--fontWeight-button));
 
     font-family: var(--fontFamily-button);
     font-weight: var(--fontWeight-button);
     letter-spacing: var(--letterSpacing-button);
     font-feature-settings: var(--fontFeatureSettings-button);
 
-    &[data-size="sm"] { --_fontSize: var(--fontSize-button-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-button); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-button-large); }
+    &[data-size="sm"] {
+      --_cp-fontSize: var(--fontSize-button-small);
+    }
+
+    &[data-size="md"] {
+      --_cp-fontSize: var(--fontSize-button);
+    }
+
+    &[data-size="lg"] {
+      --_cp-fontSize: var(--fontSize-button-large);
+    }
   }
 
   &[data-variant="nav"] {
-    --_lineHeight: var(--lineHeight-nav);
-    --_baselineOffset: var(--baseline-offset-nav);
-    --_emBox: var(--fontEmBox-nav);
-    --_capGap: var(--fontCapGap-nav);
-    --_descent: var(--fontDescent-nav);
-    --_boldWeight: var(--fontWeight-nav-bold, var(--fontWeight-nav));
+    --_cp-lineHeight: var(--lineHeight-nav);
+    --_cp-baselineOffset: var(--baseline-offset-nav);
+    --_cp-emBox: var(--fontEmBox-nav);
+    --_cp-capGap: var(--fontCapGap-nav);
+    --_cp-descent: var(--fontDescent-nav);
+    --_cp-boldWeight: var(--fontWeight-nav-bold, var(--fontWeight-nav));
 
     font-family: var(--fontFamily-nav);
     font-weight: var(--fontWeight-nav);
     letter-spacing: var(--letterSpacing-nav);
     font-feature-settings: var(--fontFeatureSettings-nav);
 
-    &[data-size="sm"] { --_fontSize: var(--fontSize-nav-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-nav); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-nav-large); }
+    &[data-size="sm"] {
+      --_cp-fontSize: var(--fontSize-nav-small);
+    }
+
+    &[data-size="md"] {
+      --_cp-fontSize: var(--fontSize-nav);
+    }
+
+    &[data-size="lg"] {
+      --_cp-fontSize: var(--fontSize-nav-large);
+    }
   }
 
-  /* =====================================================
-     ALIGNMENT
-  ===================================================== */
+  &[data-align="left"] {
+    text-align: left;
+  }
 
-  &[data-align="left"]   { text-align: left; }
-  &[data-align="center"] { text-align: center; }
-  &[data-align="right"]  { text-align: right; }
+  &[data-align="center"] {
+    text-align: center;
+  }
 
-  /* =====================================================
-     WRAP STRATEGIES
-  ===================================================== */
+  &[data-align="right"] {
+    text-align: right;
+  }
 
-  &[data-wrap="balance"] { text-wrap: balance; }
-  &[data-wrap="pretty"]  { text-wrap: pretty; }
-  &[data-wrap="stable"]  { text-wrap: stable; }
+  /* Wrap. balance, pretty and stable are enhancements: a browser without the
+    value drops the declaration and wraps the plain way, so no @supports. nowrap
+    is a promise, so it uses the property every browser has honoured. */
+  &[data-wrap="balance"] {
+    text-wrap: balance;
+  }
 
-  /* =====================================================
-     FEATURE LAYER — TEXT TRIM
-     Same gates as Heading. Removable in one sweep.
-     Law (c): trim is a block concept — inline runs sit on a shared
-     line whose metrics the host and the browser's baseline negotiate.
-  ===================================================== */
+  &[data-wrap="pretty"] {
+    text-wrap: pretty;
+  }
+
+  &[data-wrap="stable"] {
+    text-wrap: stable;
+  }
+
+  &[data-wrap="nowrap"] {
+    white-space: nowrap;
+  }
+
+  /* Text-trim with fallback */
+  /* TODOS(token) should this be a kernel after we solve the data-run:block? */
+
+  /* Fallback branch */
+  @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
+    &[data-run="block"] > .caption-content {
+      --_cp-marginBlockStart: calc(((var(--_cp-emBox, 1) - var(--_cp-lineHeight)) / 2 - var(--_cp-capGap, 0) + var(--_cp-baselineOffset, 0)) * var(--_cp-fontSize));
+      --_cp-marginBlockEnd: calc(((var(--_cp-emBox, 1) - var(--_cp-lineHeight)) / 2 - var(--_cp-descent, 0) - var(--_cp-baselineOffset, 0)) * var(--_cp-fontSize));
+
+      margin-block-start: var(--_cp-marginBlockStart);
+      margin-block-end: var(--_cp-marginBlockEnd);
+    }
+  }
 
   /* Native trim branch */
   @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
@@ -132,22 +185,6 @@
       text-box-trim: trim-both;
       text-box-edge: cap alphabetic;
       margin-block: 0;
-    }
-  }
-
-  /* Fallback branch */
-  @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
-    &[data-run="block"] > .caption-content {
-      /* Emulates text-box-edge: cap alphabetic. The line box's content
-         area is the REAL em box (ascent+descent — 1.19-1.36em for our
-         faces, never 1), so the shave is half of (emBox - lineHeight)
-         plus the cap gap above / the descent below. baselineOffset stays
-         as the artistic nudge on top (factor x font size). */
-      --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
-      --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
-
-      margin-block-start: var(--_marginBlockStart);
-      margin-block-end: var(--_marginBlockEnd);
     }
   }
 }

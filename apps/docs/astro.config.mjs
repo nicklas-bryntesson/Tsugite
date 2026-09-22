@@ -4,7 +4,7 @@ import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import vue from "@astrojs/vue";
 import browserslist from "browserslist";
-import { browserslistToTargets } from "lightningcss";
+import { browserslistToTargets, Features } from "lightningcss";
 
 // The support contract lives in /.browserslistrc (repo root). Lightning CSS
 // lowers what the targets lack — CSS nesting first of all (ADR-0010) — and
@@ -26,7 +26,11 @@ export default defineConfig({
   vite: {
     css: {
       transformer: "lightningcss",
-      lightningcss: { targets },
+      // :dir() is NOT lowered: Lightning CSS's fallback rewrites it to :lang() lists,
+      // which answers a different question (language, not direction) in every
+      // browser, not only the old ones. Browsers below the target drop the rule
+      // and --dir stays unset — the honest degradation, decided 2026-09-22.
+      lightningcss: { targets, exclude: Features.DirSelector },
     },
     build: {
       cssMinify: "lightningcss",

@@ -23,8 +23,10 @@
 /* TODO(decide): the part classes (.heading-text, .heading-link) follow the family's
    prefixed-lowercase scheme; Notice and Card use bare part names (.icon, .content).
    Two schemes for inner parts. Family-wide, decide once. */
-/* TODO(decide): the engine slots (--_fontSize, --_lineHeight, --_emBox, ...) are shared
-   by Heading, Text and TextBlock. ADR-0013 left the family prefix open. */
+/* TODO(decide): the engine slots (fontSize, lineHeight, emBox, capGap, descent, baselineOffset)
+   are the same contract in Heading, Text, Caption and TextBlock, now under a prefix per component
+   (--_hd-, --_cp-, …). When the trim engine moves to one shared file it must read ONE set of
+   names, so the prefixes become the engine's or the engine's become the prefixes; decide with it. */
 .Heading {
   /* TODO(dead): word-wrap is the legacy alias of overflow-wrap; both are declared.
      Same in Text and TextBlock, remove family-wide. */
@@ -34,8 +36,8 @@
 
   & .heading-link,
   & .heading-text {
-    font-size: var(--_fontSize);
-    line-height: var(--_lineHeight);
+    font-size: var(--_hd-fontSize);
+    line-height: var(--_hd-lineHeight);
 
     /* ADR-0012 §4, voice sovereignty: an unvoiced inline element inherits the
        run's metrics. In the loud voices that includes strong and em; partial
@@ -71,19 +73,17 @@
     text-underline-offset: 0.12em;
   }
 
-  /* ADR-0012 §3: block runs own their display; inline runs keep the UA's inline
-     flow, and receive nothing here. */
   &[data-run="block"] > .heading-link,
   &[data-run="block"] > .heading-text {
     display: block;
   }
 
   &[data-variant="heading"] {
-    --_lineHeight: var(--lineHeight-heading);
-    --_baselineOffset: var(--baseline-offset-heading);
-    --_emBox: var(--fontEmBox-heading);
-    --_capGap: var(--fontCapGap-heading);
-    --_descent: var(--fontDescent-heading);
+    --_hd-lineHeight: var(--lineHeight-heading);
+    --_hd-baselineOffset: var(--baseline-offset-heading);
+    --_hd-emBox: var(--fontEmBox-heading);
+    --_hd-capGap: var(--fontCapGap-heading);
+    --_hd-descent: var(--fontDescent-heading);
 
     font-family: var(--fontFamily-heading);
     font-weight: var(--fontWeight-heading);
@@ -91,42 +91,42 @@
     font-feature-settings: var(--fontFeatureSettings-heading);
 
     &[data-size="1"] {
-      --_fontSize: var(--fontSize-h1);
-      --_lineLength: var(--lineLength-h1);
+      --_hd-fontSize: var(--fontSize-h1);
+      --_hd-lineLength: var(--lineLength-h1);
     }
 
     &[data-size="2"] {
-      --_fontSize: var(--fontSize-h2);
-      --_lineLength: var(--lineLength-h2);
+      --_hd-fontSize: var(--fontSize-h2);
+      --_hd-lineLength: var(--lineLength-h2);
     }
 
     &[data-size="3"] {
-      --_fontSize: var(--fontSize-h3);
-      --_lineLength: var(--lineLength-h3);
+      --_hd-fontSize: var(--fontSize-h3);
+      --_hd-lineLength: var(--lineLength-h3);
     }
 
     &[data-size="4"] {
-      --_fontSize: var(--fontSize-h4);
-      --_lineLength: var(--lineLength-h4);
+      --_hd-fontSize: var(--fontSize-h4);
+      --_hd-lineLength: var(--lineLength-h4);
     }
 
     &[data-size="5"] {
-      --_fontSize: var(--fontSize-h5);
-      --_lineLength: var(--lineLength-h5);
+      --_hd-fontSize: var(--fontSize-h5);
+      --_hd-lineLength: var(--lineLength-h5);
     }
 
     &[data-size="6"] {
-      --_fontSize: var(--fontSize-h6);
-      --_lineLength: var(--lineLength-h6);
+      --_hd-fontSize: var(--fontSize-h6);
+      --_hd-lineLength: var(--lineLength-h6);
     }
   }
 
   &[data-variant="display"] {
-    --_lineHeight: var(--lineHeight-display);
-    --_baselineOffset: var(--baseline-offset-display);
-    --_emBox: var(--fontEmBox-display);
-    --_capGap: var(--fontCapGap-display);
-    --_descent: var(--fontDescent-display);
+    --_hd-lineHeight: var(--lineHeight-display);
+    --_hd-baselineOffset: var(--baseline-offset-display);
+    --_hd-emBox: var(--fontEmBox-display);
+    --_hd-capGap: var(--fontCapGap-display);
+    --_hd-descent: var(--fontDescent-display);
 
     font-family: var(--fontFamily-display);
     font-weight: var(--fontWeight-display);
@@ -134,27 +134,27 @@
     font-feature-settings: var(--fontFeatureSettings-display);
 
     &[data-size="1"] {
-      --_fontSize: var(--fontSize-display-1);
-      --_lineLength: var(--lineLength-display-1);
+      --_hd-fontSize: var(--fontSize-display-1);
+      --_hd-lineLength: var(--lineLength-display-1);
     }
 
     &[data-size="2"] {
-      --_fontSize: var(--fontSize-display-2);
-      --_lineLength: var(--lineLength-display-2);
+      --_hd-fontSize: var(--fontSize-display-2);
+      --_hd-lineLength: var(--lineLength-display-2);
     }
 
     &[data-size="3"] {
-      --_fontSize: var(--fontSize-display-3);
-      --_lineLength: var(--lineLength-display-3);
+      --_hd-fontSize: var(--fontSize-display-3);
+      --_hd-lineLength: var(--lineLength-display-3);
     }
   }
 
   &[data-variant="body"] {
-    --_lineHeight: var(--lineHeight-body);
-    --_baselineOffset: var(--baseline-offset-body);
-    --_emBox: var(--fontEmBox-body);
-    --_capGap: var(--fontCapGap-body);
-    --_descent: var(--fontDescent-body);
+    --_hd-lineHeight: var(--lineHeight-body);
+    --_hd-baselineOffset: var(--baseline-offset-body);
+    --_hd-emBox: var(--fontEmBox-body);
+    --_hd-capGap: var(--fontCapGap-body);
+    --_hd-descent: var(--fontDescent-body);
 
     font-family: var(--fontFamily-body);
     font-weight: var(--fontWeight-body);
@@ -162,26 +162,21 @@
     font-feature-settings: var(--fontFeatureSettings-body);
 
     &[data-size="sm"] {
-      --_fontSize: var(--fontSize-body-small);
-      --_lineLength: var(--lineLength-body-small);
+      --_hd-fontSize: var(--fontSize-body-small);
+      --_hd-lineLength: var(--lineLength-body-small);
     }
 
     &[data-size="md"] {
-      --_fontSize: var(--fontSize-body);
-      --_lineLength: var(--lineLength-body);
+      --_hd-fontSize: var(--fontSize-body);
+      --_hd-lineLength: var(--lineLength-body);
     }
 
     &[data-size="lg"] {
-      --_fontSize: var(--fontSize-body-large);
-      --_lineLength: var(--lineLength-body-large);
+      --_hd-fontSize: var(--fontSize-body-large);
+      --_hd-lineLength: var(--lineLength-body-large);
     }
   }
 
-  /* The reading ceiling (ADR-0021): the stop's line length, through the ownership chain
-     (ADR-0005) — the instance's --custom-heading-lineLength first. It sits on the engine
-     container, the box that carries the run's font size: a ch is measured in the font of
-     the element it is declared on, and the root has none of its own. Only a block run has
-     an inline size to cap; the inline run's gate is written and means nothing here. */
   &[data-cap-inline="false"] > .heading-link,
   &[data-cap-inline="false"] > .heading-text {
     max-inline-size: none;
@@ -189,7 +184,7 @@
 
   &[data-run="block"][data-cap-inline="true"] > .heading-link,
   &[data-run="block"][data-cap-inline="true"] > .heading-text {
-    max-inline-size: var(--custom-heading-lineLength, var(--_lineLength));
+    max-inline-size: var(--custom-heading-lineLength, var(--_hd-lineLength));
   }
 
   /* align moves the box as well as the words: a capped box centred in its column, or
@@ -228,20 +223,9 @@
     text-wrap: stable;
   }
 
+  /* nowrap is a promise, not an enhancement: the property every browser honours */
   &[data-wrap="nowrap"] {
-    text-wrap: nowrap;
-  }
-
-  /* Text trim (ADR-0012 §3): a block concept, so both branches sit behind the
-     data-run gate and an inline run receives neither. Isolated, removable in
-     one sweep. */
-  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-    &[data-run="block"] > .heading-link,
-    &[data-run="block"] > .heading-text {
-      text-box-trim: trim-both;
-      text-box-edge: cap alphabetic;
-      margin-block: 0;
-    }
+    white-space: nowrap;
   }
 
   @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
@@ -253,11 +237,21 @@
          and the descent below. baselineOffset is the artistic nudge on top. */
       /* TODO(dead): the `, 1` and `, 0` fallbacks can never fire, every variant sets
          the slots. Doctrine §2 forbids them. Same in Text and TextBlock. */
-      --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
-      --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
+      --_hd-marginBlockStart: calc(((var(--_hd-emBox, 1) - var(--_hd-lineHeight)) / 2 - var(--_hd-capGap, 0) + var(--_hd-baselineOffset, 0)) * var(--_hd-fontSize));
+      --_hd-marginBlockEnd: calc(((var(--_hd-emBox, 1) - var(--_hd-lineHeight)) / 2 - var(--_hd-descent, 0) - var(--_hd-baselineOffset, 0)) * var(--_hd-fontSize));
 
-      margin-block-start: var(--_marginBlockStart);
-      margin-block-end: var(--_marginBlockEnd);
+      margin-block-start: var(--_hd-marginBlockStart);
+      margin-block-end: var(--_hd-marginBlockEnd);
+    }
+  }
+
+  /* TODOS(tokens): kernel with the other components? */
+  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+    &[data-run="block"] > .heading-link,
+    &[data-run="block"] > .heading-text {
+      text-box-trim: trim-both;
+      text-box-edge: cap alphabetic;
+      margin-block: 0;
     }
   }
 }

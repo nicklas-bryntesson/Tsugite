@@ -1,0 +1,324 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Surface from "tsugite/components/Surface/Surface.astro";
+import DummyText from "../../components/DummyText/DummyText.astro";
+import DummyImage from "../../components/DummyImage/DummyImage.astro";
+
+---
+
+<Layout title="Grid lab">
+  <main class="GridLab">
+
+    {/* 1. centered · copy 2–7 (vertically centred) · landscape picture 7–13 */}
+    <Surface element="section" theme="brand" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex1 grid-container">
+        <div class="grid-layout">
+          <div class="copy" data-align-block="center"><DummyText seed={1} /></div>
+          <figure class="thumb" data-ratio="landscape"><DummyImage ratio="fill" /></figure>
+        </div>
+      </div>
+    </Surface>
+
+    {/* 2. breakout · picture from the screen edge to column 6 · copy 8–13 centred */}
+    <Surface element="section" theme="neutral" prominence="primary" capInline={false}>
+      <div class="Lab lab-ex2 grid-breakout">
+        <div class="copy" data-align-block="center"><DummyText seed={2} lines={5} /></div>
+        <figure class="thumb"><DummyImage ratio="fill" /></figure>
+      </div>
+    </Surface>
+
+    {/* 3. centered · copy 2–7 · picture 8–12, its own ratio */}
+    <Surface element="section" theme="neutral" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex3 grid-container">
+        <div class="grid-layout">
+          <div class="copy"><DummyText seed={3} lines={3} /></div>
+          <figure class="thumb" data-ratio="photo"><DummyImage ratio="fill" /></figure>
+        </div>
+      </div>
+    </Surface>
+
+    {/* 4. breakout · picture from the edge to column 4, as tall as the copy · copy 6–12 */}
+    <Surface element="section" theme="inverse" prominence="primary" capInline={false}>
+      <div class="Lab lab-ex4 grid-breakout">
+        <div class="copy"><DummyText seed={4} lines={3} /></div>
+        <figure class="thumb"><DummyImage ratio="fill" /></figure>
+      </div>
+    </Surface>
+
+    {/* 5. centered · portrait picture 2–6 · copy 7–12 */}
+    <Surface element="section" theme="neutral" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex5 grid-container">
+        <div class="grid-layout">
+          <div class="copy"><DummyText seed={5} lines={6} /></div>
+          <figure class="thumb" data-ratio="portrait"><DummyImage ratio="fill" /></figure>
+        </div>
+      </div>
+    </Surface>
+
+    {/* 6. centered · one landscape picture 3–11, pulled over the gaps onto the lines */}
+    <Surface element="section" theme="neutral" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex6 grid-container">
+        <div class="grid-layout">
+          <figure class="thumb" data-ratio="landscape"><DummyImage ratio="fill" /></figure>
+        </div>
+      </div>
+    </Surface>
+
+    {/* 7. breakout · copy main 1–6 · picture main 7 to the screen edge, a true half */}
+    <Surface element="section" theme="neutral" prominence="primary" capInline={false}>
+      <div class="Lab lab-ex7 grid-breakout">
+        <div class="copy"><DummyText seed={7} lines={4} /></div>
+        <figure class="thumb"><DummyImage ratio="fill" /></figure>
+      </div>
+    </Surface>
+
+    {/* 8. centered · landscape picture 2–7 · copy 8–13, bottom-aligned */}
+    <Surface element="section" theme="brand" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex8 grid-container">
+        <div class="grid-layout">
+          <div class="copy" data-align-block="end"><DummyText seed={8} lines={4} /></div>
+          <figure class="thumb" data-ratio="landscape"><DummyImage ratio="fill" /></figure>
+        </div>
+      </div>
+    </Surface>
+
+    {/* 9. breakout · two pictures at the edges · copy main 4–10, centred */}
+    <Surface element="section" theme="neutral" prominence="primary" capInline={false}>
+      <div class="Lab lab-ex9 grid-breakout">
+        <div class="copy" data-align-inline="center"><DummyText seed={9} lines={4} align="center" /></div>
+        <figure class="thumb thumb-start"><DummyImage ratio="fill" /></figure>
+        <figure class="thumb thumb-end"><DummyImage ratio="fill" /></figure>
+      </div>
+    </Surface>
+
+    {/* 10. centered · copy 1–7 reaching over the gap · square picture 9–12 on the lines */}
+    <Surface element="section" theme="neutral" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex10 grid-container">
+        <div class="grid-layout">
+          <div class="copy"><DummyText seed={10} lines={3} /></div>
+          <figure class="thumb" data-ratio="square"><DummyImage ratio="fill" /></figure>
+        </div>
+      </div>
+    </Surface>
+
+    {/* 11. breakout · a cover: the picture under everything with a scrim, a display title 3–13 */}
+    <Surface element="section" theme="inverse" prominence="primary" capInline={false}>
+      <div class="Lab lab-ex11 grid-breakout">
+        <div class="copy" data-align-inline="center"><DummyText seed={11} lines={0} titleStop="display-1" align="center" /></div>
+        <figure class="thumb"><DummyImage ratio="fill" /></figure>
+      </div>
+    </Surface>
+
+  </main>
+</Layout>
+
+<style is:global>
+  .GridLab {
+    min-block-size: 40vh;
+    inline-size: 100%;
+  }
+
+  .GridLab .Surface[data-cap-inline="false"] {
+    padding: 0;
+  }
+
+  .Lab.grid-container > .grid-layout { 
+    padding-block: var(--size-2xl);
+  }
+
+  .Lab.grid-breakout > .copy {
+    padding-block: var(--size-2xl);
+  }
+
+  .GridLab :is(
+    .Surface[data-theme="brand"][data-prominence="subtle"]    + .Surface[data-theme="brand"][data-prominence="subtle"],
+    .Surface[data-theme="neutral"][data-prominence="primary"] + .Surface[data-theme="neutral"][data-prominence="primary"],
+    .Surface[data-theme="neutral"][data-prominence="subtle"]  + .Surface[data-theme="neutral"][data-prominence="subtle"],
+    .Surface[data-theme="inverse"][data-prominence="primary"] + .Surface[data-theme="inverse"][data-prominence="primary"]
+  ) > .content > .Lab.grid-container > .grid-layout {
+    padding-block-start: 0;
+  }
+
+  .Lab {
+    & .copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    & .copy[data-align-block="center"] {
+      justify-content: center;
+    }
+
+    & .copy[data-align-block="end"] {
+      justify-content: end;
+    }
+
+    & .copy[data-align-inline="center"] { align-items: center; text-align: center; }
+
+    & .thumb {
+      position: relative;
+      margin: 0;
+      overflow: hidden;
+      /* the placeholder fills the figure like an object-fit: cover image would */
+      & > .DummyImage {
+        block-size: 100%;
+      }
+    }
+    /* a picture that touches the band's edge — every breakout picture runs to the screen
+       edge or from the band's top to its bottom — has no corner to round; only a picture
+       floating inside the layout keeps the radius */
+    &.grid-breakout .thumb > .DummyImage {
+      border-radius: 0;
+    }
+
+    & .thumb[data-ratio="landscape"] { aspect-ratio: 16 / 9; }
+    & .thumb[data-ratio="portrait"]  { aspect-ratio: 3 / 4; }
+    & .thumb[data-ratio="square"]    { aspect-ratio: 1; }
+    & .thumb[data-ratio="photo"]     { aspect-ratio: 4 / 3; }
+  }
+
+  /* a picture in a centered layout sits vertically centred against long copy */
+  .Lab.grid-container .thumb {
+    margin-block: auto;
+  }
+
+
+  @media (max-width: 47.9375rem) {
+    .Lab.grid-container .copy,
+    .Lab.grid-container .thumb { grid-column: 1 / -1; }
+    .Lab.grid-breakout .copy,
+    .Lab.grid-breakout .thumb { grid-column: main; }
+
+    .lab-ex1 .copy  { grid-row: 2; }
+    .lab-ex1 .thumb { grid-row: 1; margin-block-end: var(--size-md); }
+
+    .lab-ex2 .copy  { grid-row: 2; }
+    .lab-ex2 .thumb { grid-row: 1; grid-column: full-start / full-end; aspect-ratio: 16 / 9; }
+
+    .lab-ex3 .copy  { margin-block-end: var(--size-md); }
+    .lab-ex3 .thumb { grid-row: 2; aspect-ratio: 16 / 9; }
+
+    .lab-ex4 .thumb { display: none; }
+
+    .lab-ex5 .copy  { grid-row: 2; }
+    .lab-ex5 .thumb { grid-row: 1; margin-block-end: var(--size-xl); max-inline-size: 22rem; }
+
+    .lab-ex7 .thumb { grid-column: full-start / full-end; aspect-ratio: 16 / 9; }
+
+    .lab-ex8 .thumb { margin-block-start: var(--size-xl); }
+
+    .lab-ex9 .copy        { grid-row: 2; }
+    .lab-ex9 .thumb-start { grid-row: 1; grid-column: full-start / full-end; aspect-ratio: 16 / 9; }
+    .lab-ex9 .thumb-end   { grid-row: 3; grid-column: full-start / full-end; aspect-ratio: 16 / 9; }
+
+    .lab-ex10 .thumb { margin-block-start: var(--size-xl); max-inline-size: 22rem; }
+  }
+
+  @media (min-width: 48rem) and (max-width: 79.9375rem) {
+    .Lab .copy,
+    .Lab .thumb { grid-row: 1; }
+
+    .lab-ex1 .copy  { grid-column: 1 / 5; }
+    .lab-ex1 .thumb { grid-column: 5 / 9; }
+
+    .lab-ex2 .copy  { grid-column: 6 / 10; }
+    .lab-ex2 .thumb { grid-column: 1 / 5; }
+
+    .lab-ex3 .copy  { grid-column: 1 / 5; }
+    .lab-ex3 .thumb { grid-column: 6 / 9; }
+
+    .lab-ex4 .copy  { grid-column: 5 / 10; }
+    .lab-ex4 .thumb { grid-column: 1 / 4; }
+
+    .lab-ex5 .copy  { grid-column: 5 / 9; }
+    .lab-ex5 .thumb { grid-column: 1 / 4; }
+
+    .lab-ex6 .thumb { grid-column: 2 / 8; margin-inline: calc(-1 * var(--grid-layout-gap)); }
+
+    .lab-ex7 .copy  { grid-column: main 1 / main 5; }
+    .lab-ex7 .thumb { grid-column: main 5 / full-end; margin-inline-start: calc(-1 * var(--grid-breakout-gap) / 2); }
+
+    .lab-ex8 .copy  { grid-column: 5 / 9; }
+    .lab-ex8 .thumb { grid-column: 1 / 5; }
+
+    .lab-ex9 .copy        { grid-column: main 3 / main 7; }
+    .lab-ex9 .thumb-start { grid-column: full-start / 3; }
+    .lab-ex9 .thumb-end   { grid-column: main 7 / full-end; }
+
+    .lab-ex10 .copy  { grid-column: 1 / 5; margin-inline-end: calc(-1 * var(--grid-layout-gap)); }
+    .lab-ex10 .thumb { grid-column: 6 / 8; margin-inline: calc(-1 * var(--grid-layout-gap)); }
+
+    .lab-ex11 .copy { grid-column: 2 / 10; }
+  }
+
+  @media (min-width: 80rem) {
+    .Lab .copy,
+    .Lab .thumb { grid-row: 1; }
+
+    .lab-ex1 .copy  { grid-column: 2 / 7; }
+    .lab-ex1 .thumb { grid-column: 7 / 13; }
+
+    .lab-ex2 .copy  { grid-column: 8 / 13; }
+    .lab-ex2 .thumb { grid-column: 1 / 7; }
+
+    .lab-ex3 .copy  { grid-column: 2 / 7; }
+    .lab-ex3 .thumb { grid-column: 8 / 12; }
+
+    .lab-ex4 .copy  { grid-column: 6 / 12; }
+    .lab-ex4 .thumb { grid-column: 1 / 5; }
+
+    .lab-ex5 .copy  { grid-column: 7 / 12; }
+    .lab-ex5 .thumb { grid-column: 2 / 6; }
+
+    /* pulled over the gaps so its edges sit on the lines */
+    .lab-ex6 .thumb { grid-column: 3 / 11; margin-inline: calc(-1 * var(--grid-layout-gap)); }
+
+    .lab-ex7 .copy  { grid-column: main 1 / main 6; }
+    /* a true half: the picture starts in the middle of the gap */
+    .lab-ex7 .thumb { grid-column: main 7 / full-end; margin-inline-start: calc(-1 * var(--grid-breakout-gap) / 2); }
+
+    .lab-ex8 .copy  { grid-column: 8 / 13; }
+    .lab-ex8 .thumb { grid-column: 2 / 7; }
+
+    .lab-ex9 .copy        { grid-column: main 4 / main 10; }
+    .lab-ex9 .thumb-start { grid-column: full-start / 4; }
+    .lab-ex9 .thumb-end   { grid-column: main 11 / full-end; }
+
+    .lab-ex10 .copy  { grid-column: 1 / 7; margin-inline-end: calc(-1 * var(--grid-layout-gap)); }
+    .lab-ex10 .thumb { grid-column: 9 / 12; margin-inline: calc(-1 * var(--grid-layout-gap)); }
+
+    .lab-ex11 .copy { grid-column: 3 / 13; }
+  }
+
+  .lab-ex4 .thumb > .DummyImage {
+    position: absolute;
+    inset: 0;
+  }
+
+  .lab-ex11 {
+    position: relative;
+    min-block-size: 24rem;
+
+    & .copy {
+      position: relative;
+      z-index: 2;
+      justify-content: center;
+    }
+
+    & .thumb {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      grid-row: 1;
+      grid-column: full-start / full-end;
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: color-mix(in oklch, var(--theme-surface, var(--color-surface-page)) 50%, transparent);
+      }
+    }
+  }
+</style>

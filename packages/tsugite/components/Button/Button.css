@@ -6,6 +6,11 @@
 .Button {
   /* TODO(decide): unprefixed slots. ADR-0013 sets --_<prefix>-<propertyCamel>; the
      names already have the right form, Button only needs its prefix (own pass). */
+  /* TODO(dead): the empty slots below ("own by tone axis") are not documentation, they
+     are a silent default — an empty custom property makes the reading declaration fall
+     to inherit/transparent/currentColor. Tertiary sets none of the fifteen and lives on
+     them. The pass that prefixes also deletes them and completes tertiary; the census
+     and the plan are in tasks/parking-lot.md (2026-09-21). */
   /* invariants — the button voice's bundle (typography.tokens.js), label's values today, its own knob */
   --_fontFamily:      var(--fontFamily-button);
   --_fontWeight:      var(--fontWeight-button);
