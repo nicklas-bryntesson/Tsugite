@@ -1,483 +1,324 @@
 ---
-// /lab/grid — a stage between the site's header and footer for spoofing the content
-// blocks a content-heavy front page is made of. Not on the map, not a docs page.
-//
-// The blocks below were lifted from another Astro project (stealing/) and converted
-// to this system's form: page bands are Surfaces (voice, rhythm, adjacency collapse
-// for free), every axis is a data-* word with a gate per value, every var() is a
-// registry name, and no rule names another component's class. What could not be
-// converted without a decision carries a TODO(lab).
 import Layout from "../../layouts/Layout.astro";
 import Surface from "tsugite/components/Surface/Surface.astro";
-import Card from "tsugite/components/Card/Card.astro";
-import Heading from "tsugite/components/Heading/Heading.astro";
-import Prose from "tsugite/components/Prose/Prose.astro";
-import LinkButton from "tsugite/components/Button/LinkButton.astro";
-import Quote from "tsugite/components/Quote/Quote.astro";
-import QuoteReact from "tsugite/components/Quote/Quote.tsx";
-import amal from "tsugite/fixtures/media/amal-s.jpg";
-import david from "tsugite/fixtures/media/david-becker.jpg";
-import jean from "tsugite/fixtures/media/jean-philippe.jpg";
+import DummyText from "../../components/DummyText/DummyText.astro";
+import DummyImage from "../../components/DummyImage/DummyImage.astro";
+
 ---
 
 <Layout title="Grid lab">
   <main class="GridLab">
 
-    {/* 1. Prose beside media, on the container grid: text in the main column, media
-        may break out. The draft §6 composition without a name yet. */}
-    <Surface element="section" theme="neutral" capInline={false}>
-      <div class="ProseWithMedia grid-container" data-media-side="end" data-media-ratio="landscape" data-text-valign="start">
-        <article class="text">
-          <Heading element="h2" size="2" text="Prose beside media" />
-          <Prose variant="basic">
-            <p>The text sits in the main column; the media takes the outer half of the breakout. Flip <code>data-media-side</code> to move it.</p>
-          </Prose>
-        </article>
-        <figure class="media">
-          <img src={amal.src} width={amal.width} height={amal.height} alt="" loading="lazy" />
-        </figure>
-      </div>
-    </Surface>
-
-    {/* 2. CTA on the breakout grid: 14 tracks, text 2–8, media 8–14. */}
-    <Surface element="section" theme="brand" capInline={false}>
-      <div class="CtaWithMedia grid-breakout" data-media-side="end">
-        <div class="text">
-          <Heading element="h2" size="3" text="Find the answer to your question" />
-          <Prose variant="basic">
-            <p>We collected the questions teachers ask most. Someone may already have asked yours.</p>
-          </Prose>
-          <div class="actions">
-            <LinkButton href="#">Search questions</LinkButton>
-            <LinkButton href="#" emphasis="secondary">Contact us</LinkButton>
-          </div>
-        </div>
-        <figure class="media">
-          <img src={david.src} width={david.width} height={david.height} alt="" loading="lazy" />
-        </figure>
-      </div>
-    </Surface>
-
-    {/* 3. A testimonial: Quote, large words and a portrait, on a brand · subtle band.
-        The band is the host; Quote lays itself out from its own width. */}
-    <Surface element="section" theme="brand" prominence="subtle">
-      <Quote id="lab-testimonial" size="lg" source="Sarah Johnson, Acme Corp" image={jean} alt="Portrait of Sarah Johnson"
-        quote="Working with this team completely transformed our digital presence. The results exceeded every expectation we had." />
-    </Surface>
-
-    {/* 4. Three-up on the layout grid, same voice as the previous band: the second
-        Surface drops its start padding (generated adjacency, ADR-0016). */}
+    {/* 1. centered · copy 2–7 (vertically centred) · landscape picture 7–13 */}
     <Surface element="section" theme="brand" prominence="subtle" capInline={false}>
-      <div class="ThreeUp grid-layout">
-        <div class="lab-block" data-label="span 4">a</div>
-        <div class="lab-block" data-label="span 4">b</div>
-        <div class="lab-block" data-label="span 4">c</div>
-      </div>
-    </Surface>
-
-    {/* 5. A pull quote in the flow: an RTE block, no band of its own, the page ground. */}
-    <Surface element="section">
-      <Quote id="lab-pullquote" source="Aldous Huxley" image={amal} alt="">
-        <p>Words can be like X-rays, if you use them properly — they'll go through anything. You read and you're pierced.</p>
-      </Quote>
-    </Surface>
-
-    {/* 5b. The same quote twice: rendered by Quote.astro and by Quote.tsx, one recipe,
-        one CSS (ADR-0017). React renders on the server, nothing hydrates. */}
-    <Surface element="section" theme="neutral" prominence="subtle">
-      <div class="Renderers">
-        <Quote id="lab-astro" data-renderer="astro" source="Rendered by Quote.astro" image={david} alt=""
-          quote="The contract is the rendered DOM. Whoever writes it is an adapter." />
-        <QuoteReact id="lab-react" data-renderer="react" source="Rendered by Quote.tsx" image={{ src: david.src, width: david.width, height: david.height }} alt=""
-          quote="The contract is the rendered DOM. Whoever writes it is an adapter." />
-      </div>
-    </Surface>
-
-    {/* 6. A CTA aside: heading, prose, two actions. */}
-    <Surface element="aside" theme="accent">
-      <div class="CtaAside">
-        <Heading element="h3" size="3" text="Let's talk" />
-        <Prose variant="basic">
-          <p>We'd love to hear about your project. Drop us a line and we'll get back to you within 24 hours.</p>
-        </Prose>
-        <div class="actions">
-          <LinkButton href="/contact">Get in touch</LinkButton>
-          <LinkButton href="/book" emphasis="secondary">Book a call</LinkButton>
+      <div class="Lab lab-ex1 grid-container">
+        <div class="grid-layout">
+          <div class="copy" data-align-block="center"><DummyText seed={1} /></div>
+          <figure class="thumb" data-ratio="landscape"><DummyImage ratio="fill" /></figure>
         </div>
       </div>
     </Surface>
 
-    {/* 7. Text with image: the draft §6 axes as written — layout, media side, media
-        ratio, text valign — on the layout grid (wide) or the breakout grid (full). */}
-    <Surface element="section" capInline={false}>
-      <div class="TextWithMedia" data-layout="wide" data-media-side="start" data-media-ratio="portrait" data-text-valign="start">
-        <div class="text">
-          <Heading element="h2" size="2" text="Text with image" />
-          <Prose variant="basic">
-            <p>Lorem ipsum dolor sit amet. Sed sunt accusantium et quae galisum ea consequatur veritatis est dolorem omnis id sequi exercitationem. Ut beatae quod et corporis nobis, reiciendis galisum est error ipsum.</p>
-            <p>More text.</p>
-          </Prose>
-          <div class="actions">
-            <LinkButton href="/">CTA Button</LinkButton>
-            <LinkButton href="/" emphasis="secondary">CTA Button</LinkButton>
-          </div>
-        </div>
-        <figure class="media grid-stack">
-          <img class="grid-stack-item foreground" src={david.src} width={david.width} height={david.height} alt="" loading="lazy" />
-          <img class="grid-stack-item blur" src={david.src} width={64} height={64} alt="" aria-hidden="true" loading="lazy" />
-        </figure>
+    {/* 2. breakout · picture from the screen edge to column 6 · copy 8–13 centred */}
+    <Surface element="section" theme="neutral" prominence="primary" capInline={false}>
+      <div class="Lab lab-ex2 grid-breakout">
+        <div class="copy" data-align-block="center"><DummyText seed={2} lines={5} /></div>
+        <figure class="thumb"><DummyImage ratio="fill" /></figure>
       </div>
     </Surface>
 
-    {/* 8. A full-bleed image in the flow. */}
-    <Surface element="section" capInline={false}>
-      <figure class="Image grid-container">
-        <img class="grid-container-full" src={jean.src} width={jean.width} height={jean.height} alt="" loading="lazy" />
-        <figcaption>A caption, centred under the image.</figcaption>
-      </figure>
+    {/* 3. centered · copy 2–7 · picture 8–12, its own ratio */}
+    <Surface element="section" theme="neutral" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex3 grid-container">
+        <div class="grid-layout">
+          <div class="copy"><DummyText seed={3} lines={3} /></div>
+          <figure class="thumb" data-ratio="photo"><DummyImage ratio="fill" /></figure>
+        </div>
+      </div>
     </Surface>
 
-    {/* 9. SHADOW LAB — a voiced Card on a band of another voice, casting a shadow tinted
-        by its own surface and mixed with the ground it lies on. The stress test of the
-        "one knob, turned where the base becomes known" rule: the card's surface is known
-        at build, the ground only at runtime (inherited from the Surface), so the tint is
-        a runtime color-mix behind a @supports gate, and the everywhere form is the plain
-        neutral shadow. The trick that makes the ground readable: the Surface publishes
-        its ground under a name the voice blocks never touch (--surface-ground), computed
-        on the Surface element, so the voiced card inherits the band's literal even though
-        it overrides --theme-surface for itself. Lab-only CSS below; if it holds, the one
-        line moves into Surface. */}
-    {[
-      { theme: "brand", prominence: "primary", label: "brand · primary" },
-      { theme: "neutral", prominence: "subtle", label: "neutral · subtle" },
-    ].map((band) => (
-      <Surface element="section" theme={band.theme} prominence={band.prominence} capInline={false}>
-        <div class="ShadowLab grid-layout">
-          <p class="ShadowLab-label">Ground: {band.label}</p>
-          <Card elevation="md" padding="md" class="ShadowLab-card">
-            <Heading element="h3" size="5" text="No voice" />
-            <p>The band's ink and ground; the neutral shadow every Card has today.</p>
-          </Card>
-          <Card elevation="md" padding="md" class="ShadowLab-card ShadowLab-voiced" data-theme="accent" data-prominence="primary">
-            <Heading element="h3" size="5" text="Accent voice, neutral shadow" />
-            <p>The card paints its own voice; the shadow still knows nothing about it.</p>
-          </Card>
-          <Card elevation="md" padding="md" class="ShadowLab-card ShadowLab-voiced ShadowLab-tinted" data-theme="accent" data-prominence="primary">
-            <Heading element="h3" size="5" text="Accent voice, tinted shadow" />
-            <p>The shadow is the card's surface mixed with the ground beneath, then let through at half strength.</p>
-          </Card>
+    {/* 4. breakout · picture from the edge to column 4, as tall as the copy · copy 6–12 */}
+    <Surface element="section" theme="inverse" prominence="primary" capInline={false}>
+      <div class="Lab lab-ex4 grid-breakout">
+        <div class="copy"><DummyText seed={4} lines={3} /></div>
+        <figure class="thumb"><DummyImage ratio="fill" /></figure>
+      </div>
+    </Surface>
+
+    {/* 5. centered · portrait picture 2–6 · copy 7–12 */}
+    <Surface element="section" theme="neutral" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex5 grid-container">
+        <div class="grid-layout">
+          <div class="copy"><DummyText seed={5} lines={6} /></div>
+          <figure class="thumb" data-ratio="portrait"><DummyImage ratio="fill" /></figure>
         </div>
-      </Surface>
-    ))}
+      </div>
+    </Surface>
+
+    {/* 6. centered · one landscape picture 3–11, pulled over the gaps onto the lines */}
+    <Surface element="section" theme="neutral" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex6 grid-container">
+        <div class="grid-layout">
+          <figure class="thumb" data-ratio="landscape"><DummyImage ratio="fill" /></figure>
+        </div>
+      </div>
+    </Surface>
+
+    {/* 7. breakout · copy main 1–6 · picture main 7 to the screen edge, a true half */}
+    <Surface element="section" theme="neutral" prominence="primary" capInline={false}>
+      <div class="Lab lab-ex7 grid-breakout">
+        <div class="copy"><DummyText seed={7} lines={4} /></div>
+        <figure class="thumb"><DummyImage ratio="fill" /></figure>
+      </div>
+    </Surface>
+
+    {/* 8. centered · landscape picture 2–7 · copy 8–13, bottom-aligned */}
+    <Surface element="section" theme="brand" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex8 grid-container">
+        <div class="grid-layout">
+          <div class="copy" data-align-block="end"><DummyText seed={8} lines={4} /></div>
+          <figure class="thumb" data-ratio="landscape"><DummyImage ratio="fill" /></figure>
+        </div>
+      </div>
+    </Surface>
+
+    {/* 9. breakout · two pictures at the edges · copy main 4–10, centred */}
+    <Surface element="section" theme="neutral" prominence="primary" capInline={false}>
+      <div class="Lab lab-ex9 grid-breakout">
+        <div class="copy" data-align-inline="center"><DummyText seed={9} lines={4} align="center" /></div>
+        <figure class="thumb thumb-start"><DummyImage ratio="fill" /></figure>
+        <figure class="thumb thumb-end"><DummyImage ratio="fill" /></figure>
+      </div>
+    </Surface>
+
+    {/* 10. centered · copy 1–7 reaching over the gap · square picture 9–12 on the lines */}
+    <Surface element="section" theme="neutral" prominence="subtle" capInline={false}>
+      <div class="Lab lab-ex10 grid-container">
+        <div class="grid-layout">
+          <div class="copy"><DummyText seed={10} lines={3} /></div>
+          <figure class="thumb" data-ratio="square"><DummyImage ratio="fill" /></figure>
+        </div>
+      </div>
+    </Surface>
+
+    {/* 11. breakout · a cover: the picture under everything with a scrim, a display title 3–13 */}
+    <Surface element="section" theme="inverse" prominence="primary" capInline={false}>
+      <div class="Lab lab-ex11 grid-breakout">
+        <div class="copy" data-align-inline="center"><DummyText seed={11} lines={0} titleStop="display-1" align="center" /></div>
+        <figure class="thumb"><DummyImage ratio="fill" /></figure>
+      </div>
+    </Surface>
 
   </main>
 </Layout>
 
 <style is:global>
-  /* ── Lab helpers. Not part of the system. ───────────────────────────────── */
   .GridLab {
     min-block-size: 40vh;
+    inline-size: 100%;
   }
 
-  .lab-block {
-    position: relative;
-    min-block-size: 6rem;
-    padding: var(--size-md);
-    outline: 1px dashed var(--color-border-default);
-    background-color: color-mix(in srgb, var(--color-interactive-primary) 6%, transparent);
+  .GridLab .Surface[data-cap-inline="false"] {
+    padding: 0;
+  }
 
-    &::before {
-      content: attr(data-label);
+  .Lab.grid-container > .grid-layout { 
+    padding-block: var(--size-2xl);
+  }
+
+  .Lab.grid-breakout > .copy {
+    padding-block: var(--size-2xl);
+  }
+
+  .GridLab :is(
+    .Surface[data-theme="brand"][data-prominence="subtle"]    + .Surface[data-theme="brand"][data-prominence="subtle"],
+    .Surface[data-theme="neutral"][data-prominence="primary"] + .Surface[data-theme="neutral"][data-prominence="primary"],
+    .Surface[data-theme="neutral"][data-prominence="subtle"]  + .Surface[data-theme="neutral"][data-prominence="subtle"],
+    .Surface[data-theme="inverse"][data-prominence="primary"] + .Surface[data-theme="inverse"][data-prominence="primary"]
+  ) > .content > .Lab.grid-container > .grid-layout {
+    padding-block-start: 0;
+  }
+
+  .Lab {
+    & .copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    & .copy[data-align-block="center"] {
+      justify-content: center;
+    }
+
+    & .copy[data-align-block="end"] {
+      justify-content: end;
+    }
+
+    & .copy[data-align-inline="center"] { align-items: center; text-align: center; }
+
+    & .thumb {
+      position: relative;
+      margin: 0;
+      overflow: hidden;
+      /* the placeholder fills the figure like an object-fit: cover image would */
+      & > .DummyImage {
+        block-size: 100%;
+      }
+    }
+    /* a picture that touches the band's edge — every breakout picture runs to the screen
+       edge or from the band's top to its bottom — has no corner to round; only a picture
+       floating inside the layout keeps the radius */
+    &.grid-breakout .thumb > .DummyImage {
+      border-radius: 0;
+    }
+
+    & .thumb[data-ratio="landscape"] { aspect-ratio: 16 / 9; }
+    & .thumb[data-ratio="portrait"]  { aspect-ratio: 3 / 4; }
+    & .thumb[data-ratio="square"]    { aspect-ratio: 1; }
+    & .thumb[data-ratio="photo"]     { aspect-ratio: 4 / 3; }
+  }
+
+  /* a picture in a centered layout sits vertically centred against long copy */
+  .Lab.grid-container .thumb {
+    margin-block: auto;
+  }
+
+
+  @media (max-width: 47.9375rem) {
+    .Lab.grid-container .copy,
+    .Lab.grid-container .thumb { grid-column: 1 / -1; }
+    .Lab.grid-breakout .copy,
+    .Lab.grid-breakout .thumb { grid-column: main; }
+
+    .lab-ex1 .copy  { grid-row: 2; }
+    .lab-ex1 .thumb { grid-row: 1; margin-block-end: var(--size-md); }
+
+    .lab-ex2 .copy  { grid-row: 2; }
+    .lab-ex2 .thumb { grid-row: 1; grid-column: full-start / full-end; aspect-ratio: 16 / 9; }
+
+    .lab-ex3 .copy  { margin-block-end: var(--size-md); }
+    .lab-ex3 .thumb { grid-row: 2; aspect-ratio: 16 / 9; }
+
+    .lab-ex4 .thumb { display: none; }
+
+    .lab-ex5 .copy  { grid-row: 2; }
+    .lab-ex5 .thumb { grid-row: 1; margin-block-end: var(--size-xl); max-inline-size: 22rem; }
+
+    .lab-ex7 .thumb { grid-column: full-start / full-end; aspect-ratio: 16 / 9; }
+
+    .lab-ex8 .thumb { margin-block-start: var(--size-xl); }
+
+    .lab-ex9 .copy        { grid-row: 2; }
+    .lab-ex9 .thumb-start { grid-row: 1; grid-column: full-start / full-end; aspect-ratio: 16 / 9; }
+    .lab-ex9 .thumb-end   { grid-row: 3; grid-column: full-start / full-end; aspect-ratio: 16 / 9; }
+
+    .lab-ex10 .thumb { margin-block-start: var(--size-xl); max-inline-size: 22rem; }
+  }
+
+  @media (min-width: 48rem) and (max-width: 79.9375rem) {
+    .Lab .copy,
+    .Lab .thumb { grid-row: 1; }
+
+    .lab-ex1 .copy  { grid-column: 1 / 5; }
+    .lab-ex1 .thumb { grid-column: 5 / 9; }
+
+    .lab-ex2 .copy  { grid-column: 6 / 10; }
+    .lab-ex2 .thumb { grid-column: 1 / 5; }
+
+    .lab-ex3 .copy  { grid-column: 1 / 5; }
+    .lab-ex3 .thumb { grid-column: 6 / 9; }
+
+    .lab-ex4 .copy  { grid-column: 5 / 10; }
+    .lab-ex4 .thumb { grid-column: 1 / 4; }
+
+    .lab-ex5 .copy  { grid-column: 5 / 9; }
+    .lab-ex5 .thumb { grid-column: 1 / 4; }
+
+    .lab-ex6 .thumb { grid-column: 2 / 8; margin-inline: calc(-1 * var(--grid-layout-gap)); }
+
+    .lab-ex7 .copy  { grid-column: main 1 / main 5; }
+    .lab-ex7 .thumb { grid-column: main 5 / full-end; margin-inline-start: calc(-1 * var(--grid-breakout-gap) / 2); }
+
+    .lab-ex8 .copy  { grid-column: 5 / 9; }
+    .lab-ex8 .thumb { grid-column: 1 / 5; }
+
+    .lab-ex9 .copy        { grid-column: main 3 / main 7; }
+    .lab-ex9 .thumb-start { grid-column: full-start / 3; }
+    .lab-ex9 .thumb-end   { grid-column: main 7 / full-end; }
+
+    .lab-ex10 .copy  { grid-column: 1 / 5; margin-inline-end: calc(-1 * var(--grid-layout-gap)); }
+    .lab-ex10 .thumb { grid-column: 6 / 8; margin-inline: calc(-1 * var(--grid-layout-gap)); }
+
+    .lab-ex11 .copy { grid-column: 2 / 10; }
+  }
+
+  @media (min-width: 80rem) {
+    .Lab .copy,
+    .Lab .thumb { grid-row: 1; }
+
+    .lab-ex1 .copy  { grid-column: 2 / 7; }
+    .lab-ex1 .thumb { grid-column: 7 / 13; }
+
+    .lab-ex2 .copy  { grid-column: 8 / 13; }
+    .lab-ex2 .thumb { grid-column: 1 / 7; }
+
+    .lab-ex3 .copy  { grid-column: 2 / 7; }
+    .lab-ex3 .thumb { grid-column: 8 / 12; }
+
+    .lab-ex4 .copy  { grid-column: 6 / 12; }
+    .lab-ex4 .thumb { grid-column: 1 / 5; }
+
+    .lab-ex5 .copy  { grid-column: 7 / 12; }
+    .lab-ex5 .thumb { grid-column: 2 / 6; }
+
+    /* pulled over the gaps so its edges sit on the lines */
+    .lab-ex6 .thumb { grid-column: 3 / 11; margin-inline: calc(-1 * var(--grid-layout-gap)); }
+
+    .lab-ex7 .copy  { grid-column: main 1 / main 6; }
+    /* a true half: the picture starts in the middle of the gap */
+    .lab-ex7 .thumb { grid-column: main 7 / full-end; margin-inline-start: calc(-1 * var(--grid-breakout-gap) / 2); }
+
+    .lab-ex8 .copy  { grid-column: 8 / 13; }
+    .lab-ex8 .thumb { grid-column: 2 / 7; }
+
+    .lab-ex9 .copy        { grid-column: main 4 / main 10; }
+    .lab-ex9 .thumb-start { grid-column: full-start / 4; }
+    .lab-ex9 .thumb-end   { grid-column: main 11 / full-end; }
+
+    .lab-ex10 .copy  { grid-column: 1 / 7; margin-inline-end: calc(-1 * var(--grid-layout-gap)); }
+    .lab-ex10 .thumb { grid-column: 9 / 12; margin-inline: calc(-1 * var(--grid-layout-gap)); }
+
+    .lab-ex11 .copy { grid-column: 3 / 13; }
+  }
+
+  .lab-ex4 .thumb > .DummyImage {
+    position: absolute;
+    inset: 0;
+  }
+
+  .lab-ex11 {
+    position: relative;
+    min-block-size: 24rem;
+
+    & .copy {
+      position: relative;
+      z-index: 2;
+      justify-content: center;
+    }
+
+    & .thumb {
       position: absolute;
-      inset-block-start: 0;
-      inset-inline-start: 0;
-      padding: 0.125rem 0.375rem;
-      font: var(--fontWeight-label) 0.75rem var(--fontFamily-label);
-      color: var(--color-text-secondary);
-      background-color: var(--color-surface-inset);
-    }
-  }
+      inset: 0;
+      z-index: 0;
+      grid-row: 1;
+      grid-column: full-start / full-end;
 
-  /* Surface today wraps content in .content with a measure cap; capInline={false}
-     lifts the cap so the grid recipes can run edge to edge. When Surface takes the
-     grid recipe itself (the Grid spike), these wrappers and the utility classes go. */
-
-  /* ── 1. ProseWithMedia — container grid, media may break out ───────────── */
-  .ProseWithMedia {
-    /* TODO(lab): the vertical rhythm inside a band; --size-lg until sections have rhythm tokens. */
-    row-gap: var(--size-lg);
-
-    & .text {
-      grid-column: main;
-      display: flex;
-      flex-direction: column;
-      gap: var(--size-md);
-    }
-
-    & .media {
-      margin: 0;
-      overflow: hidden;
-      border-radius: var(--ui-radius);
-
-      & img {
-        display: block;
-        inline-size: 100%;
-        block-size: 100%;
-        object-fit: cover;
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: color-mix(in oklch, var(--theme-surface, var(--color-surface-page)) 50%, transparent);
       }
-    }
-
-    &[data-media-ratio="landscape"] .media { aspect-ratio: 16 / 9; }
-    &[data-media-ratio="portrait"]  .media { aspect-ratio: 3 / 4; }
-    &[data-media-ratio="square"]    .media { aspect-ratio: 1; }
-    &[data-media-ratio="golden"]    .media { aspect-ratio: 1.618 / 1; }
-
-    &[data-text-valign="start"]  .text { justify-content: start; }
-    &[data-text-valign="center"] .text { justify-content: center; }
-    &[data-text-valign="end"]    .text { justify-content: end; }
-
-    /* Below the desktop tier both stack in the main column. */
-    @media (max-width: 48.74rem) {
-      &[data-media-side="start"] .media,
-      &[data-media-side="end"]   .media { grid-column: main; }
-    }
-
-    @media (min-width: 48.75rem) {
-      & .text  { grid-row: 1; }
-      & .media { grid-row: 1; }
-
-      /* The container grid has only two named regions; the split is made inside
-         main by giving text a max measure and letting media take the rest. */
-      /* TODO(lab): real side-by-side needs the breakout or layout grid — the container
-         grid has no columns to place on. This block belongs on breakout; kept here to
-         show the limit. */
-      &[data-media-side="end"]   .media { grid-column: main-end / full-end; }
-      &[data-media-side="start"] .media { grid-column: full-start / main-start; }
-    }
-  }
-
-  /* ── 2. CtaWithMedia — breakout grid, 14 tracks ─────────────────────────── */
-  .CtaWithMedia {
-    row-gap: var(--size-lg);
-
-    & .text {
-      display: flex;
-      flex-direction: column;
-      gap: var(--size-md);
-      grid-column: 2 / 14;
-    }
-
-    & .media {
-      margin: 0;
-      overflow: hidden;
-      border-radius: var(--ui-radius);
-      grid-column: 2 / 14;
-
-      & img {
-        display: block;
-        inline-size: 100%;
-        block-size: 100%;
-        object-fit: cover;
-      }
-    }
-
-    & .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--size-sm);
-    }
-
-    @media (min-width: 48.75rem) {
-      & .text,
-      & .media { grid-row: 1; }
-
-      &[data-media-side="end"]   .text  { grid-column: 2 / 8; }
-      &[data-media-side="end"]   .media { grid-column: 8 / 14; }
-      &[data-media-side="start"] .media { grid-column: 2 / 8; }
-      &[data-media-side="start"] .text  { grid-column: 8 / 14; }
-    }
-  }
-
-  /* ── 4. ThreeUp — layout grid, three equal spans ────────────────────────── */
-  .ThreeUp {
-    row-gap: var(--size-md);
-
-    & > * { grid-column: 1 / -1; }
-
-    @media (min-width: 48.75rem) {
-      & > * { grid-column: span 4; }
-    }
-  }
-
-  /* ── 5b. Renderers — two Quotes side by side ────────────────────────────── */
-  .Renderers {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-    gap: var(--size-lg);
-  }
-
-  /* ── 6. CtaAside — heading, prose, actions ──────────────────────────────── */
-  .CtaAside {
-    display: flex;
-    flex-direction: column;
-    gap: var(--size-md);
-
-    & .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--size-sm);
-    }
-  }
-
-  /* ── 7. TextWithMedia — the draft §6 axes ───────────────────────────────── */
-  .TextWithMedia {
-    display: grid;
-    row-gap: var(--size-lg);
-
-    &[data-layout="wide"] {
-      grid-template-columns: var(--grid-layout-columns);
-      column-gap: var(--grid-layout-gap);
-    }
-
-    &[data-layout="full"] {
-      grid-template-columns: var(--grid-breakout-columns);
-      column-gap: var(--grid-breakout-gap);
-    }
-
-    & .text {
-      display: flex;
-      flex-direction: column;
-      gap: var(--size-md);
-      grid-column: 1 / -1;
-    }
-
-    & .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--size-sm);
-    }
-
-    & .media {
-      margin: 0;
-      grid-column: 1 / -1;
-      inline-size: 100%;
-      margin-block: auto;
-      border-radius: var(--ui-radius);
-      overflow: hidden;
-    }
-
-    &[data-media-ratio="landscape"] .media { aspect-ratio: 16 / 9; }
-    &[data-media-ratio="portrait"]  .media { aspect-ratio: 3 / 4; }
-    &[data-media-ratio="square"]    .media { aspect-ratio: 1; }
-    &[data-media-ratio="golden"]    .media { aspect-ratio: 1.618 / 1; }
-
-    &[data-text-valign="start"]  .text { justify-content: start; }
-    &[data-text-valign="center"] .text { justify-content: center; }
-    &[data-text-valign="end"]    .text { justify-content: end; }
-
-    @media (min-width: 48.75rem) {
-      & .text,
-      & .media { grid-row: 1; }
-
-      /* wide: 12 tracks. full: 14 tracks with fluid outer columns, so placements shift by one. */
-      &[data-layout="wide"][data-media-side="end"]   .text  { grid-column: 1 / 7; }
-      &[data-layout="wide"][data-media-side="end"]   .media { grid-column: 8 / 13; }
-      &[data-layout="wide"][data-media-side="start"] .media { grid-column: 1 / 6; }
-      &[data-layout="wide"][data-media-side="start"] .text  { grid-column: 7 / 13; }
-
-      &[data-layout="full"][data-media-side="end"]   .text  { grid-column: 3 / 8; }
-      &[data-layout="full"][data-media-side="end"]   .media { grid-column: 11 / 15; }
-      &[data-layout="full"][data-media-side="start"] .media { grid-column: 1 / 5; }
-      &[data-layout="full"][data-media-side="start"] .text  { grid-column: 6 / 12; }
-    }
-  }
-
-  /* ── The blurred-image stack, shared by 5 and 7 ─────────────────────────── */
-  /* TODO(decide): this is a candidate primitive — Picture with a blurred echo
-     behind it. It is a stack recipe (grid-stack) plus two rules, and two blocks
-     already want it. */
-  .grid-stack > .foreground {
-    position: relative;
-    z-index: 1;
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-  }
-
-  .grid-stack > .blur {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    padding: 10%;
-    translate: 0 10%;
-    opacity: 0.7;
-    filter: blur(20px);
-  }
-
-  /* ── 8. Image — full bleed on the container grid ────────────────────────── */
-  .Image {
-    margin: 0;
-    row-gap: var(--size-sm);
-
-    & img {
-      display: block;
-      inline-size: 100%;
-      block-size: auto;
-    }
-
-    & figcaption {
-      grid-column: main;
-      text-align: center;
-      font-family: var(--fontFamily-label);
-      font-size: var(--fontSize-label-small);
-      color: var(--theme-textMuted, var(--color-text-secondary));
-    }
-  }
-  /* ── 9. Shadow lab ────────────────────────────────────────────────────────── */
-  /* The Surface publishes its ground under a name no voice block touches. Declared
-     here on the Surface, the var() is substituted at computed-value time, so every
-     descendant inherits the band's LITERAL — a voiced card included, even though it
-     overrides --theme-surface for itself. Lab-only; the real home is Surface.astro. */
-  .GridLab .Surface {
-    --surface-ground: var(--theme-surface, var(--color-surface-page));
-  }
-
-  .ShadowLab {
-    row-gap: var(--size-md);
-    padding-block: var(--size-md);
-
-    & > * { grid-column: 1 / -1; }
-    @media (min-width: 48.75rem) {
-      & > .ShadowLab-card { grid-column: span 4; }
-    }
-  }
-
-  .ShadowLab-label {
-    margin: 0;
-    font: var(--fontWeight-label) 0.75rem var(--fontFamily-label);
-    color: var(--theme-textMuted, var(--color-text-secondary));
-  }
-
-  .ShadowLab-card {
-    /* an unvoiced card sits on the band's ground and ink; a voiced one paints its own */
-    background-color: var(--theme-surface, var(--color-surface-page));
-    color: var(--theme-text, var(--color-text-primary));
-    & p { margin: 0; }
-  }
-
-  /* The tinted shadow. Geometry from Card's md elevation; only the colour changes.
-     Everywhere form: the neutral shadow Card already has (nothing to do). Enhanced
-     form: tint = the card's own surface mixed 55/45 with the ground it lies on, then
-     that tint at 55% over transparent — a coloured shadow that belongs to BOTH the
-     card and the floor. */
-  @supports (color: color-mix(in oklab, red 50%, blue)) {
-    .ShadowLab-tinted[data-elevation="md"] {
-      --_lab-shadowTint: color-mix(in oklab, var(--theme-surface) 55%, var(--surface-ground));
-      --_lab-shadowColor: color-mix(in oklab, var(--_lab-shadowTint) 55%, transparent);
-      --_lab-shadowColorSoft: color-mix(in oklab, var(--_lab-shadowTint) 30%, transparent);
-      box-shadow:
-        0 4px 12px var(--_lab-shadowColor),
-        0 1px 3px var(--_lab-shadowColorSoft);
     }
   }
 </style>

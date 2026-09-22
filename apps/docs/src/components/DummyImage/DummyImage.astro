@@ -1,0 +1,51 @@
+---
+// DummyImage — a placeholder where a picture would be, for labs and benches that are
+// about layout, not photography. Docs-app tooling, not part of the system.
+//
+// Takes the slot an <img> would: block, full inline size, its own aspect ratio — or
+// `ratio="fill"` to fill a box the parent already sized (a figure with an aspect-ratio).
+// Painted in the band's own ink at low strength (currentColor), like DummyText, so it
+// reads on any voice; a crossed frame says "image goes here" without a picture.
+//
+//   <DummyImage />                 16 / 9
+//   <DummyImage ratio="3 / 4" />
+//   <DummyImage ratio="fill" />    the parent's box
+interface Props {
+  /** a CSS aspect-ratio value, or "fill" */
+  ratio?: string;
+  class?: string;
+}
+const { ratio = "16 / 9", class: className } = Astro.props;
+---
+
+<div
+  class:list={["DummyImage", className]}
+  data-fill={ratio === "fill" ? "true" : "false"}
+  style={ratio === "fill" ? undefined : `--_di-ratio: ${ratio}`}
+  aria-hidden="true"
+></div>
+
+<style is:global>
+.DummyImage {
+  --_di-frame: color-mix(in oklch, currentColor 30%, transparent);
+  --_di-fill: color-mix(in oklch, currentColor 8%, transparent);
+  display: block;
+  inline-size: 100%;
+  box-sizing: border-box;
+  border: 1px dashed var(--_di-frame);
+  border-radius: var(--ui-radius);
+  /* the crossed frame: two hairlines corner to corner over the fill */
+  background:
+    linear-gradient(to top right, transparent calc(50% - 0.5px), var(--_di-frame) 50%, transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom right, transparent calc(50% - 0.5px), var(--_di-frame) 50%, transparent calc(50% + 0.5px)),
+    var(--_di-fill);
+
+  &[data-fill="false"] {
+    aspect-ratio: var(--_di-ratio);
+  }
+
+  &[data-fill="true"] {
+    block-size: 100%;
+  }
+}
+</style>

@@ -1,0 +1,77 @@
+---
+// DummyText — text as strokes, the way a layout sketch stands in for copy so the eye
+// stays on flow and grid. Docs-app tooling for labs and benches, not part of the system.
+//
+// One title stroke (heavier, on the h3 stop by default, `titleStop` picks another) and a run of line strokes (on the body
+// stop), each in its own line box so a block of dummy text is exactly as tall as the
+// real text would be. Widths are irregular but deterministic: the same seed renders the
+// same ragged edge on every build. The strokes take the ink real text would: the title
+// the band's text ink (currentColor, what a Heading inherits), the lines the band's muted
+// ink through the same claim chain Text would read — so a sketch shows the page's real
+// contrast, on any voice.
+//
+//   <DummyText />                    title + 4 lines
+//   <DummyText lines={2} title={false} seed={3} />
+interface Props {
+  /** number of body-line strokes */
+  lines?: number;
+  /** a heavier title stroke first */
+  title?: boolean;
+  /** rotates the ragged-edge pattern so neighbouring blocks differ */
+  seed?: number;
+  /** the size stop the title stroke stands in for (a --fontSize-<stop> name) */
+  titleStop?: string;
+  /** where the strokes sit in their line, as text-align would put words */
+  align?: "start" | "center";
+  class?: string;
+}
+const { lines = 4, title = true, seed = 0, titleStop = "h3", align = "start", class: className } = Astro.props;
+
+// the ragged edge: line widths in percent, last line always short
+const PATTERN = [96, 82, 91, 74, 88, 67, 94, 79];
+const widthAt = (i: number) => (i === lines - 1 ? 40 + ((seed * 7 + i * 13) % 25) : PATTERN[(i + seed) % PATTERN.length]);
+const titleWidth = 52 + ((seed * 11) % 21);
+---
+
+<div class:list={["DummyText", className]} data-align={align} style={`--_dt-titleSize: var(--fontSize-${titleStop})`} aria-hidden="true">
+  {title && <span class="DummyText-title" style={`--_dt-w: ${titleWidth}%`}></span>}
+  {Array.from({ length: lines }, (_, i) => <span class="DummyText-line" style={`--_dt-w: ${widthAt(i)}%`}></span>)}
+</div>
+
+<style is:global>
+.DummyText {
+  /* the two inks a page of text has: the voice's text (inherited) and its muted text,
+     through the claim chain with the semantic default as the one fallback (ADR-0008) */
+  --_dt-inkTitle: currentColor;
+  --_dt-inkLine: var(--theme-textMuted, var(--color-text-secondary));
+  display: block;
+  /* a block of words fills its column; in a flex column that starts its items this
+     would otherwise shrink to nothing, and the strokes are sized by its width */
+  inline-size: 100%;
+
+  /* each stroke sits centred in the line box of the stop it stands in for, so the block
+     is as tall as the words would be; the stroke is a background sized by --_dt-w */
+  & .DummyText-title,
+  & .DummyText-line {
+    display: block;
+    background: linear-gradient(var(--_dt-ink), var(--_dt-ink)) var(--_dt-x) 50% / var(--_dt-w) var(--_dt-stroke) no-repeat;
+    border-radius: 0.25em;
+  }
+
+  &[data-align="start"]  { --_dt-x: 0; }
+  &[data-align="center"] { --_dt-x: 50%; }
+
+  & .DummyText-title {
+    --_dt-ink: var(--_dt-inkTitle);
+    --_dt-stroke: calc(var(--_dt-titleSize) * 0.7);
+    block-size: calc(var(--_dt-titleSize) * var(--lineHeight-heading));
+    margin-block-end: var(--size-sm);
+  }
+
+  & .DummyText-line {
+    --_dt-ink: var(--_dt-inkLine);
+    --_dt-stroke: calc(var(--fontSize-body) * 0.5);
+    block-size: calc(var(--fontSize-body) * var(--lineHeight-body));
+  }
+}
+</style>
