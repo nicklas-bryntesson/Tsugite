@@ -2,6 +2,7 @@
 // Port of reference-components MotionRegion.html. Video assets come from the
 // same public poc-assets CDN the reference kitchensink uses.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import MotionRegion from "../components/MotionRegion/MotionRegion.astro";
 
 const POC = "https://nicklas-bryntesson.github.io/poc-assets/";
@@ -54,7 +55,7 @@ const POC = "https://nicklas-bryntesson.github.io/poc-assets/";
   </style>
 
   {/* ─── Live demo (e2e target): CSS-animated backend, autostart ───────── */}
-  <Heading text="Live demo — CSS-animated backend (autostart)" element="h3" variant="body" size="lg" />
+  <Text text="Live demo — CSS-animated backend (autostart)" element="h3" size="lg" />
   <MotionRegion
     id="motion-region-live"
     autoplay="policy"
@@ -67,7 +68,7 @@ const POC = "https://nicklas-bryntesson.github.io/poc-assets/";
   </MotionRegion>
 
   {/* ─── Autoplay off — waits for the user ─────────────────────────────── */}
-  <Heading text="Autoplay off — waits for the user" element="h3" variant="body" size="lg" />
+  <Text text="Autoplay off — waits for the user" element="h3" size="lg" />
   <MotionRegion
     id="motion-region-off"
     autoplay="off"
@@ -80,7 +81,7 @@ const POC = "https://nicklas-bryntesson.github.io/poc-assets/";
   </MotionRegion>
 
   {/* ─── Video backend ─────────────────────────────────────────────────── */}
-  <Heading text="Video backend (preload none until policy plays)" element="h3" variant="body" size="lg" />
+  <Text text="Video backend (preload none until policy plays)" element="h3" size="lg" />
   <MotionRegion
     id="motion-region-video"
     autoplay="policy"

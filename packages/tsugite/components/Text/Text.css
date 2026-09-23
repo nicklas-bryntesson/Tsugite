@@ -1,6 +1,6 @@
 /*
- * Text — the reading voice of the typography family: body, on text shapes
- * and the form and figure captions. It owns one run's bundle (face, weight,
+ * Text — the reading voice of the typography family: body, on text shapes,
+ * the form and figure captions, and the heading shapes (ADR-0023). It owns one run's bundle (face, weight,
  * size, leading, tracking, trim) and how the run sits on its line, nothing
  * about what the words mean. The loud voices are Heading's, the UI voices
  * Caption's, the plain multiline field TextBlock's.

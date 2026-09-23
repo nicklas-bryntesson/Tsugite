@@ -16,8 +16,6 @@ import ElementAndSize from "../../examples/heading/ElementAndSize.astro";
 import elementAndSizeSrc from "../../examples/heading/ElementAndSize.astro?raw";
 import Display from "../../examples/heading/Display.astro";
 import displaySrc from "../../examples/heading/Display.astro?raw";
-import Body from "../../examples/heading/Body.astro";
-import bodySrc from "../../examples/heading/Body.astro?raw";
 import Highlight from "../../examples/heading/Highlight.astro";
 import highlightSrc from "../../examples/heading/Highlight.astro?raw";
 import Link from "../../examples/heading/Link.astro";
@@ -35,7 +33,7 @@ const entry = entryFor("heading");
 <Layout title={entry.title}>
   <DocPage entry={entry}>
     <TextBlock
-      text="The heading primitive. Three voices — heading, display and body — on the heading-shaped elements. The element is the outline, the size is the visual step, and the two are independent."
+      text="The heading primitive. Two voices — heading and display — on the heading-shaped elements, the text shapes and the captions. The element is the outline, the size is the visual step, and the two are independent. A heading that should read like text is Text on an h-element (ADR-0023)."
     />
 
     <Example id="sizes" title="Sizes" lead="The heading voice has six steps. By default the element decides the size: h1 is 1, h6 is 6." source={sizesSrc} block>
@@ -50,9 +48,6 @@ const entry = entryFor("heading");
       <Display />
     </Example>
 
-    <Example id="body" title="Body voice" lead="A heading that should read like text. The quiet voice is allowed on heading-shaped elements only — a body-voiced p, span, div, legend or figcaption has one door, and that is Text. The loud voices still speak through every element in the farm, legend and figcaption included." source={bodySrc} block>
-      <Body />
-    </Example>
 
     <Example id="highlight" title="Highlight" lead="Comma-separated words to mark, and a style for the marking: mark by default, or a wavy underline. The list is open, one row in the table and one rule in the CSS per style; the mark always inherits the run's metrics. Bold is not on it: a loud voice flattens inline emphasis (ADR-0012)." source={highlightSrc} block>
       <Highlight />

@@ -2,6 +2,7 @@
 // Port of reference-components DateField.html — states mirror
 // DateField.generate.ts StateDefinition[] one to one.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import DateField from "../components/DateField/DateField.astro";
 ---
 
@@ -9,7 +10,7 @@ import DateField from "../components/DateField/DateField.astro";
   <Heading text="DateField" element="h2" size="2" />
 
   {/* Interaction states */}
-  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <Text text="Interaction states" element="h3" size="lg" />
   <table class="state-table">
     <thead>
       <tr>
@@ -39,7 +40,7 @@ import DateField from "../components/DateField/DateField.astro";
   </table>
 
   {/* Disabled */}
-  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <Text text="Disabled" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -54,7 +55,7 @@ import DateField from "../components/DateField/DateField.astro";
   </table>
 
   {/* Invalid */}
-  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <Text text="Invalid" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -77,13 +78,13 @@ import DateField from "../components/DateField/DateField.astro";
   </table>
 
   {/* Live demo */}
-  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Text text="Live demo" element="h3" size="lg" />
   <div>
     <DateField id="birthdate" label="Date" />
   </div>
 
   {/* Localization: segment order + language */}
-  <Heading text="Localization" element="h3" variant="body" size="lg" />
+  <Text text="Localization" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -102,7 +103,7 @@ import DateField from "../components/DateField/DateField.astro";
   </table>
 
   {/* Native reference */}
-  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <Text text="Native reference" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>

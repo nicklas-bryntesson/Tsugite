@@ -10,6 +10,8 @@ import Example from "../../components/Example/Example.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
 import { entryFor } from "../../lib/manifest.ts";
 
+import BodyOnHeading from "../../examples/text/BodyOnHeading.astro";
+import bodyOnHeadingSrc from "../../examples/text/BodyOnHeading.astro?raw";
 import Sizes from "../../examples/text/Sizes.astro";
 import sizesSrc from "../../examples/text/Sizes.astro?raw";
 import ElementAndRun from "../../examples/text/ElementAndRun.astro";
@@ -31,7 +33,7 @@ const entry = entryFor("text");
 <Layout title={entry.title}>
   <DocPage entry={entry}>
     <TextBlock
-      text="The text primitive. Authored single-run reading text in the body voice, on p, span and div and on the captions legend, figcaption and label. The family litmus: do you author the element? Text for reading, Caption for the UI voices, Heading for the loud ones. A flow you don't control? Prose."
+      text="The text primitive. Authored single-run reading text in the body voice, on p, span and div, on the captions legend, figcaption and label, and on h1–h6 when the outline needs a heading that reads like text. The family litmus: do you author the element? Text for reading, Caption for the UI voices, Heading for the loud ones. A flow you don't control? Prose."
     />
 
     <Example id="sizes" title="Sizes" lead="The body voice has three steps, md by default. Unlike Heading, the element never decides the size." source={sizesSrc} block>
@@ -42,6 +44,9 @@ const entry = entryFor("text");
       <ElementAndRun />
     </Example>
 
+    <Example id="body-on-heading" title="Body on a heading shape" lead="A heading that should read like text. The element is the outline's business, the voice the design's; the two never force each other. The quiet voice keeps its emphasis law here — strong stays bold — where Heading would flatten it, which is why this cell is Text's and not Heading's (ADR-0023)." source={bodyOnHeadingSrc} block>
+      <BodyOnHeading />
+    </Example>
     <Example id="emphasis" title="Emphasis keeps its semantics" lead="Child content runs through the same engine as prop text. In the body voice strong takes the body-bold weight and em stays italic — the loud voices flatten instead (ADR-0012, law b)." source={emphasisSrc} block>
       <Emphasis />
     </Example>

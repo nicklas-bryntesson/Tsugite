@@ -2,6 +2,7 @@
 // Port of reference-components ChoiceGroup.html — section id, data-id hooks
 // and element ids are conformance-suite selectors.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import ChoiceGroup from "../components/ChoiceGroup/ChoiceGroup.astro";
 import ChoiceField from "../components/ChoiceField/ChoiceField.astro";
 import Notice from "../components/Notice/Notice.astro";
@@ -11,7 +12,7 @@ import Notice from "../components/Notice/Notice.astro";
   <Heading text="ChoiceGroup" element="h2" size="2" />
 
   {/* Legend: above (default) — radios (single-select via shared name) */}
-  <Heading text="Legend above (default) · radios" element="h3" variant="body" size="lg" />
+  <Text text="Legend above (default) · radios" element="h3" size="lg" />
   <ChoiceGroup legend="Shipping speed" data-id="above">
     <ChoiceField type="radio" id="cg-a-1" name="cg-above" label="Standard" checked={true} />
     <ChoiceField type="radio" id="cg-a-2" name="cg-above" label="Express" />
@@ -19,7 +20,7 @@ import Notice from "../components/Notice/Notice.astro";
   </ChoiceGroup>
 
   {/* Legend: beside — grid, legend left / options right */}
-  <Heading text="Legend beside · checkboxes" element="h3" variant="body" size="lg" />
+  <Text text="Legend beside · checkboxes" element="h3" size="lg" />
   <ChoiceGroup legend="Notifications" legendPlacement="beside" data-id="beside">
     <ChoiceField type="checkbox" id="cg-b-1" name="cg-b-1" label="Email" checked={true} />
     <ChoiceField type="checkbox" id="cg-b-2" name="cg-b-2" label="SMS" />
@@ -27,14 +28,14 @@ import Notice from "../components/Notice/Notice.astro";
   </ChoiceGroup>
 
   {/* Legend: hidden — visually gone, still the SR group name */}
-  <Heading text="Legend hidden (SR-only name)" element="h3" variant="body" size="lg" />
+  <Text text="Legend hidden (SR-only name)" element="h3" size="lg" />
   <ChoiceGroup legend="Payment method" legendPlacement="hidden" data-id="hidden">
     <ChoiceField type="radio" id="cg-h-1" name="cg-hidden" label="Card" checked={true} />
     <ChoiceField type="radio" id="cg-h-2" name="cg-hidden" label="Invoice" />
   </ChoiceGroup>
 
   {/* Orientation: horizontal — fields flow in a row and wrap */}
-  <Heading text="Orientation horizontal" element="h3" variant="body" size="lg" />
+  <Text text="Orientation horizontal" element="h3" size="lg" />
   <ChoiceGroup legend="Flavor profile (choose any)" orientation="horizontal" data-id="horizontal">
     <ChoiceField type="checkbox" id="cg-hz-1" name="cg-hz-1" label="Floral" />
     <ChoiceField type="checkbox" id="cg-hz-2" name="cg-hz-2" label="Peachy" checked={true} />
@@ -43,7 +44,7 @@ import Notice from "../components/Notice/Notice.astro";
   </ChoiceGroup>
 
   {/* With hint — group description read after the legend (aria-describedby) */}
-  <Heading text="With hint" element="h3" variant="body" size="lg" />
+  <Text text="With hint" element="h3" size="lg" />
   <ChoiceGroup
     legend="Account type"
     hint="Choose the plan that fits your team. You can change this later."
@@ -57,7 +58,7 @@ import Notice from "../components/Notice/Notice.astro";
   </ChoiceGroup>
 
   {/* Invalid — the group error is a Notice inside a persistent live region. */}
-  <Heading text="Invalid (group error)" element="h3" variant="body" size="lg" />
+  <Text text="Invalid (group error)" element="h3" size="lg" />
   <ChoiceGroup legend="Terms" invalid={true} describedby="cg-err-text" data-id="invalid">
     <ChoiceField type="checkbox" id="cg-err-1" name="cg-err-1" label="I accept the terms" required={true} invalid={true} />
     <div slot="error" class="notice-region" role="alert" aria-live="assertive">
@@ -68,7 +69,7 @@ import Notice from "../components/Notice/Notice.astro";
   </ChoiceGroup>
 
   {/* Live demo */}
-  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Text text="Live demo" element="h3" size="lg" />
   <ChoiceGroup
     legend="Contact preference"
     hint="How should we reach you?"

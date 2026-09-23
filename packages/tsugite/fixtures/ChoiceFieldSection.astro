@@ -2,6 +2,7 @@
 // Port of reference-components ChoiceField.html — the section id and the
 // element ids (#cf-live-*, #cf-dis-*) are conformance-suite hooks.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import ChoiceField from "../components/ChoiceField/ChoiceField.astro";
 
 const STATES = ["hover", "focus", "active"] as const;
@@ -12,7 +13,7 @@ const STATES = ["hover", "focus", "active"] as const;
 
   {/* Interaction states — one skeleton, both types. hover/focus/active are
       simulated via data-test-state on the root. */}
-  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <Text text="Interaction states" element="h3" size="lg" />
   <table class="state-table">
     <thead>
       <tr>
@@ -56,7 +57,7 @@ const STATES = ["hover", "focus", "active"] as const;
   </table>
 
   {/* Disabled — its own table: pointer-events:none makes hover/focus impossible */}
-  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <Text text="Disabled" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -75,7 +76,7 @@ const STATES = ["hover", "focus", "active"] as const;
   </table>
 
   {/* Invalid */}
-  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <Text text="Invalid" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -90,7 +91,7 @@ const STATES = ["hover", "focus", "active"] as const;
   </table>
 
   {/* Variants — the host "pushes" an accent by overriding --_cf-selected */}
-  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <Text text="Variants" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -105,7 +106,7 @@ const STATES = ["hover", "focus", "active"] as const;
   </table>
 
   {/* Live demo — independent checkboxes + a real single-selection radio group */}
-  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Text text="Live demo" element="h3" size="lg" />
   <div style="display:flex; gap:3rem; flex-wrap:wrap;">
     <div id="cf-live-checkbox" style="display:flex; flex-direction:column; gap:0.5rem; align-items:flex-start;">
       <strong>Notifications (choose any)</strong>
@@ -122,7 +123,7 @@ const STATES = ["hover", "focus", "active"] as const;
   </div>
 
   {/* Native reference — the browser's built-in controls, unstyled */}
-  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <Text text="Native reference" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>

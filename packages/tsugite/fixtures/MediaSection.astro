@@ -3,6 +3,7 @@
 // four crops) and teaser (two pictures, host-controlled visibility).
 // Split from Components.astro; Umbraco.Media() lookups are ImageMetadata imports.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import Card from "../components/Card/Card.astro";
 import Picture from "../components/Picture/Picture.astro";
 
@@ -42,14 +43,14 @@ const allImages = [
   <Picture preset="teaser" image={img2} alt="Teaser test — david-becker unsplash" />
 
   {/* — All three images side by side ——————————— */}
-  <Heading text="All media items" element="h3" variant="body" size="lg" />
+  <Text text="All media items" element="h3" size="lg" />
   <div style="display:flex; gap:1rem; flex-wrap:wrap;">
     {
       allImages.map(({ img, label }) => (
         <Card border={true} padding="none" style="width:16rem;">
           <Picture preset="teaser" image={img} alt={label} />
           <div style="padding:var(--size-sm);">
-            <Heading element="h4" variant="body" size="sm" text={label} />
+            <Text element="h4" size="sm" text={label} />
           </div>
         </Card>
       ))

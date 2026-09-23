@@ -89,28 +89,6 @@
       }
     },
     {
-      "name": "body on h3 defaults to md",
-      "input": {
-        "text": "T",
-        "element": "h3",
-        "variant": "body",
-        "children": false
-      },
-      "expect": {
-        "mode": "render",
-        "tag": "h3",
-        "className": "Heading",
-        "attrs": {
-          "data-variant": "body",
-          "data-size": "md",
-          "data-align-inline": "start",
-          "data-wrap": "balance",
-          "data-cap-inline": "true",
-          "data-run": "block"
-        }
-      }
-    },
-    {
       "name": "a span is an inline run",
       "input": {
         "text": "T",
@@ -294,19 +272,6 @@
       },
       "expect": {
         "mode": "suppress"
-      }
-    },
-    {
-      "name": "body does not speak through a span",
-      "input": {
-        "text": "T",
-        "element": "span",
-        "variant": "body",
-        "children": false
-      },
-      "expect": {
-        "mode": "error",
-        "errorMessage": "variant \"body\" does not allow element \"span\""
       }
     },
     {

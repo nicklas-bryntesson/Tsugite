@@ -2,6 +2,7 @@
 // Quote — the content-derived gates (media × source), the sizes, string and slot,
 // and the container switch at 30rem.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import Quote from "../components/Quote/Quote.astro";
 import portrait from "./media/jean-philippe.jpg";
 ---
@@ -9,26 +10,26 @@ import portrait from "./media/jean-philippe.jpg";
 <section class="KitchenSink-section" id="Quote">
   <Heading text="Quote" element="h2" size="2" />
 
-  <Heading text="Words alone: an aside" element="h3" variant="body" size="lg" />
+  <Text text="Words alone: an aside" element="h3" size="lg" />
   <Quote id="q-aside" quote="Words can be like X-rays, if you use them properly — they'll go through anything. You read and you're pierced." />
 
-  <Heading text="Words and a source: a figure" element="h3" variant="body" size="lg" />
+  <Text text="Words and a source: a figure" element="h3" size="lg" />
   <Quote id="q-source" source="Aldous Huxley" quote="Words can be like X-rays, if you use them properly — they'll go through anything." />
 
-  <Heading text="Words, a source and a portrait — drag to cross 30rem" element="h3" variant="body" size="lg" />
+  <Text text="Words, a source and a portrait — drag to cross 30rem" element="h3" size="lg" />
   <div style="resize: horizontal; overflow: auto; inline-size: 26rem; max-inline-size: 100%; padding: var(--size-sm); outline: 1px dashed var(--color-border-default);">
     <Quote id="q-portrait" source="Sarah Johnson, Acme Corp" image={portrait} alt="Portrait of Sarah Johnson" capInline={false}
       quote="Working with this team completely transformed our digital presence. The results exceeded every expectation we had." />
   </div>
 
-  <Heading text="Sizes" element="h3" variant="body" size="lg" />
+  <Text text="Sizes" element="h3" size="lg" />
   <div style="display: grid; gap: var(--size-lg);">
     <Quote id="q-sm" size="sm" source="sm" quote="The smallest words." />
     <Quote id="q-md" size="md" source="md" quote="The default words." />
     <Quote id="q-lg" size="lg" source="lg" quote="The largest words." />
   </div>
 
-  <Heading text="Markup in the words: the slot" element="h3" variant="body" size="lg" />
+  <Text text="Markup in the words: the slot" element="h3" size="lg" />
   <Quote id="q-slot" source="A. Nonymous">
     <p>The first line of the quote,<br />and the second, <em>with emphasis</em>.</p>
   </Quote>
