@@ -3,6 +3,7 @@
 // (the reference generates them from MonthField.generate.ts; the state list
 // below mirrors its StateDefinition[] one to one).
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import MonthField from "../components/MonthField/MonthField.astro";
 ---
 
@@ -10,7 +11,7 @@ import MonthField from "../components/MonthField/MonthField.astro";
   <Heading text="MonthField" element="h2" size="2" />
 
   {/* Interaction states */}
-  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <Text text="Interaction states" element="h3" size="lg" />
   <table class="state-table">
     <thead>
       <tr>
@@ -40,7 +41,7 @@ import MonthField from "../components/MonthField/MonthField.astro";
   </table>
 
   {/* Disabled */}
-  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <Text text="Disabled" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -55,7 +56,7 @@ import MonthField from "../components/MonthField/MonthField.astro";
   </table>
 
   {/* Invalid */}
-  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <Text text="Invalid" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -78,7 +79,7 @@ import MonthField from "../components/MonthField/MonthField.astro";
   </table>
 
   {/* Variants */}
-  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <Text text="Variants" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -89,13 +90,13 @@ import MonthField from "../components/MonthField/MonthField.astro";
   </table>
 
   {/* Live demo */}
-  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Text text="Live demo" element="h3" size="lg" />
   <div>
     <MonthField id="meeting-month" label="Meeting month" />
   </div>
 
   {/* Localization: month names + language */}
-  <Heading text="Localization" element="h3" variant="body" size="lg" />
+  <Text text="Localization" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -110,7 +111,7 @@ import MonthField from "../components/MonthField/MonthField.astro";
   </table>
 
   {/* Native reference */}
-  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <Text text="Native reference" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>

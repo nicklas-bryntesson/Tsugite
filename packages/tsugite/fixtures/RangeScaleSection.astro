@@ -2,6 +2,7 @@
 // Port of reference-components RangeScale.html — the state data below mirrors
 // RangeScale.generate.ts StateDefinition[] one to one.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import RangeScale from "../components/RangeScale/RangeScale.astro";
 
 const min = { min: "0", max: "100", step: "1", value: "0" };
@@ -19,7 +20,7 @@ const quarters: [number, string][] = [
   <Heading text="RangeScale" element="h2" size="2" />
 
   {/* Interaction states */}
-  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <Text text="Interaction states" element="h3" size="lg" />
   <table class="state-table">
     <thead>
       <tr>
@@ -49,7 +50,7 @@ const quarters: [number, string][] = [
   </table>
 
   {/* Disabled */}
-  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <Text text="Disabled" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -60,7 +61,7 @@ const quarters: [number, string][] = [
   </table>
 
   {/* Invalid */}
-  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <Text text="Invalid" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -79,7 +80,7 @@ const quarters: [number, string][] = [
   </table>
 
   {/* Lane model */}
-  <Heading text="Lane model — a documented choice" element="h3" variant="body" size="lg" />
+  <Text text="Lane model — a documented choice" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -106,7 +107,7 @@ const quarters: [number, string][] = [
   </table>
 
   {/* Ticks */}
-  <Heading text="Ticks" element="h3" variant="body" size="lg" />
+  <Text text="Ticks" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -139,7 +140,7 @@ const quarters: [number, string][] = [
   </table>
 
   {/* Variants */}
-  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <Text text="Variants" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -174,7 +175,7 @@ const quarters: [number, string][] = [
   </table>
 
   {/* Reference layer */}
-  <Heading text="Reference layer" element="h3" variant="body" size="lg" />
+  <Text text="Reference layer" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -287,13 +288,13 @@ const quarters: [number, string][] = [
   </table>
 
   {/* Live demo */}
-  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Text text="Live demo" element="h3" size="lg" />
   <div>
     <RangeScale id="rs-live" rootId="rangescale-live" label="Volume" input={mid} output={pct} />
   </div>
 
   {/* Native reference */}
-  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <Text text="Native reference" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>

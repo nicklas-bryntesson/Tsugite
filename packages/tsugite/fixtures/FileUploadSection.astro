@@ -2,6 +2,7 @@
 // Port of reference-components FileUpload.html — states and item/seed helpers
 // mirror FileUpload.generate.ts one to one.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import FileUpload from "../components/FileUpload/FileUpload.astro";
 
 // ── Item HTML helpers — multiple mode (<li>) ─────────────────────────────────
@@ -59,7 +60,7 @@ const seedServer = '[{"name":"contract.pdf","size":200000,"type":"application/pd
   <Heading text="FileUpload" element="h2" size="2" />
 
   {/* Interaction states */}
-  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <Text text="Interaction states" element="h3" size="lg" />
   <table class="state-table">
     <thead>
       <tr>
@@ -89,7 +90,7 @@ const seedServer = '[{"name":"contract.pdf","size":200000,"type":"application/pd
   </table>
 
   {/* Disabled */}
-  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <Text text="Disabled" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -104,7 +105,7 @@ const seedServer = '[{"name":"contract.pdf","size":200000,"type":"application/pd
   </table>
 
   {/* Validation */}
-  <Heading text="Validation" element="h3" variant="body" size="lg" />
+  <Text text="Validation" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -127,7 +128,7 @@ const seedServer = '[{"name":"contract.pdf","size":200000,"type":"application/pd
   </table>
 
   {/* Variants */}
-  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <Text text="Variants" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -150,13 +151,13 @@ const seedServer = '[{"name":"contract.pdf","size":200000,"type":"application/pd
   </table>
 
   {/* Live demo */}
-  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Text text="Live demo" element="h3" size="lg" />
   <div>
     <FileUpload id="fu-live" label="Upload files" input={{ multiple: "multiple" }} isMultiple={true} triggerText="Add files" />
   </div>
 
   {/* Native reference */}
-  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <Text text="Native reference" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>

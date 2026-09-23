@@ -5,6 +5,7 @@
 // to miss, in all four appearance modes. The forbidden combination
 // (inverse × subtle) is shown AS forbidden.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import LinkButton from "../components/Button/LinkButton.astro";
 import { voiceMatrix, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 
@@ -45,7 +46,7 @@ const cells = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
   </div>
 
   {/* Nested volume change: same voice, quieter — prominence without theme. */}
-  <Heading text="Nested volume" element="h3" variant="body" size="lg" />
+  <Text text="Nested volume" element="h3" size="lg" />
   <div class="theme-cell" data-theme="brand">
     <p class="cell-label"><code>brand</code> (default = primary)</p>
     <p class="cell-text">Full voice</p>

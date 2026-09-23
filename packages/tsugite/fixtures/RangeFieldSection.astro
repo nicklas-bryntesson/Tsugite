@@ -2,6 +2,7 @@
 // Port of reference-components RangeField.html — states mirror
 // RangeField.generate.ts one to one.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import RangeField from "../components/RangeField/RangeField.astro";
 ---
 
@@ -9,7 +10,7 @@ import RangeField from "../components/RangeField/RangeField.astro";
   <Heading text="RangeField" element="h2" size="2" />
 
   {/* Interaction states */}
-  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <Text text="Interaction states" element="h3" size="lg" />
   <p>
     A range <strong>always carries a value</strong>, so the rows are <em>at minimum</em> and
     <em>partially filled</em> rather than the family's usual empty/filled pair.
@@ -43,7 +44,7 @@ import RangeField from "../components/RangeField/RangeField.astro";
   </table>
 
   {/* Disabled */}
-  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <Text text="Disabled" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -58,7 +59,7 @@ import RangeField from "../components/RangeField/RangeField.astro";
   </table>
 
   {/* Invalid */}
-  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <Text text="Invalid" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -83,7 +84,7 @@ import RangeField from "../components/RangeField/RangeField.astro";
   </table>
 
   {/* Variants */}
-  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <Text text="Variants" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -120,13 +121,13 @@ import RangeField from "../components/RangeField/RangeField.astro";
   </table>
 
   {/* Live demo */}
-  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Text text="Live demo" element="h3" size="lg" />
   <div>
     <RangeField id="rf-live" rootId="rangefield-live" label="Volume" value="50" />
   </div>
 
   {/* Native reference */}
-  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <Text text="Native reference" element="h3" size="lg" />
   <p>
     The browser's own track, thumb and <code>&lt;datalist&gt;</code> tick marks. Compare the marks
     here with the variant above, which has the same <code>&lt;datalist&gt;</code> and draws none.

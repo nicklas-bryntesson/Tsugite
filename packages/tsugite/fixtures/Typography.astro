@@ -9,7 +9,6 @@ import Text from "../components/Text/Text.astro";
 import Prose from "../components/Prose/Prose.astro";
 
 const ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "span", "div"];
-const HEADING_SHAPED = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const VIEWPORTS = [
   { key: "desktop", caption: "Desktop" },
   { key: "mobile", caption: "Mobile" },
@@ -127,11 +126,7 @@ const bodySizes = ["lg", "md", "sm"];
               <th scope="row">{size}</th>
               {ELEMENTS.map((el) => (
                 <td>
-                  {HEADING_SHAPED.has(el) ? (
-                    <Heading text={size} element={el} variant="body" size={size} />
-                  ) : (
-                    <Text text={size} element={el} variant="body" size={size} />
-                  )}
+                  <Text text={size} element={el} variant="body" size={size} />
                 </td>
               ))}
             </tr>

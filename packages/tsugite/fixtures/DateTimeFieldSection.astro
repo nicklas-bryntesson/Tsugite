@@ -2,6 +2,7 @@
 // Port of reference-components DateTimeField.html — states mirror
 // DateTimeField.generate.ts one to one.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import DateTimeField from "../components/DateTimeField/DateTimeField.astro";
 ---
 
@@ -9,7 +10,7 @@ import DateTimeField from "../components/DateTimeField/DateTimeField.astro";
   <Heading text="DateTimeField" element="h2" size="2" />
 
   {/* Interaction states */}
-  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <Text text="Interaction states" element="h3" size="lg" />
   <table class="state-table">
     <thead>
       <tr>
@@ -39,7 +40,7 @@ import DateTimeField from "../components/DateTimeField/DateTimeField.astro";
   </table>
 
   {/* Disabled */}
-  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <Text text="Disabled" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -54,7 +55,7 @@ import DateTimeField from "../components/DateTimeField/DateTimeField.astro";
   </table>
 
   {/* Invalid */}
-  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <Text text="Invalid" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -69,7 +70,7 @@ import DateTimeField from "../components/DateTimeField/DateTimeField.astro";
   </table>
 
   {/* With seconds */}
-  <Heading text="With seconds" element="h3" variant="body" size="lg" />
+  <Text text="With seconds" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -80,7 +81,7 @@ import DateTimeField from "../components/DateTimeField/DateTimeField.astro";
   </table>
 
   {/* Localization */}
-  <Heading text="Localization" element="h3" variant="body" size="lg" />
+  <Text text="Localization" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -95,13 +96,13 @@ import DateTimeField from "../components/DateTimeField/DateTimeField.astro";
   </table>
 
   {/* Live demo */}
-  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Text text="Live demo" element="h3" size="lg" />
   <div>
     <DateTimeField id="meeting-datetime" label="Meeting date and time" />
   </div>
 
   {/* Native reference */}
-  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <Text text="Native reference" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>

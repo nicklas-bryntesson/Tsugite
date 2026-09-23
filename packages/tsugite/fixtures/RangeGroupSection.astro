@@ -2,6 +2,7 @@
 // Port of reference-components RangeGroup.html — states mirror
 // RangeGroup.generate.ts one to one.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import RangeGroup from "../components/RangeGroup/RangeGroup.astro";
 
 const price = {
@@ -21,7 +22,7 @@ const price = {
   <Heading text="RangeGroup" element="h2" size="2" />
 
   {/* Interaction states */}
-  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <Text text="Interaction states" element="h3" size="lg" />
   <table class="state-table">
     <thead>
       <tr>
@@ -42,7 +43,7 @@ const price = {
   </table>
 
   {/* Disabled */}
-  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <Text text="Disabled" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -52,7 +53,7 @@ const price = {
   </table>
 
   {/* Invalid */}
-  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <Text text="Invalid" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -69,7 +70,7 @@ const price = {
   </table>
 
   {/* When the two ends meet */}
-  <Heading text="When the two ends meet" element="h3" variant="body" size="lg" />
+  <Text text="When the two ends meet" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -85,7 +86,7 @@ const price = {
   </table>
 
   {/* Variants */}
-  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <Text text="Variants" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -112,13 +113,13 @@ const price = {
   </table>
 
   {/* Live demo */}
-  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Text text="Live demo" element="h3" size="lg" />
   <div>
     <RangeGroup id="rg-live" rootId="rangegroup-live" {...price} />
   </div>
 
   {/* Native reference */}
-  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <Text text="Native reference" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>

@@ -1,6 +1,7 @@
 ---
 // Port of reference-components ScrollArea.html.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import ScrollArea from "../components/ScrollArea/ScrollArea.astro";
 import ToggleTip from "../components/ToggleTip/ToggleTip.astro";
 ---
@@ -17,7 +18,7 @@ import ToggleTip from "../components/ToggleTip/ToggleTip.astro";
   </p>
 
   {/* Primary use: a wide table that overflows on smaller screens */}
-  <Heading text="Wide table" element="h3" variant="body" size="lg" />
+  <Text text="Wide table" element="h3" size="lg" />
   <ScrollArea id="scrollarea-live" ariaLabel="Members table" style="max-inline-size: 100%;">
     <table class="state-table" style="white-space: nowrap; margin: 0;">
       <thead>
@@ -68,7 +69,7 @@ import ToggleTip from "../components/ToggleTip/ToggleTip.astro";
   </ScrollArea>
 
   {/* Deliberate clipping demo */}
-  <Heading text="Popover clipping (a known limitation)" element="h3" variant="body" size="lg" />
+  <Text text="Popover clipping (a known limitation)" element="h3" size="lg" />
   <p>
     A ToggleTip <em>inside</em> the scroller: its bubble is clipped at the scroller's edge, because
     horizontal scrolling makes the vertical axis non-visible. Compare the same ToggleTip outside a
@@ -88,7 +89,7 @@ import ToggleTip from "../components/ToggleTip/ToggleTip.astro";
   </ScrollArea>
 
   {/* Native reference */}
-  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <Text text="Native reference" element="h3" size="lg" />
   <p>The browser's own horizontal scroller — native bar, no fades, no inset.</p>
   <div style="overflow-x: auto; max-inline-size: 100%;">
     <table class="state-table" style="white-space: nowrap; min-inline-size: 40rem; margin: 0;">

@@ -1,0 +1,9 @@
+---
+import Text from "tsugite/components/Text/Text.astro";
+---
+{/* A heading that should read like text: the body voice on a heading shape. The
+    outline gets its h-element, the words keep the quiet voice and its emphasis
+    law — <strong> stays bold here, where Heading would flatten it. */}
+<Text text="A body-voiced h3, size lg" element="h3" size="lg" />
+<Text text="A body-voiced h4, size md" element="h4" />
+<Text element="h5" size="sm">A body-voiced h5, size sm, with <strong>strong</strong> kept</Text>

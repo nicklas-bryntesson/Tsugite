@@ -3,6 +3,7 @@
 // Split from Components.astro (the AiPoc _Components.cshtml port); the
 // Media and Teaser sections live in MediaSection / TeaserSection.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import Card from "../components/Card/Card.astro";
 ---
 
@@ -14,7 +15,7 @@ import Card from "../components/Card/Card.astro";
   <Heading text="Card" element="h2" size="2" />
 
   {/* — Border ——————————————————————————————— */}
-  <Heading text="Border" element="h3" variant="body" size="lg" />
+  <Text text="Border" element="h3" size="lg" />
   <div style="display:flex; gap:1rem; flex-wrap:wrap;">
     <Card border={false} padding="md">
       <Heading element="h4" text="No border" />
@@ -27,7 +28,7 @@ import Card from "../components/Card/Card.astro";
   </div>
 
   {/* — Elevation ————————————————————————————— */}
-  <Heading text="Elevation" element="h3" variant="body" size="lg" />
+  <Text text="Elevation" element="h3" size="lg" />
   <div style="display:flex; gap:2rem; flex-wrap:wrap; padding:1rem;">
     {
       ["sm", "md", "lg"].map((elevation) => (
@@ -40,7 +41,7 @@ import Card from "../components/Card/Card.astro";
   </div>
 
   {/* — Padding ——————————————————————————————— */}
-  <Heading text="Padding" element="h3" variant="body" size="lg" />
+  <Text text="Padding" element="h3" size="lg" />
   <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start;">
     <Card border={true} padding="none">
       <Heading element="h4" text="None" />
@@ -61,7 +62,7 @@ import Card from "../components/Card/Card.astro";
   </div>
 
   {/* — Combined ——————————————————————————————— */}
-  <Heading text="Combined" element="h3" variant="body" size="lg" />
+  <Text text="Combined" element="h3" size="lg" />
   <div style="display:flex; gap:2rem; flex-wrap:wrap; padding:1rem;">
     <Card border={true} elevation="sm" padding="lg">
       <Heading element="h4" text="Border + elevation" />

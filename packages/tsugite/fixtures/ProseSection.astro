@@ -1,6 +1,7 @@
 ---
 // Port of AiPoc Views/Shared/Partials/KitchenSink/_Prose.cshtml
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import Prose from "../components/Prose/Prose.astro";
 import Card from "../components/Card/Card.astro";
 
@@ -19,7 +20,7 @@ const sizes = ["sm", "md", "lg"];
   </p>
 
   {/* — variant="basic" ——————————————————————————— */}
-  <Heading text="basic — p only" element="h3" variant="body" size="lg" />
+  <Text text="basic — p only" element="h3" size="lg" />
   <Prose variant="basic" size="md">
     <p>
       This is a basic prose block. Only paragraphs — no headings, lists, or inline formatting.
@@ -29,7 +30,7 @@ const sizes = ["sm", "md", "lg"];
   </Prose>
 
   {/* — variant="default" ——————————————————————————— */}
-  <Heading text="default — full prose" element="h3" variant="body" size="lg" />
+  <Text text="default — full prose" element="h3" size="lg" />
   <Prose variant="default" size="md">
     <h2>Heading level 2</h2>
     <p>
@@ -55,7 +56,7 @@ const sizes = ["sm", "md", "lg"];
   </Prose>
 
   {/* — variant="rich" ——————————————————————————— */}
-  <Heading text="rich — extended" element="h3" variant="body" size="lg" />
+  <Text text="rich — extended" element="h3" size="lg" />
   <Prose variant="rich" size="md">
     <h2>Rich prose adds tables, figures, pre, hr</h2>
     <p>Everything from default, plus extended elements.</p>
@@ -80,12 +81,12 @@ console.log(greeting);`}</code></pre>
   </Prose>
 
   {/* — size variants ——————————————————————————— */}
-  <Heading text="Size axis" element="h3" variant="body" size="lg" />
+  <Text text="Size axis" element="h3" size="lg" />
   <div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-start;">
     {
       sizes.map((size) => (
         <Card border={true} padding="md" style="flex:1; min-width:16rem;">
-          <Heading element="h4" variant="body" size="sm" text={`size="${size}"`} />
+          <Text element="h4" size="sm" text={`size="${size}"`} />
           <Prose variant="default" size={size}>
             <p>
               Body text at <strong>{size}</strong> size. The quick brown fox jumps over the lazy

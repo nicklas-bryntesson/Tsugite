@@ -2,6 +2,7 @@
 // Port of reference-components TimeField.html — states mirror
 // TimeField.generate.ts StateDefinition[] one to one.
 import Heading from "../components/Heading/Heading.astro";
+import Text from "../components/Text/Text.astro";
 import TimeField from "../components/TimeField/TimeField.astro";
 ---
 
@@ -9,7 +10,7 @@ import TimeField from "../components/TimeField/TimeField.astro";
   <Heading text="TimeField" element="h2" size="2" />
 
   {/* Interaction states */}
-  <Heading text="Interaction states" element="h3" variant="body" size="lg" />
+  <Text text="Interaction states" element="h3" size="lg" />
   <table class="state-table">
     <thead>
       <tr>
@@ -39,7 +40,7 @@ import TimeField from "../components/TimeField/TimeField.astro";
   </table>
 
   {/* Disabled */}
-  <Heading text="Disabled" element="h3" variant="body" size="lg" />
+  <Text text="Disabled" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -54,7 +55,7 @@ import TimeField from "../components/TimeField/TimeField.astro";
   </table>
 
   {/* Invalid */}
-  <Heading text="Invalid" element="h3" variant="body" size="lg" />
+  <Text text="Invalid" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -77,7 +78,7 @@ import TimeField from "../components/TimeField/TimeField.astro";
   </table>
 
   {/* With seconds (step < 60) */}
-  <Heading text="Variants" element="h3" variant="body" size="lg" />
+  <Text text="Variants" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -88,13 +89,13 @@ import TimeField from "../components/TimeField/TimeField.astro";
   </table>
 
   {/* Live demo */}
-  <Heading text="Live demo" element="h3" variant="body" size="lg" />
+  <Text text="Live demo" element="h3" size="lg" />
   <div>
     <TimeField id="meeting-time" label="Meeting time" />
   </div>
 
   {/* Localization: the hour cycle differs by locale */}
-  <Heading text="Localization" element="h3" variant="body" size="lg" />
+  <Text text="Localization" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
@@ -109,7 +110,7 @@ import TimeField from "../components/TimeField/TimeField.astro";
   </table>
 
   {/* Native reference */}
-  <Heading text="Native reference" element="h3" variant="body" size="lg" />
+  <Text text="Native reference" element="h3" size="lg" />
   <table class="state-table">
     <tbody>
       <tr>
