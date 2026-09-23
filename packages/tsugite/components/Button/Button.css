@@ -52,6 +52,16 @@
               border-color     250ms ease,
               box-shadow       250ms ease;
 
+  /* TODO(investigate): the states are four booleans the browser owns — hover, active,
+     focus-visible, disabled — and they combine (hover + active on a press, focus-visible +
+     active on a held Space, hover on a disabled button in some engines and not others).
+     Which cells are reachable, per engine and per element (a vs button), is unmeasured.
+     Today a combination renders by source order — the later block wins at equal
+     specificity — so hover + focus shows focus and anything + disabled shows disabled,
+     and nothing says so. data-test-state treats them as one enum, so no test has ever
+     rendered a combination. Measure first (a probe page driven by Playwright in three
+     engines), then decide the order and its form (a ladder in the selectors, or source
+     order with a test). Applies to every component with states, so the decision is an ADR. */
   &:hover,
   &[data-test-state="hover"] {
     color:                var(--_bt-color-hover);
