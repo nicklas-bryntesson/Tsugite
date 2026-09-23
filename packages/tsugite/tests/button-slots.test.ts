@@ -32,8 +32,8 @@ function gateBody(value: string): string {
 const written = (body: string) => new Set([...body.matchAll(/^\s+(--_bt-[\w-]+):/gm)].map((m) => m[1]));
 
 describe("Button.css slots", () => {
-  it("reads the fourteen colour slots", () => {
-    expect(consumed.size).toBe(14);
+  it("reads the fifteen colour slots", () => {
+    expect(consumed.size).toBe(15);
   });
 
   it("declares no slot empty", () => {

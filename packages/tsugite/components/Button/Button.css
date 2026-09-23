@@ -52,9 +52,25 @@
               border-color     250ms ease,
               box-shadow       250ms ease;
 
+  /* TODO(investigate): the states are four booleans the browser owns — hover, active,
+     focus-visible, disabled — and they combine (hover + active on a press, focus-visible +
+     active on a held Space, hover on a disabled button in some engines and not others).
+     Which cells are reachable, per engine and per element (a vs button), is unmeasured.
+     Today a combination renders by source order — the later block wins at equal
+     specificity — so hover + focus shows focus and anything + disabled shows disabled,
+     and nothing says so. data-test-state treats them as one enum, so no test has ever
+     rendered a combination. Measure first (a probe page driven by Playwright in three
+     engines), then decide the order and its form (a ladder in the selectors, or source
+     order with a test). The test lens is part of the same decision: to render a
+     combination, data-test-state must carry several states at once — space-separated
+     tokens read with ~= ("hover active", one gate per state, combinations for free,
+     mirroring the pseudo-classes) rather than one value per combination ("hover-active",
+     one selector per cell). Whatever exclusion the real selectors get, the test form needs
+     the same, so the two are shaped together. Applies to every component with states, so
+     the decision is an ADR. */
   &:hover,
   &[data-test-state="hover"] {
-    /* No color here: the emphasis hover blocks re-write --_bt-color itself. */
+    color:                var(--_bt-color-hover);
     background-color:     var(--_bt-backgroundColor-hover);
     border-color:         var(--_bt-borderColor-hover);
     box-shadow:           var(--_bt-boxShadow);
@@ -130,7 +146,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
-      --_bt-color:                     var(--theme-button-color-primary, var(--color-interactive-onPrimary));
+      --_bt-color-hover:               var(--theme-button-color-primary, var(--color-interactive-onPrimary));
       --_bt-backgroundColor-hover:     var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
       --_bt-borderColor-hover:         var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
       --_bt-boxShadow:                 0 0 0 4px var(--_bt-hoverRingColor);
@@ -177,7 +193,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
-      --_bt-color:                     var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
+      --_bt-color-hover:               var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
       --_bt-backgroundColor-hover:     var(--theme-button-backgroundColor-secondary-hover, var(--color-interactive-secondary-hoverSurface));
       --_bt-borderColor-hover:         var(--theme-button-borderColor-secondary-hover, var(--color-interactive-secondary-text));
       --_bt-boxShadow:                 0 0 0 4px var(--_bt-hoverRingColor);
@@ -240,6 +256,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
+      --_bt-color-hover:               var(--color-feedback-onError);
       --_bt-backgroundColor-hover:     var(--color-feedback-error);
       --_bt-borderColor-hover:         var(--color-feedback-error);
     }
@@ -264,6 +281,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
+      --_bt-color-hover:               var(--color-feedback-onSuccess);
       --_bt-backgroundColor-hover:     var(--color-feedback-success);
       --_bt-borderColor-hover:         var(--color-feedback-success);
     }
@@ -290,6 +308,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
+      --_bt-color-hover:               var(--color-feedback-error);
       --_bt-borderColor-hover:         var(--color-feedback-error);
     }
     &:active,
@@ -311,6 +330,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
+      --_bt-color-hover:               var(--color-feedback-success);
       --_bt-borderColor-hover:         var(--color-feedback-success);
     }
     &:active,
