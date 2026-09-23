@@ -1,66 +1,48 @@
-/* Kept as a FILE (not inlined as <style> in one component).
-   Shared contract: LinkButton, ActionButton, CtaLinkButton and Teaser's raw .Button markup all key on it.
-   Inlining would duplicate it in the bundle or couple components to page composition. */
+/*
+ * Button — one thing to press: a link goes somewhere, an action does something,
+ * and the two look alike. One file for both renderers and for CtaButton, which
+ * shares the button voice.
+ *
+ * Gates over one base:
+ *   data-emphasis       primary | secondary | tertiary, ink, surface and border
+ *                       per state, from the theme claims with a semantic fallback.
+ *   data-intent         destructive | success, feedback colours over the emphasis
+ *                       cell; actions only.
+ *   data-size           sm | md | lg, the button voice's stops, padding and icon size.
+ *   data-pill           the radius.
+ *   data-grow-inline    the footprint on the inline axis (ADR-0015).
+ *   data-icon-position  left | right, the grid areas and the gap.
+ *   data-icon-only      one area, square padding; wins over the position gates.
+ */
 @import "../../kernel/css/debug.css";
 /* prettier-ignore */
 .Button {
-  /* TODO(decide): unprefixed slots. ADR-0013 sets --_<prefix>-<propertyCamel>; the
-     names already have the right form, Button only needs its prefix (own pass). */
-  /* TODO(dead): the empty slots below ("own by tone axis") are not documentation, they
-     are a silent default — an empty custom property makes the reading declaration fall
-     to inherit/transparent/currentColor. Tertiary sets none of the fifteen and lives on
-     them. The pass that prefixes also deletes them and completes tertiary; the census
-     and the plan are in tasks/parking-lot.md (2026-09-21). */
-  /* invariants — the button voice's bundle (typography.tokens.js), label's values today, its own knob */
-  --_fontFamily:      var(--fontFamily-button);
-  --_fontWeight:      var(--fontWeight-button);
-  --_lineHeight:      var(--lineHeight-button);
-  --_fontBaselineOffset: var(--baseline-offset-button);
-  --_borderWidth: 1px;
-  --_borderRadius: ;
-  --_outlineWidth: 2px;
-  --_outlineOffset: 3px;
-  --_outlineColor: var(--color-focus-ring);
-  --_hoverRingColor: var(--color-interactive-hoverRing);
-  
-  /* own by tone axis */
-  --_color: ;
-  --_backgroundColor: ;
-  --_borderColor: ;
-  
-  --_color-hover: ;
-  --_backgroundColor-hover: ;
-  --_borderColor-hover: ;
-  
-  --_color-active: ;
-  --_backgroundColor-active: ;
-  --_borderColor-active: ;
+  /* knobs: the button voice's bundle, the border and the focus ring */
+  --_bt-fontFamily:      var(--fontFamily-button);
+  --_bt-fontWeight:      var(--fontWeight-button);
+  --_bt-lineHeight:      var(--lineHeight-button);
+  --_bt-fontBaselineOffset: var(--baseline-offset-button);
+  --_bt-borderWidth: 1px;
+  --_bt-outlineWidth: 2px;
+  --_bt-outlineOffset: 3px;
+  --_bt-outlineColor: var(--color-focus-ring);
+  --_bt-hoverRingColor: var(--color-interactive-hoverRing);
 
-  --_color-focus: ;
-  --_backgroundColor-focus: ;
-  --_borderColor-focus: ;
-
-  --_color-disabled: ;
-  --_backgroundColor-disabled: ;
-  --_borderColor-disabled: ;
-
-
-  /* generic styles */
   position: relative;
   display: inline-grid;
-  grid-template-columns: var(--_buttonColumns, auto);
-  grid-template-areas: var(--_buttonAreas, "text");
+  grid-template-columns: var(--_bt-gridTemplateColumns, auto);
+  grid-template-areas: var(--_bt-gridTemplateAreas, "text");
   align-items: center;
 
-  padding-block: var(--_paddingBlock);
-  padding-inline: var(--_paddingInline);
+  padding-block: var(--_bt-paddingBlock);
+  padding-inline: var(--_bt-paddingInline);
   border-style: solid;
-  border-width: var(--_borderWidth);
-  border-color: var(--_borderColor);
-  border-radius: var(--_borderRadius);
+  border-width: var(--_bt-borderWidth);
+  border-color: var(--_bt-borderColor);
+  border-radius: var(--_bt-borderRadius);
 
-  color: var(--_color);
-  background-color: var(--_backgroundColor);
+  color: var(--_bt-color);
+  background-color: var(--_bt-backgroundColor);
 
   text-decoration: none;
   box-sizing: border-box;
@@ -72,19 +54,17 @@
 
   &:hover,
   &[data-test-state="hover"] {
-    /* Upstream had `color: var();` — invalid, dropped by the browser at parse
-       time, so hover text color comes from the base rule's var(--_color),
-       which the emphasis hover blocks update. Omitted here to match. */
-    background-color:     var(--_backgroundColor-hover);
-    border-color:         var(--_borderColor-hover);
-    box-shadow:           var(--_boxShadow);
+    /* No color here: the emphasis hover blocks re-write --_bt-color itself. */
+    background-color:     var(--_bt-backgroundColor-hover);
+    border-color:         var(--_bt-borderColor-hover);
+    box-shadow:           var(--_bt-boxShadow);
   }
 
   &:active,
   &[data-test-state="active"] {
-    color:                var(--_color-active);
-    background-color:     var(--_backgroundColor-active);
-    border-color:         var(--_borderColor-active);
+    color:                var(--_bt-color-active);
+    background-color:     var(--_bt-backgroundColor-active);
+    border-color:         var(--_bt-borderColor-active);
     box-shadow:           none;
   }
 
@@ -96,22 +76,22 @@
   /* Keyboard interaction */
   &:focus-visible,
   &[data-test-state="focus"] {
-    color:                var(--_color-focus);
-    background-color:     var(--_backgroundColor-focus);
-    border-color:         var(--_borderColor-focus);
+    color:                var(--_bt-color-focus);
+    background-color:     var(--_bt-backgroundColor-focus);
+    border-color:         var(--_bt-borderColor-focus);
     box-shadow:           none;
 
     outline-style:        solid;
-    outline-width:        var(--_outlineWidth);
-    outline-color:        var(--_outlineColor);
-    outline-offset:       var(--_outlineOffset);
+    outline-width:        var(--_bt-outlineWidth);
+    outline-color:        var(--_bt-outlineColor);
+    outline-offset:       var(--_bt-outlineOffset);
   }
 
   &:disabled,
   &[data-test-state="disabled"] {
-    color:                var(--_color-disabled);
-    background-color:     var(--_backgroundColor-disabled);
-    border-color:         var(--_borderColor-disabled);
+    color:                var(--_bt-color-disabled);
+    background-color:     var(--_bt-backgroundColor-disabled);
+    border-color:         var(--_bt-borderColor-disabled);
     box-shadow:           none;
     cursor:               not-allowed;
   }
@@ -119,67 +99,66 @@
 
   /* Sizes */
   &[data-size="sm"] {
-    --_iconSize:                    1.125rem;
-    --_iconMargin:                  0.5rem;
-    --_fontSize:                    var(--fontSize-button-small);
-    --_paddingBlock:                var(--size-sm);
-    --_paddingInline:               1.4em;
+    --_bt-iconSize:                    1.125rem;
+    --_bt-iconMargin:                  0.5rem;
+    --_bt-fontSize:                    var(--fontSize-button-small);
+    --_bt-paddingBlock:                var(--size-sm);
+    --_bt-paddingInline:               1.4em;
   }
 
   &[data-size="md"] {
-    --_iconSize:                    1.5rem;
-    --_iconMargin:                  0.75rem;
-    --_fontSize:                    var(--fontSize-button);
-    --_paddingBlock:                var(--size-sm);
-    --_paddingInline:               1.4em;
+    --_bt-iconSize:                    1.5rem;
+    --_bt-iconMargin:                  0.75rem;
+    --_bt-fontSize:                    var(--fontSize-button);
+    --_bt-paddingBlock:                var(--size-sm);
+    --_bt-paddingInline:               1.4em;
   }
 
   &[data-size="lg"] {
-    --_iconSize:                    1.75rem;
-    --_iconMargin:                  1rem;
-    --_fontSize:                    var(--fontSize-button-large);
-    --_paddingBlock:                0.8em;
-    --_paddingInline:               1.6em;
+    --_bt-iconSize:                    1.75rem;
+    --_bt-iconMargin:                  1rem;
+    --_bt-fontSize:                    var(--fontSize-button-large);
+    --_bt-paddingBlock:                0.8em;
+    --_bt-paddingInline:               1.6em;
   }
 
   /* Emphasis */
   &[data-emphasis="primary"] {
-    --_color:                       var(--theme-button-color-primary, var(--color-interactive-onPrimary));
-    --_backgroundColor:             var(--theme-button-backgroundColor-primary, var(--color-interactive-primary));
-    --_borderColor:                 var(--theme-button-borderColor-primary, var(--color-interactive-primary));
+    --_bt-color:                       var(--theme-button-color-primary, var(--color-interactive-onPrimary));
+    --_bt-backgroundColor:             var(--theme-button-backgroundColor-primary, var(--color-interactive-primary));
+    --_bt-borderColor:                 var(--theme-button-borderColor-primary, var(--color-interactive-primary));
 
     &:hover,
     &[data-test-state="hover"] {
-      --_color:                     var(--theme-button-color-primary, var(--color-interactive-onPrimary));
-      --_backgroundColor-hover:     var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
-      --_borderColor-hover:         var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
-      --_boxShadow:                 0 0 0 4px var(--_hoverRingColor);
+      --_bt-color:                     var(--theme-button-color-primary, var(--color-interactive-onPrimary));
+      --_bt-backgroundColor-hover:     var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
+      --_bt-borderColor-hover:         var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
+      --_bt-boxShadow:                 0 0 0 4px var(--_bt-hoverRingColor);
     }
 
     &:active,
     &[data-test-state="active"] {
-      --_color-active:              var(--theme-button-color-primary, var(--color-interactive-onPrimary));
-      --_backgroundColor-active:    var(--theme-button-backgroundColor-primary, var(--color-interactive-primary));
-      --_borderColor-active:        var(--theme-button-borderColor-primary, var(--color-interactive-primary));
-      --_boxShadow:                 0 0 0 4px transparent;
+      --_bt-color-active:              var(--theme-button-color-primary, var(--color-interactive-onPrimary));
+      --_bt-backgroundColor-active:    var(--theme-button-backgroundColor-primary, var(--color-interactive-primary));
+      --_bt-borderColor-active:        var(--theme-button-borderColor-primary, var(--color-interactive-primary));
+      --_bt-boxShadow:                 0 0 0 4px transparent;
     }
 
     &:focus-visible,
     &[data-test-state="focus"] {
-      /* tbd: does this need to be tied to the emphasis axis? */
-      --_color-focus:               var(--theme-button-color-primary, var(--color-interactive-onPrimary));
-      --_backgroundColor-focus:     var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
-      --_borderColor-focus:         var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
-      --_boxShadow:                 none;
-      --_boxShadow:                 0 0 0 4px transparent;
+      /* TODO(decide): focus takes the hover colours; whether focus belongs to the emphasis axis at all is open. */
+      --_bt-color-focus:               var(--theme-button-color-primary, var(--color-interactive-onPrimary));
+      --_bt-backgroundColor-focus:     var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
+      --_bt-borderColor-focus:         var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
+      --_bt-boxShadow:                 0 0 0 4px transparent;
     }
 
     &:disabled,
     &[data-test-state="disabled"] {
-      --_color-disabled:            var(--color-disabled-text);
-      --_backgroundColor-disabled:  var(--color-disabled-surface);
-      --_borderColor-disabled:      var(--color-disabled-border);
-      --_boxShadow:                 0 0 0 4px transparent;
+      --_bt-color-disabled:            var(--color-disabled-text);
+      --_bt-backgroundColor-disabled:  var(--color-disabled-surface);
+      --_bt-borderColor-disabled:      var(--color-disabled-border);
+      --_bt-boxShadow:                 0 0 0 4px transparent;
 
       background-image: repeating-linear-gradient(
         45deg,
@@ -192,42 +171,41 @@
   }
 
   &[data-emphasis="secondary"] {
-    --_color:                       var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
-    --_backgroundColor:             transparent;
-    --_borderColor:                 var(--theme-button-borderColor-secondary, var(--color-interactive-secondary-border));
+    --_bt-color:                       var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
+    --_bt-backgroundColor:             transparent;
+    --_bt-borderColor:                 var(--theme-button-borderColor-secondary, var(--color-interactive-secondary-border));
 
     &:hover,
     &[data-test-state="hover"] {
-      --_color:                     var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
-      --_backgroundColor-hover:     var(--theme-button-backgroundColor-secondary-hover, var(--color-interactive-secondary-hoverSurface));
-      --_borderColor-hover:         var(--theme-button-borderColor-secondary-hover, var(--color-interactive-secondary-text));
-      --_boxShadow:                 0 0 0 4px var(--_hoverRingColor);
+      --_bt-color:                     var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
+      --_bt-backgroundColor-hover:     var(--theme-button-backgroundColor-secondary-hover, var(--color-interactive-secondary-hoverSurface));
+      --_bt-borderColor-hover:         var(--theme-button-borderColor-secondary-hover, var(--color-interactive-secondary-text));
+      --_bt-boxShadow:                 0 0 0 4px var(--_bt-hoverRingColor);
     }
 
     &:active,
     &[data-test-state="active"] {
-      --_color-active:              var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
-      --_backgroundColor-active:    transparent;
-      --_borderColor-active:        var(--theme-button-borderColor-secondary, var(--color-interactive-secondary-border));
-      --_boxShadow:                 0 0 0 4px transparent;
+      --_bt-color-active:              var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
+      --_bt-backgroundColor-active:    transparent;
+      --_bt-borderColor-active:        var(--theme-button-borderColor-secondary, var(--color-interactive-secondary-border));
+      --_bt-boxShadow:                 0 0 0 4px transparent;
     }
 
     &:focus-visible,
     &[data-test-state="focus"] {
-      /* tbd: does this need to be tied to the emphasis axis? */
-      --_color-focus:               var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
-      --_backgroundColor-focus:     var(--theme-button-backgroundColor-secondary-hover, var(--color-interactive-secondary-hoverSurface));
-      --_borderColor-focus:         var(--theme-button-borderColor-secondary-hover, var(--color-interactive-secondary-text));
-      --_boxShadow:                 none;
-      --_boxShadow:                 0 0 0 4px transparent;
+      /* TODO(decide): focus takes the hover colours; whether focus belongs to the emphasis axis at all is open. */
+      --_bt-color-focus:               var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
+      --_bt-backgroundColor-focus:     var(--theme-button-backgroundColor-secondary-hover, var(--color-interactive-secondary-hoverSurface));
+      --_bt-borderColor-focus:         var(--theme-button-borderColor-secondary-hover, var(--color-interactive-secondary-text));
+      --_bt-boxShadow:                 0 0 0 4px transparent;
     }
 
     &:disabled,
     &[data-test-state="disabled"] {
-      --_color-disabled:            var(--color-disabled-text);
-      --_backgroundColor-disabled:  var(--color-disabled-surface);
-      --_borderColor-disabled:      var(--color-disabled-border);
-      --_boxShadow:                 0 0 0 4px transparent;
+      --_bt-color-disabled:            var(--color-disabled-text);
+      --_bt-backgroundColor-disabled:  var(--color-disabled-surface);
+      --_bt-borderColor-disabled:      var(--color-disabled-border);
+      --_bt-boxShadow:                 0 0 0 4px transparent;
 
       background-image: repeating-linear-gradient(
         45deg,
@@ -239,12 +217,14 @@
     }
   }
 
+  /* TODO(decide): tertiary is parked until it has a design and a use. The gate writes
+     none of the colour slots the states read, so ink is inherited, surface and border
+     transparent, and hover shows no ring. tests/button-slots.test.ts names it exempt. */
   &[data-emphasis="tertiary"] {
-    --_borderWidth: 0;
+    --_bt-borderWidth: 0;
     background: transparent;
   }
 
-  /* ── Intent ── */
   /* An action can be destructive or successful. Intent writes the same slots emphasis
      writes, so every state — hover ring, active, focus, disabled — keeps working; it
      never sets a property on the element directly. The feedback colours are deliberately
@@ -254,50 +234,50 @@
      so the hover and focus states keep the base colour and show the ring. */
 
   &[data-emphasis="primary"][data-intent="destructive"] {
-    --_color:                       var(--color-feedback-onError);
-    --_backgroundColor:             var(--color-feedback-error);
-    --_borderColor:                 var(--color-feedback-error);
+    --_bt-color:                       var(--color-feedback-onError);
+    --_bt-backgroundColor:             var(--color-feedback-error);
+    --_bt-borderColor:                 var(--color-feedback-error);
 
     &:hover,
     &[data-test-state="hover"] {
-      --_backgroundColor-hover:     var(--color-feedback-error);
-      --_borderColor-hover:         var(--color-feedback-error);
+      --_bt-backgroundColor-hover:     var(--color-feedback-error);
+      --_bt-borderColor-hover:         var(--color-feedback-error);
     }
     &:active,
     &[data-test-state="active"] {
-      --_color-active:              var(--color-feedback-onError);
-      --_backgroundColor-active:    var(--color-feedback-error);
-      --_borderColor-active:        var(--color-feedback-error);
+      --_bt-color-active:              var(--color-feedback-onError);
+      --_bt-backgroundColor-active:    var(--color-feedback-error);
+      --_bt-borderColor-active:        var(--color-feedback-error);
     }
     &:focus-visible,
     &[data-test-state="focus"] {
-      --_color-focus:               var(--color-feedback-onError);
-      --_backgroundColor-focus:     var(--color-feedback-error);
-      --_borderColor-focus:         var(--color-feedback-error);
+      --_bt-color-focus:               var(--color-feedback-onError);
+      --_bt-backgroundColor-focus:     var(--color-feedback-error);
+      --_bt-borderColor-focus:         var(--color-feedback-error);
     }
   }
 
   &[data-emphasis="primary"][data-intent="success"] {
-    --_color:                       var(--color-feedback-onSuccess);
-    --_backgroundColor:             var(--color-feedback-success);
-    --_borderColor:                 var(--color-feedback-success);
+    --_bt-color:                       var(--color-feedback-onSuccess);
+    --_bt-backgroundColor:             var(--color-feedback-success);
+    --_bt-borderColor:                 var(--color-feedback-success);
 
     &:hover,
     &[data-test-state="hover"] {
-      --_backgroundColor-hover:     var(--color-feedback-success);
-      --_borderColor-hover:         var(--color-feedback-success);
+      --_bt-backgroundColor-hover:     var(--color-feedback-success);
+      --_bt-borderColor-hover:         var(--color-feedback-success);
     }
     &:active,
     &[data-test-state="active"] {
-      --_color-active:              var(--color-feedback-onSuccess);
-      --_backgroundColor-active:    var(--color-feedback-success);
-      --_borderColor-active:        var(--color-feedback-success);
+      --_bt-color-active:              var(--color-feedback-onSuccess);
+      --_bt-backgroundColor-active:    var(--color-feedback-success);
+      --_bt-borderColor-active:        var(--color-feedback-success);
     }
     &:focus-visible,
     &[data-test-state="focus"] {
-      --_color-focus:               var(--color-feedback-onSuccess);
-      --_backgroundColor-focus:     var(--color-feedback-success);
-      --_borderColor-focus:         var(--color-feedback-success);
+      --_bt-color-focus:               var(--color-feedback-onSuccess);
+      --_bt-backgroundColor-focus:     var(--color-feedback-success);
+      --_bt-borderColor-focus:         var(--color-feedback-success);
     }
   }
 
@@ -305,57 +285,53 @@
      and take the feedback colour as ink and border. */
   &[data-emphasis="secondary"][data-intent="destructive"],
   &[data-emphasis="tertiary"][data-intent="destructive"] {
-    --_color:                       var(--color-feedback-error);
-    --_borderColor:                 var(--color-feedback-error);
+    --_bt-color:                       var(--color-feedback-error);
+    --_bt-borderColor:                 var(--color-feedback-error);
 
     &:hover,
     &[data-test-state="hover"] {
-      --_borderColor-hover:         var(--color-feedback-error);
+      --_bt-borderColor-hover:         var(--color-feedback-error);
     }
     &:active,
     &[data-test-state="active"] {
-      --_color-active:              var(--color-feedback-error);
-      --_borderColor-active:        var(--color-feedback-error);
+      --_bt-color-active:              var(--color-feedback-error);
+      --_bt-borderColor-active:        var(--color-feedback-error);
     }
     &:focus-visible,
     &[data-test-state="focus"] {
-      --_color-focus:               var(--color-feedback-error);
-      --_borderColor-focus:         var(--color-feedback-error);
+      --_bt-color-focus:               var(--color-feedback-error);
+      --_bt-borderColor-focus:         var(--color-feedback-error);
     }
   }
 
   &[data-emphasis="secondary"][data-intent="success"],
   &[data-emphasis="tertiary"][data-intent="success"] {
-    --_color:                       var(--color-feedback-success);
-    --_borderColor:                 var(--color-feedback-success);
+    --_bt-color:                       var(--color-feedback-success);
+    --_bt-borderColor:                 var(--color-feedback-success);
 
     &:hover,
     &[data-test-state="hover"] {
-      --_borderColor-hover:         var(--color-feedback-success);
+      --_bt-borderColor-hover:         var(--color-feedback-success);
     }
     &:active,
     &[data-test-state="active"] {
-      --_color-active:              var(--color-feedback-success);
-      --_borderColor-active:        var(--color-feedback-success);
+      --_bt-color-active:              var(--color-feedback-success);
+      --_bt-borderColor-active:        var(--color-feedback-success);
     }
     &:focus-visible,
     &[data-test-state="focus"] {
-      --_color-focus:               var(--color-feedback-success);
-      --_borderColor-focus:         var(--color-feedback-success);
+      --_bt-color-focus:               var(--color-feedback-success);
+      --_bt-borderColor-focus:         var(--color-feedback-success);
     }
   }
 
-  /* ── Shape ── */
-
   &[data-pill="false"] {
-   --_borderRadius: 0.375em;
+   --_bt-borderRadius: 0.375em;
   }
 
   &[data-pill="true"] {
-    --_borderRadius: 3em;
+    --_bt-borderRadius: 3em;
   }
-
-  /* ── Icon layout ── */
 
   /* Footprint on the inline axis (ADR-0015): may the button take more room than its
      label. 100%, not auto, so a start-aligned flex or grid parent cannot shrink it. */
@@ -372,32 +348,32 @@
   }
 
   &:not([data-icon-position]) {
-    --_buttonColumns: auto;
-    --_buttonAreas: "text";
+    --_bt-gridTemplateColumns: auto;
+    --_bt-gridTemplateAreas: "text";
   }
 
   &[data-icon-position="left"] {
-    --_buttonColumns: auto 1fr;
-    --_buttonAreas: "icon text";
-    --_marginEnd: var(--_iconMargin);
+    --_bt-gridTemplateColumns: auto 1fr;
+    --_bt-gridTemplateAreas: "icon text";
+    --_bt-marginEnd: var(--_bt-iconMargin);
 
-    gap: var(--_marginEnd);
+    gap: var(--_bt-marginEnd);
   }
 
   &[data-icon-position="right"] {
-    --_buttonColumns: 1fr auto;
-    --_buttonAreas: "text icon";
-    --_marginStart: var(--_iconMargin);
+    --_bt-gridTemplateColumns: 1fr auto;
+    --_bt-gridTemplateAreas: "text icon";
+    --_bt-marginStart: var(--_bt-iconMargin);
 
-    gap: var(--_marginStart);
+    gap: var(--_bt-marginStart);
   }
 
   /* Icon-only: one area, square padding. After the position rules on purpose — an
      icon-only button still carries data-icon-position, and this must win. */
   &[data-icon-only="true"] {
-    --_buttonColumns: auto;
-    --_buttonAreas: "icon";
-    padding-inline: var(--_paddingBlock);
+    --_bt-gridTemplateColumns: auto;
+    --_bt-gridTemplateAreas: "icon";
+    padding-inline: var(--_bt-paddingBlock);
 
     /* No label line to sit within: the icon carries the height itself, and the
        button is a square of padding around it. */
@@ -408,22 +384,22 @@
 
   & > .Button-text {
     /* prettier-ignore */
-    --_baselineOffset: var(--button--baselineOffset, 0);
-    --_effectiveLineHeight: calc(var(--_fontSize) * var(--_lineHeight));
-    --_marginBlock: calc((var(--_fontSize) - var(--_effectiveLineHeight)) / 2);
-    --_marginBlockStart: calc(var(--_marginBlock) + var(--_baselineOffset));
-    --_marginBlockEnd: calc(var(--_marginBlock) - var(--_baselineOffset));
+    --_bt-baselineOffset: var(--button--baselineOffset, 0);
+    --_bt-effectiveLineHeight: calc(var(--_bt-fontSize) * var(--_bt-lineHeight));
+    --_bt-marginBlock: calc((var(--_bt-fontSize) - var(--_bt-effectiveLineHeight)) / 2);
+    --_bt-marginBlockStart: calc(var(--_bt-marginBlock) + var(--_bt-baselineOffset));
+    --_bt-marginBlockEnd: calc(var(--_bt-marginBlock) - var(--_bt-baselineOffset));
 
     position: relative;
     color: inherit;
     grid-area: text;
-    font-size: var(--_fontSize);
-    font-family: var(--_fontFamily);
-    font-weight: var(--_fontWeight);
-    line-height: var(--_lineHeight);
+    font-size: var(--_bt-fontSize);
+    font-family: var(--_bt-fontFamily);
+    font-weight: var(--_bt-fontWeight);
+    line-height: var(--_bt-lineHeight);
     /* negative margin compensating for line-height above and below while still keeping line-height inside the button text, with baseline offset */
-    margin-block-start: var(--_marginBlockStart);
-    margin-block-end: var(--_marginBlockEnd);
+    margin-block-start: var(--_bt-marginBlockStart);
+    margin-block-end: var(--_bt-marginBlockEnd);
     word-break: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
@@ -447,10 +423,10 @@
   & > .Button-icon {
     grid-area: icon;
     display: block;
-    inline-size: var(--_iconSize);
-    block-size: var(--_iconSize);
+    inline-size: var(--_bt-iconSize);
+    block-size: var(--_bt-iconSize);
     position: relative;
-    margin-block: calc((var(--_iconSize) / 2) * -1);
+    margin-block: calc((var(--_bt-iconSize) / 2) * -1);
   }
 }
 
@@ -462,7 +438,7 @@
     inset-inline: 0;
     inset-block-start: 0;
     width: 100%;
-    height: var(--_paddingBlock);
+    height: var(--_bt-paddingBlock);
     background-color: var(--debug-fill);
   }
 
@@ -472,7 +448,7 @@
     inset-inline: 0;
     inset-block-end: 0;
     width: 100%;
-    height: var(--_paddingBlock);
+    height: var(--_bt-paddingBlock);
     background-color: var(--debug-fill);
   }
 
@@ -486,11 +462,13 @@
       inset-inline: 0;
       inset-block: 0;
 
-      /* Show the height of the text after line-height compensation */
+      /* TODO(dead): --_bt-marginAdjustment is set nowhere; height falls to auto and the
+         transform to none, so the box shows the text's full line box, not the
+         compensated one. */
       height: calc(
-        100% - (2 * var(--_marginAdjustment))
+        100% - (2 * var(--_bt-marginAdjustment))
       ); /* Subtract top & bottom */
-      transform: translateY(var(--_marginAdjustment)); /* Shift it down */
+      transform: translateY(var(--_bt-marginAdjustment)); /* Shift it down */
 
       width: 100%;
       background-color: var(--debug-measure);
