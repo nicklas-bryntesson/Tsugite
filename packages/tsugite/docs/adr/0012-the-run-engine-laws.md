@@ -36,8 +36,8 @@ decisions in the ledger; this ADR moves them there unchanged.
 2. **Inline emphasis semantics are declared per family member** — the
    `emphasis` field of `FamilyMember`. The quiet voices (Text: body,
    label) keep the semantics: `strong`/`b` take the role convention's
-   strong weight (`--fontWeight-body-bold`, the F2 decision in
-   `tasks/typography-map.md` — no new weight stop), `em`/`i` stay
+   strong weight (`--fontWeight-body-bold`, the typography sweep's
+   decision, 2026-09-02 — no new weight stop), `em`/`i` stay
    italic. The loud voices (Heading) **flatten**: emphasis elements
    inherit the run's font; partial bolding of a heading is drift. The
    plaintext contract (TextBlock) declares `none` — markup is

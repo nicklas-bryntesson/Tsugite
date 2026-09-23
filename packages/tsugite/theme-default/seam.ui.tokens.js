@@ -33,7 +33,7 @@ export const uiSeamTokens = {
   "--ui-info": "var(--color-feedback-info)",
 
   // Typography — field text runs through the label role ramp (the
-  // typography sweep, tasks/typography-map.md F1/F2). The strong stop
+  // typography sweep, 2026-09; ADR-0012 law b). The strong stop
   // reuses the existing body-bold weight so within-component emphasis
   // (calendar today/selected) survives without new role vocabulary;
   // whether the label role should own a strong stop is an upstream
