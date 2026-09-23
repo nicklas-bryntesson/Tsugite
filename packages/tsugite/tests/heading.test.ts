@@ -37,16 +37,11 @@ describe("Heading", () => {
     expect(html).toContain('data-size="1"');
   });
 
-  it("defaults body variant to size md", async () => {
+  it("does not speak the body voice — that cell is Text's (ADR-0023)", async () => {
     const html = await render({ text: "T", element: "h3", variant: "body" });
-    expect(html).toContain('data-variant="body"');
-    expect(html).toContain('data-size="md"');
-  });
-
-  it("rejects non-heading elements for body variant (dev error)", async () => {
-    const html = await render({ text: "T", element: "span", variant: "body" });
     expect(html).toContain("Heading:");
-    expect(html).toContain("does not allow element");
+    expect(html).toContain('invalid variant "body"');
+    expect(html).not.toContain('class="Heading"');
   });
 
   it("wraps text in a link when href is set", async () => {

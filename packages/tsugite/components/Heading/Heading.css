@@ -8,7 +8,7 @@
  * files.
  *
  * Gates:
- *   data-variant   heading | display | body, the voice bundle.
+ *   data-variant   heading | display, the voice bundle.
  *   data-size      per voice: 1–6, 1–3, sm | md | lg.
  *   data-run       block | inline, derived from the element (ADR-0012 §3).
  *   data-align-inline  start | center | end, logical.
@@ -149,33 +149,6 @@
     }
   }
 
-  &[data-variant="body"] {
-    --_hd-lineHeight: var(--lineHeight-body);
-    --_hd-baselineOffset: var(--baseline-offset-body);
-    --_hd-emBox: var(--fontEmBox-body);
-    --_hd-capGap: var(--fontCapGap-body);
-    --_hd-descent: var(--fontDescent-body);
-
-    font-family: var(--fontFamily-body);
-    font-weight: var(--fontWeight-body);
-    letter-spacing: var(--letterSpacing-body);
-    font-feature-settings: var(--fontFeatureSettings-body);
-
-    &[data-size="sm"] {
-      --_hd-fontSize: var(--fontSize-body-small);
-      --_hd-lineLength: var(--lineLength-body-small);
-    }
-
-    &[data-size="md"] {
-      --_hd-fontSize: var(--fontSize-body);
-      --_hd-lineLength: var(--lineLength-body);
-    }
-
-    &[data-size="lg"] {
-      --_hd-fontSize: var(--fontSize-body-large);
-      --_hd-lineLength: var(--lineLength-body-large);
-    }
-  }
 
   &[data-cap-inline="false"] > .heading-link,
   &[data-cap-inline="false"] > .heading-text {

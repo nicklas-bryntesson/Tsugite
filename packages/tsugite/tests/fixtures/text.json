@@ -184,6 +184,49 @@
       }
     },
     {
+      "name": "body voice on an h3 — a heading that reads like text (ADR-0023)",
+      "input": {
+        "text": "T",
+        "element": "h3",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h3",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align-inline": "start",
+          "data-wrap": "pretty",
+          "data-cap-inline": "true",
+          "data-run": "block"
+        }
+      }
+    },
+    {
+      "name": "an h1 does not decide the size either",
+      "input": {
+        "text": "T",
+        "element": "h1",
+        "size": "sm",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "h1",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "sm",
+          "data-align-inline": "start",
+          "data-wrap": "pretty",
+          "data-cap-inline": "true",
+          "data-run": "block"
+        }
+      }
+    },
+    {
       "name": "align and wrap",
       "input": {
         "text": "T",
@@ -209,7 +252,7 @@
       "name": "an invalid element falls back to p",
       "input": {
         "text": "T",
-        "element": "h2",
+        "element": "section",
         "children": false
       },
       "expect": {

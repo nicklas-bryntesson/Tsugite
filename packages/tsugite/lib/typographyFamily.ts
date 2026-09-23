@@ -51,8 +51,10 @@ export const VOICE_SIZES: Record<string, readonly string[]> = {
 const HEADING_SHAPED = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
 /** every element a loud voice may speak through */
 const HEADING_FARM = [...HEADING_SHAPED, "span", "div", "p", "legend", "figcaption"] as const;
-/** every element the body voice may speak through outside the heading shapes */
-const TEXT_FARM = ["p", "span", "div", "legend", "figcaption", "label"] as const;
+/** every element the body voice may speak through: the text shapes, the captions, and the
+ *  heading shapes — a heading that must read like text is Text on an h-element, so the
+ *  quiet voice keeps its own emphasis law (ADR-0023) */
+const TEXT_FARM = ["p", "span", "div", "legend", "figcaption", "label", ...HEADING_SHAPED] as const;
 /** every element a UI voice may speak through: a legend that must be a heading, a th, a
  *  form label, a figcaption — the whole farm, because forms need every trick to bind
  *  things semantically that look alike */
@@ -84,12 +86,11 @@ export const FAMILY: Record<string, FamilyMember> = {
   Heading: {
     input: "authored",
     emphasis: "flattened",
+    // The loud voices only. Body on a heading shape is Text's cell (ADR-0023): the
+    // emphasis law follows the voice, and Heading's is flattened.
     voices: {
       heading: HEADING_FARM,
       display: HEADING_FARM,
-      // The quiet voice on heading-shaped elements only — a body-voiced anything
-      // else has ONE door, and it is Text.
-      body: HEADING_SHAPED,
     },
   },
   Text: {

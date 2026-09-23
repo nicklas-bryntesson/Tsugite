@@ -1,13 +1,14 @@
 // Text — the table (ADR-0018). The reading voice of the typography family, body, on text
-// shapes and the form/figure captions: authored single-run text. The UI voices (label,
-// button) have their own door, Caption. One voice, six elements, no absent cells; the
+// shapes, the form/figure captions and the heading shapes: authored single-run text. The
+// UI voices (label, button) have their own door, Caption; the loud voices, Heading. One
+// voice, twelve elements, no absent cells (ADR-0023 gave it h1–h6); the
 // size set is the voice's, md by default — unlike Heading, the element never decides the
 // size. tests/typographyFamily.test.ts holds this table to the family matrix.
 import type { Recipe } from "../lib/recipe";
 
 export const text = {
   name: "Text",
-  promise: "One run of reading text in the body voice, on a text shape or a caption.",
+  promise: "One run of reading text in the body voice, on a text shape, a caption or a heading shape.",
   refuses: [
     "a link of its own — a link is content inside the run",
     "the UI voices — a label, a legend that looks like one, a button's words: that is Caption",
@@ -15,7 +16,7 @@ export const text = {
     "markup it cannot carry — plain multiline strings are TextBlock's contract",
   ],
   class: "Text",
-  element: { values: ["p", "span", "div", "legend", "figcaption", "label"], default: "p" },
+  element: { values: ["p", "span", "div", "legend", "figcaption", "label", "h1", "h2", "h3", "h4", "h5", "h6"], default: "p" },
   parts: {
     /** the run's words, escaped by the renderer; or child markup through the engine container */
     text: { kind: "text" },

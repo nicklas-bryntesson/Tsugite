@@ -6,9 +6,9 @@ import { escapeHtml } from "./html";
 
 const ELEMENT_SIZE: Record<string, string> = { h1: "1", h2: "2", h3: "3", h4: "4", h5: "5", h6: "6" };
 
-/** Axis defaults the table declares as holes. Size: display 2, body md, heading follows the element. */
+/** Axis defaults the table declares as holes. Size: display 2, heading follows the element. */
 export const headingDefaults = {
-  size: ({ tag, axes }: View) => (axes.variant === "display" ? "2" : axes.variant === "body" ? "md" : (ELEMENT_SIZE[tag] ?? "2")),
+  size: ({ tag, axes }: View) => (axes.variant === "display" ? "2" : (ELEMENT_SIZE[tag] ?? "2")),
 };
 
 /** Derived values. The run mode follows the element (ADR-0012 §3). */
