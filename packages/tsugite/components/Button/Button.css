@@ -1,10 +1,23 @@
-/* Kept as a FILE (not inlined as <style> in one component).
-   Shared contract: LinkButton, ActionButton, CtaLinkButton and Teaser's raw .Button markup all key on it.
-   Inlining would duplicate it in the bundle or couple components to page composition. */
+/*
+ * Button — one thing to press: a link goes somewhere, an action does something,
+ * and the two look alike. One file for both renderers and for CtaButton, which
+ * shares the button voice.
+ *
+ * Gates over one base:
+ *   data-emphasis       primary | secondary | tertiary, ink, surface and border
+ *                       per state, from the theme claims with a semantic fallback.
+ *   data-intent         destructive | success, feedback colours over the emphasis
+ *                       cell; actions only.
+ *   data-size           sm | md | lg, the button voice's stops, padding and icon size.
+ *   data-pill           the radius.
+ *   data-grow-inline    the footprint on the inline axis (ADR-0015).
+ *   data-icon-position  left | right, the grid areas and the gap.
+ *   data-icon-only      one area, square padding; wins over the position gates.
+ */
 @import "../../kernel/css/debug.css";
 /* prettier-ignore */
 .Button {
-  /* invariants — the button voice's bundle (typography.tokens.js), label's values today, its own knob */
+  /* knobs: the button voice's bundle, the border and the focus ring */
   --_bt-fontFamily:      var(--fontFamily-button);
   --_bt-fontWeight:      var(--fontWeight-button);
   --_bt-lineHeight:      var(--lineHeight-button);
@@ -15,7 +28,6 @@
   --_bt-outlineColor: var(--color-focus-ring);
   --_bt-hoverRingColor: var(--color-interactive-hoverRing);
 
-  /* generic styles */
   position: relative;
   display: inline-grid;
   grid-template-columns: var(--_bt-gridTemplateColumns, auto);
@@ -42,9 +54,7 @@
 
   &:hover,
   &[data-test-state="hover"] {
-    /* Upstream had `color: var();` — invalid, dropped by the browser at parse
-       time, so hover text color comes from the base rule's var(--_bt-color),
-       which the emphasis hover blocks update. Omitted here to match. */
+    /* No color here: the emphasis hover blocks re-write --_bt-color itself. */
     background-color:     var(--_bt-backgroundColor-hover);
     border-color:         var(--_bt-borderColor-hover);
     box-shadow:           var(--_bt-boxShadow);
@@ -136,7 +146,7 @@
 
     &:focus-visible,
     &[data-test-state="focus"] {
-      /* tbd: does this need to be tied to the emphasis axis? */
+      /* TODO(decide): focus takes the hover colours; whether focus belongs to the emphasis axis at all is open. */
       --_bt-color-focus:               var(--theme-button-color-primary, var(--color-interactive-onPrimary));
       --_bt-backgroundColor-focus:     var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
       --_bt-borderColor-focus:         var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
@@ -183,7 +193,7 @@
 
     &:focus-visible,
     &[data-test-state="focus"] {
-      /* tbd: does this need to be tied to the emphasis axis? */
+      /* TODO(decide): focus takes the hover colours; whether focus belongs to the emphasis axis at all is open. */
       --_bt-color-focus:               var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
       --_bt-backgroundColor-focus:     var(--theme-button-backgroundColor-secondary-hover, var(--color-interactive-secondary-hoverSurface));
       --_bt-borderColor-focus:         var(--theme-button-borderColor-secondary-hover, var(--color-interactive-secondary-text));
@@ -207,12 +217,14 @@
     }
   }
 
+  /* TODO(decide): tertiary is parked until it has a design and a use. The gate writes
+     none of the colour slots the states read, so ink is inherited, surface and border
+     transparent, and hover shows no ring. tests/button-slots.test.ts names it exempt. */
   &[data-emphasis="tertiary"] {
     --_bt-borderWidth: 0;
     background: transparent;
   }
 
-  /* ── Intent ── */
   /* An action can be destructive or successful. Intent writes the same slots emphasis
      writes, so every state — hover ring, active, focus, disabled — keeps working; it
      never sets a property on the element directly. The feedback colours are deliberately
@@ -313,8 +325,6 @@
     }
   }
 
-  /* ── Shape ── */
-
   &[data-pill="false"] {
    --_bt-borderRadius: 0.375em;
   }
@@ -322,8 +332,6 @@
   &[data-pill="true"] {
     --_bt-borderRadius: 3em;
   }
-
-  /* ── Icon layout ── */
 
   /* Footprint on the inline axis (ADR-0015): may the button take more room than its
      label. 100%, not auto, so a start-aligned flex or grid parent cannot shrink it. */

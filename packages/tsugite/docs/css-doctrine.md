@@ -30,6 +30,11 @@ variant, a state.
   instance, every state.
 - `--_*` slots carry no value in the base. They exist once a variant
   sets them.
+- A slot is never declared empty (`--_x: ;`). An empty custom property is
+  a silent default — the reading declaration turns invalid at
+  computed-value time and falls to `inherit`, `transparent` or
+  `currentColor` — and it lets a gate be partial. The gate that consumes
+  a slot writes it (ADR-0013 §3).
 - Defaults live in the component layer, never in CSS. The component
   always outputs its `data-*` attributes, so CSS never guards against
   absence — impossible states cannot be authored, so they are not

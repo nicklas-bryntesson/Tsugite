@@ -105,7 +105,12 @@ and did not decide. Each is a separate call.
 
 ## From the lab cleanup (2026-09-21)
 
-- **Button's empty slots are a hidden default, and tertiary lives on it.**
+- ~~**Button's empty slots are a hidden default, and tertiary lives on it.**~~ —
+  **resolved 2026-09-23** (`tasks/plan-button-slots.md`): prefix `--_bt-`, the
+  empties and the dead slots gone, `tests/button-slots.test.ts` keeps every
+  emphasis gate complete, css-doctrine §1 says a slot is never declared empty.
+  **Tertiary itself stays parked** (no design, no use yet): it still writes none
+  of the fourteen and the test names it exempt. Original note:
   `Button.css` declares fifteen colour slots empty (`--_color: ;` …) under
   "own by tone axis". An empty custom property is valid: `color: var(--_color)`
   turns invalid at computed-value time and falls to `inherit`, background to
@@ -147,3 +152,18 @@ and did not decide. Each is a separate call.
   (dead weight: every child sets full width), the lab's `data-align-block` /
   `data-align-inline` words.
 
+
+## From the Button slots pass (2026-09-23)
+
+- **The git-flow guard lives in the wrong layer.** `.claude/hooks/protect-git.py`
+  enforces hard rule 5 as a Claude Code PreToolUse hook and judged the branch
+  in the session's cwd — an assumption about how the shell behaves that
+  stopped holding when the cwd began resetting between commands, blocking
+  every worktree commit (PR #70 patched it by reading `cd`/`-C` out of the
+  command string, which is the same kind of assumption). The robust home is
+  git itself: a `pre-commit` hook under `.githooks/` (`core.hooksPath`) runs
+  in the directory the commit actually happens in, for every tool and every
+  person, and needs only `git branch --show-current`. Force-push is already
+  refused by the GitHub ruleset on origin, the guard that counts. Decide:
+  move the branch rule to git, keep the PreToolUse hook as an early friendly
+  message or delete it. ADR-shaped.
