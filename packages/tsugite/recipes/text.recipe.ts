@@ -24,7 +24,7 @@ export const text = {
   axes: {
     variant: { values: ["body"], default: "body" },
     size: { valuesBy: { axis: "variant", values: { body: ["sm", "md", "lg"] } }, default: "md" },
-    align: { values: ["left", "center", "right"], default: "left" },
+    alignInline: { values: ["start", "center", "end"], default: "start" },
     wrap: { values: ["balance", "pretty", "stable", "nowrap"], default: "pretty" },
     /** ADR-0021: a reading ceiling on the inline size, the stop's line length; only a block
         run has an inline size to cap, so the CSS applies it behind the data-run gate */

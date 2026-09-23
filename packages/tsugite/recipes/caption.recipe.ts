@@ -26,7 +26,7 @@ export const caption = {
   axes: {
     variant: { values: ["label", "button", "nav"], default: "label" },
     size: { valuesBy: { axis: "variant", values: { label: ["sm", "md", "lg"], button: ["sm", "md", "lg"], nav: ["sm", "md", "lg"] } }, default: "md" },
-    align: { values: ["left", "center", "right"], default: "left" },
+    alignInline: { values: ["start", "center", "end"], default: "start" },
     wrap: { values: ["balance", "pretty", "stable", "nowrap"], default: "pretty" },
   },
   derived: {

@@ -15,7 +15,7 @@ describe("Heading", () => {
     expect(html).toContain('class="Heading"');
     expect(html).toContain('data-variant="heading"');
     expect(html).toContain('data-size="2"');
-    expect(html).toContain('data-align="left"');
+    expect(html).toContain('data-align-inline="start"');
     expect(html).toContain('data-wrap="balance"');
     expect(html).toContain('<span class="heading-text">Hello</span>');
   });

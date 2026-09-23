@@ -11,7 +11,7 @@
  *   data-variant   heading | display | body, the voice bundle.
  *   data-size      per voice: 1–6, 1–3, sm | md | lg.
  *   data-run       block | inline, derived from the element (ADR-0012 §3).
- *   data-align     left | center | right.
+ *   data-align-inline  start | center | end, logical.
  *   data-wrap      balance | pretty | stable | nowrap.
  *   data-cap-inline  true | false — the reading ceiling, the stop's line length (ADR-0021);
  *                  applies to block runs only.
@@ -188,12 +188,12 @@
   }
 
   /* align moves the box as well as the words: a capped box centred in its column, or
-     against its end, is what "center" and "right" mean once a ceiling exists. */
-  &[data-align="left"] {
-    text-align: left;
+     against its end, is what "center" and "end" mean once a ceiling exists. */
+  &[data-align-inline="start"] {
+    text-align: start;
   }
 
-  &[data-align="center"] {
+  &[data-align-inline="center"] {
     text-align: center;
 
     & > .heading-link,
@@ -202,8 +202,8 @@
     }
   }
 
-  &[data-align="right"] {
-    text-align: right;
+  &[data-align-inline="end"] {
+    text-align: end;
 
     & > .heading-link,
     & > .heading-text {

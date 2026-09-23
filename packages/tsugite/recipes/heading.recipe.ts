@@ -30,7 +30,7 @@ export const heading = {
       valuesBy: { axis: "variant", values: { heading: ["1", "2", "3", "4", "5", "6"], display: ["1", "2", "3"], body: ["sm", "md", "lg"] } },
       default: { hole: true },
     },
-    align: { values: ["left", "center", "right"], default: "left" },
+    alignInline: { values: ["start", "center", "end"], default: "start" },
     wrap: { values: ["balance", "pretty", "stable", "nowrap"], default: "balance" },
     /** ADR-0021: a reading ceiling on the inline size, the stop's line length; only a block
         run has an inline size to cap, so the CSS applies it behind the data-run gate */

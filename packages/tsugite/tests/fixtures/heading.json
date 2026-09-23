@@ -15,7 +15,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "2",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -36,7 +36,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "4",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -58,7 +58,7 @@
         "attrs": {
           "data-variant": "display",
           "data-size": "2",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -81,7 +81,7 @@
         "attrs": {
           "data-variant": "display",
           "data-size": "1",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -103,7 +103,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -124,7 +124,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "2",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "inline"
@@ -146,7 +146,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "3",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -170,7 +170,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "2",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-highlight-style": "mark",
@@ -196,7 +196,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "2",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-highlight-style": "underline",
@@ -208,7 +208,7 @@
       "name": "align and wrap",
       "input": {
         "text": "T",
-        "align": "center",
+        "alignInline": "center",
         "wrap": "pretty",
         "children": false
       },
@@ -219,7 +219,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "2",
-          "data-align": "center",
+          "data-align-inline": "center",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -240,7 +240,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "2",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -261,7 +261,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "2",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -280,7 +280,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "2",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -344,15 +344,15 @@
       }
     },
     {
-      "name": "an invalid align is refused, not dropped",
+      "name": "an invalid alignInline is refused, not dropped",
       "input": {
         "text": "T",
-        "align": "middle",
+        "alignInline": "middle",
         "children": false
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "invalid align \"middle\" — expected left | center | right"
+        "errorMessage": "invalid alignInline \"middle\" — expected start | center | end"
       }
     },
     {
@@ -381,7 +381,7 @@
         "attrs": {
           "data-variant": "heading",
           "data-size": "2",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "false",
           "data-run": "block"
