@@ -61,7 +61,13 @@
      and nothing says so. data-test-state treats them as one enum, so no test has ever
      rendered a combination. Measure first (a probe page driven by Playwright in three
      engines), then decide the order and its form (a ladder in the selectors, or source
-     order with a test). Applies to every component with states, so the decision is an ADR. */
+     order with a test). The test lens is part of the same decision: to render a
+     combination, data-test-state must carry several states at once — space-separated
+     tokens read with ~= ("hover active", one gate per state, combinations for free,
+     mirroring the pseudo-classes) rather than one value per combination ("hover-active",
+     one selector per cell). Whatever exclusion the real selectors get, the test form needs
+     the same, so the two are shaped together. Applies to every component with states, so
+     the decision is an ADR. */
   &:hover,
   &[data-test-state="hover"] {
     color:                var(--_bt-color-hover);
