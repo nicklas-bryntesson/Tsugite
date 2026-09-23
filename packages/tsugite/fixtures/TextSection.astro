@@ -1,5 +1,6 @@
 ---
-// Text — the reading voice (body) on authored elements; the UI voices are Caption's.
+// Text — the reading voice (body) on authored elements, heading shapes included (ADR-0023);
+// the UI voices are Caption's, the loud ones Heading's.
 // Same contract-map pattern as Typography: every size × element renders, so drift in
 // the body bundle shows here first.
 import Heading from "../components/Heading/Heading.astro";
@@ -8,7 +9,7 @@ import Text from "../components/Text/Text.astro";
 import Caption from "../components/Caption/Caption.astro";
 
 const sizes = ["lg", "md", "sm"];
-const ELEMENTS = ["p", "span", "div", "legend", "figcaption", "label"];
+const ELEMENTS = ["p", "span", "div", "legend", "figcaption", "label", "h1", "h2", "h3", "h4", "h5", "h6"];
 const VARIANTS = ["body"];
 ---
 
