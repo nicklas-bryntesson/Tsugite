@@ -4,44 +4,16 @@
 @import "../../kernel/css/debug.css";
 /* prettier-ignore */
 .Button {
-  /* TODO(dead): the empty slots below ("own by tone axis") are not documentation, they
-     are a silent default — an empty custom property makes the reading declaration fall
-     to inherit/transparent/currentColor. Tertiary sets none of the fifteen and lives on
-     them. The pass that prefixes also deletes them and completes tertiary; the census
-     and the plan are in tasks/parking-lot.md (2026-09-21). */
   /* invariants — the button voice's bundle (typography.tokens.js), label's values today, its own knob */
   --_bt-fontFamily:      var(--fontFamily-button);
   --_bt-fontWeight:      var(--fontWeight-button);
   --_bt-lineHeight:      var(--lineHeight-button);
   --_bt-fontBaselineOffset: var(--baseline-offset-button);
   --_bt-borderWidth: 1px;
-  --_bt-borderRadius: ;
   --_bt-outlineWidth: 2px;
   --_bt-outlineOffset: 3px;
   --_bt-outlineColor: var(--color-focus-ring);
   --_bt-hoverRingColor: var(--color-interactive-hoverRing);
-  
-  /* own by tone axis */
-  --_bt-color: ;
-  --_bt-backgroundColor: ;
-  --_bt-borderColor: ;
-  
-  --_bt-color-hover: ;
-  --_bt-backgroundColor-hover: ;
-  --_bt-borderColor-hover: ;
-  
-  --_bt-color-active: ;
-  --_bt-backgroundColor-active: ;
-  --_bt-borderColor-active: ;
-
-  --_bt-color-focus: ;
-  --_bt-backgroundColor-focus: ;
-  --_bt-borderColor-focus: ;
-
-  --_bt-color-disabled: ;
-  --_bt-backgroundColor-disabled: ;
-  --_bt-borderColor-disabled: ;
-
 
   /* generic styles */
   position: relative;
@@ -168,7 +140,6 @@
       --_bt-color-focus:               var(--theme-button-color-primary, var(--color-interactive-onPrimary));
       --_bt-backgroundColor-focus:     var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
       --_bt-borderColor-focus:         var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
-      --_bt-boxShadow:                 none;
       --_bt-boxShadow:                 0 0 0 4px transparent;
     }
 
@@ -216,7 +187,6 @@
       --_bt-color-focus:               var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
       --_bt-backgroundColor-focus:     var(--theme-button-backgroundColor-secondary-hover, var(--color-interactive-secondary-hoverSurface));
       --_bt-borderColor-focus:         var(--theme-button-borderColor-secondary-hover, var(--color-interactive-secondary-text));
-      --_bt-boxShadow:                 none;
       --_bt-boxShadow:                 0 0 0 4px transparent;
     }
 
@@ -484,7 +454,9 @@
       inset-inline: 0;
       inset-block: 0;
 
-      /* Show the height of the text after line-height compensation */
+      /* TODO(dead): --_bt-marginAdjustment is set nowhere; height falls to auto and the
+         transform to none, so the box shows the text's full line box, not the
+         compensated one. */
       height: calc(
         100% - (2 * var(--_bt-marginAdjustment))
       ); /* Subtract top & bottom */
