@@ -54,7 +54,7 @@
 
   &:hover,
   &[data-test-state="hover"] {
-    /* No color here: the emphasis hover blocks re-write --_bt-color itself. */
+    color:                var(--_bt-color-hover);
     background-color:     var(--_bt-backgroundColor-hover);
     border-color:         var(--_bt-borderColor-hover);
     box-shadow:           var(--_bt-boxShadow);
@@ -130,7 +130,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
-      --_bt-color:                     var(--theme-button-color-primary, var(--color-interactive-onPrimary));
+      --_bt-color-hover:               var(--theme-button-color-primary, var(--color-interactive-onPrimary));
       --_bt-backgroundColor-hover:     var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
       --_bt-borderColor-hover:         var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
       --_bt-boxShadow:                 0 0 0 4px var(--_bt-hoverRingColor);
@@ -177,7 +177,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
-      --_bt-color:                     var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
+      --_bt-color-hover:               var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
       --_bt-backgroundColor-hover:     var(--theme-button-backgroundColor-secondary-hover, var(--color-interactive-secondary-hoverSurface));
       --_bt-borderColor-hover:         var(--theme-button-borderColor-secondary-hover, var(--color-interactive-secondary-text));
       --_bt-boxShadow:                 0 0 0 4px var(--_bt-hoverRingColor);
@@ -240,6 +240,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
+      --_bt-color-hover:               var(--color-feedback-onError);
       --_bt-backgroundColor-hover:     var(--color-feedback-error);
       --_bt-borderColor-hover:         var(--color-feedback-error);
     }
@@ -264,6 +265,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
+      --_bt-color-hover:               var(--color-feedback-onSuccess);
       --_bt-backgroundColor-hover:     var(--color-feedback-success);
       --_bt-borderColor-hover:         var(--color-feedback-success);
     }
@@ -290,6 +292,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
+      --_bt-color-hover:               var(--color-feedback-error);
       --_bt-borderColor-hover:         var(--color-feedback-error);
     }
     &:active,
@@ -311,6 +314,7 @@
 
     &:hover,
     &[data-test-state="hover"] {
+      --_bt-color-hover:               var(--color-feedback-success);
       --_bt-borderColor-hover:         var(--color-feedback-success);
     }
     &:active,
