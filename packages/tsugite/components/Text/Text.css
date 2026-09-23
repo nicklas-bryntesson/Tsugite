@@ -10,7 +10,7 @@
  *   data-size        sm | md | lg, the voice's size stop.
  *   data-run         block | inline, derived from the element (ADR-0012 §3):
  *                    a span flows on the line and is never trimmed.
- *   data-align       left | center | right; once capped, the box moves too.
+ *   data-align-inline  start | center | end, logical; once capped, the box moves too.
  *   data-wrap        balance | pretty | stable | nowrap.
  *   data-cap-inline  true | false, the reading ceiling: the stop's line
  *                    length (ADR-0021), block runs only.
@@ -89,19 +89,19 @@
    &[data-run="block"][data-cap-inline="true"] > .text-content { max-inline-size: var(--custom-text-lineLength, var(--_lineLength)); }
 
 
-   &[data-align="left"] {
-      text-align: left;
+   &[data-align-inline="start"] {
+      text-align: start;
    }
 
-   &[data-align="center"] {
+   &[data-align-inline="center"] {
       text-align: center; 
       
       & > .text-content {
          margin-inline: auto;
       }
    }
-   &[data-align="right"] {
-      text-align: right; 
+   &[data-align-inline="end"] {
+      text-align: end; 
       
       & > .text-content { 
          margin-inline-start: auto; 

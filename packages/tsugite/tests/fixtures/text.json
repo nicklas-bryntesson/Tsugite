@@ -15,7 +15,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -36,7 +36,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "sm",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -69,7 +69,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "inline"
@@ -90,7 +90,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -112,7 +112,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "lg",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "inline"
@@ -133,7 +133,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -154,7 +154,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -176,7 +176,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "sm",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -187,7 +187,7 @@
       "name": "align and wrap",
       "input": {
         "text": "T",
-        "align": "center",
+        "alignInline": "center",
         "wrap": "balance",
         "children": false
       },
@@ -198,7 +198,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "center",
+          "data-align-inline": "center",
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -219,7 +219,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -240,7 +240,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -259,7 +259,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "block"
@@ -336,7 +336,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "false",
           "data-run": "block"
@@ -357,7 +357,7 @@
         "attrs": {
           "data-variant": "body",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
           "data-run": "inline"

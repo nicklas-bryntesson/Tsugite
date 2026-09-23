@@ -10,7 +10,7 @@
  *   data-size      sm | md | lg, the voice's size stop.
  *   data-run       block | inline, derived from the element (ADR-0012 §3):
  *                  a span flows on the line and is never trimmed.
- *   data-align     left | center | right.
+ *   data-align-inline  start | center | end, logical.
  *   data-wrap      balance | pretty | stable | nowrap.
  *
  * The engine (.caption-content, laws b–d, the trim branches) is shared word
@@ -134,16 +134,16 @@
     }
   }
 
-  &[data-align="left"] {
-    text-align: left;
+  &[data-align-inline="start"] {
+    text-align: start;
   }
 
-  &[data-align="center"] {
+  &[data-align-inline="center"] {
     text-align: center;
   }
 
-  &[data-align="right"] {
-    text-align: right;
+  &[data-align-inline="end"] {
+    text-align: end;
   }
 
   /* Wrap. balance, pretty and stable are enhancements: a browser without the

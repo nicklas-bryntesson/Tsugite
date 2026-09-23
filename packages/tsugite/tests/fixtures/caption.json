@@ -15,7 +15,7 @@
         "attrs": {
           "data-variant": "label",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-run": "inline"
         }
@@ -36,7 +36,7 @@
         "attrs": {
           "data-variant": "label",
           "data-size": "sm",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-run": "block"
         }
@@ -57,7 +57,7 @@
         "attrs": {
           "data-variant": "label",
           "data-size": "lg",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-run": "block"
         }
@@ -77,7 +77,7 @@
         "attrs": {
           "data-variant": "label",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-run": "block"
         }
@@ -97,7 +97,7 @@
         "attrs": {
           "data-variant": "label",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-run": "block"
         }
@@ -118,7 +118,7 @@
         "attrs": {
           "data-variant": "button",
           "data-size": "lg",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-run": "inline"
         }
@@ -138,7 +138,7 @@
         "attrs": {
           "data-variant": "nav",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-run": "inline"
         }
@@ -149,7 +149,7 @@
       "input": {
         "text": "T",
         "element": "p",
-        "align": "center",
+        "alignInline": "center",
         "wrap": "nowrap",
         "children": false
       },
@@ -160,7 +160,7 @@
         "attrs": {
           "data-variant": "label",
           "data-size": "md",
-          "data-align": "center",
+          "data-align-inline": "center",
           "data-wrap": "nowrap",
           "data-run": "block"
         }
@@ -180,7 +180,7 @@
         "attrs": {
           "data-variant": "label",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-run": "inline"
         }
@@ -200,7 +200,7 @@
         "attrs": {
           "data-variant": "label",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-run": "inline"
         }
@@ -219,7 +219,7 @@
         "attrs": {
           "data-variant": "label",
           "data-size": "md",
-          "data-align": "left",
+          "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-run": "block"
         }

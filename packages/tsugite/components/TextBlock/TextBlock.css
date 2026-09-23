@@ -74,9 +74,9 @@
      ALIGNMENT — the words and, once capped, the box
   ===================================================== */
 
-  &[data-align="left"]   { text-align: left; }
-  &[data-align="center"] { text-align: center; & > .textblock-content { margin-inline: auto; } }
-  &[data-align="right"]  { text-align: right; & > .textblock-content { margin-inline-start: auto; } }
+  &[data-align-inline="start"]  { text-align: start; }
+  &[data-align-inline="center"] { text-align: center; & > .textblock-content { margin-inline: auto; } }
+  &[data-align-inline="end"]    { text-align: end; & > .textblock-content { margin-inline-start: auto; } }
 
   /* =====================================================
      WRAP STRATEGIES
