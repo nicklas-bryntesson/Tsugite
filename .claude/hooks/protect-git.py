@@ -24,6 +24,14 @@ if re.search(r"\bgit\b[^|;&]*\bpush\b[^|;&]*(\s-\w*f|\s--force)", command):
     sys.exit(2)
 
 if re.search(r"\bgit\b[^|;&]*\b(commit|merge)\b", command):
+    # The session's cwd is reset to the project root between commands, so a
+    # commit made from a worktree (`cd <path> && git …` or `git -C <path> …`)
+    # must be judged in that worktree, not at the root.
+    target = re.match(r"\s*cd\s+(?:\"([^\"]+)\"|'([^']+)'|(\S+))\s*(?:&&|;)", command) or re.search(
+        r"\bgit\s+-C\s+(?:\"([^\"]+)\"|'([^']+)'|(\S+))", command
+    )
+    if target:
+        cwd = next(g for g in target.groups() if g)
     try:
         branch = subprocess.run(
             ["git", "branch", "--show-current"],
