@@ -267,3 +267,23 @@ and did not decide. Each is a separate call.
     argue for `manner: value | eyebrow` over a lone boolean. Word undecided (`value`
     collides with the input attribute). Lands with the input-component job, but AffixField's
     value is already typography of this family, so it may arrive earlier.
+- **Shadows as roles: geometry in a ramp, ink built at build time.** Card's three elevation
+  gates are raw `oklch(0 0 0 / α)` stacks — one truth for every mode, invisible on dark
+  ground. `--color-shadow-popup` already does it right (four mode rows), Card just does not
+  read it. Proposed shape (discussion 2026-09-24, not decided): split the string —
+  *geometry* (offsets, blur) as a theme-independent ramp in `shadow.tokens.js`,
+  `--shadow-sm | md | lg`, two layers each; *ink* as a role with mode rows,
+  `--color-shadow-ink-1/2`, `mix()` recipes computed by the color engine. The tinted-shadow
+  POC lands there as `mix(<ground>, pct, <black>)` per voice cell — a `--theme-shadow-ink`
+  in the voice donut, so the tint follows the cell's ground with no runtime `color-mix()`
+  and therefore no fallback question. Card reads `var(--shadow-sm)`; `--color-shadow-popup`
+  is rebuilt the same way behind the unchanged `--ui-shadow` seam. Forced-colors forces
+  `box-shadow` to none on its own. Same job shape as the gradient role.
+- **Runtime `color-mix()` under a Chrome 109 floor.** Five files compute colours in the
+  browser: FileUpload (three, with system colours), Notice (`--_nt-backgroundColor`),
+  RangeScale (four) and RangeField (two). `color-mix()` arrived in Chrome 111; `defaults`
+  in `.browserslistrc` still carries 109. Lightning lowers `color-mix()` only with static
+  operands, and these mix `var()`s, `currentColor` and system colours — so on 109 the
+  declaration is dropped and the slot falls to its fallback or to nothing. Decide per site:
+  a build-time recipe where the operands are tokens (Notice), a `@supports` pair where they
+  are `currentColor`/system colours (the ranges, FileUpload), or a floor decision (ADR-0009).
