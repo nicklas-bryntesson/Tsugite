@@ -242,3 +242,28 @@ and did not decide. Each is a separate call.
     the value and drops the label. Any change is a contract change in the frozen family → a
     porting-log question for reference-components, not a local deviation. The escape hatch
     (`prefix.attrs.id`, `input["aria-labelledby"]`) exists today but double-announces.
+- **Caption's weight axis, and "value" as a manner, not a voice.** Discussion 2026-09-24
+  ahead of the job that pulls the custom input components apart; nothing decided.
+  - *Caption gets `weight="regular | strong"`:* the label voice has one weight (Inter 400) and
+    the popups need two (calendar header and today strong, weekdays regular). The strong gate
+    writes the slot the `<strong>` door already reads (`--_cp-boldWeight`), so it costs no
+    token and turns visible when the theme gives label a bold stop — which also retires the
+    seam's cross-wiring (`--ui-font-weight-strong` → body's bold under label's face, seven
+    files). Two cables, one truth: `<strong>` is content, the axis is design; both read the
+    voice's bold stop. Word: `weight` (values `regular | strong`, role words); `emphasis` is
+    taken twice already. Dictionary question.
+  - *Words vs controls in a popup:* a segment is a control (JS-made span, focusable,
+    spinbutton) and reads its voice as tokens like Button; the words (month/year, weekday
+    names, hints, legends, headings) go through Caption, whose farm already has h1–h6 and
+    legend. Swapping Text/Heading/Caption on a word is cheap — same engine — except for the
+    emphasis law (Heading flattens) and the door law (a voice lives behind one door).
+  - *"Value" is a manner, orthogonal to voice:* what is true of a value in any typeface —
+    tabular lining figures (`font-variant-numeric`), no ligatures, nowrap, no hyphens,
+    `unicode-bidi: isolate`, optional slashed zero. None touch the voice bundle. So: not a
+    voice, not a component (door law), not a utility class (doctrine) — a `manners.value`
+    group in typography.tokens.js beside the voices, read as tokens by the controls
+    (segments, AffixField's input value, day buttons) and as an axis by the family doors.
+    Eyebrow, already parked as "the tracked-caps manner", is the same kind — two manners
+    argue for `manner: value | eyebrow` over a lone boolean. Word undecided (`value`
+    collides with the input attribute). Lands with the input-component job, but AffixField's
+    value is already typography of this family, so it may arrive earlier.
