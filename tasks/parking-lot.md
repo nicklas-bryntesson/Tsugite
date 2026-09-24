@@ -300,3 +300,26 @@ and did not decide. Each is a separate call.
   as geometry, not a token) in a `shape.tokens.js`; whether `em` radii on Button/CtaButton are
   a size-relative choice worth keeping (they scale with the voice) or drift. Same disease as
   the spacing zoo above, same cure: census, ramp, gates.
+  *Added 2026-09-24, after discussion:*
+  - **At least two widths.** Even a site whose manner is broad lines has the place where a
+    line must be thin; `thin | regular` (or `hairline | line`) is the floor of the set, a
+    third for focus/emphasis rings if the census bears it out.
+  - **Outer and inner radius, with the formula.** A rounded box inside a rounded box needs
+    the inner corner to follow the outer one: `inner = outer − inset` (the padding or gap
+    between the two edges), clamped at zero. The inner radius is not a second token value
+    but a derivation, `--_x-radiusInner: max(0px, calc(var(--radius-outer) - var(--_x-padding)))`,
+    on the component that nests — Card around a Picture, a chip inside a field, a popup's
+    rail inside its frame. Where the gap is a token, the derivation is exact and stays in
+    sync when the theme turns the outer radius.
+  - **The composite.** Sveriges Lärare's `--border: var(--borderWidth) var(--borderStyle)
+    var(--borderColor)` is a seam convenience: width from the width set, style constant,
+    colour from the border role. Worth one alias on the `--ui-*` seam for the fields; in
+    the components the gate still sets width and colour from their own tokens so each can
+    turn alone.
+  - **Modern corners to evaluate:** `corner-shape` (CSS Borders 4: `squircle | bevel |
+    notch | scoop`, shipped in Chromium 2025, not in the floor — a progressive enhancement
+    under `@supports`, since the fallback is the round corner); and the aspect-corrected
+    percentage radius for boxes whose ratio is known — a `15%` radius on a 16:9 box is an
+    ellipse, the fix is a per-axis pair, `border-*-radius: var(--h) var(--v)` with
+    `--v: calc(var(--pct) * var(--aspectWidth) / var(--aspectHeight) * 1%)` — a Picture /
+    media-frame concern where `aspect-ratio` is already a token.
