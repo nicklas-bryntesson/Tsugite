@@ -167,3 +167,19 @@ and did not decide. Each is a separate call.
   refused by the GitHub ruleset on origin, the guard that counts. Decide:
   move the branch rule to git, keep the PreToolUse hook as an early friendly
   message or delete it. ADR-shaped.
+
+## From the cleanup round (2026-09-24)
+
+- **The inner span: one part, four names, and a mode word nobody reads right.**
+  The engine container is `text-content` in Text, `heading-text` / `heading-link`
+  in Heading, `Button-text` in Button — three dialects for the recipe's one part,
+  `text`. Two questions, two answers so far (discussion 2026-09-24, nothing decided):
+  (1) the part's class should fall out of the recipe, `<Class>-<part>` — a sentence
+  next to ADR-0013's slot grammar; (2) the container is a PART, not a sub-component
+  (no axes, no props, borrows the parent's carriers, its tag varies by the parent),
+  so the lift is not `<Run>` but the kernel run engine already noted above
+  (`kernel/css/run.css` on `[data-run="block"] > .run`), Button last with the
+  alignment bench as instrument. Open on top: `data-run` was read as "makes the
+  component block" — it gates the container's mode (display, trim, cap, box move),
+  not the root's display. Rename candidate `data-flow="block | inline"`, or drop
+  the attribute for `:not(span)`. To be settled with an HTML/CSS POC before any ADR.
