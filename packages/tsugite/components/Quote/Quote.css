@@ -8,7 +8,7 @@
  *   data-cap-inline  the box is held to a reading measure.
  *
  * Layout is container-driven: one column below 30rem, the portrait beside the words
- * above it. Without container queries everything stacks in one column. The root is
+ * above it; without container queries, the @supports not branch stacks one column. The root is
  * the container and .body carries the grid: a container query resolves against an
  * ancestor, so the root cannot gate on its own width. The root is inline-size: 100%
  * because an inline-size container has no intrinsic width of its own.
@@ -31,10 +31,9 @@
   inline-size: 100%;
   color: var(--theme-text, var(--color-text-primary));
 
+  /* .body's layout mode lives in the feature-query pair below; the gap is the one
+     thing both modes share. */
   & .body {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
     gap: var(--_qt-gap);
   }
 
@@ -120,13 +119,22 @@
     }
   }
 
+  /* Fallback first (ADR-0013's gate order applied to feature queries): without
+     container queries everything stacks in one column, and nothing here is
+     re-declared by the native branch. */
+  @supports not (container-type: inline-size) {
+    & .body {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+    }
+  }
+
   @supports (container-type: inline-size) {
     container-type: inline-size;
 
     & .body {
       display: grid;
-      column-gap: var(--_qt-gap);
-      row-gap: var(--_qt-gap);
     }
 
     & .mark { grid-area: mark; }
