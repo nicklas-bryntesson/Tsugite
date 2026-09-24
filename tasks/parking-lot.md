@@ -183,3 +183,37 @@ and did not decide. Each is a separate call.
   component block" — it gates the container's mode (display, trim, cap, box move),
   not the root's display. Rename candidate `data-flow="block | inline"`, or drop
   the attribute for `:not(span)`. To be settled with an HTML/CSS POC before any ADR.
+- **Button's next spike: the label as a run, screen-reader affixes, two icon slots.**
+  Findings from the design examples (Vercel's pill with a three-icon stack at the start and
+  a copy icon at the end; SvD's full-width quiet link button with mixed weights and an
+  arrow), 2026-09-24, nothing decided:
+  - *Control surfaces, four:* the box (axes — a value must answer in every cell of every
+    other axis, the anti-utility test; `quiet` passes), the label run (`Button-text` is a
+    run and should obey the family's laws — law (b) `<strong>` through the voice's bold
+    weight, height always from the label, the dead baseline engine replaced by the kernel
+    run engine, Button last with the alignment bench as instrument), the icon areas (slots,
+    never axes), and the root's knobs + tokens (where a design's individual values land;
+    a new *look* with a name is CtaButton).
+  - *Screen-reader affixes:* `srText` becomes two text parts, `screenReaderPrefix` and
+    `screenReaderSuffix` (spelled out, ADR-0013; "who reads it", not "hidden" — the text is
+    read, only visually hidden). Both are needed when the visible label is a bare value:
+    "Sida 3 av 12", "Torsdag 14 maj", "Sortera efter Namn, stigande". DOM order = the
+    accessible name; label-in-name (WCAG 2.5.3) is why affixes and not aria-label. Icon-only
+    falls into the same door (both affixes, no visible words), affix + aria-label is refused.
+  - *ScreenReaderText is a component, not a utility class:* always a `<span>`, promise "words
+    in the accessible name only", refuses focusable hosts, interactive or block content,
+    emptiness. Replaces ten copies of the clip pattern (Button, ChoiceGroup, Picklist,
+    ThemeSwitch, MotionRegion, the five date fields). Button renders its affixes through it.
+  - *Two icon slots, `iconStart` and `iconEnd`* (logical, ADR-0022), replacing the `icon`
+    part + `iconPosition` axis — position is which slot is filled, one axis fewer. Each slot
+    takes a sprite name (square from the size gate) or children (block size from the gate,
+    inline auto — the stack). `--_bt-iconSize` is a carrier set by raw values in the size
+    gates: read a token there, never inject per instance. Grid per filled cell, five gates
+    (`data-icon-start` × `data-icon-end` × text), no empty tracks so `gap` stays right —
+    not a collapsing `auto 1fr auto`. Two icons and no words is an `absent` cell.
+  - The Vercel button is then Button (secondary, pill, stack at start, copy sprite at end)
+    *if* the copy icon is decoration; a second action makes it two buttons, a composition.
+    The SvD button is Button today plus `quiet`: grow-inline, iconEnd, `<strong>` in the label,
+    and it settles the TODO(decide) on a grown button's inner layout (label start, icon end).
+  - POC question that ties it to the run engine: children in an icon slot must stay inside
+    the label's line — the label owns the height.
