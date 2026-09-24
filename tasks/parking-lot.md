@@ -287,3 +287,16 @@ and did not decide. Each is a separate call.
   declaration is dropped and the slot falls to its fallback or to nothing. Decide per site:
   a build-time recipe where the operands are tokens (Notice), a `@supports` pair where they
   are `currentColor`/system colours (the ranges, FileUpload), or a floor decision (ADR-0009).
+- **Border width and radius as tokens.** Census 2026-09-24: 56 raw border widths and radii in
+  20 components — the date/time fields carry 32 of them (DateTimeField 8, WeekField 7,
+  DateField 7, TimeField 5, MonthField 5), then ChoiceField 3, Button 3, Card 2, CtaButton 2,
+  AffixField 2, and one each in ToggleTip, ScrollArea, RangeScale, Prose, Picklist, Notice,
+  MotionRegion, CoverComposition, RangeField 2, FileUpload 2. Eleven distinct values: `2px`
+  (22), `4px` (14), `50%` (7, the circles), `1px` (6), and one each of `999px`, `10em`,
+  `5em`, `3em`, `0.5rem`, `0.375em`, `0.35em` — three spellings of "pill" and three of a
+  small radius. Tokens that exist: `--ui-radius` (0.75rem) and `--ui-border` (a colour) on the
+  seam, nothing for width, nothing for a radius ramp. Decide: a `--borderWidth-*` set (hairline
+  1px, control 2px, focus 4px?) and a `--radius-*` ramp (sm | md | lg | pill, circle stays `50%`
+  as geometry, not a token) in a `shape.tokens.js`; whether `em` radii on Button/CtaButton are
+  a size-relative choice worth keeping (they scale with the voice) or drift. Same disease as
+  the spacing zoo above, same cure: census, ramp, gates.
