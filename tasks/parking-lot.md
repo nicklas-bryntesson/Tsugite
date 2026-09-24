@@ -217,3 +217,28 @@ and did not decide. Each is a separate call.
     and it settles the TODO(decide) on a grown button's inner layout (label start, icon end).
   - POC question that ties it to the run engine: children in an icon slot must stay inside
     the label's line — the label owns the height.
+- **AffixField: onto the table, an align axis, a closed type list, and the affix wiring question.**
+  Discussion 2026-09-24, nothing decided. AffixField is reference-components' canonical port
+  (the field family's frozen upstream API) and is NOT on the interpreter: no recipe, the Astro
+  file authors the end state and `AffixField.ts` gap-fills attributes client-side.
+  - *Port it to the recipe + lib engine* (ADR-0017/0018): `recipes/affixfield.recipe.ts` for the
+    table, `lib/affixfield.ts` for the holes (affix ids, the describedby merge, the character
+    counts), and the Astro, React and Vue renderers as adapters of one resolution — the first
+    field on the table, the pattern for the rest of the family.
+  - *Align:* the upstream had `data-input-align="end"`; the port kept `data-align="end"` on the
+    root as an on-switch (text-align on `.input`, no start gate, no center). Tsugite form per
+    ADR-0022: `data-align-inline="start | center | end"`, three gates, start explicit; center is a
+    real cell in the sized variant (a code centred in its character slot). No "input" in the word:
+    the affixes have no alignment of their own.
+  - *A closed type list.* Today `type` is an open pass-through defaulting to text; `type="date"`
+    would render and break the layout silently. The recipe closes it: text | number | tel | email
+    | url | search (the text-like inputs; number keeps its spinner rule), an invalid value refused
+    in development (ADR-0019). The element stays `<input>`: the date/time family has its own
+    components, a select with a prefix is a different component, a textarea with affixes is not a
+    thing.
+  - *Affix wiring:* the port puts prefix + suffix ids in `aria-describedby` after any hint
+    (name "Amount", description "$ USD"). The alternative `aria-labelledby="label prefix"` puts
+    the unit in the name; `aria-labelledby="currency sum"` as seen in the wild self-references
+    the value and drops the label. Any change is a contract change in the frozen family → a
+    porting-log question for reference-components, not a local deviation. The escape hatch
+    (`prefix.attrs.id`, `input["aria-labelledby"]`) exists today but double-announces.
