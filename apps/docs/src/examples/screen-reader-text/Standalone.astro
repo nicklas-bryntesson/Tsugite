@@ -1,0 +1,9 @@
+---
+import ScreenReaderText from "tsugite/ScreenReaderText/ScreenReaderText.astro";
+---
+{/* The words are the whole accessible name; the icon is decoration and says so. */}
+<a href="#">
+  <svg width="24" height="24" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2" /><path d="M15 15l6 6" stroke="currentColor" stroke-width="2" /></svg>
+  <ScreenReaderText text="Search" />
+</a>
+<p>Saved <ScreenReaderText text="— the form was submitted at 13:45" aria-live="polite" /></p>

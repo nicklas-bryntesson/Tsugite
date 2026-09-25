@@ -20,6 +20,7 @@ import QuoteSection from "tsugite/fixtures/QuoteSection.astro";
 import RangeFieldSection from "tsugite/fixtures/RangeFieldSection.astro";
 import RangeGroupSection from "tsugite/fixtures/RangeGroupSection.astro";
 import RangeScaleSection from "tsugite/fixtures/RangeScaleSection.astro";
+import ScreenReaderTextSection from "tsugite/fixtures/ScreenReaderTextSection.astro";
 import ScrollAreaSection from "tsugite/fixtures/ScrollAreaSection.astro";
 import SurfaceSection from "tsugite/fixtures/SurfaceSection.astro";
 import TablesSection from "tsugite/fixtures/TablesSection.astro";
@@ -52,6 +53,7 @@ export const sections: Record<string, any> = {
   RangeFieldSection,
   RangeGroupSection,
   RangeScaleSection,
+  ScreenReaderTextSection,
   ScrollAreaSection,
   SurfaceSection,
   TablesSection,

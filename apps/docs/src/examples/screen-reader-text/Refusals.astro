@@ -1,0 +1,7 @@
+---
+import ScreenReaderText from "tsugite/ScreenReaderText/ScreenReaderText.astro";
+---
+{/* A link that cannot be seen can still take focus: a trap. Refused in development,
+    nothing in production. Hiding a native control under a custom one is not this
+    component's job either — that is the control's own gate, and it stays focusable. */}
+<ScreenReaderText><a href="#">a hidden link</a></ScreenReaderText>
