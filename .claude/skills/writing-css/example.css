@@ -1,0 +1,257 @@
+/*
+ * Component — the example every component stylesheet is compared against. It does
+ * not exist as a component; it shows every form the doctrine asks for on one page,
+ * and every block says which rule it demonstrates and where the rule lives
+ * (css-doctrine.md §n, ADR-nnnn). A file that does not look like this is drift
+ * unless it says why.
+ *
+ * The header form (Card.css): one line for the promise, then one line per gate —
+ * the attribute, its values, what it changes. Nothing about history, nothing
+ * about the previous codebase, no rulers, no banners.
+ *
+ * Gates over one base:
+ *   data-size          sm | md | lg, the size stop of the words.
+ *   data-emphasis      true | false, a stronger surface.
+ *   data-media         true | false, derived from the content: a picture is present.
+ *   data-cap-inline    true | false, a reading ceiling on the inline size (ADR-0021).
+ *   data-run           block | inline, derived from the element (ADR-0012 §3).
+ */
+
+/* One root rule per component, PascalCase, the name to look up in recipes/. Everything
+   else nests inside it with & — the root selector is never repeated (doctrine §7,
+   ADR-0010). */
+.Component {
+  /* Design knobs: declared on the root WITH a default (ADR-0013 §3). The prefix is the
+     component's, two or three lowercase letters claimed in ADR-0013 §2's register;
+     property words are camelCase and spelled out — backgroundColor, never bg.
+     A consumer or theme sets a knob on the root and every part below follows. */
+  --_co-borderWidth: 1px;
+  --_co-gap: var(--size-md);
+  --_co-padding: var(--size-md);
+
+  /* A name that is not in docs/tokens.generated.md does not exist (ADR-0014). Where the
+     token is missing, the raw value stays and a TODO(token) sits above it — never an
+     invented name, never a made-up fallback. */
+  /* TODO(token): the radius is raw; a radius ramp is queued in the parking lot. */
+  --_co-borderRadius: 0.375rem;
+
+  /* Axis carriers — --_co-fontSize, --_co-backgroundColor — are NOT declared here. A
+     carrier is set by the gates of one axis and read by a shared consumer; it has no
+     meaning outside a gate, so it has no root value (doctrine §1). Never `--_x: ;`:
+     an empty custom property is a silent default that lets a gate be partial. */
+
+  /* The base holds only what is true for every instance and every state. Logical
+     properties only — inline/block, start/end — never left/right/top/bottom
+     (ADR-0022). */
+  display: grid;
+  gap: var(--_co-gap);
+  margin-block: 0;
+  padding: var(--_co-padding);
+  border-radius: var(--_co-borderRadius);
+
+  /* The resolution chain, one hop per layer (doctrine §2, ADR-0008):
+     component slot → theme claim → semantic → RAW. The chain may be five hops deep, but
+     each hop is its own declaration in its own layer, and one EXPRESSION holds at most
+     one fallback — only at a seam where absence is the contract, so that the same
+     declaration covers both worlds. Two such seams exist: the theme claim (the donut is
+     present or it is not) and a voice's optional stop (the bold weight the theme may or
+     may not give, ADR-0012 law b). A fallback pyramid — var(--a, var(--b, var(--c))) —
+     guesses its way down through layers in one expression and is forbidden. */
+  color: var(--theme-text, var(--color-text-primary));
+  background-color: var(--_co-backgroundColor);
+
+  /* The second seam, in a part: the voice's bold stop with one fallback to its own weight. */
+  & .title strong {
+    font-weight: var(--fontWeight-label-bold, var(--fontWeight-label));
+  }
+
+  /* Parts.
+     A part is the recipe's part name, bare and lowercase, nested under the root:
+     `.Component .title`, never `Component-title`, never `component-title`. A capital
+     letter means a root; a lowercase word means a part of the root above it. */
+  & .title {
+    /* A part reads the carrier the size gates set; it never sets its own size. */
+    font-size: var(--_co-fontSize);
+  }
+
+  & .body {
+    /* The one thing both layout modes below share sits here; the mode itself does not. */
+    gap: var(--_co-gap);
+  }
+
+  & .media {
+    grid-area: media;
+  }
+
+  /* The kernel-owned exemption, the only :where in a component file (ADR-0012 law d):
+     an unvoiced inline child inherits the run's metrics; a voiced child owns its own.
+     Zero specificity on purpose, so "nearest voice wins" is decided by inheritance,
+     never by a selector. Anywhere else :where is an invitation to be overridden from
+     outside, which ADR-0015 forbids — a consumer styles only its own parts. */
+  & .title :where(a, span, strong, em):where(:not(:is(.Component [data-variant]), :is(.Component [data-variant]) *)) {
+    font: inherit;
+  }
+
+  /* Gates.
+     Every value of every axis has a gate, INCLUDING the off value, off first
+     (doctrine §1, ADR-0007). The component always writes the attribute, so CSS never
+     guards against absence: no `:not([data-x])`, no default in the base. A gate sets
+     the property directly for a fixed enum, or writes the carrier the base reads. */
+
+  /* A boolean axis: both cells written. */
+  &[data-emphasis="false"] {
+    --_co-backgroundColor: var(--theme-surface, var(--color-surface-page));
+  }
+
+  &[data-emphasis="true"] {
+    --_co-backgroundColor: var(--theme-surface, var(--color-surface-inset));
+  }
+
+  /* An enum axis: every value, each setting the SAME carriers — a gate never sets a
+     subset and leaves the rest to fall through. The cap gate below reads
+     --_co-lineLength, so every size gate writes it. */
+  &[data-size="sm"] {
+    --_co-fontSize: var(--fontSize-label-small);
+    --_co-lineLength: var(--lineLength-label-small);
+  }
+
+  &[data-size="md"] {
+    --_co-fontSize: var(--fontSize-label);
+    --_co-lineLength: var(--lineLength-label);
+  }
+
+  &[data-size="lg"] {
+    --_co-fontSize: var(--fontSize-label-large);
+    --_co-lineLength: var(--lineLength-label-large);
+  }
+
+  /* A derived attribute is still an axis with gates; the recipe derives it, the CSS
+     does not know it was derived. */
+  &[data-cap-inline="false"] > .body {
+    max-inline-size: none;
+  }
+
+  &[data-run="block"][data-cap-inline="true"] > .body {
+    max-inline-size: var(--_co-lineLength);
+  }
+
+  /* States.
+     Real pseudo-class and its data-test-state twin, always as a pair, so the test
+     bench can render the state without a pointer. */
+  /* TODO(investigate): the states combine (hover + active, focus-visible + active) and
+     a combination renders by source order today; the order and its form are an open
+     question — see Button.css. */
+  &:hover,
+  &[data-test-state="hover"] {
+    --_co-backgroundColor: var(--color-interactive-secondary-hoverSurface);
+  }
+
+  &:focus-visible,
+  &[data-test-state="focus"] {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  /* Tiers.
+     A viewport tier is an axis (ADR-0001): FLOOR ≤ 21.24999rem, MOBILE 21.25–48.74rem,
+     DESKTOP 48.75–89.99rem, WIDE ≥ 90rem. A declaration lives inside the tier where it
+     is valid, bounded at BOTH ends — never a mobile-first base unwound per breakpoint
+     (doctrine §3). Values normally step with the tier through the tokens themselves
+     (--size-*, --fontSize-* carry the ladder), so a tier query in a component is for
+     structure only, and rare. Queries nest inside the root (doctrine §7). */
+  @media (max-width: 21.24999rem) {
+    & .body {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 21.25rem) and (max-width: 48.74999rem) {
+    & .body {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 48.75rem) {
+    & .body {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+
+  /* Container.
+     A component that reshapes on its own width is a container, and gates its parts on
+     it. A container query resolves against an ancestor, so the root is the container
+     and .body carries the grid. Both states written, closed at both ends, like tiers.
+     The threshold is a token when one exists; raw values get a TODO(token). */
+  /* TODO(token): the 25rem switch below is a raw container threshold. */
+  @supports not (container-type: inline-size) {
+    /* Fallback first (ADR-0009): the not-branch holds everything the unsupported world
+       needs, and NOTHING here is declared again in the native branch — a property
+       that appears in both is base-plus-override in a feature-query costume. */
+    & .body {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  @supports (container-type: inline-size) {
+    container-type: inline-size;
+
+    & .body {
+      display: grid;
+    }
+
+    @container (max-width: 24.999rem) {
+      &[data-media="true"] .body {
+        grid-template-areas:
+          "media"
+          "title";
+      }
+    }
+
+    @container (min-width: 25rem) {
+      &[data-media="true"] .body {
+        grid-template-areas: "media title";
+      }
+    }
+  }
+
+  /* Preferences.
+     Forced colours, contrast and motion are gates too: bounded, written as the end
+     state, no property declared in the base only to be cancelled here. Under
+     forced-colors the system palette wins; say what must survive (a border, an icon's
+     fill) in system colour keywords. */
+  @media (forced-colors: active), (prefers-contrast: more) {
+    border: var(--_co-borderWidth) solid CanvasText;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &,
+    &::after {
+      animation: none;
+      transition: none;
+    }
+  }
+}
+
+/*
+ * Form (the cleanup convention, ADR-0010):
+ *   one declaration per line · braces on their own lines · two-space indent ·
+ *   `&` before every nested selector · one root per file · the parent of a nested
+ *   rule is one compound selector, never a list (lowering would add :is() and a
+ *   specificity you did not write).
+ *
+ * Comments say why, above the line they concern. TODOs are typed —
+ *   TODO(decide | token | markup | dead | ref | investigate): what you see, not the fix —
+ * and sit above the line, never inside markup.
+ *
+ * Never in a component file (doctrine §3, §4):
+ *   !important · @layer · utility classes · a base value overridden by a gate ·
+ *   a default in CSS for an attribute the component always writes · an empty slot ·
+ *   a nested fallback · a made-up token name · a rule on another component's class
+ *   (ADR-0015) · left/right/top/bottom where a logical property exists · a
+ *   specificity raised to win a conflict.
+ *
+ * Before writing a var(): docs/tokens.generated.md. Before writing a gate: the
+ * component's recipe — every value in `axes` needs its gate here, and nothing here
+ * may gate a value the recipe does not have.
+ */

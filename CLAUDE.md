@@ -44,7 +44,7 @@ Decide which side of the seam you are on before changing anything.
 
 | Document | When to read |
 |----------|--------------|
-| `packages/tsugite/docs/css-doctrine.md` | Before writing or changing any CSS — the anti-drift contract |
+| `packages/tsugite/docs/css-doctrine.md` + the `writing-css` skill | Before writing or changing any CSS — the anti-drift contract, and the example file every stylesheet is compared against |
 | `packages/tsugite/docs/tokens.generated.md` | Before writing any `var()` in a component — the list of every token that exists, per layer (ADR-0014) |
 | `packages/tsugite/docs/adr/` | Before touching kernel, engine, or token grammar |
 | `packages/tsugite/docs/INTAKE.md` | Before converting a component from reference-components (or invoke the `intake` skill) |

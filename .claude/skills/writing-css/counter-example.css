@@ -1,0 +1,82 @@
+/* Port of the old kitchen-sink card — see /legacy/card.scss for the original.
+   ─────────────────────────────────────────────────────────────────────── */
+/* ✗ provenance and a ruler: the header names the promise and the gates, nothing else. */
+
+.component {
+  /* ✗ lowercase root: a capital letter is what says "root, look me up in recipes/". */
+
+  --_color: ;
+  --_bg: ;
+  /* ✗ empty slots: a silent default that lets a gate be partial. ✗ no prefix, ✗ "bg". */
+
+  --_co-radius: var(--radius-card, var(--ui-radius, 0.5rem));
+  /* ✗ a fallback pyramid: three guesses in one expression, and --radius-card is not in
+     the registry. One fallback, at a seam, or a raw value with a TODO(token). */
+
+  display: flex;
+  flex-direction: column;
+  /* ✗ a layout mode in the base that the @supports branch below overrides. */
+
+  margin-left: 0;
+  padding-top: 1rem;
+  /* ✗ physical properties; ✗ a raw spacing value where --size-* exists, no TODO. */
+
+  font-size: 1rem;
+  /* ✗ a default for an axis the component always writes (data-size) — the sm/md/lg
+     gates below then override it: base-plus-override. */
+
+  & .component-title {
+    /* ✗ prefixed part; the part is the recipe's name, bare: .title */
+  }
+
+  & .Component-body {
+    /* ✗ capitalised part: a capital means a root. */
+  }
+
+  &[data-emphasis="true"] {
+    --_bg: var(--color-surface-inset);
+    /* ✗ only the on value is gated; the off value falls through to the empty slot. */
+  }
+
+  &[data-size="lg"] {
+    font-size: 1.25rem !important;
+    /* ✗ !important; ✗ raw value; ✗ sm and md have no gate (they live on the base default). */
+  }
+
+  &:not([data-media]) .body {
+    /* ✗ guarding against absence: the component always writes data-media. Gate on
+       data-media="false". */
+  }
+
+  @media (min-width: 48rem) {
+    /* ✗ open-ended tier, unwinds the base mobile-first; ✗ 48rem is not a tier boundary
+       (MOBILE ends at 48.74999rem). */
+  }
+
+  @supports (container-type: inline-size) {
+    & .body {
+      display: grid;
+      /* ✗ no `@supports not` pair, and this overrides the base's flex — the fallback is
+         whatever happens to be left in the base. */
+    }
+  }
+
+  & .Button {
+    margin-inline-start: auto;
+    /* ✗ a rule on another component's class (ADR-0015): the composition places its own
+       parts and sets the child's attributes, never its CSS. */
+  }
+}
+
+:where(.component .body) {
+  /* ✗ a second root-level rule, and :where as an invitation to be overridden. */
+}
+
+.component[data-emphasis="true"][data-size="lg"] .title {
+  /* ✗ specificity raised to win a conflict; ✗ the root selector repeated outside the tree. */
+}
+
+@layer components {
+  /* ✗ @layer: unsupported layers collapse into one pool and the failure reads as a
+     cascade bug. */
+}

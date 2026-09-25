@@ -335,7 +335,9 @@ and did not decide. Each is a separate call.
   `lib/*.ts`, renderers, fixtures, e2e selectors) and rides with each component's next
   pass; the typography four go with the run-engine job, where the container becomes `.text`
   in all of them. ScreenReaderText stays capitalised because it is a component.
-- **A `write-css` skill with an example file.** Agreed shape 2026-09-25, not built: a skill
+- ~~**A `write-css` skill with an example file.**~~ — **built 2026-09-25** as
+  `.claude/skills/writing-css/` (SKILL.md, example.css, counter-example.css), root
+  CLAUDE.md points to it; no hook yet. Original note: a skill
   folder `.claude/skills/write-css/` with `SKILL.md` (the routine: read the doctrine, the
   registry and the component's recipe first; write; then compare the file against
   `example.css` point by point and name every deviation in the reply), `example.css` (one
