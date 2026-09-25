@@ -31,8 +31,6 @@
   inline-size: 100%;
   color: var(--theme-text, var(--color-text-primary));
 
-  /* .body's layout mode lives in the feature-query pair below; the gap is the one
-     thing both modes share. */
   & .body {
     gap: var(--_qt-gap);
   }
@@ -137,10 +135,22 @@
       display: grid;
     }
 
-    & .mark { grid-area: mark; }
-    & .quote { grid-area: quote; }
-    & .thumbnail { grid-area: thumbnail; }
-    & .source { grid-area: source; margin-block: auto; }
+    & .mark { 
+      grid-area: mark; 
+    }
+
+    & .quote {
+      grid-area: quote;
+    }
+
+    & .thumbnail {
+      grid-area: thumbnail;
+    }
+
+    & .source {
+      grid-area: source; 
+      margin-block: auto;
+    }
 
     &[data-media="false"] .body {
       grid-template-columns: 1fr;
