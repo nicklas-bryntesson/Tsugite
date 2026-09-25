@@ -335,3 +335,20 @@ and did not decide. Each is a separate call.
   `lib/*.ts`, renderers, fixtures, e2e selectors) and rides with each component's next
   pass; the typography four go with the run-engine job, where the container becomes `.text`
   in all of them. ScreenReaderText stays capitalised because it is a component.
+- **A `write-css` skill with an example file.** Agreed shape 2026-09-25, not built: a skill
+  folder `.claude/skills/write-css/` with `SKILL.md` (the routine: read the doctrine, the
+  registry and the component's recipe first; write; then compare the file against
+  `example.css` point by point and name every deviation in the reply), `example.css` (one
+  component that does not exist, showing everything on one page, each thing commented with
+  the rule and its ADR: Card-form header; capital root, bare lowercase parts nested under
+  it; knobs on the root, carriers set by gates, the prefix from the ADR-0013 register; every
+  axis value gated, off value first; the `@supports` pair, fallback first, nothing in the
+  base re-declared; the resolution chain with one fallback at the theme seam; the engine's
+  `:where` exemption with the comment that says why it is right there; `TODO(kind)` above
+  the line; one declaration per line) and `counter-example.css` (the same component written
+  wrong, every fault marked). The skill judges what a script cannot (`:where` in the engine
+  vs in Picture); the mechanical gates that exist (typography gate, button-slots test) stay
+  as the guards for what is a matter of characters. Conditions: the description must
+  trigger on writing or changing CSS in the package, and root CLAUDE.md's "read the doctrine
+  before CSS" points to the skill; a doctrine change lands in `example.css` in the same PR,
+  or the example lies within a month. Own branch, `chore/write-css-skill`, from main.
