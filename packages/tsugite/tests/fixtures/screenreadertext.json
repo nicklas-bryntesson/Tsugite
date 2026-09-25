@@ -1,0 +1,36 @@
+{
+  "$comment": "ScreenReaderText — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. Always a span, no axes, so no attributes of its own; a class passes through. Empty renders nothing; text and children together is refused.",
+  "component": "ScreenReaderText",
+  "cases": [
+    {
+      "name": "words from the text prop",
+      "input": { "text": " about Widgets", "children": false },
+      "expect": { "mode": "render", "tag": "span", "className": "ScreenReaderText", "attrs": {} }
+    },
+    {
+      "name": "words as child markup",
+      "input": { "children": true },
+      "expect": { "mode": "render", "tag": "span", "className": "ScreenReaderText", "attrs": {} }
+    },
+    {
+      "name": "a caller class rides along",
+      "input": { "text": "Search", "class": "extra", "children": false },
+      "expect": { "mode": "render", "tag": "span", "className": "ScreenReaderText extra", "attrs": {} }
+    },
+    {
+      "name": "the element is always a span",
+      "input": { "text": "Search", "element": "div", "children": false },
+      "expect": { "mode": "render", "tag": "span", "className": "ScreenReaderText", "attrs": {} }
+    },
+    {
+      "name": "no words: suppressed",
+      "input": { "children": false },
+      "expect": { "mode": "suppress" }
+    },
+    {
+      "name": "text and children together",
+      "input": { "text": "X", "children": true },
+      "expect": { "mode": "error", "errorMessage": "use text OR child content, not both" }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+---
+// ScreenReaderText — words for the accessible name only. The table is
+// recipes/screenreadertext.recipe.ts, read by lib/recipe.ts (ADR-0018);
+// lib/screenreadertext.ts holds the one hole, the interactive-content refusal; this file
+// renders it in Astro.
+import "./ScreenReaderText.css";
+import DevError from "../../DevError/DevError.astro";
+import { screenReaderText as recipe } from "../../../recipes/screenreadertext.recipe";
+import { resolve, type InputOf } from "../../../lib/recipe";
+import { hiddenInteractive, screenReaderTextHtml } from "../../../lib/screenreadertext";
+
+type Props = InputOf<typeof recipe> & { [key: string]: unknown };
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const hasChildren = childHtml.trim().length > 0;
+const r = resolve(recipe, Astro.props, { slots: { children: hasChildren } });
+const trap = r.mode === "render" && hasChildren ? hiddenInteractive(childHtml) : null;
+const inner = r.mode === "render" ? screenReaderTextHtml(r.parts.text as string | null, childHtml, hasChildren) : "";
+---
+
+{
+  trap ? (
+    <DevError name={recipe.name} message={trap} />
+  ) : r.mode === "render" ? (
+    <span class={r.className} {...r.attrs} {...r.rest} set:html={inner} />
+  ) : r.mode === "error" ? (
+    <DevError name={recipe.name} message={r.errorMessage} />
+  ) : null
+}

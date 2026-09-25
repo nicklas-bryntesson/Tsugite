@@ -28,6 +28,7 @@
     "./RangeField/*": "./components/primitives/fields/RangeField/*",
     "./RangeGroup/*": "./components/primitives/fields/RangeGroup/*",
     "./RangeScale/*": "./components/primitives/fields/RangeScale/*",
+    "./ScreenReaderText/*": "./components/primitives/ScreenReaderText/*",
     "./ScrollArea/*": "./components/regions/ScrollArea/*",
     "./Surface/*": "./components/regions/Surface/*",
     "./Teaser/*": "./components/compositions/Teaser/*",
