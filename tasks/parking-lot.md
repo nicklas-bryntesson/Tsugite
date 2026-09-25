@@ -174,8 +174,8 @@ and did not decide. Each is a separate call.
   The engine container is `text-content` in Text, `heading-text` / `heading-link`
   in Heading, `Button-text` in Button — three dialects for the recipe's one part,
   `text`. Two questions, two answers so far (discussion 2026-09-24, nothing decided):
-  (1) the part's class should fall out of the recipe, `<Class>-<part>` — a sentence
-  next to ADR-0013's slot grammar; (2) the container is a PART, not a sub-component
+  (1) the part's class is the recipe's part name, bare and lowercase under the root —
+  `.Text .text`, `.Button .text` — see the class-naming row below; (2) the container is a PART, not a sub-component
   (no axes, no props, borrows the parent's carriers, its tag varies by the parent),
   so the lift is not `<Run>` but the kernel run engine already noted above
   (`kernel/css/run.css` on `[data-run="block"] > .run`), Button last with the
@@ -323,3 +323,15 @@ and did not decide. Each is a separate call.
     ellipse, the fix is a per-axis pair, `border-*-radius: var(--h) var(--v)` with
     `--v: calc(var(--pct) * var(--aspectWidth) / var(--aspectHeight) * 1%)` — a Picture /
     media-frame concern where `aspect-ratio` is already a token.
+- **Class naming: a capital is a root, a bare lowercase word is a part.** Settled in
+  discussion 2026-09-25, to be written into ADR-0013 (a sentence beside the slot grammar):
+  a PascalCase class is a component root, the name to look up in `recipes/`; a part is the
+  recipe's part name in lowercase, unprefixed, nested under the root — `.Quote .body`,
+  `.Notice .title`. Nested under the root the prefix is noise. Census: Quote, Notice,
+  RangeScale and the fields already do it; nine components carry a prefix — capitalised
+  (`Button-text`, `CtaButton-text`, `NavItem-text`, `Teaser-link`, `CoverComposition-media`)
+  or lowercase (`caption-content`, `heading-text` / `heading-link`, `text-content`,
+  `textblock-content`). The rename is mechanical per component (CSS, plan helpers in
+  `lib/*.ts`, renderers, fixtures, e2e selectors) and rides with each component's next
+  pass; the typography four go with the run-engine job, where the container becomes `.text`
+  in all of them. ScreenReaderText stays capitalised because it is a component.
