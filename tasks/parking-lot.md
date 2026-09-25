@@ -354,8 +354,11 @@ and did not decide. Each is a separate call.
   trigger on writing or changing CSS in the package, and root CLAUDE.md's "read the doctrine
   before CSS" points to the skill; a doctrine change lands in `example.css` in the same PR,
   or the example lies within a month. Own branch, `chore/write-css-skill`, from main.
-- **The components tree follows the pillars, and the path stops being API.** Discussion
-  2026-09-25, not decided. 33 folders in one `components/`; the manifest says 26
+- ~~**The components tree follows the pillars, and the path stops being API.**~~ — **done
+  2026-09-25**: `components/<pillars>/[<family>/]<Name>`, families fields | typography | buttons,
+  DevError at the top as infrastructure, Prose alone; export map by name, `tsugite/<Name>/…`;
+  `tests/components-tree.test.ts` holds map to tree, `apps/docs/tests/manifest-tree.test.ts`
+  holds manifest to tree. Recipes and lib stay flat (the ADR-0018 question remains). Original: 33 folders in one `components/`; the manifest says 26
   primitives (15 of them the fields family), 3 compositions, 3 regions, 2 chrome. Pillar
   folders alone leave a pile of 26, so the shape is pillar, then family where one exists,
   then component: `components/primitives/fields/DateField`, `components/primitives/typography/Text`,
