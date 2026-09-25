@@ -22,7 +22,7 @@ const { entry } = Astro.props;
 
     <ul class="doc-meta">
       <li class="chip" data-kind="pillar">{pillarLabels[entry.pillar]}</li>
-      {entry.family && <li class="chip" data-kind="family">fields</li>}
+      {entry.family && <li class="chip" data-kind="family">{entry.family}</li>}
       {entry.adrs?.map((n) => <li class="chip" data-kind="adr">ADR-{n}</li>)}
     </ul>
 

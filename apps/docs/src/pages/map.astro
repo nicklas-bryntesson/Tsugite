@@ -43,7 +43,7 @@ const pillarNotes: Record<string, string> = {
                   {e.published ? (
                     <a class="card" href={`/docs/${e.slug}`}>
                       <span class="card-title">{e.title}</span>
-                      {e.family && <span class="badge" data-family={e.family}>fields</span>}
+                      {e.family && <span class="badge" data-family={e.family}>{e.family}</span>}
                     </a>
                   ) : (
                     <span class="card" data-unpublished>
