@@ -1,7 +1,7 @@
 // Contract tests for Picture.astro — mirrors PictureTagHelper.cs + MediaHelper.cs
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
-import Picture from "../components/Picture/Picture.astro";
+import Picture from "../components/primitives/Picture/Picture.astro";
 // @ts-expect-error — vite resolves image imports to ImageMetadata
 import img from "./media/amal-s.jpg";
 

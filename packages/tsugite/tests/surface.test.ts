@@ -1,7 +1,7 @@
 // Contract tests for Surface.astro — the voice donut as a region (ADR-0016).
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
-import Surface from "../components/Surface/Surface.astro";
+import Surface from "../components/regions/Surface/Surface.astro";
 
 const container = await AstroContainer.create();
 const render = (props: Record<string, unknown>, slots: Record<string, string> = { default: "<p>x</p>" }) =>

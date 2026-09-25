@@ -1,0 +1,400 @@
+---
+// Port of reference-components MonthField — an accessible month input
+// wrapping <input type="month">. Server renders the canonical markup from
+// MonthField.generate.ts canonical(); MonthField.ts (verbatim, kernel-composed)
+// hydrates it: builds segments, wheels, popup. The CSS init gate stays —
+// like the reference, markup is unformed until attach() runs.
+import "../../../../kernel/css/Wheel.css";
+
+interface Props {
+  id: string;
+  label: string;
+  /** overrides the field name (defaults to id) */
+  name?: string;
+  locale?: string;
+  /** YYYY-MM */
+  value?: string;
+  /** YYYY-MM */
+  min?: string;
+  /** YYYY-MM */
+  max?: string;
+  disabled?: boolean;
+  invalid?: boolean;
+  required?: boolean;
+  /** raw HTML appended inside the label (e.g. required marker) */
+  labelSuffix?: string;
+  [key: string]: unknown;
+}
+
+const {
+  id,
+  label,
+  name = undefined,
+  locale = "en-GB",
+  value,
+  min,
+  max,
+  disabled = false,
+  invalid = false,
+  required = false,
+  labelSuffix,
+  ...rest
+} = Astro.props;
+---
+
+<label for={id}>{label}{labelSuffix && <Fragment set:html={` ${labelSuffix}`} />}</label>
+<div
+  class="MonthField"
+  data-component="MonthField"
+  data-id={id}
+  data-name={name ?? id}
+  data-locale={locale}
+  data-value={value}
+  data-min={min}
+  data-max={max}
+  data-disabled={disabled ? "true" : undefined}
+  data-invalid={invalid ? "true" : undefined}
+  {...rest}
+>
+  <input
+    class="native"
+    type="month"
+    aria-hidden="true"
+    tabindex="-1"
+    value={value}
+    min={min}
+    max={max}
+    disabled={disabled}
+    required={required}
+    aria-invalid={invalid ? "true" : undefined}
+  />
+  <div class="overlay" aria-hidden="true">
+    <div class="segments" role="group"></div>
+    <button
+      type="button"
+      class="trigger"
+      aria-label="Open month picker"
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      disabled={disabled}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-calendar-icon lucide-calendar"
+        ><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path
+          d="M3 10h18" /></svg
+      >
+    </button>
+    <div class="rail">
+      <template data-template="monthfield-popup">
+        <div class="popup" role="dialog" aria-modal="true">
+          <div class="year-month-picker WheelColumns">
+            <div class="Wheel" data-picker="month" role="spinbutton" tabindex="0"></div>
+            <div class="Wheel" data-picker="year" role="spinbutton" tabindex="-1"></div>
+          </div>
+          <div class="footer">
+            <button type="button" class="footer-clear"></button>
+            <button type="button" class="footer-now"></button>
+          </div>
+          <div class="arrow"></div>
+        </div>
+      </template>
+    </div>
+  </div>
+  <div class="announce" aria-live="polite" aria-atomic="true"></div>
+</div>
+
+<script>
+  import MonthField from "./MonthField";
+  MonthField.attach();
+</script>
+
+<style is:global>
+/* One root, one tree (ADR-0010): tokens + root props on the root; every part,
+   state, variant and gate is a nested `&` rule below, in cascade order. */
+.MonthField {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  /* Public API */
+  /* Popup sizes to its content (fit-content); month + year columns define the width. */
+  --_mf-popup-gap: 1.5rem;
+  --_mf-site-padding: var(--SITE--PADDING, 1rem);
+  /* Field-family height contract — every field's bordered box is min 2.5rem tall */
+  --_mf-field-min-block-size: 2.5rem;
+  /* Design tokens — segments */
+  --_mf-border-color: currentColor;
+  --_mf-border-color-hover: CanvasText;
+  --_mf-bg-hover: var(--ui-hover);
+  --_mf-border-color-invalid: var(--ui-destructive, #c00);
+  --_mf-color-muted: var(--ui-muted-foreground);
+  --_mf-trigger-bg-hover: var(--ui-hover);
+  --_mf-trigger-bg-active: var(--ui-hover);
+  /* Design tokens — popup (shared popover surface) */
+  --_mf-popup-bg: var(--ui-surface);
+  --_mf-popup-color: var(--ui-surface-foreground);
+  --_mf-popup-border-color: var(--ui-border);
+  --_mf-popup-radius: var(--ui-radius);
+  --_mf-popup-shadow: var(--ui-shadow);
+  --_mf-option-bg-selected: var(--ui-primary);
+  --_mf-option-color-selected: var(--ui-primary-foreground);
+  /* Wheel visuals live in the shared src/kernel/css/Wheel.css (.Wheel .ring / .option) */
+  /* Internal */
+  --_mf-arrow-size: 0.75rem;
+  --_mf-arrow-corner-radius: 0.25rem;
+  /* Written by popup-anchor on open and resize; the resting values centre the bubble. */
+  --_mf-popup-offset: 50%;
+  --_mf-arrow-offset: 0px;
+
+  /* ── Native / custom fallback ──────────────────────────────────────────── */
+  & .native {
+    display: block;
+  }
+  & .overlay {
+    display: none;
+  }
+
+  &[data-disabled="true"] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &[data-input-mode="custom"] .native {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+  }
+  &[data-input-mode="custom"] .overlay {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: var(--_mf-field-min-block-size);
+    gap: 0.125rem;
+    border: 1px solid var(--_mf-border-color);
+    padding-inline: 0.5rem;
+    padding-block: 0.25rem;
+    border-radius: 4px;
+  }
+
+  &[data-input-mode="display"] .native {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  &[data-input-mode="display"] .overlay {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: var(--_mf-field-min-block-size);
+    gap: 0.125rem;
+    border: 1px solid var(--_mf-border-color);
+    padding-inline: 0.5rem;
+    padding-block: 0.25rem;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
+  /* ── Segments ──────────────────────────────────────────────────────────── */
+  & .segments {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.125rem;
+  }
+
+  & .segment {
+    font-variant-numeric: tabular-nums;
+    min-inline-size: 2ch;
+    text-align: center;
+    outline: none;
+    border-radius: 2px;
+    cursor: default;
+  }
+  & .segment[data-segment="year"] {
+    min-inline-size: 4ch;
+  }
+  & .segment[data-focused="true"] {
+    background-color: var(--ui-primary);
+    color: var(--ui-primary-foreground);
+  }
+  & .segment[data-placeholder="true"] {
+    color: var(--_mf-color-muted);
+  }
+
+  & .separator {
+    user-select: none;
+    color: var(--_mf-color-muted);
+  }
+
+  &[data-input-mode="custom"] .overlay:hover,
+  &[data-test-state="hover"] .overlay {
+    border-color: var(--_mf-border-color-hover);
+    background-color: var(--_mf-bg-hover);
+  }
+
+  &[data-input-mode="custom"] .overlay:focus-within,
+  &[data-test-state="focus"] .overlay {
+    outline: 2px solid;
+    outline-offset: 1px;
+  }
+
+  &[data-invalid="true"] .overlay {
+    border-color: var(--_mf-border-color-invalid);
+  }
+
+  /* ── Trigger ───────────────────────────────────────────────────────────── */
+  & .trigger {
+    margin-inline-start: 0.25rem;
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    cursor: pointer;
+    border-radius: 2px;
+    vertical-align: middle;
+  }
+  & .trigger svg {
+    /* block — an inline svg reserves baseline descender space below the icon */
+    display: block;
+  }
+  & .trigger:focus-visible {
+    outline: 2px solid;
+    outline-offset: 2px;
+  }
+  & .trigger:hover {
+    background-color: var(--_mf-trigger-bg-hover);
+  }
+  & .trigger:active {
+    background-color: var(--_mf-trigger-bg-active);
+  }
+
+  /* ── Announce (SR-only) ────────────────────────────────────────────────── */
+  & .announce {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ── Initialisation gate ───────────────────────────────────────────────── */
+  &[data-initialized="true"] {
+    overflow: visible;
+  }
+
+  /* ── Slide rail ────────────────────────────────────────────────────────── */
+  & .rail {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100vw, calc(100vw - 2rem));
+    height: 0;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── Popup bubble ──────────────────────────────────────────────────────── */
+  & .popup {
+    position: absolute;
+    left: var(--_mf-popup-offset);
+    transform: translateX(-50%);
+    inline-size: fit-content;
+    pointer-events: auto;
+    background: var(--_mf-popup-bg);
+    color: var(--_mf-popup-color);
+    border: 1px solid var(--_mf-popup-border-color);
+    border-radius: var(--_mf-popup-radius);
+    box-shadow: var(--_mf-popup-shadow);
+    z-index: 100;
+    padding: var(--ui-surface-padding);
+    font-size: var(--ui-font-size);
+  }
+  &[data-direction="bottom"] .popup {
+    top: var(--_mf-popup-gap);
+  }
+  &[data-direction="top"] .popup {
+    bottom: var(--_mf-popup-gap);
+  }
+
+  /* ── Month/year picker ─────────────────────────────────────────────────── */
+  & .popup .year-month-picker {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+  }
+
+  /* The shared .Wheel is 64px — sized for numeric time/year columns. The month
+     wheel shows full localized names ("september", "februari"), so it needs to be
+     wider or the names clip under the wheel's overflow:hidden. */
+  & .popup .year-month-picker .Wheel[data-picker="month"] {
+    width: 7rem;
+  }
+
+  /* ── Popup footer ──────────────────────────────────────────────────────── */
+  & .popup .footer {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    margin-block-start: 0.5rem;
+    gap: 0.5rem;
+  }
+  & .popup .footer button {
+    background: none;
+    border: none;
+    color: var(--ui-primary);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    border-radius: 2px;
+    font: inherit;
+  }
+  & .popup .footer button:hover {
+    background-color: var(--_mf-bg-hover);
+  }
+  & .popup .footer button:focus-visible {
+    outline: 2px solid;
+    outline-offset: 2px;
+  }
+  & .popup .footer button:disabled {
+    color: var(--_mf-color-muted);
+    cursor: not-allowed;
+  }
+
+  /* ── Arrow ─────────────────────────────────────────────────────────────── */
+  & .arrow {
+    position: absolute;
+    width: var(--_mf-arrow-size);
+    height: var(--_mf-arrow-size);
+    background-color: var(--_mf-popup-bg);
+    left: 50%;
+    z-index: 3;
+  }
+  &[data-direction="top"] .arrow {
+    bottom: calc(var(--_mf-arrow-size) * -0.5);
+    transform: translateX(calc(-50% + var(--_mf-arrow-offset))) rotate(45deg);
+    border-end-end-radius: var(--_mf-arrow-corner-radius);
+  }
+  &[data-direction="bottom"] .arrow {
+    top: calc(var(--_mf-arrow-size) * -0.5);
+    transform: translateX(calc(-50% + var(--_mf-arrow-offset))) rotate(45deg);
+    border-start-start-radius: var(--_mf-arrow-corner-radius);
+  }
+}
+</style>

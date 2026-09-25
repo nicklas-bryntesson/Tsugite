@@ -74,8 +74,8 @@ describe("generated artifacts are fresh", () => {
     expect(onDisk).toBe(generateTokenRegistry());
   });
 
-  it("components/Surface/Surface.generated.css matches the adjacency builder (ADR-0016)", () => {
-    const onDisk = readFileSync(new URL("../components/Surface/Surface.generated.css", import.meta.url), "utf8");
+  it("components/regions/Surface/Surface.generated.css matches the adjacency builder (ADR-0016)", () => {
+    const onDisk = readFileSync(new URL("../components/regions/Surface/Surface.generated.css", import.meta.url), "utf8");
     expect(onDisk).toBe(generateSurfaceStylesheet());
   });
 

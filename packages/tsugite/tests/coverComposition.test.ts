@@ -1,7 +1,7 @@
 // Contract tests for CoverComposition.astro — mirrors _CoverComposition.cshtml
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
-import CoverComposition from "../components/CoverComposition/CoverComposition.astro";
+import CoverComposition from "../components/compositions/CoverComposition/CoverComposition.astro";
 // @ts-expect-error — vite resolves image imports to ImageMetadata
 import img from "./media/amal-s.jpg";
 

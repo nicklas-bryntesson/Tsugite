@@ -1,7 +1,7 @@
 // Contract tests for Heading.astro
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
-import Heading from "../components/Heading/Heading.astro";
+import Heading from "../components/primitives/typography/Heading/Heading.astro";
 
 const container = await AstroContainer.create();
 

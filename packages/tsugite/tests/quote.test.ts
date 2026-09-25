@@ -1,7 +1,7 @@
 // Contract tests for Quote.astro — element follows content, gates always written.
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
-import Quote from "../components/Quote/Quote.astro";
+import Quote from "../components/compositions/Quote/Quote.astro";
 import { resolve } from "../lib/recipe";
 import { quote as recipe } from "../recipes/quote.recipe";
 import { quoteDefaults, quoteDerive } from "../lib/quote";

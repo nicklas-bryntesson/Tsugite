@@ -17,8 +17,8 @@ export interface ManifestEntry {
   slug: string;
   title: string;
   pillar: Pillar;
-  /** Family badge within the pillar (only "fields" today). */
-  family?: "fields";
+  /** Family within the pillar — also the folder under components/<pillar>/ (tests/manifest-tree.test.ts holds the two together). */
+  family?: "fields" | "typography" | "buttons";
   /** Where the component came from — metadata, never grouping. */
   origin: "aipoc" | "ref-comps" | "own";
   /** Section basename in the package fixtures/ (no .astro).
@@ -35,14 +35,14 @@ export interface ManifestEntry {
 
 export const manifest: ManifestEntry[] = [
   // ── Primitives ──────────────────────────────────────────────────────────────
-  { slug: "heading", title: "Heading", pillar: "primitive", origin: "aipoc", section: "Typography", published: true },
-  { slug: "text", title: "Text", pillar: "primitive", origin: "own", section: "TextSection", published: true },
-  { slug: "caption", title: "Caption", pillar: "primitive", origin: "own", section: "CaptionSection", adrs: ["0018"], published: true },
+  { slug: "heading", title: "Heading", pillar: "primitive", family: "typography", origin: "aipoc", section: "Typography", published: true },
+  { slug: "text", title: "Text", pillar: "primitive", family: "typography", origin: "own", section: "TextSection", published: true },
+  { slug: "caption", title: "Caption", pillar: "primitive", family: "typography", origin: "own", section: "CaptionSection", adrs: ["0018"], published: true },
   { slug: "nav-item", title: "NavItem", pillar: "primitive", origin: "own", section: "NavItemSection", adrs: ["0018", "0019"], published: true },
-  { slug: "text-block", title: "TextBlock", pillar: "primitive", origin: "own", section: "TextBlockSection", published: true },
+  { slug: "text-block", title: "TextBlock", pillar: "primitive", family: "typography", origin: "own", section: "TextBlockSection", published: true },
   { slug: "prose", title: "Prose", pillar: "primitive", origin: "aipoc", section: "ProseSection", published: true },
-  { slug: "button", title: "Button", pillar: "primitive", origin: "aipoc", section: "Buttons", adrs: ["0005", "0006"], published: true },
-  { slug: "cta-button", title: "CtaButton", pillar: "primitive", origin: "own", section: "CtaButtonSection", adrs: ["0018", "0019"], published: true },
+  { slug: "button", title: "Button", pillar: "primitive", family: "buttons", origin: "aipoc", section: "Buttons", adrs: ["0005", "0006"], published: true },
+  { slug: "cta-button", title: "CtaButton", pillar: "primitive", family: "buttons", origin: "own", section: "CtaButtonSection", adrs: ["0018", "0019"], published: true },
   { slug: "card", title: "Card", pillar: "primitive", origin: "aipoc", section: "CardSection", published: true },
   { slug: "picture", title: "Picture", pillar: "primitive", origin: "aipoc", section: "MediaSection", published: true },
   { slug: "notice", title: "Notice", pillar: "primitive", origin: "ref-comps", section: "NoticeSection", suite: "tests/e2e/notice.e2e.test.js", published: true },

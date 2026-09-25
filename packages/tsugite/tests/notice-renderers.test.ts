@@ -10,8 +10,8 @@ import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { notice } from "../recipes/notice.recipe";
 import { noticeDerive } from "../lib/notice";
-import NoticeAstro from "../components/Notice/Notice.astro";
-import NoticeReact from "../components/Notice/Notice.tsx";
+import NoticeAstro from "../components/primitives/Notice/Notice.astro";
+import NoticeReact from "../components/primitives/Notice/Notice.tsx";
 
 interface Fixture {
   component: string;

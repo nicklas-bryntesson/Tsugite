@@ -7,7 +7,7 @@ import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { textblock as text } from "../recipes/textblock.recipe";
 import { textBlockDerive as textDerive } from "../lib/textblock";
-import TextAstro from "../components/TextBlock/TextBlock.astro";
+import TextAstro from "../components/primitives/typography/TextBlock/TextBlock.astro";
 
 interface Fixture {
   component: string;

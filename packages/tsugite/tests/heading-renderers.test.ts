@@ -10,8 +10,8 @@ import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { heading } from "../recipes/heading.recipe";
 import { headingDefaults, headingDerive } from "../lib/heading";
-import HeadingAstro from "../components/Heading/Heading.astro";
-import HeadingReact from "../components/Heading/Heading.tsx";
+import HeadingAstro from "../components/primitives/typography/Heading/Heading.astro";
+import HeadingReact from "../components/primitives/typography/Heading/Heading.tsx";
 
 interface Fixture {
   component: string;

@@ -21,7 +21,7 @@ export default defineConfig({
   // the same component through Astro, React and Vue on one page, against one CSS.
   // React and Vue render server-side only here: the renderer spike (lib/card.ts) shows
   // the same component through Astro, React and Vue on one page, against one CSS.
-  // Keep Vue SFCs in plain JS: see the note in packages/tsugite/components/Card/Card.vue.
+  // Keep Vue SFCs in plain JS: see the note in packages/tsugite/components/primitives/Card/Card.vue.
   integrations: [react(), vue()],
   vite: {
     css: {

@@ -1,9 +1,9 @@
 ---
 // Port of reference-components FileUpload.html — states and item/seed helpers
 // mirror FileUpload.generate.ts one to one.
-import Heading from "../components/Heading/Heading.astro";
-import Text from "../components/Text/Text.astro";
-import FileUpload from "../components/FileUpload/FileUpload.astro";
+import Heading from "../components/primitives/typography/Heading/Heading.astro";
+import Text from "../components/primitives/typography/Text/Text.astro";
+import FileUpload from "../components/primitives/fields/FileUpload/FileUpload.astro";
 
 // ── Item HTML helpers — multiple mode (<li>) ─────────────────────────────────
 const validItem = (name: string, size: string, id = "static-1") =>

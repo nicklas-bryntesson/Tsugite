@@ -2,8 +2,8 @@
 // mirrors LinkButtonTagHelper.cs / ActionButtonTagHelper.cs / ButtonHelper.cs
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
-import LinkButton from "../components/Button/LinkButton.astro";
-import ActionButton from "../components/Button/ActionButton.astro";
+import LinkButton from "../components/primitives/buttons/Button/LinkButton.astro";
+import ActionButton from "../components/primitives/buttons/Button/ActionButton.astro";
 
 const container = await AstroContainer.create();
 

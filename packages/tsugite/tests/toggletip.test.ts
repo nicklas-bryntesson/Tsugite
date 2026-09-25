@@ -4,7 +4,7 @@
 // e2e suite's job.
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
-import ToggleTip from "../components/ToggleTip/ToggleTip.astro";
+import ToggleTip from "../components/primitives/ToggleTip/ToggleTip.astro";
 
 const container = await AstroContainer.create();
 

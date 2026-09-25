@@ -74,15 +74,15 @@ const ALLOWLIST: Record<string, Record<string, number>> = {
     "font-size: 0.875em": 1,
     "font-size: var($": 1, // specimen template literal — renders the token itself
   },
-  "packages/tsugite/components/Prose/Prose.astro": {
+  "packages/tsugite/components/primitives/Prose/Prose.astro": {
     "font-size: 0.875em": 3,
     "font-size: 1em": 1,
   },
-  "packages/tsugite/components/AffixField/AffixField.astro": { "line-height: 1": 1 },
-  "packages/tsugite/components/FileUpload/FileUpload.astro": { "line-height: 1": 1 },
-  "packages/tsugite/components/WeekField/WeekField.astro": { "line-height: 1": 1 },
-  "packages/tsugite/components/DateField/DateField.astro": { "line-height: 1": 1 },
-  "packages/tsugite/components/DateTimeField/DateTimeField.astro": { "line-height: 1": 1 },
+  "packages/tsugite/components/primitives/fields/AffixField/AffixField.astro": { "line-height: 1": 1 },
+  "packages/tsugite/components/primitives/fields/FileUpload/FileUpload.astro": { "line-height: 1": 1 },
+  "packages/tsugite/components/primitives/fields/WeekField/WeekField.astro": { "line-height: 1": 1 },
+  "packages/tsugite/components/primitives/fields/DateField/DateField.astro": { "line-height: 1": 1 },
+  "packages/tsugite/components/primitives/fields/DateTimeField/DateTimeField.astro": { "line-height: 1": 1 },
   // test stimuli: the raw value IS the test; ") " variants are the visible
   // label text naming the stimulus
   "packages/tsugite/fixtures/RangeFieldSection.astro": { "font-size: 1.5rem": 1, "font-size: 1.5rem)": 1 },

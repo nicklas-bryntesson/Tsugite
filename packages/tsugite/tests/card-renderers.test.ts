@@ -12,9 +12,9 @@ import { createSSRApp, h } from "vue";
 import { renderToString as renderVue } from "vue/server-renderer";
 import { resolve } from "../lib/recipe";
 import { card } from "../recipes/card.recipe";
-import CardAstro from "../components/Card/Card.astro";
-import CardReact from "../components/Card/Card.tsx";
-import CardVue from "../components/Card/Card.vue";
+import CardAstro from "../components/primitives/Card/Card.astro";
+import CardReact from "../components/primitives/Card/Card.tsx";
+import CardVue from "../components/primitives/Card/Card.vue";
 
 interface Fixture {
   component: string;

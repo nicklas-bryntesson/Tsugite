@@ -8,7 +8,7 @@ import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { teaser } from "../recipes/teaser.recipe";
 import { teaserDerive } from "../lib/teaser";
-import TeaserAstro from "../components/Teaser/Teaser.astro";
+import TeaserAstro from "../components/compositions/Teaser/Teaser.astro";
 
 interface Fixture {
   component: string;
