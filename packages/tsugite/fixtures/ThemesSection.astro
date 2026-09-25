@@ -4,9 +4,9 @@
 // primary/secondary buttons — so drift in any theme table is impossible
 // to miss, in all four appearance modes. The forbidden combination
 // (inverse × subtle) is shown AS forbidden.
-import Heading from "../components/Heading/Heading.astro";
-import Text from "../components/Text/Text.astro";
-import LinkButton from "../components/Button/LinkButton.astro";
+import Heading from "../components/primitives/typography/Heading/Heading.astro";
+import Text from "../components/primitives/typography/Text/Text.astro";
+import LinkButton from "../components/primitives/buttons/Button/LinkButton.astro";
 import { voiceMatrix, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 
 const cells = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>

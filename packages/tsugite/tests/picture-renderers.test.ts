@@ -8,7 +8,7 @@ import { createElement } from "react";
 import { describe, it, expect } from "vitest";
 import { resolveMedia, mediaPlanHtml, type MediaPlan, type UrlResolver } from "../lib/media";
 import { CROPS, PRESETS } from "../theme-default/media.presets";
-import PictureReact from "../components/Picture/Picture.tsx";
+import PictureReact from "../components/primitives/Picture/Picture.tsx";
 
 interface Fixture {
   component: string;

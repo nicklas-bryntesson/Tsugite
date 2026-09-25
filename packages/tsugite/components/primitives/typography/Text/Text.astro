@@ -1,0 +1,29 @@
+---
+// Text — the reading voice (body) on plain text elements, the captions and the heading shapes: authored
+// single-run text, the family member next to Heading, Caption and Prose. The table is recipes/text.recipe.ts,
+// read by lib/recipe.ts (ADR-0018); lib/text.ts fills its holes; this file renders it.
+import "./Text.css";
+import DevError from "../../../DevError/DevError.astro";
+import { text as recipe } from "../../../../recipes/text.recipe";
+import { resolve, type InputOf } from "../../../../lib/recipe";
+import { textDerive, textPlan } from "../../../../lib/text";
+
+type Props = InputOf<typeof recipe> & { [key: string]: unknown };
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const t = resolve(recipe, Astro.props, { slots: { children: childHtml.trim().length > 0 }, derive: textDerive });
+const plan = textPlan(t);
+
+// ADR-0012 §1: child content passes through the same engine container as prop text.
+const inner = t.mode === "render" ? `<span class="${plan.containerClass}">${t.parts.children ? childHtml : plan.innerHtml}</span>` : "";
+
+const Tag = t.tag as "p";
+---
+
+{
+  t.mode === "render" ? (
+    <Tag class={t.className} {...t.attrs} {...t.rest} set:html={inner} />
+  ) : t.mode === "error" ? (
+    <DevError name={recipe.name} message={t.errorMessage} />
+  ) : null
+}

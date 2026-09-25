@@ -11,9 +11,9 @@ import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { navitem as button } from "../recipes/navitem.recipe";
 import { navItemDerive as buttonDerive } from "../lib/navitem";
-import LinkAstro from "../components/NavItem/NavLink.astro";
-import ActionAstro from "../components/NavItem/NavButton.astro";
-import { NavLink as LinkReact, NavButton as ActionReact } from "../components/NavItem/NavItem.tsx";
+import LinkAstro from "../components/primitives/NavItem/NavLink.astro";
+import ActionAstro from "../components/primitives/NavItem/NavButton.astro";
+import { NavLink as LinkReact, NavButton as ActionReact } from "../components/primitives/NavItem/NavItem.tsx";
 
 interface Fixture {
   component: string;

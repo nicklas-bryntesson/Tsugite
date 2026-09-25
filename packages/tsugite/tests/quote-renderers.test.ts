@@ -11,8 +11,8 @@ import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { quote } from "../recipes/quote.recipe";
 import { quoteDefaults, quoteDerive } from "../lib/quote";
-import QuoteAstro from "../components/Quote/Quote.astro";
-import QuoteReact from "../components/Quote/Quote.tsx";
+import QuoteAstro from "../components/compositions/Quote/Quote.astro";
+import QuoteReact from "../components/compositions/Quote/Quote.tsx";
 
 interface Fixture {
   component: string;

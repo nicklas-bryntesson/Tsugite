@@ -1,7 +1,7 @@
 // Contract tests for Card.astro
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
-import Card from "../components/Card/Card.astro";
+import Card from "../components/primitives/Card/Card.astro";
 
 const container = await AstroContainer.create();
 

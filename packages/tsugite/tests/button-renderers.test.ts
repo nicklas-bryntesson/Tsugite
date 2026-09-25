@@ -11,9 +11,9 @@ import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { button } from "../recipes/button.recipe";
 import { buttonDerive } from "../lib/button";
-import LinkAstro from "../components/Button/LinkButton.astro";
-import ActionAstro from "../components/Button/ActionButton.astro";
-import { LinkButton as LinkReact, ActionButton as ActionReact } from "../components/Button/Button.tsx";
+import LinkAstro from "../components/primitives/buttons/Button/LinkButton.astro";
+import ActionAstro from "../components/primitives/buttons/Button/ActionButton.astro";
+import { LinkButton as LinkReact, ActionButton as ActionReact } from "../components/primitives/buttons/Button/Button.tsx";
 
 interface Fixture {
   component: string;

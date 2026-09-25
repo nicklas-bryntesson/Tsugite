@@ -1,0 +1,82 @@
+---
+// Teaser — transports the reader to one destination. The table is recipes/teaser.recipe.ts
+// (ADR-0018): the frame is Card input, the media a Picture, the action a Button, and this
+// file hands each part to its component and styles only its own arrangement (ADR-0015).
+import "./Teaser.css";
+import Card from "../../primitives/Card/Card.astro";
+import Heading from "../../primitives/typography/Heading/Heading.astro";
+import Prose from "../../primitives/Prose/Prose.astro";
+import Picture from "../../primitives/Picture/Picture.astro";
+import LinkButton from "../../primitives/buttons/Button/LinkButton.astro";
+import DevError from "../../DevError/DevError.astro";
+import type { ImageMetadata } from "astro";
+import { teaser } from "../../../recipes/teaser.recipe";
+import { resolve, type InputOf } from "../../../lib/recipe";
+import { teaserDerive, teaserPlan } from "../../../lib/teaser";
+import { escapeHtml } from "../../../lib/html";
+
+// TODO(decide): kebab prop names ("button-label") against the camelCase of growInline.
+// One convention for props; until then the front door translates.
+type Props = Omit<InputOf<typeof teaser>, "buttonLabel" | "buttonContext"> & {
+  image?: ImageMetadata | null;
+  alt?: string;
+  "button-label"?: string;
+  [key: string]: unknown;
+};
+
+const { image = null, alt, "button-label": buttonLabel, ...props } = Astro.props;
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+
+const t = resolve(
+  teaser,
+  { ...props, buttonLabel },
+  { slots: { media: image != null, body: childHtml.trim().length > 0, action: false }, derive: teaserDerive },
+);
+const plan = teaserPlan(t);
+const Tag = t.tag as "article";
+const frame = t.maps.frame as Record<string, unknown> | null;
+const Frame = frame ? Card : Fragment;
+const headingWith = teaser.parts.heading.with;
+const excerptWith = teaser.parts.excerpt.with;
+const mediaWith = teaser.parts.media.with;
+const actionWith = teaser.parts.action.with;
+---
+
+{
+  t.mode === "error" ? (
+    <DevError name={teaser.name} message={t.errorMessage} />
+  ) : (
+    <Frame {...(frame ?? {})}>
+      <Tag class={t.className} {...t.attrs} {...t.rest}>
+        <div class="LayoutContainer">
+          {t.parts.media && <Picture image={image} alt={alt ?? ""} {...mediaWith} />}
+          {plan.heading && (
+            <div class="HeadingContainer">
+              {plan.headingIsLink ? (
+                <a class="Teaser-link" href={plan.href!}>
+                  <Heading {...headingWith} text={plan.heading} />
+                </a>
+              ) : (
+                <Heading {...headingWith} text={plan.heading} />
+              )}
+            </div>
+          )}
+          {plan.hasBody && (
+            <div class="ContentContainer">
+              {t.parts.excerpt && <Prose {...excerptWith} content={`<p>${escapeHtml(t.parts.excerpt as string)}</p>`} />}
+              {t.parts.body && <Fragment set:html={childHtml} />}
+              {t.attrs["data-button"] === "true" && (
+                <div class="Actions">
+                  <LinkButton href={plan.href!} {...actionWith} srText={plan.buttonSrText ?? undefined}>
+                    {plan.buttonLabel}
+                  </LinkButton>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </Tag>
+    </Frame>
+  )
+}

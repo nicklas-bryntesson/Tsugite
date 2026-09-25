@@ -11,9 +11,9 @@ import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { ctabutton as button } from "../recipes/ctabutton.recipe";
 const buttonDerive = {};
-import LinkAstro from "../components/CtaButton/CtaLinkButton.astro";
-import ActionAstro from "../components/CtaButton/CtaActionButton.astro";
-import { CtaLinkButton as LinkReact, CtaActionButton as ActionReact } from "../components/CtaButton/CtaButton.tsx";
+import LinkAstro from "../components/primitives/buttons/CtaButton/CtaLinkButton.astro";
+import ActionAstro from "../components/primitives/buttons/CtaButton/CtaActionButton.astro";
+import { CtaLinkButton as LinkReact, CtaActionButton as ActionReact } from "../components/primitives/buttons/CtaButton/CtaButton.tsx";
 
 interface Fixture {
   component: string;

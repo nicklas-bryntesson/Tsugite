@@ -1,0 +1,32 @@
+---
+// CtaLinkButton — the front door to the CtaButton table for a link: <a class="CtaButton">.
+// The table is recipes/ctabutton.recipe.ts, read by lib/recipe.ts (ADR-0018);
+// CtaActionButton.astro and CtaButton.tsx render the same table.
+import "./CtaButton.css";
+import DevError from "../../../DevError/DevError.astro";
+import { ctabutton } from "../../../../recipes/ctabutton.recipe";
+import { resolve, type InputOf } from "../../../../lib/recipe";
+import { ctaLayersHtml, ctaIconHtml, ctaTextHtml } from "../../../../lib/ctabutton";
+
+type Props = Omit<InputOf<typeof ctabutton>, "element" | "type" | "disabled" | "iconPosition"> & {
+  "icon-position"?: InputOf<typeof ctabutton>["iconPosition"];
+  [key: string]: unknown;
+};
+
+const { "icon-position": iconPosition, ...props } = Astro.props;
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const c = resolve(ctabutton, { ...props, iconPosition, element: "a" }, { slots: { text: childHtml.trim().length > 0 } });
+
+let inner = ctaLayersHtml(c.attrs["data-variant"] as string);
+if (c.parts.text) inner += ctaTextHtml(childHtml);
+if (c.parts.icon) inner += ctaIconHtml(c.parts.icon as string);
+---
+
+{
+  c.mode === "render" ? (
+    <a class={c.className} {...c.attrs} {...c.rest} set:html={inner} />
+  ) : c.mode === "error" ? (
+    <DevError name="CtaLinkButton" message={c.errorMessage} />
+  ) : null
+}

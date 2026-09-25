@@ -4,7 +4,7 @@
 import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
 
-const css = readFileSync(new URL("../components/Button/Button.css", import.meta.url), "utf8");
+const css = readFileSync(new URL("../components/primitives/buttons/Button/Button.css", import.meta.url), "utf8");
 
 // Parked: tertiary has no design yet and writes none of the slots — see its
 // TODO(decide) in Button.css. Remove it from here when the cell is decided.

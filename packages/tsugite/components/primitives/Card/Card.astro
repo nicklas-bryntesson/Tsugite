@@ -1,0 +1,23 @@
+---
+// Card — a visual frame around other components. The recipe is the table in
+// recipes/card.recipe.ts, read by lib/recipe.ts (ADR-0018); this file renders it in Astro.
+import "./Card.css";
+import DevError from "../../DevError/DevError.astro";
+import { card } from "../../../recipes/card.recipe";
+import { resolve, type InputOf } from "../../../lib/recipe";
+
+// TODO: do we ever need to pass an ID to the card, or an aria-described property?
+type Props = InputOf<typeof card> & { [key: string]: unknown };
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const r = resolve(card, Astro.props, { hasContent: childHtml.trim().length > 0 });
+const Tag = r.tag as "div";
+---
+
+{
+  r.mode === "render" ? (
+    <Tag class={r.className} {...r.attrs} {...r.rest} set:html={childHtml} />
+  ) : r.mode === "error" ? (
+    <DevError name={card.name} message={r.errorMessage} />
+  ) : null
+}

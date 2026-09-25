@@ -1,7 +1,7 @@
 // Contract tests for Prose.astro — mirrors ProseTagHelper.cs
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
-import Prose from "../components/Prose/Prose.astro";
+import Prose from "../components/primitives/Prose/Prose.astro";
 
 const container = await AstroContainer.create();
 

@@ -3,7 +3,7 @@
 // theirs to change.
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
-import Teaser from "../components/Teaser/Teaser.astro";
+import Teaser from "../components/compositions/Teaser/Teaser.astro";
 
 const container = await AstroContainer.create();
 

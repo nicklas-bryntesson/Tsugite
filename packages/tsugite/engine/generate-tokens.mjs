@@ -25,7 +25,7 @@ const typeOut = resolve(here, "../styles/tokens/typography/typography.generated.
 const seamOut = resolve(here, "../styles/ui-tokens.css");
 const baseOut = resolve(here, "../styles/tokens/base/base.generated.css");
 const registryOut = resolve(here, "../docs/tokens.generated.md");
-const surfaceOut = resolve(here, "../components/Surface/Surface.generated.css");
+const surfaceOut = resolve(here, "../components/regions/Surface/Surface.generated.css");
 
 mkdirSync(dirname(out), { recursive: true });
 mkdirSync(dirname(typeOut), { recursive: true });

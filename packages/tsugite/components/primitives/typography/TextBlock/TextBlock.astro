@@ -1,0 +1,29 @@
+---
+// TextBlock — the textarea contract: a PLAIN MULTILINE STRING the way a CMS field
+// delivers it, never markup. Voices: preamble (the standfirst, default) and body. The
+// table is recipes/textblock.recipe.ts, read by lib/recipe.ts (ADR-0018); lib/textblock.ts
+// fills its holes; this file renders it in Astro.
+import "./TextBlock.css";
+import DevError from "../../../DevError/DevError.astro";
+import { textblock } from "../../../../recipes/textblock.recipe";
+import { resolve, type InputOf } from "../../../../lib/recipe";
+import { textBlockDerive, textBlockPlan } from "../../../../lib/textblock";
+
+type Props = InputOf<typeof textblock> & { [key: string]: unknown };
+
+// Child content is reported, never rendered: the table refuses it.
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const t = resolve(textblock, Astro.props, { slots: { children: childHtml.trim().length > 0 }, derive: textBlockDerive });
+const plan = textBlockPlan(t);
+
+const inner = t.mode === "render" ? `<span class="${plan.containerClass}">${plan.innerHtml}</span>` : "";
+const Tag = t.tag as "p";
+---
+
+{
+  t.mode === "render" ? (
+    <Tag class={t.className} {...t.attrs} {...t.rest} set:html={inner} />
+  ) : t.mode === "error" ? (
+    <DevError name={textblock.name} message={t.errorMessage} />
+  ) : null
+}

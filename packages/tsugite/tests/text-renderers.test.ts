@@ -7,7 +7,7 @@ import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { text } from "../recipes/text.recipe";
 import { textDerive } from "../lib/text";
-import TextAstro from "../components/Text/Text.astro";
+import TextAstro from "../components/primitives/typography/Text/Text.astro";
 
 interface Fixture {
   component: string;

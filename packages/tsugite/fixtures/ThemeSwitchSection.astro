@@ -3,9 +3,9 @@
 // attached instance), inert state rows, disabled cascade, and the resolved
 // state readout (wired by the script below, mirrored from the reference
 // kitchensink's script.js).
-import Heading from "../components/Heading/Heading.astro";
-import Text from "../components/Text/Text.astro";
-import ThemeSwitch from "../components/ThemeSwitch/ThemeSwitch.astro";
+import Heading from "../components/primitives/typography/Heading/Heading.astro";
+import Text from "../components/primitives/typography/Text/Text.astro";
+import ThemeSwitch from "../components/primitives/fields/ThemeSwitch/ThemeSwitch.astro";
 ---
 
 <section class="KitchenSink-section" id="ThemeSwitch">
@@ -93,7 +93,7 @@ import ThemeSwitch from "../components/ThemeSwitch/ThemeSwitch.astro";
   // Kitchensink-only: mirror ThemeSwitch's resolved state into its readout
   // table — the worked example of the `theme-change` event (a host keeps
   // something else in step with the appearance).
-  import ThemeSwitch from "../components/ThemeSwitch/ThemeSwitch";
+  import ThemeSwitch from "../components/primitives/fields/ThemeSwitch/ThemeSwitch";
 
   const table = document.querySelector("#ThemeSwitch-readout");
   const live = document.querySelector('.ThemeSwitch[data-component="ThemeSwitch"]');
