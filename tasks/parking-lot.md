@@ -367,3 +367,15 @@ and did not decide. Each is a separate call.
   ADR-0018 change and its own question. Own chore PR when nothing else is in flight: the
   move and the export map together, proof = all suites green, the docs routes render the
   same, zero `components/` paths in imports outside the package.
+  *Added 2026-09-25:* three families cover 21 of the 26 primitives — `primitives/fields`
+  (15), `primitives/typography` (Heading, Text, Caption, TextBlock), `primitives/buttons`
+  (Button, CtaButton); NavItem stands alone until a second nav component arrives. The
+  pillar test is the ledger's own (ADR-0005, packages/tsugite/CLAUDE.md): *a composition
+  owns no vocabulary* — it places primitives and makes claims; whoever owns slots and
+  consumes tokens is a primitive, whatever it contains. So Teaser (five imports, five slots
+  for its own parts) is a composition; Notice (raw markup, thirteen slots) and DateField
+  (raw markup, owns everything) are primitives, size and inner complexity notwithstanding.
+  DateField becomes a composition the day it is built from Segment, Popup, Wheel and
+  Calendar primitives that exist on their own — which the input-component job may produce.
+  That is why the path must be the truth: the tree shows where the ledger stands now and
+  moves with it, a reclassification is a `git mv`.
