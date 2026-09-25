@@ -36,6 +36,16 @@ constraints:
 Nested defensive fallbacks — `var(--a, var(--b, var(--c, …)))` — are
 forbidden. A chain describes ownership, never guesswork.
 
+**Amendment 2026-09-25 — a second seam.** Since ADR-0012 law b a voice's
+optional stop is a seam of the same kind: `var(--fontWeight-label-bold,
+var(--fontWeight-label))` — the theme gives the bold weight or it does
+not, and one declaration covers both. Rule 2 reads: one fallback per
+expression, only at a seam where absence is the contract; the seams are
+the theme claim and a voice's optional stop. Measured the same day: no
+expression in any component nests deeper than one fallback, and every
+one sits at one of the two; Button's "four to five hops" are hops
+between layers, one declaration each, not a pyramid.
+
 ## Alternatives rejected
 
 - **`@layer`** — layer order beats specificity, so context would always

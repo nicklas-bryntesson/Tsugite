@@ -127,7 +127,7 @@ and did not decide. Each is a separate call.
   in Card's format. Before the prefix, check the e2e suites and CtaButton for
   reads of Button's slot names; `--button--baselineOffset` (line ~406) is a
   public knob and keeps its name. Own PR, after the lab branch closes.
-- **Fallback-first is the @supports order.** ADR-0013's gate rule (off value
+- ~~**Fallback-first is the @supports order.**~~ — **resolved 2026-09-25**, css-doctrine §5. Original: ADR-0013's gate rule (off value
   first, on value last) applied to feature queries: the `@supports not` branch
   before the native one. Heading and TextBlock were flipped to match Text and
   Caption; a sentence in css-doctrine.md should say it.
@@ -381,7 +381,7 @@ and did not decide. Each is a separate call.
   Calendar primitives that exist on their own — which the input-component job may produce.
   That is why the path must be the truth: the tree shows where the ledger stands now and
   moves with it, a reclassification is a `git mv`.
-- **ADR-0008 names one seam; the code has two.** The ADR allows one fallback per chain
+- ~~**ADR-0008 names one seam; the code has two.**~~ — **resolved 2026-09-25**, amendment in ADR-0008 and css-doctrine §2. Original: The ADR allows one fallback per chain
   "only at the theme seam", `var(--theme-x, var(--color-y))`. Since ADR-0012 law b there
   is a second seam of the same kind: a voice's optional stop, `var(--fontWeight-label-bold,
   var(--fontWeight-label))` in Caption, `--fontWeight-button-bold` in Button — the stop is
