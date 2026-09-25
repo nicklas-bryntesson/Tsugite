@@ -11,11 +11,11 @@ const render = (props: Record<string, unknown>) =>
   container.renderToString(Picture, { props });
 
 describe("Picture", () => {
-  it("teaser preset renders figure.Media with stacked + horizontal pictures", async () => {
+  it("teaser preset renders figure.Picture with stacked + horizontal pictures", async () => {
     const html = await render({ image: img, preset: "teaser", alt: "Test" });
-    expect(html).toContain('<figure class="Media">');
-    expect(html).toContain('class="Media-picture StackedSources"');
-    expect(html).toContain('class="Media-picture HorizontalSources"');
+    expect(html).toContain('<figure class="Picture">');
+    expect(html).toContain('class="group StackedSources"');
+    expect(html).toContain('class="group HorizontalSources"');
     expect(html).toContain('type="image/avif"');
     expect(html).toContain('type="image/webp"');
     expect(html).toContain("400w");
@@ -29,7 +29,7 @@ describe("Picture", () => {
 
   it("hero preset renders one art-directed picture with 4 media queries, eager", async () => {
     const html = await render({ image: img, preset: "hero", alt: "Hero" });
-    expect(html).toContain('<figure class="Media grid-container-full">');
+    expect(html).toContain('<figure class="Picture grid-container-full">');
     expect(html).toContain('media="(max-width: 21.24999rem)"');
     expect(html).toContain('media="(max-width: 48rem)"');
     expect(html).toContain('media="(max-width: 64rem)"');
@@ -57,6 +57,6 @@ describe("Picture", () => {
 
   it("appends caller class to the figure", async () => {
     const html = await render({ image: img, preset: "teaser", alt: "", class: "extra" });
-    expect(html).toContain('<figure class="Media extra">');
+    expect(html).toContain('<figure class="Picture extra">');
   });
 });

@@ -35,7 +35,7 @@ describe("Quote", () => {
     const html = await render({ quote: "Hello", image, alt: "Ada" });
     expect(html).toMatch(/<figure class="Quote"[^>]*data-media="true"/);
     expect(html).toContain('<div class="thumbnail">');
-    expect(html).toContain('<figure class="Media portrait">');
+    expect(html).toContain('<figure class="Picture portrait">');
     expect(html).toMatch(/<img class="echo"[^>]*aria-hidden="true"/);
   });
 

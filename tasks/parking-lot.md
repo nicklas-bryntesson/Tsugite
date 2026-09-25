@@ -391,3 +391,13 @@ and did not decide. Each is a separate call.
   layers, one declaration each, not a pyramid. Amend ADR-0008 with a sentence: one fallback
   per expression, only at a seam where absence is the contract, and the two seams named.
   The example file already says it.
+- **Picture owns which group shows.** After the rename (root `.Picture`, part `.group`,
+  2026-09-25), the last of Picture.css's three questions: Teaser.css chooses the art-direction
+  group with container queries on `.group.StackedSources` / `.HorizontalSources` at Teaser's
+  own 25rem switch, and the preset writes `grid-container-full` on the figure — a consumer
+  styling this component's parts (ADR-0015), which the recipe itself calls a debt. The form
+  that keeps the vocabulary in Picture: the figure is its own container and gates its
+  groups on its own inline size, so a wide picture shows the stacked crop and a narrow one
+  the horizontal crop wherever it sits. The threshold is not Teaser's 25rem — it is the
+  picture's width, to be measured on the teaser bench at both states before it is chosen;
+  the preset's grid class needs its own answer (a Surface/grid concern, not Picture's).

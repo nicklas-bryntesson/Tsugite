@@ -52,7 +52,7 @@ describe("CoverComposition — image variant", () => {
     const html = await render({ title: "Image hero", image: img, preamble: "Text." });
     expect(html).toContain('class="CoverComposition"');
     expect(html).not.toContain("CoverCompositionVideo");
-    expect(html).toContain('<figure class="Media grid-container-full">');
+    expect(html).toContain('<figure class="Picture grid-container-full">');
     expect(html).toContain('loading="eager"');
     expect(html).toContain('alt="Image hero"');
   });

@@ -10,7 +10,7 @@
  *   data-button   false: the heading's link is stretched over the whole card.
  *                 true: the heading is plain and a button in .Actions carries the link,
  *                 bottom-start when stacked, bottom-end beside media.
- *   data-media    whether a Picture (figure.Media) is present.
+ *   data-media    whether a Picture (figure.Picture) is present.
  *
  * Teaser styles only its own parts (LayoutContainer, HeadingContainer, ContentContainer,
  * Actions, Teaser-link) and PLACES the parts it composes — the Picture's figure and its
@@ -35,15 +35,15 @@
     flex: 1;
   }
 
-  & .Media {
+  & .Picture {
     border-radius: var(--_te-mediaRadius);
     overflow: hidden;
 
-    & .Media-picture.StackedSources {
+    & .group.StackedSources {
       overflow: hidden;
     }
 
-    & .Media-picture.HorizontalSources {
+    & .group.HorizontalSources {
       overflow: hidden;
     }
   }
@@ -71,11 +71,11 @@
     & .LayoutContainer {
       gap: var(--size-md);
 
-      & .Media {
+      & .Picture {
         inline-size: 100%;
         margin-block-end: var(--size-md);
 
-        & .Media-picture.StackedSources {
+        & .group.StackedSources {
           display: block;
 
           & img {
@@ -84,7 +84,7 @@
           }
         }
 
-        & .Media-picture.HorizontalSources {
+        & .group.HorizontalSources {
           display: none;
         }
       }
@@ -106,7 +106,7 @@
       display: grid;
       column-gap: var(--size-md);
 
-      & .Media {
+      & .Picture {
         grid-area: media;
       }
 
@@ -145,14 +145,14 @@
           "heading"
           "body";
 
-        & .Media {
+        & .Picture {
           margin-block-end: var(--size-md);
 
-          & .Media-picture.StackedSources {
+          & .group.StackedSources {
             display: block;
           }
 
-          & .Media-picture.HorizontalSources {
+          & .group.HorizontalSources {
             display: none;
           }
         }
@@ -171,14 +171,14 @@
         block-size: 100%;
         align-items: stretch;
 
-        & .Media {
+        & .Picture {
           min-block-size: var(--_te-minMediaSize);
 
-          & .Media-picture.StackedSources {
+          & .group.StackedSources {
             display: none;
           }
 
-          & .Media-picture.HorizontalSources {
+          & .group.HorizontalSources {
             display: block;
             position: relative;
             aspect-ratio: 1 / 1;

@@ -86,7 +86,7 @@ export interface MediaInput<Image> {
   alt?: string | null;
   /** overrides the preset's default */
   loading?: string | null;
-  /** the figure's class as the recipe resolved it ("Media", "Media extra"); the preset may add one */
+  /** the figure's class as the recipe resolved it ("Picture", "Picture extra"); the preset may add one */
   className?: string;
   /** the picture elements' base class */
   pictureClass?: string;
@@ -123,7 +123,7 @@ export async function resolveMedia<Image>(
   const srcset = async (source: SourceDefinition, format: ImageFormat) =>
     (await Promise.all(source.widths.map(async (w) => `${await url(source, w, format)} ${w}w`))).join(", ");
 
-  const pictureBase = input.pictureClass ?? "Media-picture";
+  const pictureBase = input.pictureClass ?? "group";
   const pictures: MediaPicture[] = [];
   for (const group of preset.groups) {
     const artDirection = group.sources.some((s) => s.media != null);
@@ -148,7 +148,7 @@ export async function resolveMedia<Image>(
     });
   }
 
-  const className = [input.className ?? "Media", preset.figureCssClass].filter((c): c is string => !!c && c.trim().length > 0).join(" ");
+  const className = [input.className ?? "Picture", preset.figureCssClass].filter((c): c is string => !!c && c.trim().length > 0).join(" ");
   return { mode: "render", className, pictures };
 }
 

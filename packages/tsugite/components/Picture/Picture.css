@@ -3,21 +3,17 @@
  * figure; each <picture> inside is one of the preset's groups (art direction), and the
  * img fills it.
  *
- * TODO(decide): the root class is Media while the component is Picture, and the part is
- *   called picture while the preset and lib/media.ts call it a group — .Picture with a
- *   bare .group part would make markup, table and preset say the same thing. Renaming
- *   touches Teaser.css and the presets.
  * TODO(decide): which group shows is decided by Teaser.css (container queries on
- *   .Media-picture.StackedSources / .HorizontalSources), and the preset writes a grid
- *   class on the figure — both are a consumer styling this component's parts (ADR-0015).
- *   The form that keeps the vocabulary here: Picture is its own container and gates its
- *   groups on its own inline size. Own pass.
+ *   .group.StackedSources / .HorizontalSources), and the preset writes a grid class on
+ *   the figure — both are a consumer styling this component's parts (ADR-0015). The form
+ *   that keeps the vocabulary here: Picture is its own container and gates its groups on
+ *   its own inline size. Own pass; the row is in tasks/parking-lot.md.
  */
 
-.Media {
+.Picture {
   margin: 0;
 
-  & .Media-picture {
+  & .group {
     display: block;
 
     & img {
