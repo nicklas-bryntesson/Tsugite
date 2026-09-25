@@ -52,10 +52,13 @@ component slot (--_*) → theme claim (--theme-*) → semantic (--color-*) → R
 ```
 
 - Never skip a layer. Each layer references exactly the layer below it.
-- At most **one** fallback per chain, and only at the theme seam:
-  `var(--theme-x, var(--color-y))`. There, absence is the contract —
-  the theme donut is present or it is not, and the same declaration
-  covers both worlds.
+- At most **one** fallback per expression, and only at a seam where
+  absence is the contract, so that one declaration covers both worlds.
+  Two seams exist: the theme claim, `var(--theme-x, var(--color-y))` —
+  the donut is present or it is not — and a voice's optional stop,
+  `var(--fontWeight-label-bold, var(--fontWeight-label))` (ADR-0012
+  law b) — the theme gives the stop or it does not. A chain may be five
+  hops deep; each hop is its own declaration in its own layer.
 - Nested defensive fallbacks — `var(--a, var(--b, var(--c, …)))` — are
   forbidden. A chain describes ownership, never guesswork.
 - Choose every name from the registry, `docs/tokens.generated.md`
@@ -94,6 +97,12 @@ happy path last, authored as the end state.
 - Enhancement is gated with `@supports`. Branches are bounded and
   self-contained — values never bleed between them. The support axis is
   an axis like every other (§1).
+- The branches are a pair, and the fallback comes first: `@supports not
+  (…)` above `@supports (…)`, the gate order of §1 (off value first,
+  on value last) applied to the support axis. Nothing a branch declares
+  is declared again by the other, and nothing in the base is overridden
+  by either — a property that appears in the base and in a branch is
+  base-plus-override in a feature-query costume (§3).
 - Fallbacks are guards written to die. A fallback branch or a compile
   polyfill is allowed only if removal is a no-op for the supported set
   — by construction, or proven by running the conformance suites with
