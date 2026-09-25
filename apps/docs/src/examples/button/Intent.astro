@@ -3,7 +3,7 @@ import ActionButton from "tsugite/Button/ActionButton.astro";
 ---
 {/* Intent exists only on ActionButton. An action can be destructive or
     successful; a link merely goes somewhere. A LinkButton given an intent is
-    refused in development (ADR-0019) — the axis does not exist on <a>. */}
+    refused in development — the axis does not exist on <a>. */}
 <ActionButton intent="neutral">Neutral</ActionButton>
 <ActionButton intent="destructive">Delete</ActionButton>
 <ActionButton intent="success">Confirm</ActionButton>

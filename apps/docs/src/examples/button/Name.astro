@@ -1,0 +1,10 @@
+---
+import LinkButton from "tsugite/Button/LinkButton.astro";
+import ActionButton from "tsugite/Button/ActionButton.astro";
+---
+{/* The visible words stay in the accessible name; a screen-reader affix completes it
+    before or after, in DOM order. A bare value needs both: "Page 3 of 12". An icon-only
+    button may take its whole name from an affix instead of aria-label — never both. */}
+<LinkButton href="#" screenReaderSuffix=" about the exhibition">Read more</LinkButton>
+<ActionButton emphasis="secondary" screenReaderPrefix="Page " screenReaderSuffix=" of 12">3</ActionButton>
+<ActionButton emphasis="secondary" icon="icon-search" screenReaderPrefix="Search" screenReaderSuffix=" the site" />
