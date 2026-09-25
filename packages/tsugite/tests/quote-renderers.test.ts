@@ -76,12 +76,12 @@ describe(`${fixture.component}: Astro and React render every fixture case identi
         if (input.media) {
           // the portrait is the host's picture markup; root and parts must agree, bytes need not
           expect(react.startsWith(root)).toBe(true);
-          for (const part of ['<div class="thumbnail">', 'class="Media portrait"', 'class="echo"']) {
+          for (const part of ['<div class="thumbnail">', 'class="Picture portrait"', 'class="echo"']) {
             expect(astro).toContain(part);
             expect(react).toContain(part);
           }
           if (input.source) for (const html of [astro, react]) expect(html).toContain(`<figcaption class="source">${input.source}</figcaption>`);
-          expect(react.replace(/<div class="thumbnail">.*?<\/div>/, "").replace(/<figure class="Media portrait">.*?<\/figure>/, "")).toBe(astro.replace(/<div class="thumbnail">.*?<\/div>/, "").replace(/<figure class="Media portrait">.*?<\/figure>/, ""));
+          expect(react.replace(/<div class="thumbnail">.*?<\/div>/, "").replace(/<figure class="Picture portrait">.*?<\/figure>/, "")).toBe(astro.replace(/<div class="thumbnail">.*?<\/div>/, "").replace(/<figure class="Picture portrait">.*?<\/figure>/, ""));
         } else {
           expect(react, "react").toBe(astro);
         }

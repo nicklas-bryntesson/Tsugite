@@ -73,13 +73,13 @@ describe("Teaser", () => {
     expect(html).toContain("<p>A taste</p>");
   });
 
-  it("image renders a Picture (figure.Media) with the teaser preset's two pictures", async () => {
+  it("image renders a Picture (figure.Picture) with the teaser preset's two pictures", async () => {
     const image = { src: "/img/a.jpg", width: 1600, height: 900, format: "jpg" } as const;
     const html = await render({ heading: "T", href: "#", image, alt: "Alt" });
     expect(html).toMatch(/<article class="Teaser"[^>]*data-media="true"/);
-    expect(html).toContain('<figure class="Media">');
-    expect(html).toContain('class="Media-picture StackedSources"');
-    expect(html).toContain('class="Media-picture HorizontalSources"');
+    expect(html).toContain('<figure class="Picture">');
+    expect(html).toContain('class="group StackedSources"');
+    expect(html).toContain('class="group HorizontalSources"');
   });
 
   it("an unknown frame is refused (ADR-0019), not silently bordered", async () => {

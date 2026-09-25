@@ -12,7 +12,7 @@ import { targetPath } from './helpers/target.js'
 // reaches system colours, that `system` projects nothing, and that an explicit
 // choice survives both a reload and a contradicting OS.
 
-// ADAPTATION (logged in tasks/porting-log.md): scoped to the kitchen-sink demo
+// ADAPTATION (logged in reference-components' porting log): scoped to the kitchen-sink demo
 // instance by data-id. The reference selector assumed exactly one live instance
 // per page; this site also mounts one in the header, and an unqualified locator
 // would trip Playwright's strict mode. Site-level behaviour (header instance,

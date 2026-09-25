@@ -55,7 +55,7 @@ export default function Quote({ image = null, alt, className, children, ...props
         h(
           "div",
           { className: "thumbnail" },
-          h("figure", { className: "Media portrait" }, h("img", { src: image.src, width: image.width, height: image.height, alt: alt ?? "", loading: "lazy", decoding: "async" })),
+          h("figure", { className: "Picture portrait" }, h("img", { src: image.src, width: image.width, height: image.height, alt: alt ?? "", loading: "lazy", decoding: "async" })),
           h("img", { className: "echo", src: image.src, width: 64, height: 64, alt: "", "aria-hidden": "true", loading: "lazy", decoding: "async" }),
         ),
       q.parts.source && h("figcaption", { className: "source" }, plan.source),

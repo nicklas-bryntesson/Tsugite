@@ -9,7 +9,7 @@ export const picture = {
   name: "Picture",
   promise: "One image, rendered responsively through a named preset.",
   refuses: ["a caption", "a link", "layout of its own — the preset's figure class is a debt, not a right"],
-  class: "Media",
+  class: "Picture",
   element: { values: ["figure"], default: "figure" },
   axes: {},
   content: { empty: "render" },

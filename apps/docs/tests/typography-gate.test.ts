@@ -1,4 +1,4 @@
-// THE TYPOGRAPHY GATE (T9, tasks/plan.md) — drift must not return.
+// THE TYPOGRAPHY GATE — the typography sweep's last task (2026-09): drift must not return.
 //
 // Every typography declaration in both workspaces must resolve through
 // tokens. The census matches PER DECLARATION (a raw value sharing a line

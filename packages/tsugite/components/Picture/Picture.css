@@ -1,18 +1,26 @@
-:where(.Media) {
-    margin: 0; /* figure reset */
-}
+/*
+ * Picture — one image, rendered responsively through a named preset. The root is the
+ * figure; each <picture> inside is one of the preset's groups (art direction), and the
+ * img fills it.
+ *
+ * TODO(decide): which group shows is decided by Teaser.css (container queries on
+ *   .group.StackedSources / .HorizontalSources), and the preset writes a grid class on
+ *   the figure — both are a consumer styling this component's parts (ADR-0015). The form
+ *   that keeps the vocabulary here: Picture is its own container and gates its groups on
+ *   its own inline size. Own pass; the row is in tasks/parking-lot.md.
+ */
 
-:where(.Media-picture) {
+.Picture {
+  margin: 0;
+
+  & .group {
     display: block;
 
     & img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+      display: block;
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
     }
+  }
 }
-
-/* StackedSources / HorizontalSources visibility is controlled
-   by the consuming component (e.g. Teaser.css) via container queries.
-   Neither class carries display rules here. */

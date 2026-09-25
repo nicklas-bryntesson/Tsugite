@@ -42,7 +42,7 @@ export default class ThemeSwitch {
 
     this.root.addEventListener('change', this.onChange)
 
-    // Multi-instance sync (site addition, logged in tasks/porting-log.md):
+    // Multi-instance sync (site addition, logged in reference-components' porting log):
     // the reference site had exactly one live instance per page, so the
     // library never states a multi-instance contract. With a switch in the
     // site header AND the kitchen-sink demo, two live instances share the
