@@ -38,7 +38,9 @@ function render(element: "a" | "button", name: string, props: Record<string, unk
   return h(
     b.tag,
     { className: b.className, ...b.attrs, ...b.rest },
-    b.parts.text && h("span", { className: "Button-text" }, children, b.parts.srText && h("span", { className: "ScreenReaderText" }, b.parts.srText)),
+    b.parts.screenReaderPrefix && h("span", { className: "ScreenReaderText" }, b.parts.screenReaderPrefix),
+    b.parts.text && h("span", { className: "Button-text" }, children),
+    b.parts.screenReaderSuffix && h("span", { className: "ScreenReaderText" }, b.parts.screenReaderSuffix),
     b.parts.icon && h("svg", { className: "Button-icon", "aria-hidden": "true", focusable: "false" }, h("use", { href: `#${b.parts.icon}` })),
   );
 }

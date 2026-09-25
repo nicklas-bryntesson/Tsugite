@@ -13,9 +13,14 @@ export function buttonIconHtml(iconName: string): string {
   return `<svg class="Button-icon" aria-hidden="true" focusable="false"><use href="#${escapeHtml(iconName)}"></use></svg>`;
 }
 
-/** The label part as an HTML string: the visible text, then the hidden suffix that
- *  extends the accessible name ("Read more" + " about {heading}"). */
-export function buttonTextHtml(childHtml: string, srText: string | null): string {
-  const suffix = srText ? `<span class="ScreenReaderText">${escapeHtml(srText)}</span>` : "";
-  return `<span class="Button-text">${childHtml}${suffix}</span>`;
+/** A screen-reader affix as an HTML string, or nothing. The span is out of flow, so it
+ *  takes no grid cell: it sits beside the label (or alone, on an icon-only button) and
+ *  only the accessible name notices it — DOM order is name order. */
+export function buttonAffixHtml(words: string | null): string {
+  return words ? `<span class="ScreenReaderText">${escapeHtml(words)}</span>` : "";
+}
+
+/** The label part as an HTML string: the visible text. */
+export function buttonTextHtml(childHtml: string): string {
+  return `<span class="Button-text">${childHtml}</span>`;
 }

@@ -21,6 +21,6 @@ export function teaserPlan(r: Resolution) {
     hasBody: !!r.parts.excerpt || !!r.parts.body || button,
     buttonLabel: r.parts.buttonLabel as string,
     /** the hidden suffix that completes the button's accessible name, or null without a heading */
-    buttonSrText: heading ? `${r.parts.buttonContext as string}${heading}` : null,
+    buttonScreenReaderSuffix: heading ? `${r.parts.buttonContext as string}${heading}` : null,
   };
 }

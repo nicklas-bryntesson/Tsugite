@@ -4,106 +4,425 @@
   "cases": [
     {
       "name": "link defaults",
-      "input": { "element": "a", "href": "/start", "text": true },
-      "expect": { "mode": "render", "tag": "a", "className": "Button",
-        "attrs": { "href": "/start", "data-emphasis": "primary", "data-size": "md", "data-pill": "false", "data-grow-inline": "false", "data-icon-only": "false" } }
+      "input": {
+        "element": "a",
+        "href": "/start",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "Button",
+        "attrs": {
+          "href": "/start",
+          "data-emphasis": "primary",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-only": "false"
+        }
+      }
     },
     {
       "name": "link secondary pill sm",
-      "input": { "element": "a", "href": "#", "emphasis": "secondary", "pill": true, "size": "sm", "text": true },
-      "expect": { "mode": "render", "tag": "a", "className": "Button",
-        "attrs": { "href": "#", "data-emphasis": "secondary", "data-size": "sm", "data-pill": "true", "data-grow-inline": "false", "data-icon-only": "false" } }
+      "input": {
+        "element": "a",
+        "href": "#",
+        "emphasis": "secondary",
+        "pill": true,
+        "size": "sm",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "Button",
+        "attrs": {
+          "href": "#",
+          "data-emphasis": "secondary",
+          "data-size": "sm",
+          "data-pill": "true",
+          "data-grow-inline": "false",
+          "data-icon-only": "false"
+        }
+      }
     },
     {
       "name": "link to a new tab implies rel",
-      "input": { "element": "a", "href": "https://x.se", "target": "_blank", "text": true },
-      "expect": { "mode": "render", "tag": "a", "className": "Button",
-        "attrs": { "href": "https://x.se", "target": "_blank", "rel": "noopener noreferrer", "data-emphasis": "primary", "data-size": "md", "data-pill": "false", "data-grow-inline": "false", "data-icon-only": "false" } }
+      "input": {
+        "element": "a",
+        "href": "https://x.se",
+        "target": "_blank",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "Button",
+        "attrs": {
+          "href": "https://x.se",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "data-emphasis": "primary",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-only": "false"
+        }
+      }
     },
     {
       "name": "link with icon, right by default",
-      "input": { "element": "a", "href": "#", "icon": "icon-search", "text": true },
-      "expect": { "mode": "render", "tag": "a", "className": "Button",
-        "attrs": { "href": "#", "data-icon": "icon-search", "data-emphasis": "primary", "data-size": "md", "data-pill": "false", "data-grow-inline": "false", "data-icon-position": "right", "data-icon-only": "false" } }
+      "input": {
+        "element": "a",
+        "href": "#",
+        "icon": "icon-search",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "Button",
+        "attrs": {
+          "href": "#",
+          "data-icon": "icon-search",
+          "data-emphasis": "primary",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-position": "right",
+          "data-icon-only": "false"
+        }
+      }
     },
     {
       "name": "link icon-only with aria-label",
-      "input": { "element": "a", "href": "/share", "icon": "icon-search", "aria-label": "Share", "text": false },
-      "expect": { "mode": "render", "tag": "a", "className": "Button",
-        "attrs": { "href": "/share", "aria-label": "Share", "data-icon": "icon-search", "data-emphasis": "primary", "data-size": "md", "data-pill": "false", "data-grow-inline": "false", "data-icon-position": "right", "data-icon-only": "true" } }
+      "input": {
+        "element": "a",
+        "href": "/share",
+        "icon": "icon-search",
+        "aria-label": "Share",
+        "text": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "Button",
+        "attrs": {
+          "href": "/share",
+          "aria-label": "Share",
+          "data-icon": "icon-search",
+          "data-emphasis": "primary",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-position": "right",
+          "data-icon-only": "true"
+        }
+      }
     },
     {
       "name": "link grown",
-      "input": { "element": "a", "href": "#", "growInline": true, "text": true },
-      "expect": { "mode": "render", "tag": "a", "className": "Button",
-        "attrs": { "href": "#", "data-emphasis": "primary", "data-size": "md", "data-pill": "false", "data-grow-inline": "true", "data-icon-only": "false" } }
+      "input": {
+        "element": "a",
+        "href": "#",
+        "growInline": true,
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "Button",
+        "attrs": {
+          "href": "#",
+          "data-emphasis": "primary",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "true",
+          "data-icon-only": "false"
+        }
+      }
     },
     {
       "name": "link with extra class",
-      "input": { "element": "a", "href": "#", "class": "extra", "text": true },
-      "expect": { "mode": "render", "tag": "a", "className": "Button extra",
-        "attrs": { "href": "#", "data-emphasis": "primary", "data-size": "md", "data-pill": "false", "data-grow-inline": "false", "data-icon-only": "false" } }
+      "input": {
+        "element": "a",
+        "href": "#",
+        "class": "extra",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "Button extra",
+        "attrs": {
+          "href": "#",
+          "data-emphasis": "primary",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-only": "false"
+        }
+      }
     },
     {
       "name": "link with a hidden suffix to its name",
-      "input": { "element": "a", "href": "#", "srText": " about Widgets", "text": true },
-      "expect": { "mode": "render", "tag": "a", "className": "Button",
-        "attrs": { "href": "#", "data-emphasis": "primary", "data-size": "md", "data-pill": "false", "data-grow-inline": "false", "data-icon-only": "false" },
-        "parts": { "srText": " about Widgets" } }
+      "input": {
+        "element": "a",
+        "href": "#",
+        "screenReaderSuffix": " about Widgets",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "a",
+        "className": "Button",
+        "attrs": {
+          "href": "#",
+          "data-emphasis": "primary",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-only": "false"
+        },
+        "parts": {
+          "screenReaderSuffix": " about Widgets"
+        }
+      }
+    },
+    {
+      "name": "a bare value named by a prefix and a suffix",
+      "input": {
+        "element": "button",
+        "screenReaderPrefix": "Page ",
+        "screenReaderSuffix": " of 12",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "Button",
+        "attrs": {
+          "type": "button",
+          "data-emphasis": "primary",
+          "data-intent": "neutral",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-only": "false"
+        },
+        "parts": {
+          "screenReaderPrefix": "Page ",
+          "screenReaderSuffix": " of 12"
+        }
+      }
+    },
+    {
+      "name": "icon-only, named by an affix instead of aria-label",
+      "input": {
+        "element": "button",
+        "icon": "icon-search",
+        "screenReaderPrefix": "Search",
+        "text": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "Button",
+        "attrs": {
+          "type": "button",
+          "data-icon": "icon-search",
+          "data-emphasis": "primary",
+          "data-intent": "neutral",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-position": "right",
+          "data-icon-only": "true"
+        },
+        "parts": {
+          "screenReaderPrefix": "Search"
+        }
+      }
+    },
+    {
+      "name": "aria-label and an affix are two names",
+      "input": {
+        "element": "button",
+        "aria-label": "Search",
+        "screenReaderSuffix": " the site",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "aria-label and a screen-reader affix are two names for one button — use one"
+      }
     },
     {
       "name": "intent does not exist on a link",
-      "input": { "element": "a", "href": "#", "intent": "destructive", "text": true },
-      "expect": { "mode": "error", "errorMessage": "intent does not exist on <a>" }
+      "input": {
+        "element": "a",
+        "href": "#",
+        "intent": "destructive",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "intent does not exist on <a>"
+      }
     },
     {
       "name": "icon-only cannot grow",
-      "input": { "element": "a", "href": "/x", "icon": "icon-search", "aria-label": "Search", "growInline": true, "text": false },
-      "expect": { "mode": "error", "errorMessage": "icon-only buttons cannot grow: growInline requires a label" }
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "icon": "icon-search",
+        "aria-label": "Search",
+        "growInline": true,
+        "text": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "icon-only buttons cannot grow: growInline requires a label"
+      }
     },
     {
       "name": "nothing to press, nothing to announce: suppressed",
-      "input": { "element": "a", "href": "/x", "text": false },
-      "expect": { "mode": "suppress" }
+      "input": {
+        "element": "a",
+        "href": "/x",
+        "text": false
+      },
+      "expect": {
+        "mode": "suppress"
+      }
     },
     {
       "name": "action defaults",
-      "input": { "element": "button", "text": true },
-      "expect": { "mode": "render", "tag": "button", "className": "Button",
-        "attrs": { "type": "button", "data-emphasis": "primary", "data-intent": "neutral", "data-size": "md", "data-pill": "false", "data-grow-inline": "false", "data-icon-only": "false" } }
+      "input": {
+        "element": "button",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "Button",
+        "attrs": {
+          "type": "button",
+          "data-emphasis": "primary",
+          "data-intent": "neutral",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-only": "false"
+        }
+      }
     },
     {
       "name": "action submit, destructive",
-      "input": { "element": "button", "type": "submit", "intent": "destructive", "text": true },
-      "expect": { "mode": "render", "tag": "button", "className": "Button",
-        "attrs": { "type": "submit", "data-emphasis": "primary", "data-intent": "destructive", "data-size": "md", "data-pill": "false", "data-grow-inline": "false", "data-icon-only": "false" } }
+      "input": {
+        "element": "button",
+        "type": "submit",
+        "intent": "destructive",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "Button",
+        "attrs": {
+          "type": "submit",
+          "data-emphasis": "primary",
+          "data-intent": "destructive",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-only": "false"
+        }
+      }
     },
     {
       "name": "action with icon left",
-      "input": { "element": "button", "icon": "icon-key", "iconPosition": "left", "text": true },
-      "expect": { "mode": "render", "tag": "button", "className": "Button",
-        "attrs": { "type": "button", "data-icon": "icon-key", "data-emphasis": "primary", "data-intent": "neutral", "data-size": "md", "data-pill": "false", "data-grow-inline": "false", "data-icon-position": "left", "data-icon-only": "false" } }
+      "input": {
+        "element": "button",
+        "icon": "icon-key",
+        "iconPosition": "left",
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "Button",
+        "attrs": {
+          "type": "button",
+          "data-icon": "icon-key",
+          "data-emphasis": "primary",
+          "data-intent": "neutral",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-position": "left",
+          "data-icon-only": "false"
+        }
+      }
     },
     {
       "name": "action disabled",
-      "input": { "element": "button", "disabled": true, "text": true },
-      "expect": { "mode": "render", "tag": "button", "className": "Button",
-        "attrs": { "type": "button", "disabled": true, "data-emphasis": "primary", "data-intent": "neutral", "data-size": "md", "data-pill": "false", "data-grow-inline": "false", "data-icon-only": "false" } }
+      "input": {
+        "element": "button",
+        "disabled": true,
+        "text": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "button",
+        "className": "Button",
+        "attrs": {
+          "type": "button",
+          "disabled": true,
+          "data-emphasis": "primary",
+          "data-intent": "neutral",
+          "data-size": "md",
+          "data-pill": "false",
+          "data-grow-inline": "false",
+          "data-icon-only": "false"
+        }
+      }
     },
     {
       "name": "an invalid intent is an error",
-      "input": { "element": "button", "intent": "evil", "text": true },
-      "expect": { "mode": "error", "errorMessage": "invalid intent \"evil\" — expected neutral | destructive | success" }
+      "input": {
+        "element": "button",
+        "intent": "evil",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid intent \"evil\" — expected neutral | destructive | success"
+      }
     },
     {
       "name": "href is not an attribute of an action",
-      "input": { "element": "button", "href": "/x", "text": true },
-      "expect": { "mode": "error", "errorMessage": "href is not an attribute of <button>" }
+      "input": {
+        "element": "button",
+        "href": "/x",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "href is not an attribute of <button>"
+      }
     },
     {
       "name": "the element is required",
-      "input": { "href": "/x", "text": true },
-      "expect": { "mode": "error", "errorMessage": "element is required — expected a | button" }
+      "input": {
+        "href": "/x",
+        "text": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "element is required — expected a | button"
+      }
     }
   ]
 }
