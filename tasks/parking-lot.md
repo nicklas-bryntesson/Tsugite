@@ -379,3 +379,13 @@ and did not decide. Each is a separate call.
   Calendar primitives that exist on their own — which the input-component job may produce.
   That is why the path must be the truth: the tree shows where the ledger stands now and
   moves with it, a reclassification is a `git mv`.
+- **ADR-0008 names one seam; the code has two.** The ADR allows one fallback per chain
+  "only at the theme seam", `var(--theme-x, var(--color-y))`. Since ADR-0012 law b there
+  is a second seam of the same kind: a voice's optional stop, `var(--fontWeight-label-bold,
+  var(--fontWeight-label))` in Caption, `--fontWeight-button-bold` in Button — the stop is
+  in the theme or it is not, and one declaration covers both. Measured 2026-09-25: no
+  expression in any component nests deeper than one fallback, and every one sits at one
+  of these two seams; the "four to five hops" the ADR mentions for Button are hops between
+  layers, one declaration each, not a pyramid. Amend ADR-0008 with a sentence: one fallback
+  per expression, only at a seam where absence is the contract, and the two seams named.
+  The example file already says it.
