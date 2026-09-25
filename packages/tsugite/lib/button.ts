@@ -16,6 +16,6 @@ export function buttonIconHtml(iconName: string): string {
 /** The label part as an HTML string: the visible text, then the hidden suffix that
  *  extends the accessible name ("Read more" + " about {heading}"). */
 export function buttonTextHtml(childHtml: string, srText: string | null): string {
-  const suffix = srText ? `<span class="Button-srText">${escapeHtml(srText)}</span>` : "";
+  const suffix = srText ? `<span class="ScreenReaderText">${escapeHtml(srText)}</span>` : "";
   return `<span class="Button-text">${childHtml}${suffix}</span>`;
 }

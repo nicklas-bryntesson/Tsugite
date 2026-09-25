@@ -1,0 +1,8 @@
+---
+import LinkButton from "tsugite/Button/LinkButton.astro";
+import ScreenReaderText from "tsugite/ScreenReaderText/ScreenReaderText.astro";
+---
+{/* The visible words stay in the name (WCAG 2.5.3, label in name); the hidden ones
+    complete it. On Button the suffix is a prop; anywhere else it is the component. */}
+<LinkButton href="#" srText=" about the exhibition">Read more</LinkButton>
+<button type="button"><ScreenReaderText text="Page " />3<ScreenReaderText text=" of 12" /></button>

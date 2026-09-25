@@ -1,0 +1,24 @@
+/*
+ * ScreenReaderText — words for the accessible name only: read by assistive
+ * technology, never drawn. Always a span. No axes, so no gates.
+ *
+ * The clip pattern, not display: none or visibility: hidden — those remove the
+ * words from the accessibility tree too. The box is one pixel, clipped to nothing,
+ * out of flow and never wrapping, so it adds no height to the line it sits in and
+ * no line break to the name. Forced colours change nothing: there is nothing to
+ * paint.
+ */
+
+.ScreenReaderText {
+  /* One pixel is the technique's geometry, not a design value: a zero-size box is
+     dropped from some accessibility trees, a clipped one-pixel box is not. */
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

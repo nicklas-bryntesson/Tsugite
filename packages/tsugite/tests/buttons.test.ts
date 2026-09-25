@@ -108,6 +108,6 @@ describe("ActionButton", () => {
 
   it("writes the hidden suffix that extends the accessible name", async () => {
     const html = await renderLink({ href: "/x", srText: " about Widgets" }, { default: "Read more" });
-    expect(html).toContain('<span class="Button-text">Read more<span class="Button-srText"> about Widgets</span></span>');
+    expect(html).toContain('<span class="Button-text">Read more<span class="ScreenReaderText"> about Widgets</span></span>');
   });
 });

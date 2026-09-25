@@ -1,0 +1,33 @@
+---
+// ScreenReaderText — the bench: the three places hidden words belong, and the one
+// place they are refused.
+import Heading from "../components/primitives/typography/Heading/Heading.astro";
+import Text from "../components/primitives/typography/Text/Text.astro";
+import Caption from "../components/primitives/typography/Caption/Caption.astro";
+import LinkButton from "../components/primitives/buttons/Button/LinkButton.astro";
+import ScreenReaderText from "../components/primitives/ScreenReaderText/ScreenReaderText.astro";
+---
+
+<section class="KitchenSink-section" id="ScreenReaderText">
+  <Heading text="ScreenReaderText" element="h2" size="2" />
+
+  <Text text="A suffix on a button" element="h3" size="lg" />
+  <Caption element="p" text='Visible "Read more"; accessible name "Read more about the exhibition".' />
+  <LinkButton href="#" srText=" about the exhibition">Read more</LinkButton>
+
+  <Text text="A label under an icon" element="h3" size="lg" />
+  <Caption element="p" text="The words are the whole name; the icon is decoration." />
+  <a href="#" aria-hidden="false"><svg width="24" height="24" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2" /><path d="M15 15l6 6" stroke="currentColor" stroke-width="2" /></svg><ScreenReaderText text="Search" /></a>
+
+  <Text text="The unit a bare value lacks" element="h3" size="lg" />
+  <Caption element="p" text='Visible "3"; accessible name "Page 3 of 12".' />
+  <button type="button"><ScreenReaderText text="Page " />3<ScreenReaderText text=" of 12" /></button>
+
+  <Text text="A live region" element="h3" size="lg" />
+  <Caption element="p" text="Host attributes pass through: a hidden span with aria-live is a status channel." />
+  <ScreenReaderText text="Saved" aria-live="polite" />
+
+  <Text text="Refused: interactive content" element="h3" size="lg" />
+  <Caption element="p" text="A link inside the hidden span would take focus without being seen. Visible error in development, nothing in production." />
+  <ScreenReaderText><a href="#">a hidden link</a></ScreenReaderText>
+</section>

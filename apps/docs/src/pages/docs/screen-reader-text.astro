@@ -1,0 +1,47 @@
+---
+// /docs/screen-reader-text — explicit page. The page is the view: it imports exactly
+// the examples it shows, each one file under src/examples/screen-reader-text/, mounted
+// twice (Figure + Code). The fixture is mounted last as the bench.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import TextBlock from "tsugite/TextBlock/TextBlock.astro";
+import ScreenReaderTextSection from "tsugite/fixtures/ScreenReaderTextSection.astro";
+import Example from "../../components/Example/Example.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+import Affix from "../../examples/screen-reader-text/Affix.astro";
+import affixSrc from "../../examples/screen-reader-text/Affix.astro?raw";
+import Standalone from "../../examples/screen-reader-text/Standalone.astro";
+import standaloneSrc from "../../examples/screen-reader-text/Standalone.astro?raw";
+import Refusals from "../../examples/screen-reader-text/Refusals.astro";
+import refusalsSrc from "../../examples/screen-reader-text/Refusals.astro?raw";
+
+const entry = entryFor("screen-reader-text");
+---
+
+<Layout title={entry.title}>
+  <DocPage entry={entry}>
+    <TextBlock
+      text="Words for the accessible name only: read by assistive technology, never drawn. Always a span, because it is inline text that must not be seen — the pattern other systems call visually hidden. It is the one place the clip pattern lives; a component that needs hidden words renders this, and a component that needs to hide a control gates that itself, because a control must stay focusable."
+    />
+
+    <Example id="affix" title="An affix on a button" lead="The visible words stay in the accessible name (WCAG 2.5.3, label in name); the hidden ones complete it before or after. Button carries the suffix as a prop and renders this component; a bare value like a page number takes both a prefix and a suffix." source={affixSrc} row>
+      <Affix />
+    </Example>
+
+    <Example id="standalone" title="Standalone" lead="Under an icon the words are the whole name. Host attributes pass through, so a hidden span with aria-live is a status channel." source={standaloneSrc} row>
+      <Standalone />
+    </Example>
+
+    <Example id="refusals" title="Refusals" lead="Interactive content inside the hidden span — a link, a button, a field, anything with tabindex — is refused in development: it would take focus without being seen. Empty renders nothing. The element is always a span." source={refusalsSrc} block>
+      <Refusals />
+    </Example>
+
+    <section class="doc-bench" id="test-bench">
+      <Heading text="Test bench" element="h2" size="2" />
+      <p class="doc-note">The ScreenReaderText fixture — the three places hidden words belong and the one where they are refused, mounted unchanged.</p>
+      <ScreenReaderTextSection />
+    </section>
+  </DocPage>
+</Layout>

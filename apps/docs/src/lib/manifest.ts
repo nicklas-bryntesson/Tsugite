@@ -46,6 +46,7 @@ export const manifest: ManifestEntry[] = [
   { slug: "card", title: "Card", pillar: "primitive", origin: "aipoc", section: "CardSection", published: true },
   { slug: "picture", title: "Picture", pillar: "primitive", origin: "aipoc", section: "MediaSection", published: true },
   { slug: "notice", title: "Notice", pillar: "primitive", origin: "ref-comps", section: "NoticeSection", suite: "tests/e2e/notice.e2e.test.js", published: true },
+  { slug: "screen-reader-text", title: "ScreenReaderText", pillar: "primitive", origin: "own", section: "ScreenReaderTextSection", published: true },
   { slug: "toggletip", title: "ToggleTip", pillar: "primitive", origin: "ref-comps", section: "ToggleTipSection", suite: "tests/e2e/toggletip.e2e.test.js", published: true },
   { slug: "theme-switch", title: "ThemeSwitch", pillar: "primitive", family: "fields", origin: "ref-comps", section: "ThemeSwitchSection", suite: "tests/e2e/themeswitch.e2e.test.js", adrs: ["0003"], published: true },
 
