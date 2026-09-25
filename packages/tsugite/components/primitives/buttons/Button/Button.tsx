@@ -4,6 +4,7 @@
 import type { ReactNode } from "react";
 import { createElement } from "react";
 import "./Button.css";
+import "../../ScreenReaderText/ScreenReaderText.css";
 import "../../../../kernel/css/debug.css";
 import { button } from "../../../../recipes/button.recipe";
 import { resolve, type InputOf } from "../../../../lib/recipe";
@@ -37,7 +38,7 @@ function render(element: "a" | "button", name: string, props: Record<string, unk
   return h(
     b.tag,
     { className: b.className, ...b.attrs, ...b.rest },
-    b.parts.text && h("span", { className: "Button-text" }, children, b.parts.srText && h("span", { className: "Button-srText" }, b.parts.srText)),
+    b.parts.text && h("span", { className: "Button-text" }, children, b.parts.srText && h("span", { className: "ScreenReaderText" }, b.parts.srText)),
     b.parts.icon && h("svg", { className: "Button-icon", "aria-hidden": "true", focusable: "false" }, h("use", { href: `#${b.parts.icon}` })),
   );
 }

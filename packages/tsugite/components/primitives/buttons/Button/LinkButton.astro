@@ -3,6 +3,7 @@
 // intent-neutral. The table is recipes/button.recipe.ts, read by lib/recipe.ts
 // (ADR-0018); ActionButton.astro and Button.tsx render the same table.
 import "./Button.css";
+import "../../ScreenReaderText/ScreenReaderText.css";
 import DevError from "../../../DevError/DevError.astro";
 import { button } from "../../../../recipes/button.recipe";
 import { resolve, type InputOf } from "../../../../lib/recipe";

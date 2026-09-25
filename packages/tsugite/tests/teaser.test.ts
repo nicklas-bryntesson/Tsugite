@@ -58,7 +58,7 @@ describe("Teaser", () => {
     expect(html).toMatch(/<a class="Button"[^>]*data-grow-inline="true"/);
     expect(html).toContain("Read more");
     // the sr-only context is Button's part now: Teaser supplies the words, Button the hiding
-    expect(html).toContain('<span class="Button-text">Read more<span class="Button-srText"> about Title</span></span>');
+    expect(html).toContain('<span class="Button-text">Read more<span class="ScreenReaderText"> about Title</span></span>');
   });
 
   it("custom button label", async () => {
