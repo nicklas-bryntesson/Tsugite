@@ -24,7 +24,10 @@ export const button = {
   parts: {
     text: { kind: "slot" },
     icon: { kind: "name", attr: "data-icon" },
-    srText: { kind: "text" },
+    /** hidden words before the visible ones — the verb a bare value lacks ("Page ") */
+    screenReaderPrefix: { kind: "text" },
+    /** hidden words after — the object or the set (" about Widgets", " of 12") */
+    screenReaderSuffix: { kind: "text" },
   },
   axes: {
     emphasis: { values: ["primary", "secondary", "tertiary"], default: "primary" },
@@ -38,6 +41,9 @@ export const button = {
     iconOnly: { attr: "data-icon-only", from: ["icon", "text"] },
   },
   absent: [
+    // One accessible name per button: an affix builds it around the visible words, aria-label replaces it.
+    { cells: { "aria-label": true, screenReaderPrefix: true }, message: "aria-label and a screen-reader affix are two names for one button — use one" },
+    { cells: { "aria-label": true, screenReaderSuffix: true }, message: "aria-label and a screen-reader affix are two names for one button — use one" },
     // ADR-0015: a square icon button never spans a row — there is no geometry for it.
     { cells: { iconOnly: true, growInline: true }, message: "icon-only buttons cannot grow: growInline requires a label" },
   ],

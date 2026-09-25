@@ -7,7 +7,7 @@ import "../../ScreenReaderText/ScreenReaderText.css";
 import DevError from "../../../DevError/DevError.astro";
 import { button } from "../../../../recipes/button.recipe";
 import { resolve, type InputOf } from "../../../../lib/recipe";
-import { buttonDerive, buttonIconHtml, buttonTextHtml } from "../../../../lib/button";
+import { buttonDerive, buttonIconHtml, buttonTextHtml, buttonAffixHtml } from "../../../../lib/button";
 
 // TODO(decide): kebab prop names ("icon-position") against camelCase (growInline). One
 // convention for props; until then the front door translates.
@@ -22,7 +22,9 @@ const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default
 const b = resolve(button, { ...props, iconPosition, element: "a" }, { slots: { text: childHtml.trim().length > 0 }, derive: buttonDerive });
 
 let inner = "";
-if (b.parts.text) inner += buttonTextHtml(childHtml, b.parts.srText as string | null);
+inner += buttonAffixHtml(b.parts.screenReaderPrefix as string | null);
+if (b.parts.text) inner += buttonTextHtml(childHtml);
+inner += buttonAffixHtml(b.parts.screenReaderSuffix as string | null);
 if (b.parts.icon) inner += buttonIconHtml(b.parts.icon as string);
 ---
 

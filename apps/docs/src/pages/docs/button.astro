@@ -20,6 +20,8 @@ import Size from "../../examples/button/Size.astro";
 import sizeSrc from "../../examples/button/Size.astro?raw";
 import Icon from "../../examples/button/Icon.astro";
 import iconSrc from "../../examples/button/Icon.astro?raw";
+import Name from "../../examples/button/Name.astro";
+import nameSrc from "../../examples/button/Name.astro?raw";
 import Ownership from "../../examples/button/Ownership.astro";
 import ownershipSrc from "../../examples/button/Ownership.astro?raw";
 import Empty from "../../examples/button/Empty.astro";
@@ -38,11 +40,11 @@ const entry = entryFor("button");
       <Element />
     </Example>
 
-    <Example id="emphasis" title="Emphasis" lead="Emphasis ranks siblings: which of these buttons matters most. It says nothing about the surface underneath — that is prominence (ADR-0006), and a primary button in a subtle section is the normal case. Tertiary is unfinished: it drops the border and owns no color or hover yet." source={emphasisSrc} row>
+    <Example id="emphasis" title="Emphasis" lead="Emphasis ranks siblings: which of these buttons matters most. It says nothing about the surface underneath — that is prominence — and a primary button in a subtle section is the normal case. Tertiary is unfinished: it drops the border and owns no color or hover yet." source={emphasisSrc} row>
       <Emphasis />
     </Example>
 
-    <Example id="intent" title="Intent — actions only" lead="Destructive and success are things an action can be, not a link. The axis does not exist on a LinkButton: given an intent, it is refused in development rather than rendered without one (ADR-0019). Intent writes the same slots emphasis writes, so hover, active and focus keep working; the feedback colours take no voice on purpose, like the focus ring, so a destructive button is the same red on every band." source={intentSrc} row>
+    <Example id="intent" title="Intent — actions only" lead="Destructive and success are things an action can be, not a link. The axis does not exist on a LinkButton: given an intent, it is refused in development rather than rendered without one. Intent writes the same slots emphasis writes, so hover, active and focus keep working; the feedback colours take no voice on purpose, like the focus ring, so a destructive button is the same red on every band." source={intentSrc} row>
       <Intent />
     </Example>
 
@@ -50,11 +52,15 @@ const entry = entryFor("button");
       <Size />
     </Example>
 
-    <Example id="icon" title="Icon" lead="An icon references the page sprite, right of the text unless asked otherwise. Drop the text and the button pads to a square — then the aria-label is the whole accessible name." source={iconSrc} row>
+    <Example id="icon" title="Icon" lead="An icon references the page sprite, right of the text unless asked otherwise. Drop the text and the button pads to a square — then the whole accessible name comes from aria-label or from a screen-reader affix, never both." source={iconSrc} row>
       <Icon />
     </Example>
 
-    <Example id="ownership" title="The ownership chain" lead="The button consumes theme slots with one fallback to the semantic default (ADR-0005, ADR-0008). It never reads data-theme. The surface claims a voice, the voice's donut points the button's slots into its palette, and the same markup renders three ways." source={ownershipSrc} block>
+    <Example id="name" title="The accessible name" lead="The visible words stay in the name; screenReaderPrefix and screenReaderSuffix complete it before and after, in DOM order, as ScreenReaderText spans that take no room. A bare value needs both: visibly 3, announced as Page 3 of 12. An icon-only button may take its whole name from an affix instead of aria-label. Two names on one button — aria-label and an affix — are refused in development." source={nameSrc} row>
+      <Name />
+    </Example>
+
+    <Example id="ownership" title="The ownership chain" lead="The button consumes theme slots with one fallback to the semantic default. It never reads data-theme. The surface claims a voice, the voice's donut points the button's slots into its palette, and the same markup renders three ways." source={ownershipSrc} block>
       <Ownership />
     </Example>
 

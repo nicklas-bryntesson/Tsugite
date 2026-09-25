@@ -106,8 +106,21 @@ describe("ActionButton", () => {
     expect(html).not.toContain('class="Button"');
   });
 
-  it("writes the hidden suffix that extends the accessible name", async () => {
-    const html = await renderLink({ href: "/x", srText: " about Widgets" }, { default: "Read more" });
-    expect(html).toContain('<span class="Button-text">Read more<span class="ScreenReaderText"> about Widgets</span></span>');
+  it("writes the screen-reader affixes around the visible words, in name order", async () => {
+    const html = await renderLink({ href: "/x", screenReaderSuffix: " about Widgets" }, { default: "Read more" });
+    expect(html).toContain('<span class="Button-text">Read more</span><span class="ScreenReaderText"> about Widgets</span>');
+    const both = await renderAction({ screenReaderPrefix: "Page ", screenReaderSuffix: " of 12" }, { default: "3" });
+    expect(both).toContain('<span class="ScreenReaderText">Page </span><span class="Button-text">3</span><span class="ScreenReaderText"> of 12</span>');
+  });
+
+  it("an icon-only button may take its name from an affix instead of aria-label", async () => {
+    const html = await renderAction({ icon: "icon-search", screenReaderPrefix: "Search" });
+    expect(html).toContain('data-icon-only="true"');
+    expect(html).toContain('<span class="ScreenReaderText">Search</span>');
+  });
+
+  it("refuses aria-label and an affix together: two names", async () => {
+    const html = await renderAction({ "aria-label": "Search", screenReaderSuffix: " the site" }, { default: "Go" });
+    expect(html).toContain("two names for one button");
   });
 });

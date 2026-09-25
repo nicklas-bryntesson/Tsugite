@@ -68,7 +68,7 @@ const actionWith = teaser.parts.action.with;
               {t.parts.body && <Fragment set:html={childHtml} />}
               {t.attrs["data-button"] === "true" && (
                 <div class="Actions">
-                  <LinkButton href={plan.href!} {...actionWith} srText={plan.buttonSrText ?? undefined}>
+                  <LinkButton href={plan.href!} {...actionWith} screenReaderSuffix={plan.buttonScreenReaderSuffix ?? undefined}>
                     {plan.buttonLabel}
                   </LinkButton>
                 </div>

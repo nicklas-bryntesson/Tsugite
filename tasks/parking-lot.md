@@ -194,7 +194,8 @@ and did not decide. Each is a separate call.
     run engine, Button last with the alignment bench as instrument), the icon areas (slots,
     never axes), and the root's knobs + tokens (where a design's individual values land;
     a new *look* with a name is CtaButton).
-  - *Screen-reader affixes:* `srText` becomes two text parts, `screenReaderPrefix` and
+  - ~~*Screen-reader affixes*~~ — **done 2026-09-25** (`screenReaderPrefix` / `screenReaderSuffix`
+    on Button, affix + aria-label refused, icon-only named by an affix). Original: `srText` becomes two text parts, `screenReaderPrefix` and
     `screenReaderSuffix` (spelled out, ADR-0013; "who reads it", not "hidden" — the text is
     read, only visually hidden). Both are needed when the visible label is a bare value:
     "Sida 3 av 12", "Torsdag 14 maj", "Sortera efter Namn, stigande". DOM order = the
