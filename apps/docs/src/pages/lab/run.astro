@@ -1,0 +1,402 @@
+---
+// /lab/run — the run-engine lab. Raw HTML and CSS, no components except where a
+// component is the thing being compared. Five setups, each answering one question the
+// parking lot holds against the same POC: one engine file for four components; the
+// container's display mode under trim; where a capped box goes when the composition
+// aligns; Button's label on the same engine; the word for the mode. Every block
+// measures itself and writes the numbers under it.
+import Layout from "../../layouts/Layout.astro";
+import Text from "tsugite/Text/Text.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import ActionButton from "tsugite/Button/ActionButton.astro";
+
+const words = "The quick brown fox jumps over the lazy dog, and keeps jumping until the line is long enough to wrap twice on a narrow column.";
+---
+
+<Layout title="Run lab">
+  <main class="RunLab grid-container">
+    <header class="lab-head">
+      <h1>Run engine lab</h1>
+      <p>Raw HTML and CSS. Each setup answers one question; the numbers under each block are measured live. Resize, switch theme, compare.</p>
+    </header>
+
+    {/* ── A. One engine, four doors ─────────────────────────────────────── */}
+    <section class="lab" id="a">
+      <h2>A · One engine file, four components</h2>
+      <p class="q">Does <code>kernel/css/run.css</code> on <code>[data-run="block"] &gt; .text</code> render the same pixels as Text.css's own copy?</p>
+      <div class="row">
+        <figure class="cell">
+          <figcaption>Text component (Text.css engine)</figcaption>
+          <div class="probe" data-probe="a-text"><Text text={words} /></div>
+        </figure>
+        <figure class="cell">
+          <figcaption>Raw markup on the kernel candidate (<code>.run</code> + <code>.text</code>)</figcaption>
+          <div class="probe" data-probe="a-run">
+            <p class="run" data-voice="body" data-run="block"><span class="text">{words}</span></p>
+          </div>
+        </figure>
+      </div>
+      <output data-for="a-text a-run"></output>
+    </section>
+
+    {/* ── B. The container's display ────────────────────────────────────── */}
+    <section class="lab" id="b">
+      <h2>B · The container: block, inline-block, or inline-grid</h2>
+      <p class="q">The trim works on block containers. Does an inline-level container keep the trim, and what does the root's own line box (the strut) cost?</p>
+      <div class="row">
+        <figure class="cell">
+          <figcaption>container <code>display: block</code> (today)</figcaption>
+          <div class="probe" data-probe="b-block"><p class="run" data-voice="body" data-run="block"><span class="text">{words}</span></p></div>
+        </figure>
+        <figure class="cell">
+          <figcaption>container <code>inline-block</code></figcaption>
+          <div class="probe" data-probe="b-inline"><p class="run" data-voice="body" data-run="block" data-container="inline-block"><span class="text">{words}</span></p></div>
+        </figure>
+        <figure class="cell">
+          <figcaption>container <code>inline-block</code>, root line height zero (kills the strut)</figcaption>
+          <div class="probe" data-probe="b-inline-nostrut"><p class="run" data-voice="body" data-run="block" data-container="inline-block" data-strut="none"><span class="text">{words}</span></p></div>
+        </figure>
+        <figure class="cell">
+          <figcaption>container <code>inline-grid</code></figcaption>
+          <div class="probe" data-probe="b-igrid"><p class="run" data-voice="body" data-run="block" data-container="inline-grid"><span class="text">{words}</span></p></div>
+        </figure>
+      </div>
+      <output data-for="b-block b-inline b-inline-nostrut b-igrid"></output>
+    </section>
+
+    {/* ── C. The capped box in an aligned cell ──────────────────────────── */}
+    <section class="lab" id="c">
+      <h2>C · A capped box in a cell the composition aligns</h2>
+      <p class="q">The composition says <code>text-align: center</code> on its cell (and per tier: start below 48.75rem, center above). Where does a capped run's box go?</p>
+      <div class="row">
+        <figure class="cell aligned">
+          <figcaption>1 · today: child <code>align-inline="center"</code> (margin auto on the container)</figcaption>
+          <div class="probe" data-probe="c1" style="--custom-text-lineLength: 22ch;"><Text text={words} alignInline="center" /></div>
+        </figure>
+        <figure class="cell aligned">
+          <figcaption>2 · <code>context</code>: block container inherits text-align, box stays at start</figcaption>
+          <div class="probe" data-probe="c2"><p class="run" data-voice="body" data-run="block" data-align="context"><span class="text">{words}</span></p></div>
+        </figure>
+        <figure class="cell aligned">
+          <figcaption>3 · <code>context</code> + inline-block container: text-align places the box</figcaption>
+          <div class="probe" data-probe="c3"><p class="run" data-voice="body" data-run="block" data-align="context" data-container="inline-block" data-strut="none"><span class="text">{words}</span></p></div>
+        </figure>
+        <figure class="cell aligned grid">
+          <figcaption>4 · ceiling on the root, the cell is a grid with <code>justify-items: center</code></figcaption>
+          <div class="probe" data-probe="c4"><p class="run" data-voice="body" data-run="block" data-align="context" data-cap="root"><span class="text">{words}</span></p></div>
+        </figure>
+      </div>
+      <output data-for="c1 c2 c3 c4"></output>
+      <p class="note">The cell's tint shows its edges; the dashed line is the run's box. Narrow the window below 48.75rem: the cell switches to start and every <code>context</code> run should follow without a change on the child.</p>
+    </section>
+
+    {/* ── D. Button's label on the same engine ──────────────────────────── */}
+    <section class="lab" id="d">
+      <h2>D · Button's label as a run</h2>
+      <p class="q">Button.css carries its own (dead) baseline engine. Does the label sit right on the kernel engine, next to a text run on the same line?</p>
+      <div class="row baseline">
+        <figure class="cell">
+          <figcaption>Button today</figcaption>
+          <div class="probe line" data-probe="d-today"><Text element="span" text="Label beside" /> <ActionButton emphasis="secondary">Press</ActionButton></div>
+        </figure>
+        <figure class="cell">
+          <figcaption>raw button, label on the kernel engine (button voice)</figcaption>
+          <div class="probe line" data-probe="d-run"><Text element="span" text="Label beside" /> <button type="button" class="rawbtn"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span></button></div>
+        </figure>
+      </div>
+      <output data-for="d-today d-run"></output>
+      <p class="note">The horizontal guides are the text run's cap top and baseline; a label that sits right shares them.</p>
+    </section>
+
+    {/* ── E. The word for the mode ──────────────────────────────────────── */}
+    <section class="lab" id="e">
+      <h2>E · The word</h2>
+      <p class="q">The attribute gates the container's mode — display, trim, cap, box move — not the root's display. Which spelling reads right in markup?</p>
+      <div class="row">
+        <figure class="cell"><figcaption><code>data-run="block | inline"</code> (today)</figcaption>
+          <pre>&lt;p class="Text" data-run="block"&gt;
+  &lt;span class="text"&gt;…&lt;/span&gt;
+&lt;/p&gt;
+&lt;span class="Text" data-run="inline"&gt;
+  &lt;span class="text"&gt;…&lt;/span&gt;
+&lt;/span&gt;</pre></figure>
+        <figure class="cell"><figcaption><code>data-flow="block | inline"</code></figcaption>
+          <pre>&lt;p class="Text" data-flow="block"&gt;
+  &lt;span class="text"&gt;…&lt;/span&gt;
+&lt;/p&gt;
+&lt;span class="Text" data-flow="inline"&gt;
+  &lt;span class="text"&gt;…&lt;/span&gt;
+&lt;/span&gt;</pre></figure>
+        <figure class="cell"><figcaption>no attribute, the element decides (<code>:not(span)</code>)</figcaption>
+          <pre>&lt;p class="Text"&gt;
+  &lt;span class="text"&gt;…&lt;/span&gt;
+&lt;/p&gt;
+&lt;span class="Text"&gt;
+  &lt;span class="text"&gt;…&lt;/span&gt;
+&lt;/span&gt;</pre></figure>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style is:global>
+  /* ── The kernel candidate: one engine, keyed on the mode and the part ──────────
+     What Text.css, Heading.css, Caption.css and TextBlock.css each carry today, once.
+     The voice sets the carriers (here on data-voice, in a component on data-variant);
+     the engine reads them. TODO(lab): lab-only, not the kernel file itself. */
+  .run {
+    margin-block: 0;
+    overflow-wrap: break-word;
+
+    &[data-voice="body"] {
+      --_lineHeight: var(--lineHeight-body);
+      --_baselineOffset: var(--baseline-offset-body);
+      --_emBox: var(--fontEmBox-body);
+      --_capGap: var(--fontCapGap-body);
+      --_descent: var(--fontDescent-body);
+      --_fontSize: var(--fontSize-body);
+      --_lineLength: var(--lineLength-body);
+      font-family: var(--fontFamily-body);
+      font-weight: var(--fontWeight-body);
+    }
+
+    &[data-voice="button"] {
+      --_lineHeight: var(--lineHeight-button);
+      --_baselineOffset: var(--baseline-offset-button);
+      --_emBox: var(--fontEmBox-button);
+      --_capGap: var(--fontCapGap-button);
+      --_descent: var(--fontDescent-button);
+      --_fontSize: var(--fontSize-button);
+      --_lineLength: var(--lineLength-button);
+      font-family: var(--fontFamily-button);
+      font-weight: var(--fontWeight-button);
+    }
+
+    & > .text {
+      font-size: var(--_fontSize);
+      line-height: var(--_lineHeight);
+    }
+
+    /* the mode: a block run owns its container's display; an inline run keeps the UA flow */
+    &[data-run="block"] > .text {
+      display: block;
+      max-inline-size: var(--_lineLength);
+    }
+
+    /* B — the container's display, as an axis of the lab */
+    &[data-run="block"][data-container="inline-block"] > .text {
+      display: inline-block;
+    }
+
+    &[data-run="block"][data-container="inline-grid"] > .text {
+      display: inline-grid;
+    }
+
+    /* the strut: an inline-level container sits in the root's own line box */
+    &[data-strut="none"] {
+      line-height: 0;
+    }
+
+    /* C — alignment from the context: the root inherits, the container gets nothing */
+    &[data-align="context"] {
+      text-align: inherit;
+    }
+
+    /* C — the lab caps at 22ch so the box is narrower than its cell; the real cap is the stop's */
+    &[data-align] {
+      --_lineLength: 22ch;
+    }
+
+    /* C4 — the ceiling on the root instead of the container */
+    &[data-cap="root"] {
+      max-inline-size: var(--_lineLength);
+
+      & > .text {
+        max-inline-size: none;
+      }
+    }
+
+    @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
+      &[data-run="block"] > .text {
+        --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
+        --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
+        margin-block-start: var(--_marginBlockStart);
+        margin-block-end: var(--_marginBlockEnd);
+      }
+    }
+
+    @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+      &[data-run="block"] > .text {
+        text-box-trim: trim-both;
+        text-box-edge: cap alphabetic;
+        margin-block: 0;
+      }
+    }
+  }
+
+  /* D — a raw button whose label is a run on the engine; padding and border as Button md */
+  .rawbtn {
+    display: inline-grid;
+    align-items: center;
+    padding-block: var(--size-sm);
+    padding-inline: 1.4em;
+    border: 1px solid var(--color-interactive-secondary-border);
+    border-radius: 0.375em;
+    background: transparent;
+    color: var(--color-interactive-secondary-text);
+    font-size: var(--fontSize-button);
+    cursor: pointer;
+  }
+
+  /* ── The lab's own furniture ─────────────────────────────────────────── */
+  .RunLab {
+    padding-block: var(--size-lg);
+
+    & .lab-head,
+    & .lab {
+      grid-column: 1 / -1;
+      margin-block-end: var(--size-lg);
+    }
+
+    & h2 {
+      margin-block: 0 0.25em;
+    }
+
+    & .q {
+      margin-block: 0 var(--size-md);
+      color: var(--color-text-secondary);
+    }
+
+    & .note {
+      margin-block: var(--size-md) 0;
+      color: var(--color-text-secondary);
+      font-size: var(--fontSize-label);
+    }
+
+    & .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+      gap: var(--size-md);
+      align-items: start;
+    }
+
+    & .cell {
+      margin: 0;
+      min-inline-size: 0;
+
+      & figcaption {
+        font-size: var(--fontSize-label);
+        color: var(--color-text-secondary);
+        margin-block-end: 0.5em;
+      }
+    }
+
+    /* the probe: the box the run lives in; its edges are what the composition owns */
+    & .probe {
+      background: var(--color-surface-inset);
+      outline: 1px solid var(--color-border-default);
+      padding: var(--size-md);
+
+      & > .Text > .text-content,
+      & > .run > .text {
+        outline: 1px dashed var(--color-interactive-primary);
+      }
+    }
+
+    /* C — the composition's cell: aligns per tier, on its own gates */
+    & .aligned .probe {
+      text-align: start;
+    }
+
+    @media (min-width: 48.75rem) {
+      & .aligned .probe {
+        text-align: center;
+      }
+    }
+
+    & .aligned.grid .probe {
+      display: grid;
+      justify-items: start;
+    }
+
+    @media (min-width: 48.75rem) {
+      & .aligned.grid .probe {
+        justify-items: center;
+      }
+    }
+
+    /* D — one line, a run and a button; the guides are drawn by the script */
+    & .line {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: var(--size-md);
+    }
+
+    & .guide {
+      position: absolute;
+      inset-inline: 0;
+      block-size: 0;
+      border-block-start: 1px solid var(--color-feedback-error);
+      pointer-events: none;
+    }
+
+    & output {
+      display: block;
+      margin-block-start: var(--size-sm);
+      font-family: var(--fontFamily-label);
+      font-size: var(--fontSize-label-small);
+      line-height: var(--lineHeight-body);
+      color: var(--color-text-secondary);
+      white-space: pre-wrap;
+    }
+
+    & pre {
+      margin: 0;
+      padding: var(--size-sm);
+      font-family: var(--fontFamily-label);
+      font-size: var(--fontSize-label-small);
+      background: var(--color-surface-inset);
+      overflow: auto;
+    }
+  }
+</style>
+
+<script>
+  // Measure every probe: the root's box, the container's box, and where the container's
+  // ink starts and ends relative to the root — the trim's proof — then print it.
+  const px = (n: number) => `${Math.round(n * 100) / 100}px`;
+  function measure(id: string) {
+    const probe = document.querySelector<HTMLElement>(`[data-probe="${id}"]`);
+    if (!probe) return `${id}: (missing)`;
+    const isLine = probe.classList.contains("line");
+    const root = probe.querySelector<HTMLElement>(isLine ? ".Button, .rawbtn" : ".Text, .run");
+    const box = root?.querySelector<HTMLElement>(":scope > .text-content, :scope > .text, :scope > .Button-text, :scope > .run > .text");
+    if (!root || !box) return `${id}: (no run)`;
+    const p = probe.getBoundingClientRect(), r = root.getBoundingClientRect(), b = box.getBoundingClientRect();
+    const cs = getComputedStyle(box);
+    if (isLine) {
+      const ref = probe.querySelector<HTMLElement>(".Text > .text-content")!.getBoundingClientRect();
+      return `${id}: button ${px(r.width)}×${px(r.height)} · label box ${px(b.width)}×${px(b.height)} · label top vs text-run top ${px(b.top - ref.top)} · label bottom vs text-run bottom ${px(b.bottom - ref.bottom)} · label display ${cs.display}`;
+    }
+    return `${id}: root ${px(r.width)}×${px(r.height)} · box ${px(b.width)}×${px(b.height)} · box inset in cell: start ${px(b.left - p.left)} end ${px(p.right - b.right)} · box top vs root top ${px(b.top - r.top)} · display ${cs.display} · margin-block ${cs.marginBlockStart} / ${cs.marginBlockEnd}`;
+  }
+  function run() {
+    for (const out of document.querySelectorAll<HTMLOutputElement>("output[data-for]")) {
+      out.textContent = out.dataset.for!.split(" ").map(measure).join("\n");
+    }
+    // D — draw the text run's cap top and baseline as guides across the line
+    for (const line of document.querySelectorAll<HTMLElement>(".probe.line")) {
+      line.querySelectorAll(".guide").forEach((g) => g.remove());
+      const run = line.querySelector<HTMLElement>(".Text > .text-content");
+      if (!run) continue;
+      const lr = line.getBoundingClientRect(), rr = run.getBoundingClientRect();
+      for (const y of [rr.top - lr.top, rr.bottom - lr.top]) {
+        const g = document.createElement("div"); g.className = "guide"; g.style.insetBlockStart = `${y}px`; line.append(g);
+      }
+    }
+  }
+  run();
+  addEventListener("resize", run);
+  document.fonts?.ready.then(run);
+</script>
