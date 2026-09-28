@@ -6,6 +6,7 @@
 // aligns; Button's label on the same engine; the word for the mode. Every block
 // measures itself and writes the numbers under it.
 import Layout from "../../layouts/Layout.astro";
+import "tsugite/kernel/css/debug.css";
 import Text from "tsugite/Text/Text.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import ActionButton from "tsugite/Button/ActionButton.astro";
@@ -109,7 +110,7 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
         </figure>
       </div>
       <output data-for="d1 d2 d3"></output>
-      <p class="note">Red lines: the label box's top and bottom, drawn across the button; blue: the icon box. An icon must set no height and sit centred on the label — the question for two lines is whether "centred" means the block or the first line. A button rarely wraps, but with large text on a small screen it wraps often, so the two-line rows are the ones to watch. The air between a red line and the button's edge is what the padding actually owns. On 1 that air includes half a line of slack; on 2 and 3 it is the padding alone.</p>
+      <p class="note">Guide lines: the label box's top and bottom, drawn across the whole column; the part-outline colour marks the icon box. An icon must set no height and sit centred on the label — the question for two lines is whether "centred" means the block or the first line. A button rarely wraps, but with large text on a small screen it wraps often, so the two-line rows are the ones to watch. The air between a red line and the button's edge is what the padding actually owns. On 1 that air includes half a line of slack; on 2 and 3 it is the padding alone.</p>
     </section>
 
     {/* ── E. The word for the mode ──────────────────────────────────────── */}
@@ -338,7 +339,7 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
 
       & > .Text > .text-content,
       & > .run > .text {
-        outline: 1px dashed var(--color-interactive-primary);
+        outline: 1px dashed var(--debug-outline);
       }
     }
 
@@ -364,28 +365,27 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
       }
     }
 
-    /* D — the buttons on their own, stacked; the guides are drawn by the script */
+    /* D — the buttons on their own, stacked; the guides are drawn by the script into one
+       overlay on the probe, above every button, so no background can cover them */
     & .stack {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: start;
       gap: var(--size-md);
-
-      & > .Button,
-      & > .rawbtn {
-        position: relative;
-      }
     }
 
     & .guide {
       position: absolute;
-      inset-inline: -0.5rem;
+      inset-inline: 0;
       block-size: 0;
-      border-block-start: 1px solid var(--color-feedback-error);
+      /* the kernel's debug palette, never brand tokens: a ruler looks the same on every brand */
+      border-block-start: 1px dashed var(--debug-guide);
       pointer-events: none;
+      z-index: 1;
 
       &.icon {
-        border-block-start-color: var(--color-interactive-primary);
+        border-block-start-color: var(--debug-outline);
       }
     }
 
@@ -450,23 +450,19 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
     for (const out of document.querySelectorAll<HTMLOutputElement>("output[data-for]")) {
       out.textContent = out.dataset.for!.split(" ").map(measure).join("\n");
     }
-    // D — draw the label box's top and bottom across each button
-    for (const btn of document.querySelectorAll<HTMLElement>(".stack > .Button, .stack > .rawbtn")) {
-      btn.querySelectorAll(".guide").forEach((g) => g.remove());
-      const br = btn.getBoundingClientRect();
-      const box = btn.querySelector<HTMLElement>(":scope > .Button-text, :scope > .run > .text");
-      if (box) {
-        const bb = box.getBoundingClientRect();
-        for (const y of [bb.top - br.top, bb.bottom - br.top]) {
-          const g = document.createElement("div"); g.className = "guide"; g.style.insetBlockStart = `${y}px`; btn.append(g);
-        }
-      }
-      const icon = btn.querySelector<HTMLElement>(":scope > .Button-icon, :scope > .icon");
-      if (icon) {
-        const ib = icon.getBoundingClientRect();
-        for (const y of [ib.top - br.top, ib.bottom - br.top]) {
-          const g = document.createElement("div"); g.className = "guide icon"; g.style.insetBlockStart = `${y}px`; btn.append(g);
-        }
+    // D — the label box's top and bottom (red) and the icon box's (blue), drawn across the
+    // whole probe in one overlay, so the lines read against every button and nothing hides them
+    for (const probe of document.querySelectorAll<HTMLElement>(".probe.stack")) {
+      probe.querySelectorAll(".guide").forEach((g) => g.remove());
+      const pr = probe.getBoundingClientRect();
+      const draw = (y: number, cls: string) => {
+        const g = document.createElement("div"); g.className = cls; g.style.insetBlockStart = `${y - pr.top}px`; probe.append(g);
+      };
+      for (const btn of probe.querySelectorAll<HTMLElement>(":scope > .Button, :scope > .rawbtn")) {
+        const box = btn.querySelector<HTMLElement>(":scope > .Button-text, :scope > .run > .text");
+        const icon = btn.querySelector<HTMLElement>(":scope > .Button-icon, :scope > .icon");
+        if (box) { const b = box.getBoundingClientRect(); draw(b.top, "guide"); draw(b.bottom, "guide"); }
+        if (icon) { const i = icon.getBoundingClientRect(); draw(i.top, "guide icon"); draw(i.bottom, "guide icon"); }
       }
     }
   }
