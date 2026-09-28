@@ -105,7 +105,7 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
           <div class="probe stack" data-probe="d2"><button type="button" class="rawbtn"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span></button><button type="button" class="rawbtn"><span class="run" data-voice="button" data-run="block"><span class="text">Press this<br />button please</span></span></button><button type="button" class="rawbtn" data-icon="right"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button><button type="button" class="rawbtn" data-icon="right"><span class="run" data-voice="button" data-run="block"><span class="text">Press this<br />button please</span></span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button><button type="button" class="rawbtn" data-icon="only"><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button></div>
         </figure>
         <figure class="cell">
-          <figcaption>3 · label on the kernel engine, padding-block re-derived to hold today's height — and icon-only padded to the same height</figcaption>
+          <figcaption>3 · label on the kernel engine, padding-block re-derived to hold today's height; the icon's place is one cap box tall, so icon-only lands on the same height with no height stated</figcaption>
           <div class="probe stack" data-probe="d3"><button type="button" class="rawbtn" data-padding="derived"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span></button><button type="button" class="rawbtn" data-padding="derived"><span class="run" data-voice="button" data-run="block"><span class="text">Press this<br />button please</span></span></button><button type="button" class="rawbtn" data-icon="right" data-padding="derived"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button><button type="button" class="rawbtn" data-icon="right" data-padding="derived"><span class="run" data-voice="button" data-run="block"><span class="text">Press this<br />button please</span></span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button><button type="button" class="rawbtn" data-icon="only" data-padding="derived"><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button></div>
         </figure>
       </div>
@@ -254,29 +254,20 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
       padding-inline: var(--size-sm);
     }
 
-    /* the icon as Button.css draws it: the size on both axes, a negative block margin so
-       it never sets the button's height */
+    /* The text drives the height; the icon's place is as tall as one line of text would
+       be, whether or not the text is there. On the engine a one-line label box is the
+       voice's cap box — (emBox − capGap − descent) × fontSize, the trim's own formula —
+       so the icon's outer box is made exactly that tall with a negative block margin:
+       half of (cap box − icon) on each side. Text + icon: the icon adds nothing. Icon
+       only: the row is the cap box, and the button is as tall as a text button by
+       construction, with no height stated anywhere. (`1cap` would say this directly; it
+       is above the floor.) An icon button cannot wrap, so one line is the only case. */
+    --_lab-capBox: calc((var(--fontEmBox-button, 1) - var(--fontCapGap-button, 0) - var(--fontDescent-button, 0)) * var(--fontSize-button));
+
     & > .icon {
       inline-size: 1.5rem;
       block-size: 1.5rem;
-      margin-block: -0.75rem;
-    }
-
-    &[data-icon="only"] > .icon {
-      margin-block: 0;
-    }
-
-    /* One height for every content: the one-line height is the voice's line-height plus
-       the padding token on both sides. The label reaches it through the derived padding
-       above; the icon reaches the same number through its own — half of what is left
-       once the icon is subtracted. Today's 42 vs 41.39 is the icon and the line-height
-       disagreeing by 0.6px with the same padding token on both. TODO(lab) */
-    &[data-padding="derived"] {
-      --_lab-blockSize: calc(var(--lineHeight-button) * var(--fontSize-button) + 2 * var(--size-sm));
-    }
-
-    &[data-padding="derived"][data-icon="only"] {
-      padding-block: calc((var(--_lab-blockSize) - 1.5rem) / 2);
+      margin-block: calc((var(--_lab-capBox) - 1.5rem) / 2);
     }
     padding-block: var(--size-sm);
 
