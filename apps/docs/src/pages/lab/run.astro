@@ -93,23 +93,23 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
     {/* ── D. Button's label on the same engine ──────────────────────────── */}
     <section class="lab" id="d">
       <h2>D · Button's label as a run</h2>
-      <p class="q">Button.css carries its own (dead) baseline engine: the label keeps its full line-height, so the space above and below the letters is padding plus half a line of slack. On the kernel engine the label is trimmed cap-to-baseline. A single line should then have the same air above and below; two lines should keep the line-height between them and nothing extra above or below; and the padding must not implode — the button keeps its height, the padding owns it.</p>
+      <p class="q">Five buttons per variant: one line, two lines, the same two with an icon, and icon-only. Button.css carries its own (dead) baseline engine: the label keeps its full line-height, so the space above and below the letters is padding plus half a line of slack. On the kernel engine the label is trimmed cap-to-baseline. A single line should then have the same air above and below; two lines should keep the line-height between them and nothing extra above or below; and the padding must not implode — the button keeps its height, the padding owns it.</p>
       <div class="row">
         <figure class="cell">
           <figcaption>1 · Button today (label untrimmed, padding-block <code>--size-sm</code>)</figcaption>
-          <div class="probe stack" data-probe="d1"><ActionButton emphasis="secondary">Press</ActionButton><ActionButton emphasis="secondary">Press this<br />button please</ActionButton></div>
+          <div class="probe stack" data-probe="d1"><ActionButton emphasis="secondary">Press</ActionButton><ActionButton emphasis="secondary">Press this<br />button please</ActionButton><ActionButton emphasis="secondary" icon="icon-search">Press</ActionButton><ActionButton emphasis="secondary" icon="icon-search">Press this<br />button please</ActionButton><ActionButton emphasis="secondary" icon="icon-search" aria-label="Search" /></div>
         </figure>
         <figure class="cell">
           <figcaption>2 · label on the kernel engine, same padding token — the slack is gone and the button implodes</figcaption>
-          <div class="probe stack" data-probe="d2"><button type="button" class="rawbtn"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span></button><button type="button" class="rawbtn"><span class="run" data-voice="button" data-run="block"><span class="text">Press this<br />button please</span></span></button></div>
+          <div class="probe stack" data-probe="d2"><button type="button" class="rawbtn"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span></button><button type="button" class="rawbtn"><span class="run" data-voice="button" data-run="block"><span class="text">Press this<br />button please</span></span></button><button type="button" class="rawbtn" data-icon="right"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button><button type="button" class="rawbtn" data-icon="right"><span class="run" data-voice="button" data-run="block"><span class="text">Press this<br />button please</span></span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button><button type="button" class="rawbtn" data-icon="only"><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button></div>
         </figure>
         <figure class="cell">
           <figcaption>3 · label on the kernel engine, padding-block re-derived to hold today's height</figcaption>
-          <div class="probe stack" data-probe="d3"><button type="button" class="rawbtn" data-padding="derived"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span></button><button type="button" class="rawbtn" data-padding="derived"><span class="run" data-voice="button" data-run="block"><span class="text">Press this<br />button please</span></span></button></div>
+          <div class="probe stack" data-probe="d3"><button type="button" class="rawbtn" data-padding="derived"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span></button><button type="button" class="rawbtn" data-padding="derived"><span class="run" data-voice="button" data-run="block"><span class="text">Press this<br />button please</span></span></button><button type="button" class="rawbtn" data-icon="right" data-padding="derived"><span class="run" data-voice="button" data-run="block"><span class="text">Press</span></span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button><button type="button" class="rawbtn" data-icon="right" data-padding="derived"><span class="run" data-voice="button" data-run="block"><span class="text">Press this<br />button please</span></span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button><button type="button" class="rawbtn" data-icon="only" data-padding="derived"><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button></div>
         </figure>
       </div>
       <output data-for="d1 d2 d3"></output>
-      <p class="note">Red lines: the label box's top and bottom, drawn across the button. The air between a red line and the button's edge is what the padding actually owns. On 1 that air includes half a line of slack; on 2 and 3 it is the padding alone.</p>
+      <p class="note">Red lines: the label box's top and bottom, drawn across the button; blue: the icon box. An icon must set no height and sit centred on the label — the question for two lines is whether "centred" means the block or the first line. A button rarely wraps, but with large text on a small screen it wraps often, so the two-line rows are the ones to watch. The air between a red line and the button's edge is what the padding actually owns. On 1 that air includes half a line of slack; on 2 and 3 it is the padding alone.</p>
     </section>
 
     {/* ── E. The word for the mode ──────────────────────────────────────── */}
@@ -241,7 +241,35 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
   /* D — a raw button whose label is a run on the engine; padding and border as Button md */
   .rawbtn {
     display: inline-grid;
+    grid-template-columns: auto;
     align-items: center;
+
+    &[data-icon="right"] {
+      grid-template-columns: 1fr auto;
+      gap: 0.75rem;
+    }
+
+    &[data-icon="only"] {
+      padding-inline: var(--size-sm);
+    }
+
+    /* the icon as Button.css draws it: the size on both axes, a negative block margin so
+       it never sets the button's height */
+    & > .icon {
+      inline-size: 1.5rem;
+      block-size: 1.5rem;
+      margin-block: -0.75rem;
+    }
+
+    &[data-icon="only"] > .icon {
+      margin-block: 0;
+    }
+
+    /* icon-only: the icon carries the height itself, so the derived padding (which
+       replaces the label's lost slack) does not apply — the square keeps the plain token */
+    &[data-padding="derived"][data-icon="only"] {
+      padding-block: var(--size-sm);
+    }
     padding-block: var(--size-sm);
 
     /* D3 — the padding re-derived: today's md height (41.39px) minus the trimmed cap box
@@ -355,6 +383,10 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
       block-size: 0;
       border-block-start: 1px solid var(--color-feedback-error);
       pointer-events: none;
+
+      &.icon {
+        border-block-start-color: var(--color-interactive-primary);
+      }
     }
 
     & output {
@@ -387,11 +419,24 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
     if (!probe) return `${id}: (missing)`;
     if (probe.classList.contains("stack")) {
       return [...probe.querySelectorAll<HTMLElement>(":scope > .Button, :scope > .rawbtn")].map((btn, i) => {
-        const box = btn.querySelector<HTMLElement>(":scope > .Button-text, :scope > .run > .text")!;
-        const r = btn.getBoundingClientRect(), b = box.getBoundingClientRect();
+        const box = btn.querySelector<HTMLElement>(":scope > .Button-text, :scope > .run > .text");
+        const icon = btn.querySelector<HTMLElement>(":scope > .Button-icon, :scope > .icon");
+        const r = btn.getBoundingClientRect();
+        const name = ["one line", "two lines", "icon, one line", "icon, two lines", "icon only"][i];
+        if (!box) {
+          const ic = icon!.getBoundingClientRect();
+          return `${id}.${name}: button ${px(r.height)} tall · icon ${px(ic.height)} · air above ${px(ic.top - r.top)} · below ${px(r.bottom - ic.bottom)}`;
+        }
+        const b = box.getBoundingClientRect();
         const lh = parseFloat(getComputedStyle(box).lineHeight);
         const lines = Math.round(b.height / lh) || 1;
-        return `${id}.${i === 0 ? "one line" : "two lines"}: button ${px(r.height)} tall · label box ${px(b.height)} (${lines} × line-height ${px(lh)}${lines > 1 ? ", gap between lines " + px(lh - b.height / lines) : ""}) · air above ${px(b.top - r.top)} · air below ${px(r.bottom - b.bottom)}`;
+        let ico = "";
+        if (icon) {
+          const ic = icon.getBoundingClientRect();
+          const labelMid = (b.top + b.bottom) / 2, firstLineMid = b.top + (lines > 1 ? (b.height - (lines - 1) * lh) / 2 : b.height / 2), iconMid = (ic.top + ic.bottom) / 2;
+          ico = ` · icon ${px(ic.height)}, centre vs label block ${px(iconMid - labelMid)}, vs first line ${px(iconMid - firstLineMid)}`;
+        }
+        return `${id}.${name}: button ${px(r.height)} tall · label box ${px(b.height)} (${lines} × line-height ${px(lh)}${lines > 1 ? ", gap between lines " + px(lh - b.height / lines) : ""}) · air above ${px(b.top - r.top)} · below ${px(r.bottom - b.bottom)}${ico}`;
       }).join("\n");
     }
     const root = probe.querySelector<HTMLElement>(".Text, .run");
@@ -408,11 +453,20 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
     // D — draw the label box's top and bottom across each button
     for (const btn of document.querySelectorAll<HTMLElement>(".stack > .Button, .stack > .rawbtn")) {
       btn.querySelectorAll(".guide").forEach((g) => g.remove());
+      const br = btn.getBoundingClientRect();
       const box = btn.querySelector<HTMLElement>(":scope > .Button-text, :scope > .run > .text");
-      if (!box) continue;
-      const br = btn.getBoundingClientRect(), bb = box.getBoundingClientRect();
-      for (const y of [bb.top - br.top, bb.bottom - br.top]) {
-        const g = document.createElement("div"); g.className = "guide"; g.style.insetBlockStart = `${y}px`; btn.append(g);
+      if (box) {
+        const bb = box.getBoundingClientRect();
+        for (const y of [bb.top - br.top, bb.bottom - br.top]) {
+          const g = document.createElement("div"); g.className = "guide"; g.style.insetBlockStart = `${y}px`; btn.append(g);
+        }
+      }
+      const icon = btn.querySelector<HTMLElement>(":scope > .Button-icon, :scope > .icon");
+      if (icon) {
+        const ib = icon.getBoundingClientRect();
+        for (const y of [ib.top - br.top, ib.bottom - br.top]) {
+          const g = document.createElement("div"); g.className = "guide icon"; g.style.insetBlockStart = `${y}px`; btn.append(g);
+        }
       }
     }
   }
