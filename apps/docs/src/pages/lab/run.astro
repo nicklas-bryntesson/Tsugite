@@ -1,6 +1,6 @@
 ---
 // /lab/run — the run-engine lab. Raw HTML and CSS, no components except where a
-// component is the thing being compared. Five setups, each answering one question the
+// component is the thing being compared. Six setups, each answering one question the
 // parking lot holds against the same POC: one engine file for four components; the
 // container's display mode under trim; where a capped box goes when the composition
 // aligns; Button's label on the same engine; the word for the mode. Every block
@@ -145,6 +145,25 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
 &lt;/span&gt;</pre></figure>
       </div>
     </section>
+
+    {/* ── G. Input beside a button ──────────────────────────────────────── */}
+    <section class="lab" id="g">
+      <h2>G · An input beside a button</h2>
+      <p class="q">An input is always one line, and a one-line button beside it must be exactly as tall. The input cannot be trimmed (no child to margin, and <code>text-box-trim</code> does not reach a form control's inner editor), and it need not be: the button's derived padding exists only to give back what the trim took, so an untrimmed control reads the plain padding token and lands on the same sum — line-height × font-size + 2 × padding + 2 × border — from three directions: trimmed label, cap-box icon slot, plain input. No height is stated anywhere.</p>
+      <div class="probe controls" data-probe="g">
+        <button type="button" class="rawbtn" data-run="block" data-voice="button" data-padding="derived"><span class="text">Send</span></button>
+        <button type="button" class="rawbtn" data-run="block" data-voice="button" data-icon="only" data-padding="derived"><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button>
+        <input type="text" class="rawinput" data-voice="button" data-padding="plain" value="Amount" aria-label="value" />
+        <input type="text" class="rawinput" data-voice="button" data-padding="plain" placeholder="Placeholder" aria-label="placeholder" />
+        <input type="text" class="rawinput" data-voice="button" data-padding="plain" data-trim="native" value="trim asked" aria-label="trim probe" />
+        <button type="button" class="rawbtn" data-run="block" data-voice="button" data-padding="derived" data-weight="strong"><span class="text">Send</span></button>
+        <input type="text" class="rawinput" data-voice="button" data-padding="plain" data-weight="strong" value="Amount" aria-label="strong value" />
+        <input type="text" class="rawinput" data-voice="button" data-padding="derived" value="derived" aria-label="derived padding" />
+        <input type="text" class="rawinput" data-voice="button" value="2.5rem today" aria-label="today" />
+      </div>
+      <output data-for="g"></output>
+      <p class="note">Left to right: text button, icon-only button, input with a value, input with a placeholder, an input that asks for native trim (the number does not move: the property does not reach the control), the same button and input in the strong weight (weight is an axis on the door, never part of the voice, so nothing may move), an input on the button's <em>derived</em> padding (too tall by exactly the leading the trim removes from the label — the proof that the derivation is trim compensation, not a control rule), and today's field contract (<code>min-block-size: 2.5rem</code>, line-height 1). The first seven must agree to the hundredth; the last is the finding the control room already carries.</p>
+    </section>
   </main>
 </Layout>
 
@@ -269,6 +288,11 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
        is above the floor.) An icon button cannot wrap, so one line is the only case. */
     --_lab-capBox: calc((var(--fontEmBox-button, 1) - var(--fontCapGap-button, 0) - var(--fontDescent-button, 0)) * var(--fontSize-button));
 
+    /* weight is an axis, not part of the voice: the height must not move with it */
+    &[data-weight="strong"] > .text {
+      font-weight: var(--fontWeight-body-bold);
+    }
+
     & > .icon {
       inline-size: 1.5rem;
       block-size: 1.5rem;
@@ -289,6 +313,53 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
     color: var(--color-interactive-secondary-text);
     font-size: var(--fontSize-button);
     cursor: pointer;
+  }
+
+
+  /* G — a raw input on the button voice: the same ingredients as .rawbtn, no trim, no
+     height. The inner editor is one line of the voice's line-height; the padding is the
+     plain token (the derivation only repays the trim); the border the same width. TODO(lab) */
+  .rawinput {
+    box-sizing: border-box;
+    margin: 0;
+    inline-size: 9em;
+    font-family: var(--fontFamily-button);
+    font-weight: var(--fontWeight-button);
+    font-size: var(--fontSize-button);
+    line-height: var(--lineHeight-button);
+    padding-inline: 1.4em;
+    border: 1px solid var(--color-interactive-secondary-border);
+    border-radius: 0.375em;
+    background: transparent;
+    color: var(--color-interactive-secondary-text);
+
+    /* weight is an axis, not part of the voice: the height must not move with it */
+    &[data-weight="strong"] {
+      font-weight: var(--fontWeight-body-bold);
+    }
+
+    /* the plain token: the control is not trimmed, so nothing is given back */
+    &[data-padding="plain"] {
+      padding-block: var(--size-sm);
+    }
+
+    /* the button's derived padding on an untrimmed control: overshoots by the trimmed leading */
+    &[data-padding="derived"] {
+      padding-block: calc(var(--size-sm) + ((var(--lineHeight-button) - (var(--fontEmBox-button, 1) - var(--fontCapGap-button, 0) - var(--fontDescent-button, 0))) / 2) * var(--fontSize-button));
+    }
+
+    /* the probe: does native trim reach a form control at all? */
+    &[data-trim="native"] {
+      text-box-trim: trim-both;
+      text-box-edge: cap alphabetic;
+    }
+
+    /* today's field contract, for the comparison only */
+    &:not([data-padding]) {
+      min-block-size: 2.5rem;
+      line-height: 1;
+      padding-block: 0.25rem;
+    }
   }
 
   /* ── The lab's own furniture ─────────────────────────────────────────── */
@@ -382,6 +453,14 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
       gap: var(--size-md);
     }
 
+    /* G — controls side by side, top-aligned so every height is its own */
+    & .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: start;
+      gap: var(--size-md);
+    }
+
     & .guide {
       position: absolute;
       inset-inline: 0;
@@ -444,6 +523,16 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
           ico = ` · icon ${px(ic.height)}, centre vs label block ${px(iconMid - labelMid)}, vs first line ${px(iconMid - firstLineMid)}`;
         }
         return `${id}.${name}: button ${px(r.height)} tall · label box ${px(b.height)} (${lines} × line-height ${px(lh)}${lines > 1 ? ", gap between lines " + px(lh - b.height / lines) : ""}) · air above ${px(b.top - r.top)} · below ${px(r.bottom - b.bottom)}${ico}`;
+      }).join("\n");
+    }
+    if (probe.classList.contains("controls")) {
+      const items = [...probe.querySelectorAll<HTMLElement>(":scope > .rawbtn, :scope > .rawinput")];
+      const first = items[0].getBoundingClientRect().height;
+      return items.map((el) => {
+        const r = el.getBoundingClientRect();
+        const cs = getComputedStyle(el);
+        const name = el.getAttribute("aria-label") ?? (el.matches("[data-icon='only']") ? "icon-only button" : el.matches("[data-weight='strong']") ? "strong text button" : "text button");
+        return `${id}.${name}: ${px(r.height)} tall · vs first ${px(r.height - first)} · line-height ${cs.lineHeight} · padding-block ${cs.paddingBlockStart}`;
       }).join("\n");
     }
     const root = probe.querySelector<HTMLElement>(".Text, .run");
