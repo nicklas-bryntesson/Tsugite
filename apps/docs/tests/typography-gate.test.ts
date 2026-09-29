@@ -67,6 +67,9 @@ const ALLOWLIST: Record<string, Record<string, number>> = {
     "text-transform: uppercase": 1,
     "font-size: 0.875em": 1,
   },
+  // The run lab restates today's field contract (line-height 1) beside the derived control
+  // height, for the comparison only. Lab-only; deleted with the lab.
+  "apps/docs/src/pages/lab/run.astro": { "line-height: 1": 1 },
   "apps/docs/src/components/DocPage/DocPage.astro": {
     "font-size: 0.875em": 1,
   },
