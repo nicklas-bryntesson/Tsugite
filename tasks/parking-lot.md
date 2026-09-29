@@ -405,3 +405,21 @@ and did not decide. Each is a separate call.
   the horizontal crop wherever it sits. The threshold is not Teaser's 25rem — it is the
   picture's width, to be measured on the teaser bench at both states before it is chosen;
   the preset's grid class needs its own answer (a Surface/grid concern, not Picture's).
+- **Alignment belongs to the composition; typography's `align-inline` gains `context` as
+  its default.** Discussion 2026-09-28, not decided. A heading inside a composition may need
+  start on mobile, center on tablet, end on desktop — and the composition owns that
+  placement (ADR-0015). Today every typography component projects
+  `data-align-inline="start"` and the gate writes `text-align: start`, which closes the door
+  on inheritance: the composition must override the child per tier, base-plus-override in
+  the child's body. `text-align` is inherited by design. Proposed: a value `context`, the
+  default, whose gate writes `text-align: inherit`; the composition sets alignment on its
+  own cell in its own tier gates (the grid lab already writes `data-align-inline` on
+  `.copy`); `start | center | end` stay for the standalone run and as a deliberate override
+  on one site. The attribute is still always projected. Open, and tied to the run-engine
+  job: the capped box. ADR-0021 puts the line-length ceiling on the engine container, so
+  under `context` a centred cell centres the lines but leaves the box at the start, and
+  `justify-items` on the composition cannot place a box narrower than its root. Two
+  candidates for the POC that redraws the container anyway: the container as inline-level
+  (`inline-block`), so inherited `text-align` places the box the way CSS intends — the root's
+  own line box (the strut) is the cost to measure; or the ceiling on the root in block mode,
+  so the composition's grid can place it — an ADR-0021 change. Decide there, not here.
