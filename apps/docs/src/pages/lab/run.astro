@@ -1,10 +1,12 @@
 ---
 // /lab/run — the run-engine lab. Raw HTML and CSS, no components except where a
-// component is the thing being compared. Six setups, each answering one question the
-// parking lot holds against the same POC: one engine file for four components; the
-// container's display mode under trim; where a capped box goes when the composition
-// aligns; Button's label on the same engine; the word for the mode. Every block
-// measures itself and writes the numbers under it.
+// component is the thing being compared. Four setups, each answering one question the
+// parking lot holds against the same POC: one engine file for four components; Button's
+// label on the same engine; the word for the mode; an input beside a button. Every block
+// measures itself and writes the numbers under it. Two earlier setups — the container's
+// display mode under trim, and where a capped box goes when the composition aligns — are
+// gone: the composition is always a grid and moves boxes with justify-items, so the
+// engine container stays a block and the root's line box is never in play.
 import Layout from "../../layouts/Layout.astro";
 import "tsugite/kernel/css/debug.css";
 import Text from "tsugite/Text/Text.astro";
@@ -38,57 +40,6 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
         </figure>
       </div>
       <output data-for="a-text a-run"></output>
-    </section>
-
-    {/* ── B. The container's display ────────────────────────────────────── */}
-    <section class="lab" id="b">
-      <h2>B · The container: block, inline-block, or inline-grid</h2>
-      <p class="q">The trim works on block containers. Does an inline-level container keep the trim, and what does the root's own line box (the strut) cost?</p>
-      <div class="row">
-        <figure class="cell">
-          <figcaption>container <code>display: block</code> (today)</figcaption>
-          <div class="probe" data-probe="b-block"><p class="run" data-voice="body" data-run="block"><span class="text">{words}</span></p></div>
-        </figure>
-        <figure class="cell">
-          <figcaption>container <code>inline-block</code></figcaption>
-          <div class="probe" data-probe="b-inline"><p class="run" data-voice="body" data-run="block" data-container="inline-block"><span class="text">{words}</span></p></div>
-        </figure>
-        <figure class="cell">
-          <figcaption>container <code>inline-block</code>, root line height zero (kills the strut)</figcaption>
-          <div class="probe" data-probe="b-inline-nostrut"><p class="run" data-voice="body" data-run="block" data-container="inline-block" data-strut="none"><span class="text">{words}</span></p></div>
-        </figure>
-        <figure class="cell">
-          <figcaption>container <code>inline-grid</code></figcaption>
-          <div class="probe" data-probe="b-igrid"><p class="run" data-voice="body" data-run="block" data-container="inline-grid"><span class="text">{words}</span></p></div>
-        </figure>
-      </div>
-      <output data-for="b-block b-inline b-inline-nostrut b-igrid"></output>
-    </section>
-
-    {/* ── C. The capped box in an aligned cell ──────────────────────────── */}
-    <section class="lab" id="c">
-      <h2>C · A capped box in a cell the composition aligns</h2>
-      <p class="q">The composition says <code>text-align: center</code> on its cell (and per tier: start below 48.75rem, center above). Where does a capped run's box go?</p>
-      <div class="row">
-        <figure class="cell aligned">
-          <figcaption>1 · today: child <code>align-inline="center"</code> (margin auto on the container)</figcaption>
-          <div class="probe" data-probe="c1" style="--custom-text-lineLength: 22ch;"><Text text={words} alignInline="center" /></div>
-        </figure>
-        <figure class="cell aligned">
-          <figcaption>2 · <code>context</code>: block container inherits text-align, box stays at start</figcaption>
-          <div class="probe" data-probe="c2"><p class="run" data-voice="body" data-run="block" data-align="context"><span class="text">{words}</span></p></div>
-        </figure>
-        <figure class="cell aligned">
-          <figcaption>3 · <code>context</code> + inline-block container: text-align places the box</figcaption>
-          <div class="probe" data-probe="c3"><p class="run" data-voice="body" data-run="block" data-align="context" data-container="inline-block" data-strut="none"><span class="text">{words}</span></p></div>
-        </figure>
-        <figure class="cell aligned grid">
-          <figcaption>4 · ceiling on the root, the cell is a grid with <code>justify-items: center</code></figcaption>
-          <div class="probe" data-probe="c4"><p class="run" data-voice="body" data-run="block" data-align="context" data-cap="root"><span class="text">{words}</span></p></div>
-        </figure>
-      </div>
-      <output data-for="c1 c2 c3 c4"></output>
-      <p class="note">The cell's tint shows its edges; the dashed line is the run's box. Narrow the window below 48.75rem: the cell switches to start and every <code>context</code> run should follow without a change on the child.</p>
     </section>
 
     {/* ── D. Button's label on the same engine ──────────────────────────── */}
@@ -210,39 +161,6 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
     &[data-run="block"] > .text {
       display: block;
       max-inline-size: var(--_lineLength);
-    }
-
-    /* B — the container's display, as an axis of the lab */
-    &[data-run="block"][data-container="inline-block"] > .text {
-      display: inline-block;
-    }
-
-    &[data-run="block"][data-container="inline-grid"] > .text {
-      display: inline-grid;
-    }
-
-    /* the strut: an inline-level container sits in the root's own line box */
-    &[data-strut="none"] {
-      line-height: 0;
-    }
-
-    /* C — alignment from the context: the root inherits, the container gets nothing */
-    &[data-align="context"] {
-      text-align: inherit;
-    }
-
-    /* C — the lab caps at 22ch so the box is narrower than its cell; the real cap is the stop's */
-    &[data-align] {
-      --_lineLength: 22ch;
-    }
-
-    /* C4 — the ceiling on the root instead of the container */
-    &[data-cap="root"] {
-      max-inline-size: var(--_lineLength);
-
-      & > .text {
-        max-inline-size: none;
-      }
     }
 
     @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
@@ -418,28 +336,6 @@ const words = "The quick brown fox jumps over the lazy dog, and keeps jumping un
       & > .Text > .text-content,
       & > .run > .text {
         outline: 1px dashed var(--debug-outline);
-      }
-    }
-
-    /* C — the composition's cell: aligns per tier, on its own gates */
-    & .aligned .probe {
-      text-align: start;
-    }
-
-    @media (min-width: 48.75rem) {
-      & .aligned .probe {
-        text-align: center;
-      }
-    }
-
-    & .aligned.grid .probe {
-      display: grid;
-      justify-items: start;
-    }
-
-    @media (min-width: 48.75rem) {
-      & .aligned.grid .probe {
-        justify-items: center;
       }
     }
 

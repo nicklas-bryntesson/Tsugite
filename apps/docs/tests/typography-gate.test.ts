@@ -67,10 +67,9 @@ const ALLOWLIST: Record<string, Record<string, number>> = {
     "text-transform: uppercase": 1,
     "font-size: 0.875em": 1,
   },
-  // The run lab: a root at line-height 0 is the stimulus that removes the strut under an
-  // inline-level engine container (setup B). Lab-only; deleted with the lab.
-  // Section G restates today's field contract (line-height 1) beside the derived one, for the comparison only.
-  "apps/docs/src/pages/lab/run.astro": { "line-height: 0": 1, "line-height: 1": 1 },
+  // The run lab restates today's field contract (line-height 1) beside the derived control
+  // height, for the comparison only. Lab-only; deleted with the lab.
+  "apps/docs/src/pages/lab/run.astro": { "line-height: 1": 1 },
   "apps/docs/src/components/DocPage/DocPage.astro": {
     "font-size: 0.875em": 1,
   },
