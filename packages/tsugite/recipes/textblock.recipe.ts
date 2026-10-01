@@ -29,13 +29,13 @@ export const textblock = {
     /** no nowrap: the multiline contract (white-space: pre-line) honours the field's breaks;
         a plain field that must not wrap is a contradiction, so the word is not on this table */
     wrap: { values: ["balance", "pretty", "stable"], default: "pretty" },
-    /** ADR-0021: a reading ceiling on the inline size, the stop's line length; only a block
-        run has an inline size to cap, so the CSS applies it behind the data-run gate */
+    /** ADR-0021: a reading ceiling on the inline size, the stop's line length */
     capInline: { type: "boolean", default: true },
   },
   derived: {
-    /** ADR-0012 §3: a span is an inline run; TextBlock has none, so this is always block */
-    run: { attr: "data-run", from: ["element"] },
+    /** ADR-0024 §5: a field is never in a line, so the engine's gate is always block —
+        written anyway, so the markup reads the same as every other door */
+    textBox: { attr: "data-text-box", from: [] },
   },
   absent: [{ cells: { children: true }, message: "TextBlock takes plain text only (the textarea contract) — use the text prop, never child content" }],
   content: { empty: "suppress", unless: ["text"] },

@@ -1,118 +1,113 @@
-/* =====================================================
-   TEXTBLOCK COMPONENT — plain multiline text (textarea contract)
-===================================================== */
+/*
+ * TextBlock — a plain multiline string from a field (the textarea contract), set in the
+ * preamble or body voice exactly as delivered. Its box and trim are the text-box engine's
+ * (kernel/css/text-box.generated.css, ADR-0024); this file sets the voice's face, size and
+ * leading, the field's line breaks, the reading ceiling and how the words sit.
+ *
+ * Gates over the engine:
+ *   data-variant       preamble | body, the voice bundle; the engine's voice cell holds its metrics.
+ *   data-size          sm | md | lg, the voice's size stop.
+ *   data-align-inline  start | center | end, logical; once capped, the box moves too.
+ *   data-wrap          balance | pretty | stable — no nowrap, a field keeps its breaks.
+ *   data-cap-inline    true | false, the reading ceiling: the stop's line length (ADR-0021).
+ *   data-text-box      block, always — a field is never in a line; read by the kernel file only.
+ */
 
 .TextBlock {
-  /* reset */
   word-wrap: break-word;
   overflow-wrap: break-word;
   margin-block: 0;
 
-  /* ================================================
-     TEXT CONTAINER (Typography Engine)
-  ================================================= */
-
-  .textblock-content {
-    display: block;
-    font-size: var(--_fontSize);
-    line-height: var(--_lineHeight);
-    /* the contract: line breaks from the plain field are honored,
-       runs of spaces collapse */
+  & > .text {
+    font-size: var(--_tb-fontSize);
+    /* ADR-0024 §6: the leading is the voice cell's, the one the trim reads. */
+    line-height: var(--_tbx-lineHeight);
+    /* The contract: line breaks from the plain field are honoured, runs of spaces collapse. */
     white-space: pre-line;
   }
 
-  /* =====================================================
-     VARIANT LAYER (voice + baseline offset)
-  ===================================================== */
-
   &[data-variant="preamble"] {
-    --_lineHeight: var(--lineHeight-preamble);
-    --_baselineOffset: var(--baseline-offset-preamble);
-    --_emBox: var(--fontEmBox-preamble);
-    --_capGap: var(--fontCapGap-preamble);
-    --_descent: var(--fontDescent-preamble);
-
     font-family: var(--fontFamily-preamble);
     font-weight: var(--fontWeight-preamble);
     letter-spacing: var(--letterSpacing-preamble);
     font-feature-settings: var(--fontFeatureSettings-preamble);
 
-    &[data-size="sm"] { --_fontSize: var(--fontSize-preamble-small); --_lineLength: var(--lineLength-preamble-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-preamble); --_lineLength: var(--lineLength-preamble); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-preamble-large); --_lineLength: var(--lineLength-preamble-large); }
+    &[data-size="sm"] {
+      --_tb-fontSize: var(--fontSize-preamble-small);
+      --_tb-lineLength: var(--lineLength-preamble-small);
+    }
+
+    &[data-size="md"] {
+      --_tb-fontSize: var(--fontSize-preamble);
+      --_tb-lineLength: var(--lineLength-preamble);
+    }
+
+    &[data-size="lg"] {
+      --_tb-fontSize: var(--fontSize-preamble-large);
+      --_tb-lineLength: var(--lineLength-preamble-large);
+    }
   }
 
   &[data-variant="body"] {
-    --_lineHeight: var(--lineHeight-body);
-    --_baselineOffset: var(--baseline-offset-body);
-    --_emBox: var(--fontEmBox-body);
-    --_capGap: var(--fontCapGap-body);
-    --_descent: var(--fontDescent-body);
-
     font-family: var(--fontFamily-body);
     font-weight: var(--fontWeight-body);
     letter-spacing: var(--letterSpacing-body);
     font-feature-settings: var(--fontFeatureSettings-body);
 
-    &[data-size="sm"] { --_fontSize: var(--fontSize-body-small); --_lineLength: var(--lineLength-body-small); }
-    &[data-size="md"] { --_fontSize: var(--fontSize-body); --_lineLength: var(--lineLength-body); }
-    &[data-size="lg"] { --_fontSize: var(--fontSize-body-large); --_lineLength: var(--lineLength-body-large); }
-  }
+    &[data-size="sm"] {
+      --_tb-fontSize: var(--fontSize-body-small);
+      --_tb-lineLength: var(--lineLength-body-small);
+    }
 
-  /* =====================================================
-     LINE LENGTH (ADR-0021) — the reading ceiling, the stop's
-     line length through the ownership chain (ADR-0005): the
-     instance's --custom-textblock-lineLength first, on the engine
-     container that carries the run's font size (a ch is measured
-     in the font of its own element). TextBlock is always a block run.
-  ===================================================== */
+    &[data-size="md"] {
+      --_tb-fontSize: var(--fontSize-body);
+      --_tb-lineLength: var(--lineLength-body);
+    }
 
-  &[data-cap-inline="false"] > .textblock-content { max-inline-size: none; }
-  &[data-run="block"][data-cap-inline="true"] > .textblock-content { max-inline-size: var(--custom-textblock-lineLength, var(--_lineLength)); }
-
-  /* =====================================================
-     ALIGNMENT — the words and, once capped, the box
-  ===================================================== */
-
-  &[data-align-inline="start"]  { text-align: start; }
-  &[data-align-inline="center"] { text-align: center; & > .textblock-content { margin-inline: auto; } }
-  &[data-align-inline="end"]    { text-align: end; & > .textblock-content { margin-inline-start: auto; } }
-
-  /* =====================================================
-     WRAP STRATEGIES
-  ===================================================== */
-
-  &[data-wrap="balance"] { text-wrap: balance; }
-  &[data-wrap="pretty"]  { text-wrap: pretty; }
-  &[data-wrap="stable"]  { text-wrap: stable; }
-
-  /* =====================================================
-     FEATURE LAYER — TEXT TRIM
-     Same gates as Heading/Text. Removable in one sweep.
-  ===================================================== */
-
-  /* Fallback branch */
-  @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
-    > .textblock-content {
-      /* Emulates text-box-edge: cap alphabetic. The line box's content
-         area is the REAL em box (ascent+descent — 1.19-1.36em for our
-         faces, never 1), so the shave is half of (emBox - lineHeight)
-         plus the cap gap above / the descent below. baselineOffset stays
-         as the artistic nudge on top (factor x font size). */
-      --_marginBlockStart: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_capGap, 0) + var(--_baselineOffset, 0)) * var(--_fontSize));
-      --_marginBlockEnd: calc(((var(--_emBox, 1) - var(--_lineHeight)) / 2 - var(--_descent, 0) - var(--_baselineOffset, 0)) * var(--_fontSize));
-
-      margin-block-start: var(--_marginBlockStart);
-      margin-block-end: var(--_marginBlockEnd);
+    &[data-size="lg"] {
+      --_tb-fontSize: var(--fontSize-body-large);
+      --_tb-lineLength: var(--lineLength-body-large);
     }
   }
 
-  /* Native trim branch */
-  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-    > .textblock-content {
-      text-box-trim: trim-both;
-      text-box-edge: cap alphabetic;
-      margin-block: 0;
+  &[data-cap-inline="false"] > .text {
+    max-inline-size: none;
+  }
+
+  /* ADR-0021's custom level: a project's ceiling for every TextBlock, or the stop's own. */
+  &[data-cap-inline="true"] > .text {
+    max-inline-size: var(--custom-textblock-lineLength, var(--_tb-lineLength));
+  }
+
+  &[data-align-inline="start"] {
+    text-align: start;
+  }
+
+  &[data-align-inline="center"] {
+    text-align: center;
+
+    & > .text {
+      margin-inline: auto;
     }
+  }
+
+  &[data-align-inline="end"] {
+    text-align: end;
+
+    & > .text {
+      margin-inline-start: auto;
+    }
+  }
+
+  &[data-wrap="balance"] {
+    text-wrap: balance;
+  }
+
+  &[data-wrap="pretty"] {
+    text-wrap: pretty;
+  }
+
+  &[data-wrap="stable"] {
+    text-wrap: stable;
   }
 }

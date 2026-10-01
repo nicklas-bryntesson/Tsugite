@@ -51,7 +51,7 @@ describe(`${fixture.component}: the Astro renderer writes the recipe`, () => {
       const html = normalise(await container.renderToString(TextAstro, { props: propsOf(input), slots: input.children ? { default: CHILD } : undefined }));
       if (want.mode === "render") {
         const words = String(input.text);
-        expect(html).toBe(`${openingTag(want.tag!, want.className!, want.attrs!)}<span class="textblock-content">${words}</span></${want.tag}>`);
+        expect(html).toBe(`${openingTag(want.tag!, want.className!, want.attrs!)}<span class="text">${words}</span></${want.tag}>`);
       } else if (want.mode === "suppress") expect(html).toBe("");
       else {
         expect(html).toContain(want.errorMessage!);
