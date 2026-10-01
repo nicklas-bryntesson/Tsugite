@@ -8,8 +8,9 @@ import "../../styles/instruments/instruments.css";
 import Text from "tsugite/Text/Text.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import Caption from "tsugite/Caption/Caption.astro";
+import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 
-type Sample = { key: string; component: "Text" | "Heading" | "Caption"; props: Record<string, unknown>; narrow?: true };
+type Sample = { key: string; component: "Text" | "Heading" | "Caption" | "TextBlock"; props: Record<string, unknown>; narrow?: true };
 const samples: Sample[] = [
   { key: "Text sm", component: "Text", props: { size: "sm", text: "One line in body sm" } },
   { key: "Text md", component: "Text", props: { size: "md", text: "One line in body md" } },
@@ -24,8 +25,11 @@ const samples: Sample[] = [
   { key: "Caption label md", component: "Caption", props: { text: "A form label" } },
   { key: "Caption button md", component: "Caption", props: { variant: "button", text: "The button voice" } },
   { key: "Caption nav md", component: "Caption", props: { variant: "nav", text: "The nav voice" } },
+  { key: "TextBlock preamble md", component: "TextBlock", props: { text: "A standfirst from a field" } },
+  { key: "TextBlock body md", component: "TextBlock", props: { variant: "body", text: "A plain field in the body voice" } },
+  { key: "TextBlock preamble, two field lines", component: "TextBlock", props: { text: "First line of the field\nSecond line of the field" } },
 ];
-const components = { Text, Heading, Caption };
+const components = { Text, Heading, Caption, TextBlock };
 ---
 
 <div class="TextBoxBench">
