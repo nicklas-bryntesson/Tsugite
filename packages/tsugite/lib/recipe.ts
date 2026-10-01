@@ -24,12 +24,16 @@ export interface BooleanAxis {
   readonly type: "boolean";
   readonly default: boolean;
   readonly when?: When;
+  /** the CSS never reads the flag itself; a derived value carries what it decides
+   *  (Text's inline writes data-text-box, ADR-0024), so no attribute is written */
+  readonly unwritten?: true;
 }
 
 export type Axis = EnumAxis | BooleanAxis;
 
-/** One lookup, one level: the axis exists when another field has this value. Never `and`. */
-export type When = { readonly element: string } | { readonly part: string };
+/** One lookup, one level: the axis exists when another field has this value. Never `and`.
+ *  An axis named in `axis` must come earlier in the table. */
+export type When = { readonly element: string } | { readonly part: string } | { readonly axis: string; readonly is: string | boolean };
 
 /**
  * A host attribute: an open value the element carries. `string` is written when
@@ -165,7 +169,7 @@ export interface Resolution {
 
 const kebab = (s: string) => s.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 
-const booleanOf = (v: unknown): boolean | null =>
+export const booleanOf = (v: unknown): boolean | null =>
   v === true || v === "" || v === "true" ? true : v === false || v === "false" ? false : null;
 
 const stringOf = (v: unknown): string | null => (typeof v === "string" && v.trim() ? v.trim() : null);
@@ -247,11 +251,18 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
   for (const [name, part] of Object.entries(recipe.parts ?? {})) if (part.kind === "name" && typeof parts[name] === "string") attrs[part.attr] = parts[name] as string;
 
   // ── axes, in order; a gated axis is written only when its gate holds ───────
-  const holds = (when: When | undefined) => !when || ("element" in when ? when.element === tag : !!parts[when.part]);
+  const holds = (when: When | undefined) =>
+    !when || ("element" in when ? when.element === tag : "axis" in when ? axes[when.axis] === when.is : !!parts[when.part]);
+  const where = (when: When) =>
+    "element" in when
+      ? `<${tag}>`
+      : "axis" in when
+        ? `a ${recipe.name} with ${when.axis} ${String(axes[when.axis])}`
+        : `a ${recipe.name} without ${when.part}`;
   for (const [name, axis] of Object.entries(recipe.axes)) {
     const raw = props[name];
     if (!holds(axis.when)) {
-      if (raw !== undefined) fail(`${name} does not exist on ${"element" in axis.when! ? `<${tag}>` : `a ${recipe.name} without ${(axis.when as { part: string }).part}`}`);
+      if (raw !== undefined) fail(`${name} does not exist on ${where(axis.when!)}`);
       continue;
     }
     const attr = `data-${kebab(name)}`;
@@ -262,7 +273,7 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
       const flag = raw == null ? axis.default : booleanOf(raw);
       if (flag === null) fail(`invalid ${name} "${raw}" — expected true | false`);
       axes[name] = flag ?? axis.default;
-      attrs[attr] = axes[name] ? "true" : "false";
+      if (!axis.unwritten) attrs[attr] = axes[name] ? "true" : "false";
       continue;
     }
     const values = axis.valuesBy ? (axis.valuesBy.values[String(axes[axis.valuesBy.axis])] ?? []) : (axis.values ?? []);
