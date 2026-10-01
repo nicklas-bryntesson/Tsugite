@@ -2,7 +2,7 @@
 // for any (voice × element × input shape) there is exactly ONE component.
 // Same doctrine as the theme voiceMatrix (ADR-0006 §6).
 import { describe, it, expect } from "vitest";
-import { FAMILY, VOICE_SIZES } from "../lib/typographyFamily.ts";
+import { FAMILY, IN_LINE_ELEMENTS, VOICE_SIZES } from "../lib/typographyFamily.ts";
 import { heading } from "../recipes/heading.recipe";
 import { text } from "../recipes/text.recipe";
 import { textblock } from "../recipes/textblock.recipe";
@@ -98,6 +98,13 @@ describe("the typography family contract", () => {
       expect(missing).toEqual([]);
       const declared = text.absent.map((a) => a.cells as Record<string, unknown>).filter((c) => "variant" in c && "element" in c);
       expect(declared).toEqual([]);
+    });
+    it("an inline Text refuses exactly the elements that cannot sit in a line (ADR-0024)", () => {
+      const refused = text.absent
+        .map((a) => a.cells as Record<string, unknown>)
+        .filter((c) => c.inline === true && "element" in c)
+        .map((c) => c.element as string);
+      expect(refused.sort()).toEqual(text.element.values.filter((el) => !IN_LINE_ELEMENTS.includes(el)).sort());
     });
   });
 

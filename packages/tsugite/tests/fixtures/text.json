@@ -1,9 +1,9 @@
 {
-  "$comment": "Text — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. One reading voice, body, on six elements — p, span, div, and the captions legend, figcaption, label — three sizes, md by default; the element never decides the size. The UI voices are Caption's. Attribute order: the axes in table order, the derived run last.",
+  "$comment": "Text — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. One reading voice, body, on twelve elements, three sizes, md by default; the element never decides the size. The mode is intent (ADR-0024): `inline` puts the words in a line, the element follows (a span by default), the elements that cannot sit in a line are refused and the reading ceiling does not exist. The UI voices are Caption's. Attribute order: the axes in table order (inline is never written), the derived data-text-box last.",
   "component": "Text",
   "cases": [
     {
-      "name": "default: p, body md, pretty, block run",
+      "name": "default: p, body md, pretty, block",
       "input": {
         "text": "Hello",
         "children": false
@@ -18,7 +18,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -39,7 +39,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -56,7 +56,7 @@
       }
     },
     {
-      "name": "a span is an inline run",
+      "name": "a span without inline is a block (ADR-0024)",
       "input": {
         "text": "T",
         "element": "span",
@@ -72,7 +72,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "inline"
+          "data-text-box": "block"
         }
       }
     },
@@ -93,7 +93,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -115,7 +115,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "inline"
+          "data-text-box": "block"
         }
       }
     },
@@ -136,7 +136,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -157,7 +157,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -179,7 +179,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -200,7 +200,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -222,7 +222,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -244,7 +244,7 @@
           "data-align-inline": "center",
           "data-wrap": "balance",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -265,7 +265,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -286,7 +286,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -305,7 +305,7 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -382,12 +382,12 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "false",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
     {
-      "name": "span: the gate is written, the inline run has no inline size to cap",
+      "name": "a span block run carries its reading ceiling",
       "input": {
         "element": "span",
         "text": "inline",
@@ -403,8 +403,141 @@
           "data-align-inline": "start",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "inline"
+          "data-text-box": "block"
         }
+      }
+    },
+    {
+      "name": "inline: a span by default, no box, no ceiling",
+      "input": {
+        "text": "T",
+        "inline": true,
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align-inline": "start",
+          "data-wrap": "pretty",
+          "data-text-box": "inline"
+        }
+      }
+    },
+    {
+      "name": "inline on a label",
+      "input": {
+        "text": "T",
+        "inline": true,
+        "element": "label",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "label",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align-inline": "start",
+          "data-wrap": "pretty",
+          "data-text-box": "inline"
+        }
+      }
+    },
+    {
+      "name": "inline as a string, the way a CMS sends it",
+      "input": {
+        "text": "T",
+        "inline": "true",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align-inline": "start",
+          "data-wrap": "pretty",
+          "data-text-box": "inline"
+        }
+      }
+    },
+    {
+      "name": "inline false is a block p",
+      "input": {
+        "text": "T",
+        "inline": false,
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "p",
+        "className": "Text",
+        "attrs": {
+          "data-variant": "body",
+          "data-size": "md",
+          "data-align-inline": "start",
+          "data-wrap": "pretty",
+          "data-cap-inline": "true",
+          "data-text-box": "block"
+        }
+      }
+    },
+    {
+      "name": "an inline p is refused",
+      "input": {
+        "text": "T",
+        "inline": true,
+        "element": "p",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "an inline Text sits in a line — <p> cannot; use span or label"
+      }
+    },
+    {
+      "name": "an inline h2 is refused",
+      "input": {
+        "text": "T",
+        "inline": true,
+        "element": "h2",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "an inline Text sits in a line — <h2> cannot; use span or label"
+      }
+    },
+    {
+      "name": "an inline Text has no reading ceiling",
+      "input": {
+        "text": "T",
+        "inline": true,
+        "capInline": true,
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "capInline does not exist on a Text with inline true"
+      }
+    },
+    {
+      "name": "an invalid inline is refused",
+      "input": {
+        "text": "T",
+        "inline": "yes",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid inline \"yes\" — expected true | false"
       }
     }
   ]
