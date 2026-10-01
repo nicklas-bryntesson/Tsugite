@@ -1,7 +1,8 @@
 ---
 // The text-box bench (ADR-0024): every component on the engine, twice — as this browser
 // resolves it, and with the fallback forced (data-test-text-box="fallback" on the cell).
-// Each sample sits in its own Card (neutral × primary); a row puts the two side by side,
+// Each sample sits in its own Card on a Surface (neutral × primary — the Surface owns the
+// ground and the voice claim, the Card is the frame); a row puts the two side by side,
 // and the native text's cap line and baseline are drawn across both, so a fallback that
 // slides shows against the line. The controls row sets every md control beside a field —
 // the one size that meets the field today. The composed card stacks every door the way
@@ -10,6 +11,7 @@
 // joins with a row here when it moves onto the engine.
 import "../../styles/instruments/instruments.css";
 import Card from "tsugite/Card/Card.astro";
+import Surface from "tsugite/Surface/Surface.astro";
 import ChoiceField from "tsugite/ChoiceField/ChoiceField.astro";
 import Text from "tsugite/Text/Text.astro";
 import Heading from "tsugite/Heading/Heading.astro";
@@ -53,7 +55,6 @@ const samples: Sample[] = [
 const components = { Text, Heading, Caption, TextBlock, ActionButton };
 const sides = ["native", "fallback"] as const;
 const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-test-text-box": "fallback" } : {});
-const voice = { "data-theme": "neutral", "data-prominence": "primary" };
 ---
 
 <div class="TextBoxBench" data-visualize="false" data-show-guides="true">
@@ -77,7 +78,8 @@ const voice = { "data-theme": "neutral", "data-prominence": "primary" };
         <div class="row" data-sample={s.key}>
           {sides.map((side) => (
             <div class="cell" data-side={side} data-narrow={s.narrow ? "true" : "false"} {...forced(side)}>
-              <Card class="probe" border={true} padding="md" {...voice}>
+              <Surface theme="neutral" prominence="primary" capInline={false} class="ground">
+              <Card class="probe" border={true} padding="md">
                 {Component ? (
                   <Component {...s.props}>{s.label}</Component>
                 ) : (
@@ -89,6 +91,7 @@ const voice = { "data-theme": "neutral", "data-prominence": "primary" };
                   </div>
                 )}
               </Card>
+              </Surface>
             </div>
           ))}
         </div>
@@ -104,7 +107,8 @@ const voice = { "data-theme": "neutral", "data-prominence": "primary" };
   <div class="composed" data-guides>
     {sides.map((side) => (
       <div class="cell" data-side={side} {...forced(side)}>
-        <Card element="article" class="card" border={true} padding="lg" {...voice}>
+        <Surface theme="neutral" prominence="primary" capInline={false} class="ground">
+        <Card element="article" class="card" border={true} padding="lg">
           <div class="stack">
             <Caption size="sm" text="For your team" />
             <Heading element="h3" size="3" text="Your trial ends on Friday" />
@@ -122,6 +126,7 @@ const voice = { "data-theme": "neutral", "data-prominence": "primary" };
             <Text size="sm" text="The code is personal to this account, works once, and cannot be combined with another offer." />
           </div>
         </Card>
+        </Surface>
       </div>
     ))}
   </div>
@@ -300,6 +305,13 @@ const voice = { "data-theme": "neutral", "data-prominence": "primary" };
 
     & .cell[data-narrow="true"] {
       max-inline-size: 14rem;
+    }
+
+    /* Surface is built for page bands (2xl block, the site offset inline); a bench cell
+       sets the Surface's own knobs on its root to a cell's measure (ADR-0013 §3). */
+    & .ground {
+      --_sf-paddingBlock: var(--size-sm);
+      --_sf-paddingInline: var(--size-sm);
     }
 
     /* The dashed outline is the text's box: what the engine trimmed. The parts below are
