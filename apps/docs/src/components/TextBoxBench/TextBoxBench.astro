@@ -1,17 +1,26 @@
 ---
-// The text-box bench (ADR-0024): the same Text twice, as this browser resolves it and
-// with the fallback forced (data-test-text-box="fallback" on the column), measured live.
+// The text-box bench (ADR-0024): every component on the engine, twice — as this browser
+// resolves it and with the fallback forced (data-test-text-box="fallback" on the column),
+// measured live. A component joins with a row here when it moves onto the engine.
 // In a browser that trims natively the two columns are the two branches side by side;
 // the numbers say how far the margin formula sits from the real trim.
 import "../../styles/instruments/instruments.css";
 import Text from "tsugite/Text/Text.astro";
+import Heading from "tsugite/Heading/Heading.astro";
 
-const samples = [
-  { key: "sm", size: "sm", text: "One line in body sm" },
-  { key: "md", size: "md", text: "One line in body md" },
-  { key: "lg", size: "lg", text: "One line in body lg" },
-  { key: "md, wrapped", size: "md", text: "Wrapped body md, so the leading between the lines shows", narrow: true },
-] as const;
+type Sample = { key: string; component: "Text" | "Heading"; props: Record<string, unknown>; narrow?: true };
+const samples: Sample[] = [
+  { key: "Text sm", component: "Text", props: { size: "sm", text: "One line in body sm" } },
+  { key: "Text md", component: "Text", props: { size: "md", text: "One line in body md" } },
+  { key: "Text lg", component: "Text", props: { size: "lg", text: "One line in body lg" } },
+  { key: "Text md, wrapped", component: "Text", props: { size: "md", text: "Wrapped body md, so the leading between the lines shows" }, narrow: true },
+  { key: "Heading 2", component: "Heading", props: { size: "2", text: "A heading in size 2" } },
+  { key: "Heading 6", component: "Heading", props: { size: "6", text: "A heading in size 6" } },
+  { key: "Display 2", component: "Heading", props: { variant: "display", size: "2", text: "Display 2" } },
+  { key: "Heading 3, link", component: "Heading", props: { element: "h3", href: "#TextBox", text: "A heading that is a link" } },
+  { key: "Heading 3, wrapped", component: "Heading", props: { element: "h3", text: "A wrapped heading, the leading between its lines" }, narrow: true },
+];
+const components = { Text, Heading };
 ---
 
 <div class="TextBoxBench">
@@ -21,8 +30,11 @@ const samples = [
       <figure class="side" data-side={side} {...(side === "fallback" ? { "data-test-text-box": "fallback" } : {})}>
         <figcaption>{side === "native" ? "As this browser resolves it" : "Fallback forced — the margin formula"}</figcaption>
         {samples.map((s) => (
-          <div class="probe" data-sample={s.key} data-narrow={"narrow" in s ? "true" : "false"}>
-            <Text size={s.size} text={s.text} />
+          <div class="probe" data-sample={s.key} data-narrow={s.narrow ? "true" : "false"}>
+            {(() => {
+              const Component = components[s.component];
+              return <Component {...s.props} />;
+            })()}
           </div>
         ))}
       </figure>
@@ -36,7 +48,7 @@ const samples = [
 
   function measure(bench: HTMLElement) {
     // What the CSS did, not what the browser claims: the native column's computed trim.
-    const sample = bench.querySelector<HTMLElement>('[data-side="native"] .Text > .text')!;
+    const sample = bench.querySelector<HTMLElement>('[data-side="native"] [data-text-box="block"] > .text')!;
     const native = getComputedStyle(sample).getPropertyValue("text-box-trim") === "trim-both";
     bench.querySelector<HTMLElement>("[data-branch]")!.textContent = native
       ? "This browser trims natively: the left column is the native branch, the right the fallback."
@@ -48,7 +60,7 @@ const samples = [
     // through an empty inline-block at the end of the text (its bottom edge is the baseline).
     const read = (side: string, key: string) => {
       const probe = bench.querySelector<HTMLElement>(`[data-side="${side}"] [data-sample="${key}"]`)!;
-      const text = probe.querySelector<HTMLElement>(":scope > .Text > .text")!;
+      const text = probe.querySelector<HTMLElement>(":scope > * > .text")!;
       let mark = text.querySelector<HTMLElement>(":scope > [data-baseline-mark]");
       if (!mark) {
         mark = document.createElement("span");
@@ -120,7 +132,7 @@ const samples = [
       background: var(--color-surface-inset);
       outline: 1px solid var(--color-border-default);
 
-      & > .Text > .text {
+      & > * > .text {
         outline: 1px dashed var(--bench-outline);
       }
     }
