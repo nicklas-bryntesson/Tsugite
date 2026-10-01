@@ -6,7 +6,7 @@ import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { caption as text } from "../recipes/caption.recipe";
-import { captionDerive as textDerive } from "../lib/caption";
+import { captionDefaults, captionDerive as textDerive } from "../lib/caption";
 import TextAstro from "../components/primitives/typography/Caption/Caption.astro";
 
 interface Fixture {
@@ -32,7 +32,7 @@ const openingTag = (tag: string, className: string, attrs: Record<string, string
 describe(`${fixture.component}: the recipe resolves every fixture case`, () => {
   for (const { name, input, expect: want } of fixture.cases) {
     it(name, () => {
-      const got = resolve(text, propsOf(input), { slots: { children: input.children }, derive: textDerive });
+      const got = resolve(text, propsOf(input), { slots: { children: input.children }, derive: textDerive, defaults: captionDefaults(propsOf(input)) });
       expect(got.mode).toBe(want.mode);
       if (want.mode === "render") {
         expect(got.tag).toBe(want.tag);
@@ -51,7 +51,7 @@ describe(`${fixture.component}: the Astro renderer writes the recipe`, () => {
       const html = normalise(await container.renderToString(TextAstro, { props: propsOf(input), slots: input.children ? { default: CHILD } : undefined }));
       if (want.mode === "render") {
         const words = input.children ? CHILD : String(input.text);
-        expect(html).toBe(`${openingTag(want.tag!, want.className!, want.attrs!)}<span class="caption-content">${words}</span></${want.tag}>`);
+        expect(html).toBe(`${openingTag(want.tag!, want.className!, want.attrs!)}<span class="text">${words}</span></${want.tag}>`);
       } else if (want.mode === "suppress") expect(html).toBe("");
       else {
         expect(html).toContain(want.errorMessage!);

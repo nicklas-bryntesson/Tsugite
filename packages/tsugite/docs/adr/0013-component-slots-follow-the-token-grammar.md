@@ -56,7 +56,7 @@ separated by hyphens. A slot is the last link of the same chain
    | `te` | Teaser | | `sf` | Surface |
    | `qt` | Quote | | `bt` | Button |
    | `tx` | Text | | `tbx` | text-box engine (kernel, ADR-0024) |
-   | `hd` | Heading | | | |
+   | `hd` | Heading | | `cp` | Caption |
 
    A new component claims its prefix by adding a row here.
 3. **Two kinds of slot, both on the root's terms.**

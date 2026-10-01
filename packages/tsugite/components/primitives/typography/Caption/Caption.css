@@ -1,21 +1,16 @@
 /*
- * Caption — the UI voices of the typography family: label, button and nav.
- * It owns one run's bundle (face, weight, size, leading, tracking, trim) and
- * how the run sits on its line, nothing about what the words mean or what
- * they mark up. The controls read the same voices as tokens; this is the door
- * that speaks them standalone.
+ * Caption — the UI voices of the typography family: label, button and nav. Its box and
+ * trim are the text-box engine's (kernel/css/text-box.generated.css, ADR-0024); this file
+ * sets the voice's face, size and leading, the emphasis law and how the words sit on
+ * their line. The controls read the same voices as tokens; this is the door that speaks
+ * them standalone.
  *
- * Five gates over one engine:
- *   data-variant   label | button | nav, the voice bundle.
+ * Gates over the engine:
+ *   data-variant   label | button | nav, the voice bundle; the engine's voice cell holds its metrics.
  *   data-size      sm | md | lg, the voice's size stop.
- *   data-run       block | inline, derived from the element (ADR-0012 §3):
- *                  a span flows on the line and is never trimmed.
  *   data-align-inline  start | center | end, logical.
  *   data-wrap      balance | pretty | stable | nowrap.
- *
- * The engine (.caption-content, laws b–d, the trim branches) is shared word
- * for word with Heading, Text and TextBlock; a change here is a change in
- * four files.
+ *   data-text-box  block | inline, the engine's gate, read by the kernel file only.
  */
 
 .Caption {
@@ -23,45 +18,34 @@
   overflow-wrap: break-word;
   margin-block: 0;
 
-  /* TODOS() I think we can do better than this... */
-  .caption-content {
+  & > .text {
     font-size: var(--_cp-fontSize);
-    line-height: var(--_cp-lineHeight);
-
-    /* Law (d) — voice sovereignty: an UNVOICED inline element inherits
-       the run's metrics; a voiced child (data-variant) — and everything
-       inside it — owns its own bundle. The whole voiced subtree is
-       exempt, at zero added specificity: nearest voice wins by
-       inheritance, never by specificity. */
-    & :where(a, span, strong, em, b, i):where(:not(:is(.Caption [data-variant]), :is(.Caption [data-variant]) *)) {
-      font: inherit;
-      line-height: inherit;
-      letter-spacing: inherit;
-    }
-
-    /* Law (b), the open door: strong asks for the voice's bold weight with one
-       fallback to the voice's own (ADR-0008). A theme that gives the voice one
-       weight — Inter 400 here — gets flat emphasis by VALUE, not by law; a theme
-       that adds a bold weight opens the door without a line of CSS changing.
-       The voice's bold token is set per variant below. */
-    & :where(strong, b):where(:not(:is(.Caption [data-variant]) *)) { font-weight: var(--_cp-boldWeight); }
-    & :where(em, i):where(:not(:is(.Caption [data-variant]) *)) { font-style: italic; }
+    /* ADR-0024 §6: the leading is the voice cell's, the one the trim reads. */
+    line-height: var(--_tbx-lineHeight);
   }
 
-  /* Law (c) — the engine mode is gated on the run shape: block runs own
-     their display; inline runs keep the UA's inline flow (absence is
-     the contract). */
-  &[data-run="block"] > .caption-content {
-    display: block;
+  /* Law (d) — voice sovereignty: an UNVOICED inline element inherits the run's metrics; a
+     voiced child (data-variant) — and everything inside it — owns its own bundle, at zero
+     added specificity: nearest voice wins by inheritance, never by specificity. */
+  & > .text :where(a, span, strong, em, b, i):where(:not(:is(.Caption [data-variant]), :is(.Caption [data-variant]) *)) {
+    font: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
   }
 
+  /* Law (b), the open door: strong asks for the voice's bold weight with one fallback to
+     the voice's own (ADR-0008). A theme that gives the voice one weight — Inter 400 here —
+     gets flat emphasis by VALUE, not by law; a theme that adds a bold weight opens the
+     door without a line of CSS changing. The voice's bold token is set per variant below. */
+  & > .text :where(strong, b):where(:not(:is(.Caption [data-variant]) *)) {
+    font-weight: var(--_cp-boldWeight);
+  }
+
+  & > .text :where(em, i):where(:not(:is(.Caption [data-variant]) *)) {
+    font-style: italic;
+  }
 
   &[data-variant="label"] {
-    --_cp-lineHeight: var(--lineHeight-label);
-    --_cp-baselineOffset: var(--baseline-offset-label);
-    --_cp-emBox: var(--fontEmBox-label);
-    --_cp-capGap: var(--fontCapGap-label);
-    --_cp-descent: var(--fontDescent-label);
     --_cp-boldWeight: var(--fontWeight-label-bold, var(--fontWeight-label));
 
     font-family: var(--fontFamily-label);
@@ -83,11 +67,6 @@
   }
 
   &[data-variant="button"] {
-    --_cp-lineHeight: var(--lineHeight-button);
-    --_cp-baselineOffset: var(--baseline-offset-button);
-    --_cp-emBox: var(--fontEmBox-button);
-    --_cp-capGap: var(--fontCapGap-button);
-    --_cp-descent: var(--fontDescent-button);
     --_cp-boldWeight: var(--fontWeight-button-bold, var(--fontWeight-button));
 
     font-family: var(--fontFamily-button);
@@ -109,11 +88,6 @@
   }
 
   &[data-variant="nav"] {
-    --_cp-lineHeight: var(--lineHeight-nav);
-    --_cp-baselineOffset: var(--baseline-offset-nav);
-    --_cp-emBox: var(--fontEmBox-nav);
-    --_cp-capGap: var(--fontCapGap-nav);
-    --_cp-descent: var(--fontDescent-nav);
     --_cp-boldWeight: var(--fontWeight-nav-bold, var(--fontWeight-nav));
 
     font-family: var(--fontFamily-nav);
@@ -146,9 +120,9 @@
     text-align: end;
   }
 
-  /* Wrap. balance, pretty and stable are enhancements: a browser without the
-    value drops the declaration and wraps the plain way, so no @supports. nowrap
-    is a promise, so it uses the property every browser has honoured. */
+  /* Wrap. balance, pretty and stable are enhancements: a browser without the value drops
+     the declaration and wraps the plain way, so no @supports. nowrap is a promise, so it
+     uses the property every browser has honoured. */
   &[data-wrap="balance"] {
     text-wrap: balance;
   }
@@ -163,28 +137,5 @@
 
   &[data-wrap="nowrap"] {
     white-space: nowrap;
-  }
-
-  /* Text-trim with fallback */
-  /* TODOS(token) should this be a kernel after we solve the data-run:block? */
-
-  /* Fallback branch */
-  @supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
-    &[data-run="block"] > .caption-content {
-      --_cp-marginBlockStart: calc(((var(--_cp-emBox, 1) - var(--_cp-lineHeight)) / 2 - var(--_cp-capGap, 0) + var(--_cp-baselineOffset, 0)) * var(--_cp-fontSize));
-      --_cp-marginBlockEnd: calc(((var(--_cp-emBox, 1) - var(--_cp-lineHeight)) / 2 - var(--_cp-descent, 0) - var(--_cp-baselineOffset, 0)) * var(--_cp-fontSize));
-
-      margin-block-start: var(--_cp-marginBlockStart);
-      margin-block-end: var(--_cp-marginBlockEnd);
-    }
-  }
-
-  /* Native trim branch */
-  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-    &[data-run="block"] > .caption-content {
-      text-box-trim: trim-both;
-      text-box-edge: cap alphabetic;
-      margin-block: 0;
-    }
   }
 }
