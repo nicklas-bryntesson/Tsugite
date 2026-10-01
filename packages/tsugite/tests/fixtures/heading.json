@@ -1,9 +1,9 @@
 {
-  "$comment": "Heading — the contract as data. `children` is the default slot's presence, reported by the renderer; text, href and highlight are text parts. The size set depends on the voice and the default size on the element (lib/heading.ts fills that hole). Attribute order: the axes in table order, the highlight style only when there are words to mark, the derived run last.",
+  "$comment": "Heading — the contract as data. `children` is the default slot's presence, reported by the renderer; text, href and highlight are text parts. The size set depends on the voice and the default size on the element (lib/heading.ts fills that hole). Attribute order: the axes in table order, the highlight style only when there are words to mark, the derived data-text-box last. The mode is intent (ADR-0024): `inline` puts the words in a line, the element follows (a span by default), the block-only elements are refused and the reading ceiling does not exist; inline is never written.",
   "component": "Heading",
   "cases": [
     {
-      "name": "default: h2, heading 2, block run",
+      "name": "default: h2, heading 2, block",
       "input": {
         "text": "Hello",
         "children": false
@@ -18,7 +18,7 @@
           "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -39,7 +39,7 @@
           "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -61,7 +61,7 @@
           "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -84,12 +84,12 @@
           "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
     {
-      "name": "a span is an inline run",
+      "name": "a span without inline is a block (ADR-0024)",
       "input": {
         "text": "T",
         "element": "span",
@@ -105,7 +105,7 @@
           "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
-          "data-run": "inline"
+          "data-text-box": "block"
         }
       }
     },
@@ -127,7 +127,7 @@
           "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         },
         "parts": {
           "href": "/blog"
@@ -152,7 +152,7 @@
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-highlight-style": "mark",
-          "data-run": "block"
+          "data-text-box": "block"
         },
         "parts": {
           "highlight": "Tsugite"
@@ -178,7 +178,7 @@
           "data-wrap": "balance",
           "data-cap-inline": "true",
           "data-highlight-style": "underline",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -200,7 +200,7 @@
           "data-align-inline": "center",
           "data-wrap": "pretty",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -221,7 +221,7 @@
           "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -242,7 +242,7 @@
           "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -261,7 +261,7 @@
           "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "true",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -349,8 +349,76 @@
           "data-align-inline": "start",
           "data-wrap": "balance",
           "data-cap-inline": "false",
-          "data-run": "block"
+          "data-text-box": "block"
         }
+      }
+    },
+    {
+      "name": "inline: a span by default, no box, no ceiling",
+      "input": {
+        "text": "T",
+        "inline": true,
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "heading",
+          "data-size": "2",
+          "data-align-inline": "start",
+          "data-wrap": "balance",
+          "data-text-box": "inline"
+        }
+      }
+    },
+    {
+      "name": "inline display, the size from the voice",
+      "input": {
+        "text": "T",
+        "inline": true,
+        "variant": "display",
+        "size": "1",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Heading",
+        "attrs": {
+          "data-variant": "display",
+          "data-size": "1",
+          "data-align-inline": "start",
+          "data-wrap": "balance",
+          "data-text-box": "inline"
+        }
+      }
+    },
+    {
+      "name": "an inline h2 is refused",
+      "input": {
+        "text": "T",
+        "inline": true,
+        "element": "h2",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "an inline Heading sits in a line, and h2 cannot — use span"
+      }
+    },
+    {
+      "name": "an inline Heading has no reading ceiling",
+      "input": {
+        "text": "T",
+        "inline": true,
+        "capInline": false,
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "capInline does not exist on a Heading with inline true"
       }
     }
   ]

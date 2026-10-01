@@ -2,6 +2,7 @@
 // Heading — the LOUD voices (heading, display) of the typography family. The table is recipes/heading.recipe.ts, read by lib/recipe.ts
 // (ADR-0018); lib/heading.ts fills its holes; this file renders it in Astro. The door law
 // (one component per voice × element × input) is enforced by tests/typographyFamily.test.ts.
+import "../../../../kernel/css/text-box.generated.css";
 import "./Heading.css";
 import DevError from "../../../DevError/DevError.astro";
 import { heading } from "../../../../recipes/heading.recipe";
@@ -18,7 +19,7 @@ const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default
 const t = resolve(heading, Astro.props, {
   slots: { children: childHtml.trim().length > 0 },
   derive: headingDerive,
-  defaults: headingDefaults,
+  defaults: headingDefaults(Astro.props),
 });
 const plan = headingPlan(t);
 

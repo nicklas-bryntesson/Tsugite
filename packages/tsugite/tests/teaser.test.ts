@@ -40,11 +40,11 @@ describe("Teaser", () => {
     expect(html).not.toContain('class="Button"');
   });
 
-  it("the heading goes through the typography engine (data-run, ADR-0012)", async () => {
+  it("the heading goes through the text-box engine (data-text-box, ADR-0024)", async () => {
     const html = await render({ heading: "Engine", href: "/post" });
     expect(html).toMatch(/<h2 class="Heading"[^>]*data-variant="heading"/);
     expect(html).toMatch(/<h2 class="Heading"[^>]*data-size="4"/);
-    expect(html).toMatch(/<h2 class="Heading"[^>]*data-run="block"/);
+    expect(html).toMatch(/<h2 class="Heading"[^>]*data-text-box="block"/);
   });
 
   it("button mode: plain heading, a LinkButton in .Actions with sr-only context", async () => {

@@ -3,6 +3,7 @@
 // children go in as children.
 import type { ReactNode } from "react";
 import { createElement } from "react";
+import "../../../../kernel/css/text-box.generated.css";
 import "./Heading.css";
 import "../../../../kernel/css/debug.css";
 import { heading } from "../../../../recipes/heading.recipe";
@@ -19,7 +20,7 @@ const h = createElement;
 
 export default function Heading({ className, children, ...props }: HeadingProps) {
   const hasChildren = children != null && children !== false && children !== "";
-  const t = resolve(heading, { ...props, class: className }, { slots: { children: hasChildren }, derive: headingDerive, defaults: headingDefaults });
+  const t = resolve(heading, { ...props, class: className }, { slots: { children: hasChildren }, derive: headingDerive, defaults: headingDefaults(props) });
 
   if (t.mode === "suppress") return null;
   if (t.mode === "error") {

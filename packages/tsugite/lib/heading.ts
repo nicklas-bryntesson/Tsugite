@@ -1,19 +1,22 @@
-// Heading — the holes in the table (ADR-0018): the default size, the run mode, the
-// highlight, and the plan a renderer follows for the engine container (ADR-0012 §1).
-import type { Resolution, View } from "./recipe";
-import { runOf } from "./typographyFamily.ts";
+// Heading — the holes in the table (ADR-0018): the default element and size, the text-box
+// mode from the inline intent (ADR-0024), the highlight, and the plan a renderer follows
+// for the engine container (ADR-0012 §1).
+import { booleanOf, type Resolution, type View } from "./recipe";
 import { escapeHtml } from "./html";
 
 const ELEMENT_SIZE: Record<string, string> = { h1: "1", h2: "2", h3: "3", h4: "4", h5: "5", h6: "6" };
 
-/** Axis defaults the table declares as holes. Size: display 2, heading follows the element. */
-export const headingDefaults = {
+/** Default holes. The element is resolved before the axes, so its formula reads the intent
+ *  from the props: an inline Heading is a span, any other an h2. Size: display 2, heading
+ *  follows the element. */
+export const headingDefaults = (props: Record<string, unknown>) => ({
+  element: () => (booleanOf(props.inline) ? "span" : "h2"),
   size: ({ tag, axes }: View) => (axes.variant === "display" ? "2" : (ELEMENT_SIZE[tag] ?? "2")),
-};
+});
 
-/** Derived values. The run mode follows the element (ADR-0012 §3). */
+/** Derived values. The engine's mode is the intent, whatever the element. */
 export const headingDerive = {
-  run: ({ tag }: View) => runOf(tag),
+  textBox: ({ axes }: View) => (axes.inline ? "inline" : "block"),
 };
 
 const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -40,7 +43,7 @@ export function headingPlan(r: Resolution): {
   const text = r.parts.text as string | null;
   const href = r.parts.href as string | null;
   const highlight = r.parts.highlight as string | null;
-  const container = href && text ? ({ tag: "a", className: "heading-link", href } as const) : ({ tag: "span", className: "heading-text" } as const);
+  const container = href && text ? ({ tag: "a", className: "text", href } as const) : ({ tag: "span", className: "text" } as const);
   const innerHtml = r.parts.children || !text ? null : highlight ? applyHighlight(text, highlight) : escapeHtml(text);
   return { container, innerHtml };
 }
