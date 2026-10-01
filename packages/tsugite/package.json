@@ -15,6 +15,7 @@
     "./DateField/*": "./components/primitives/fields/DateField/*",
     "./DateTimeField/*": "./components/primitives/fields/DateTimeField/*",
     "./DevError/*": "./components/DevError/*",
+    "./debug.css": "./kernel/css/debug.css",
     "./FileUpload/*": "./components/primitives/fields/FileUpload/*",
     "./Heading/*": "./components/primitives/typography/Heading/*",
     "./MonthField/*": "./components/primitives/fields/MonthField/*",
