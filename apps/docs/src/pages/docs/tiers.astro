@@ -49,7 +49,7 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
             <code class="specimen-token">{token}</code>
             <span class="specimen-text">
               {voice === "body" ? (
-                <Text element="span" variant="body" size={size} text={label} />
+                <Text inline variant="body" size={size} text={label} />
               ) : (
                 <Heading element="span" variant={voice} size={size} text={label} />
               )}

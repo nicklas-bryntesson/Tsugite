@@ -333,11 +333,19 @@ const TYPE_TABLES = {
 
 const BLOCK_METRICS = ["lineHeight", "letterSpacing", "featureSettings", "baselineOffset"];
 
-const METRIC_TOKEN = {
+export const METRIC_TOKEN = {
   lineHeight: (voice) => `--lineHeight-${voice}`,
   letterSpacing: (voice) => `--letterSpacing-${voice}`,
   featureSettings: (voice) => `--fontFeatureSettings-${voice}`,
   baselineOffset: (voice) => `--baseline-offset-${voice}`,
+};
+
+/** The typeface geometry per voice, derived from its family's metrics; the text-box
+    engine (engine/text-box.js) reads these names too. */
+export const GEOMETRY_TOKEN = {
+  emBox: (voice) => `--fontEmBox-${voice}`,
+  capGap: (voice) => `--fontCapGap-${voice}`,
+  descent: (voice) => `--fontDescent-${voice}`,
 };
 
 /** A bundle metric is a scalar (one value for all tiers) or a tier map
@@ -478,9 +486,9 @@ export function generateTypographyStylesheet(tables = TYPE_TABLES) {
         // the voice's family.
         const { ascent, capHeight, descent } = families[def.family].metrics;
         lines.push(
-          `  --fontEmBox-${voice}: ${+(ascent + descent).toFixed(4)};`,
-          `  --fontCapGap-${voice}: ${+(ascent - capHeight).toFixed(4)};`,
-          `  --fontDescent-${voice}: ${descent};`,
+          `  ${GEOMETRY_TOKEN.emBox(voice)}: ${+(ascent + descent).toFixed(4)};`,
+          `  ${GEOMETRY_TOKEN.capGap(voice)}: ${+(ascent - capHeight).toFixed(4)};`,
+          `  ${GEOMETRY_TOKEN.descent(voice)}: ${descent};`,
         );
       }
       return lines.join("\n");

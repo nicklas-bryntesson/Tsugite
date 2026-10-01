@@ -1,0 +1,88 @@
+/* GENERATED — do not edit. Source: theme-default/typography.tokens.js (typeVoices)
+   via engine/text-box.js (ADR-0024). The text-box engine: one cell per voice, the two
+   mode gates, and the trim — native, fallback, and the fallback forced in a region
+   that asks for it, each excluding the others.
+   Regenerate: pnpm tokens   (freshness guarded by tests) */
+
+[data-variant="heading"] {
+  --_tbx-lineHeight: var(--lineHeight-heading);
+  --_tbx-baselineOffset: var(--baseline-offset-heading);
+  --_tbx-emBox: var(--fontEmBox-heading);
+  --_tbx-capGap: var(--fontCapGap-heading);
+  --_tbx-descent: var(--fontDescent-heading);
+}
+
+[data-variant="display"] {
+  --_tbx-lineHeight: var(--lineHeight-display);
+  --_tbx-baselineOffset: var(--baseline-offset-display);
+  --_tbx-emBox: var(--fontEmBox-display);
+  --_tbx-capGap: var(--fontCapGap-display);
+  --_tbx-descent: var(--fontDescent-display);
+}
+
+[data-variant="body"] {
+  --_tbx-lineHeight: var(--lineHeight-body);
+  --_tbx-baselineOffset: var(--baseline-offset-body);
+  --_tbx-emBox: var(--fontEmBox-body);
+  --_tbx-capGap: var(--fontCapGap-body);
+  --_tbx-descent: var(--fontDescent-body);
+}
+
+[data-variant="label"] {
+  --_tbx-lineHeight: var(--lineHeight-label);
+  --_tbx-baselineOffset: var(--baseline-offset-label);
+  --_tbx-emBox: var(--fontEmBox-label);
+  --_tbx-capGap: var(--fontCapGap-label);
+  --_tbx-descent: var(--fontDescent-label);
+}
+
+[data-variant="button"] {
+  --_tbx-lineHeight: var(--lineHeight-button);
+  --_tbx-baselineOffset: var(--baseline-offset-button);
+  --_tbx-emBox: var(--fontEmBox-button);
+  --_tbx-capGap: var(--fontCapGap-button);
+  --_tbx-descent: var(--fontDescent-button);
+}
+
+[data-variant="nav"] {
+  --_tbx-lineHeight: var(--lineHeight-nav);
+  --_tbx-baselineOffset: var(--baseline-offset-nav);
+  --_tbx-emBox: var(--fontEmBox-nav);
+  --_tbx-capGap: var(--fontCapGap-nav);
+  --_tbx-descent: var(--fontDescent-nav);
+}
+
+[data-variant="preamble"] {
+  --_tbx-lineHeight: var(--lineHeight-preamble);
+  --_tbx-baselineOffset: var(--baseline-offset-preamble);
+  --_tbx-emBox: var(--fontEmBox-preamble);
+  --_tbx-capGap: var(--fontCapGap-preamble);
+  --_tbx-descent: var(--fontDescent-preamble);
+}
+
+[data-text-box="inline"] > .text {
+  display: inline;
+}
+
+[data-text-box="block"] > .text {
+  display: block;
+}
+
+@supports not ((text-box-trim: trim-both) and (text-box-edge: cap alphabetic)) {
+  [data-text-box="block"] > .text {
+    margin-block-start: calc(((var(--_tbx-emBox) - var(--_tbx-lineHeight)) / 2 - var(--_tbx-capGap) + var(--_tbx-baselineOffset)) * 1em);
+    margin-block-end: calc(((var(--_tbx-emBox) - var(--_tbx-lineHeight)) / 2 - var(--_tbx-descent) - var(--_tbx-baselineOffset)) * 1em);
+  }
+}
+
+@supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+  [data-text-box="block"]:not([data-test-text-box="fallback"] *) > .text {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
+
+  [data-test-text-box="fallback"] [data-text-box="block"] > .text {
+    margin-block-start: calc(((var(--_tbx-emBox) - var(--_tbx-lineHeight)) / 2 - var(--_tbx-capGap) + var(--_tbx-baselineOffset)) * 1em);
+    margin-block-end: calc(((var(--_tbx-emBox) - var(--_tbx-lineHeight)) / 2 - var(--_tbx-descent) - var(--_tbx-baselineOffset)) * 1em);
+  }
+}

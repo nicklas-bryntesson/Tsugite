@@ -35,8 +35,14 @@
 // a row under Text plus a decision on its emphasis law, not a rebuild.
 
 /** Law (c), ADR-0012 §3: run mode follows element shape — a span is an inline run
- *  (flows on the line, no trim), every other element a block run. */
+ *  (flows on the line, no trim), every other element a block run. ADR-0024 reverses it:
+ *  the mode is intent and the element follows. Text has moved; Heading, Caption and
+ *  TextBlock still derive their mode here until their step. */
 export const runOf = (tag: string): "inline" | "block" => (tag === "span" ? "inline" : "block");
+
+/** ADR-0024: the elements a text may sit in a line on. An inline door refuses every other
+ *  element of its farm; tests/typographyFamily.test.ts holds the tables to it. */
+export const IN_LINE_ELEMENTS: readonly string[] = ["span", "label"];
 
 export const VOICE_SIZES: Record<string, readonly string[]> = {
   heading: ["1", "2", "3", "4", "5", "6"],

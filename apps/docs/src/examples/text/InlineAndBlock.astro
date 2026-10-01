@@ -1,0 +1,12 @@
+---
+import Text from "tsugite/Text/Text.astro";
+---
+{/* The element is the markup shape, the voice is the look, and inline is the
+    intent (ADR-0024): a block Text owns its box and its trim on any element,
+    a span included; an inline Text flows on its host's line, a span unless it
+    says label, and leaves trim to the host. */}
+<Text text="A p — a block, owns its trim" element="p" />
+<Text text="A span is a block too, the same metrics" element="span" />
+<Text element="p">
+  A line with <Text text="an inline Text" inline /> flowing on it.
+</Text>

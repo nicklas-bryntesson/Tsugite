@@ -4,13 +4,15 @@
 //   1. Resolution — which branch of every support gate THIS browser and
 //      display actually resolve (drag the window to another monitor and
 //      watch the gamut row change).
-//   2. Alignment — the comparison table: the field control (one height,
+//   2. Text box — Text natively trimmed beside the forced fallback (ADR-0024).
+//   3. Alignment — the comparison table: the field control (one height,
 //      2.5rem) against each button size, between dashed guides. Which
 //      button stop lines up with a field is a finding, not a given.
-//   3. Baseline trim — the heading text-trim check (shared with the bench).
-//   4. The donut matrix — voices × volumes (shared with the bench).
+//   4. Baseline trim — the heading text-trim check (shared with the bench).
+//   5. The donut matrix — voices × volumes (shared with the bench).
 import Layout from "../layouts/Layout.astro";
 import ResolutionPanel from "../components/ResolutionPanel/ResolutionPanel.astro";
+import TextBoxBench from "../components/TextBoxBench/TextBoxBench.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import AffixField from "tsugite/AffixField/AffixField.astro";
@@ -44,6 +46,16 @@ const buttonSizes = ["sm", "md", "lg"];
             sRGB display — the left one is more saturated on P3.
           </p>
         </div>
+      </section>
+
+      <section class="KitchenSink-section" id="TextBox">
+        <Heading element="h2" size="2" text="Text box" />
+        <p class="note">
+          The text-box engine's two branches on the same Text: the height the cell gets
+          and where the last baseline sits in it, native / fallback. Δ is the drift the
+          margin formula carries.
+        </p>
+        <TextBoxBench />
       </section>
 
       <section class="KitchenSink-section" id="Alignment">
