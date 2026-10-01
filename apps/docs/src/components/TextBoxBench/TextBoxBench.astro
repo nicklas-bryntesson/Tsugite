@@ -1,0 +1,138 @@
+---
+// The text-box bench (ADR-0024): the same Text twice, as this browser resolves it and
+// with the fallback forced (data-test-text-box="fallback" on the column), measured live.
+// In a browser that trims natively the two columns are the two branches side by side;
+// the numbers say how far the margin formula sits from the real trim.
+import "tsugite/kernel/css/debug.css";
+import Text from "tsugite/Text/Text.astro";
+
+const samples = [
+  { key: "sm", size: "sm", text: "One line in body sm" },
+  { key: "md", size: "md", text: "One line in body md" },
+  { key: "lg", size: "lg", text: "One line in body lg" },
+  { key: "md, wrapped", size: "md", text: "Wrapped body md, so the leading between the lines shows", narrow: true },
+] as const;
+---
+
+<div class="TextBoxBench">
+  <p class="note" data-branch></p>
+  <div class="pair">
+    {(["native", "fallback"] as const).map((side) => (
+      <figure class="side" data-side={side} {...(side === "fallback" ? { "data-test-text-box": "fallback" } : {})}>
+        <figcaption>{side === "native" ? "As this browser resolves it" : "Fallback forced — the margin formula"}</figcaption>
+        {samples.map((s) => (
+          <div class="probe" data-sample={s.key} data-narrow={"narrow" in s ? "true" : "false"}>
+            <Text size={s.size} text={s.text} />
+          </div>
+        ))}
+      </figure>
+    ))}
+  </div>
+  <output class="readout"></output>
+</div>
+
+<script>
+  const px = (n: number) => `${n.toFixed(2)}px`;
+
+  function measure(bench: HTMLElement) {
+    // What the CSS did, not what the browser claims: the native column's computed trim.
+    const sample = bench.querySelector<HTMLElement>('[data-side="native"] .Text > .text')!;
+    const native = getComputedStyle(sample).getPropertyValue("text-box-trim") === "trim-both";
+    bench.querySelector<HTMLElement>("[data-branch]")!.textContent = native
+      ? "This browser trims natively: the left column is the native branch, the right the fallback."
+      : "This browser cannot trim natively: both columns run the fallback, and they must agree to the pixel.";
+
+    // The two branches trim differently: native shrinks the text's own box, the fallback
+    // pulls the cell in with negative margins and leaves the box whole. So the instrument
+    // reads what the cell gets — the footprint — and where the last baseline sits in it,
+    // through an empty inline-block at the end of the text (its bottom edge is the baseline).
+    const read = (side: string, key: string) => {
+      const probe = bench.querySelector<HTMLElement>(`[data-side="${side}"] [data-sample="${key}"]`)!;
+      const text = probe.querySelector<HTMLElement>(":scope > .Text > .text")!;
+      let mark = text.querySelector<HTMLElement>(":scope > [data-baseline-mark]");
+      if (!mark) {
+        mark = document.createElement("span");
+        mark.dataset.baselineMark = "";
+        mark.setAttribute("aria-hidden", "true");
+        Object.assign(mark.style, { display: "inline-block", inlineSize: "0", blockSize: "0" });
+        text.append(mark);
+      }
+      const p = probe.getBoundingClientRect();
+      const cs = getComputedStyle(probe);
+      const contentBottom = p.bottom - parseFloat(cs.paddingBlockEnd);
+      return {
+        footprint: p.height - parseFloat(cs.paddingBlockStart) - parseFloat(cs.paddingBlockEnd),
+        baseline: contentBottom - mark.getBoundingClientRect().bottom,
+      };
+    };
+
+    const keys = [...bench.querySelectorAll<HTMLElement>('[data-side="native"] [data-sample]')].map((el) => el.dataset.sample!);
+    bench.querySelector("output")!.textContent = keys
+      .map((key) => {
+        const n = read("native", key);
+        const f = read("fallback", key);
+        return `${key}: footprint ${px(n.footprint)} / ${px(f.footprint)} · Δ ${px(n.footprint - f.footprint)} · last baseline above the cell's end ${px(n.baseline)} / ${px(f.baseline)}`;
+      })
+      .join("\n");
+  }
+
+  function run() {
+    document.querySelectorAll<HTMLElement>(".TextBoxBench").forEach(measure);
+  }
+  run();
+  addEventListener("resize", run);
+  document.fonts?.ready.then(run);
+</script>
+
+<style>
+  .TextBoxBench {
+    display: grid;
+    gap: var(--size-md);
+
+    & .note {
+      margin: 0;
+      color: var(--color-text-secondary);
+      font-size: var(--fontSize-label);
+    }
+
+    & .pair {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      gap: var(--size-md);
+      align-items: start;
+    }
+
+    & .side {
+      display: grid;
+      gap: var(--size-sm);
+      margin: 0;
+      min-inline-size: 0;
+
+      & figcaption {
+        color: var(--color-text-secondary);
+        font-size: var(--fontSize-label);
+      }
+    }
+
+    /* The probe is the cell the text lives in; the dashed outline is the text's box. */
+    & .probe {
+      padding: var(--size-md);
+      background: var(--color-surface-inset);
+      outline: 1px solid var(--color-border-default);
+
+      & > .Text > .text {
+        outline: 1px dashed var(--debug-outline);
+      }
+    }
+
+    & .probe[data-narrow="true"] {
+      max-inline-size: 14rem;
+    }
+
+    & .readout {
+      white-space: pre-wrap;
+      font-family: var(--fontFamily-code);
+      font-size: var(--fontSize-label-small);
+    }
+  }
+</style>
