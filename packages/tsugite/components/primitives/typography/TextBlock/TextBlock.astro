@@ -3,6 +3,7 @@
 // delivers it, never markup. Voices: preamble (the standfirst, default) and body. The
 // table is recipes/textblock.recipe.ts, read by lib/recipe.ts (ADR-0018); lib/textblock.ts
 // fills its holes; this file renders it in Astro.
+import "../../../../kernel/css/text-box.generated.css";
 import "./TextBlock.css";
 import DevError from "../../../DevError/DevError.astro";
 import { textblock } from "../../../../recipes/textblock.recipe";

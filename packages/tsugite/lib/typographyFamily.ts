@@ -34,11 +34,6 @@
 // cannot exist today. When a real case arrives (an RTE-fed standfirst), the change is
 // a row under Text plus a decision on its emphasis law, not a rebuild.
 
-/** Law (c), ADR-0012 §3: run mode follows element shape — a span is an inline run
- *  (flows on the line, no trim), every other element a block run. ADR-0024 reverses it:
- *  the mode is intent and the element follows. Text, Heading and Caption have moved;
- *  TextBlock still derives its mode here until its step. */
-export const runOf = (tag: string): "inline" | "block" => (tag === "span" ? "inline" : "block");
 
 /** ADR-0024: the elements a text may sit in a line on. An inline door refuses every other
  *  element of its farm; tests/typographyFamily.test.ts holds the tables to it. */
@@ -72,8 +67,9 @@ const CAPTION_FARM = [...HEADING_SHAPED, "p", "span", "div", "legend", "figcapti
 //   (b) inline emphasis (the `emphasis` field): quiet voices keep the
 //       semantics (strong → the F2 strong-weight convention, em italic);
 //       loud voices flatten — partial bolding of a heading is drift
-//   (c) run mode follows element shape: span = inline run (flows on the
-//       line, no trim — trim is a block concept), all else = block run
+//   (c) the mode is intent (ADR-0024, reversing ADR-0012 §3): `inline` puts
+//       the words in a line — no trim, trim is a block concept — and the
+//       element follows; TextBlock has no inline, it is always a block
 //   (d) voice sovereignty: an unvoiced inline element inherits the run's
 //       metrics; a voiced child (data-variant) owns its own bundle —
 //       nearest voice wins by inheritance, never by specificity
