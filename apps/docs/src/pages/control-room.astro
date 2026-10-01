@@ -5,24 +5,17 @@
 //      display actually resolve (drag the window to another monitor and
 //      watch the gamut row change).
 //   2. Text box — every component on the text-box engine, natively trimmed beside
-//      the forced fallback (ADR-0024).
-//   3. Alignment — the comparison table: the field control (one height,
-//      2.5rem) against each button size, between dashed guides. Which
-//      button stop lines up with a field is a finding, not a given.
-//   4. Baseline trim — the heading text-trim check (shared with the bench).
-//   5. The donut matrix — voices × volumes (shared with the bench).
+//      the forced fallback (ADR-0024), and the md controls beside a field: which
+//      control lines up with the field (one height, 2.5rem) is a finding, not a given.
+//   3. Baseline trim — the heading text-trim check (shared with the bench).
+//   4. The donut matrix — voices × volumes (shared with the bench).
 import Layout from "../layouts/Layout.astro";
 import ResolutionPanel from "../components/ResolutionPanel/ResolutionPanel.astro";
 import TextBoxBench from "../components/TextBoxBench/TextBoxBench.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import TextBlock from "tsugite/TextBlock/TextBlock.astro";
-import AffixField from "tsugite/AffixField/AffixField.astro";
-import LinkButton from "tsugite/Button/LinkButton.astro";
-import ActionButton from "tsugite/Button/ActionButton.astro";
 import Misc from "tsugite/fixtures/Misc.astro";
 import ThemesSection from "tsugite/fixtures/ThemesSection.astro";
-
-const buttonSizes = ["sm", "md", "lg"];
 ---
 
 <Layout title="Control room">
@@ -57,26 +50,6 @@ const buttonSizes = ["sm", "md", "lg"];
           margin formula carries.
         </p>
         <TextBoxBench />
-      </section>
-
-      <section class="KitchenSink-section" id="Alignment">
-        <Heading element="h2" size="2" text="Alignment" />
-        <p class="note">
-          The field control has one height — <code>2.5rem</code>. Each row pairs it
-          with one button size between the guides: a row that doesn't line up is a
-          finding, not a layout bug on this page.
-        </p>
-
-        {buttonSizes.map((size) => (
-          <div class="guide-group">
-            <p class="guide-label">field × button <code>{size}</code></p>
-            <div class="guide-row" data-guide={size}>
-              <AffixField id={`align-affix-${size}`} label="Amount" input={{ inputmode: "decimal" }} />
-              <LinkButton href="#Alignment" size={size} emphasis="primary">Link {size}</LinkButton>
-              <ActionButton size={size} emphasis="secondary">Action {size}</ActionButton>
-            </div>
-          </div>
-        ))}
       </section>
 
       <Misc />
@@ -119,30 +92,6 @@ const buttonSizes = ["sm", "md", "lg"];
     border-radius: 0.5rem;
     border: 1px solid var(--color-border-subtle);
     flex: none;
-  }
-
-  & .guide-group { inline-size: 100%; }
-
-  & .guide-label {
-    margin: 1rem 0 0.25rem;
-    font-size: var(--fontSize-label-small);
-    font-weight: var(--fontWeight-body-bold);
-    /* tracked-caps manner stays raw pending the Eyebrow primitive */
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-text-secondary);
-  }
-
-  /* dashed guides around the control line; controls bottom-align so
-     labels can hang above without disturbing the measurement */
-  & .guide-row {
-    display: flex;
-    align-items: flex-end;
-    gap: 1rem;
-    flex-wrap: wrap;
-    border-block: 1px dashed var(--color-feedback-error);
-    padding-block: 0;
-    inline-size: 100%;
   }
 }
 </style>

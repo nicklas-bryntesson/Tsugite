@@ -50,14 +50,14 @@ test('foundations: the color page renders from the factories', async ({ page }) 
   expect(bg).not.toBe('rgba(0, 0, 0, 0)')
 })
 
-test('control room: the field-height contract holds in every comparison row', async ({ page }) => {
-  // The mechanical twin of the alignment table (field-height: 2.5rem).
-  // The field is the contract carrier; whether a button size lines up with
-  // it is a FINDING the table exists to show — not asserted here.
+test('control room: the field-height contract holds in the controls row', async ({ page }) => {
+  // The mechanical twin of the controls row (field-height: 2.5rem).
+  // The field is the contract carrier; whether a button lines up with
+  // it is a FINDING the row exists to show — not asserted here.
   await page.goto('/control-room')
-  for (const size of ['sm', 'md', 'lg']) {
-    const affix = await page.locator(`#Alignment [data-guide="${size}"] .AffixField .input`).boundingBox()
-    expect(affix.height, `row ${size}: AffixField input = 2.5rem`).toBe(40)
+  for (const side of ['native', 'fallback']) {
+    const affix = await page.locator(`#TextBox .row[data-sample="Controls md"] [data-side="${side}"] .AffixField .input`).boundingBox()
+    expect(affix.height, `controls row, ${side}: AffixField input = 2.5rem`).toBe(40)
   }
 })
 

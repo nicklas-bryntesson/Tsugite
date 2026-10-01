@@ -1,3 +1,4 @@
+@import "../instruments/instruments.css";
 .KitchenSink {
     > .page-header {
         display: flex;
@@ -112,21 +113,21 @@
 }
 
 .text-alignment {
-    border: 1px dashed rebeccapurple;
+    border: 1px dashed var(--bench-guide);
     max-inline-size: 34ch;
 
     & .above {
         display: block;
         block-size: 2rem;
         background-color: var(--color-surface-inset);
-        border-block-end: 1px dashed rebeccapurple;
+        border-block-end: 1px dashed var(--bench-guide);
     }
 
     & .below {
         display: block;
         block-size: 2rem;
         background-color: var(--color-surface-inset);
-        border-block-start: 1px dashed rebeccapurple;
+        border-block-start: 1px dashed var(--bench-guide);
     }
 }
 
@@ -147,7 +148,7 @@
     }
 
     .text {
-        border-block-start: 1px dashed rebeccapurple;
+        border-block-start: 1px dashed var(--bench-guide);
         line-height: 1cap;
         font-family: var(--fontFamily-body);
         font-weight: var(--fontWeight-body);

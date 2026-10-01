@@ -58,10 +58,6 @@ const ALLOWLIST: Record<string, Record<string, number>> = {
     "letter-spacing: 0": 1,
     "text-transform: uppercase": 1,
   },
-  "apps/docs/src/pages/control-room.astro": {
-    "letter-spacing: 0.08em": 1,
-    "text-transform: uppercase": 1,
-  },
   "apps/docs/src/pages/docs/color.astro": {
     "letter-spacing: 0.08em": 1,
     "text-transform: uppercase": 1,
