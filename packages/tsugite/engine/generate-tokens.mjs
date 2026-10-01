@@ -1,5 +1,6 @@
 // Emits the token artifacts from the factories (ADR-0003, T7; ADR-0011 adds the base
-// tables; ADR-0014 adds the token registry; ADR-0016 the Surface adjacency rules).
+// tables; ADR-0014 adds the token registry; ADR-0016 the Surface adjacency rules;
+// ADR-0024 the text-box engine).
 // Run via `npm run tokens` — hooked into predev/prebuild, guarded by
 // tests/tokens.test.ts so a stale artifact fails the suite.
 import { writeFileSync, mkdirSync } from "node:fs";
@@ -16,6 +17,7 @@ import {
 } from "./collector.js";
 import { generateTokenRegistry } from "./registry.js";
 import { generateSurfaceStylesheet } from "./surface.js";
+import { generateTextBoxStylesheet } from "./text-box.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const rawOut = resolve(here, "../styles/tokens/color/color.raw.generated.css");
@@ -26,6 +28,7 @@ const seamOut = resolve(here, "../styles/ui-tokens.css");
 const baseOut = resolve(here, "../styles/tokens/base/base.generated.css");
 const registryOut = resolve(here, "../docs/tokens.generated.md");
 const surfaceOut = resolve(here, "../components/regions/Surface/Surface.generated.css");
+const textBoxOut = resolve(here, "../kernel/css/text-box.generated.css");
 
 mkdirSync(dirname(out), { recursive: true });
 mkdirSync(dirname(typeOut), { recursive: true });
@@ -38,6 +41,7 @@ mkdirSync(dirname(baseOut), { recursive: true });
 writeFileSync(baseOut, generateBaseStylesheet());
 writeFileSync(registryOut, generateTokenRegistry());
 writeFileSync(surfaceOut, generateSurfaceStylesheet());
+writeFileSync(textBoxOut, generateTextBoxStylesheet());
 console.log(`raw    → ${rawOut}`);
 console.log(`tokens → ${out}`);
 console.log(`themes → ${themesOut}`);
@@ -46,6 +50,7 @@ console.log(`seam   → ${seamOut}`);
 console.log(`base   → ${baseOut}`);
 console.log(`registry → ${registryOut}`);
 console.log(`surface  → ${surfaceOut}`);
+console.log(`text-box → ${textBoxOut}`);
 
 const clipped = gamutReport();
 if (clipped.length) {

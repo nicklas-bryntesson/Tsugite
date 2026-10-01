@@ -19,6 +19,7 @@ import {
 } from "../engine/collector.js";
 import { generateTokenRegistry } from "../engine/registry.js";
 import { generateSurfaceStylesheet, surfaceStates } from "../engine/surface.js";
+import { generateTextBoxStylesheet } from "../engine/text-box.js";
 import { rawColorTokens } from "../theme-default/raw.color.tokens.js";
 import { themeVoices, themeChannels, voiceMatrix, cellName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 import { rawRefName } from "../theme-default/raw.color.tokens.js";
@@ -77,6 +78,11 @@ describe("generated artifacts are fresh", () => {
   it("components/regions/Surface/Surface.generated.css matches the adjacency builder (ADR-0016)", () => {
     const onDisk = readFileSync(new URL("../components/regions/Surface/Surface.generated.css", import.meta.url), "utf8");
     expect(onDisk).toBe(generateSurfaceStylesheet());
+  });
+
+  it("kernel/css/text-box.generated.css matches the text-box engine (ADR-0024)", () => {
+    const onDisk = readFileSync(new URL("../kernel/css/text-box.generated.css", import.meta.url), "utf8");
+    expect(onDisk).toBe(generateTextBoxStylesheet());
   });
 
   it("surface adjacency: one rule per allowed pair, none for a forbidden one", () => {
