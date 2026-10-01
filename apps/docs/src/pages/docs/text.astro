@@ -14,8 +14,8 @@ import BodyOnHeading from "../../examples/text/BodyOnHeading.astro";
 import bodyOnHeadingSrc from "../../examples/text/BodyOnHeading.astro?raw";
 import Sizes from "../../examples/text/Sizes.astro";
 import sizesSrc from "../../examples/text/Sizes.astro?raw";
-import ElementAndRun from "../../examples/text/ElementAndRun.astro";
-import elementAndRunSrc from "../../examples/text/ElementAndRun.astro?raw";
+import InlineAndBlock from "../../examples/text/InlineAndBlock.astro";
+import inlineAndBlockSrc from "../../examples/text/InlineAndBlock.astro?raw";
 import Emphasis from "../../examples/text/Emphasis.astro";
 import emphasisSrc from "../../examples/text/Emphasis.astro?raw";
 import Chain from "../../examples/text/Chain.astro";
@@ -40,8 +40,8 @@ const entry = entryFor("text");
       <Sizes />
     </Example>
 
-    <Example id="element-and-run" title="Element and run mode" lead="The element is the markup shape, the voice is the look, and the two are independent. The shape decides the run mode: a span is an inline run that flows on the line and leaves trim to its host; p and div are block runs that own their trim (ADR-0012, law c)." source={elementAndRunSrc} block>
-      <ElementAndRun />
+    <Example id="inline-and-block" title="Block and inline" lead="The element is the markup shape, the voice is the look, and inline is the intent. A Text is a block that owns its box and trim on whatever element it stands; inline puts it in its host's line — a span by default, label allowed — with no trim and no reading ceiling (ADR-0024)." source={inlineAndBlockSrc} block>
+      <InlineAndBlock />
     </Example>
 
     <Example id="body-on-heading" title="Body on a heading shape" lead="A heading that should read like text. The element is the outline's business, the voice the design's; the two never force each other. The quiet voice keeps its emphasis law here — strong stays bold — where Heading would flatten it, which is why this cell is Text's and not Heading's (ADR-0023)." source={bodyOnHeadingSrc} block>
