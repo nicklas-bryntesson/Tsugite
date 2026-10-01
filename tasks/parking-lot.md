@@ -131,7 +131,7 @@ and did not decide. Each is a separate call.
   first, on value last) applied to feature queries: the `@supports not` branch
   before the native one. Heading and TextBlock were flipped to match Text and
   Caption; a sentence in css-doctrine.md should say it.
-- **The trim engine is four copies.** The `@supports` pair (native
+- ~~**The trim engine is four copies.**~~ — **resolved 2026-10-01, ADR-0024** (PRs #85–#92: one generated kernel file). Original: The `@supports` pair (native
   text-box-trim / margin fallback) is identical in Heading, Text, Caption and
   TextBlock but for the container class and the slot prefix. Candidate:
   `kernel/css/run.css` on `[data-run="block"] > .run`, the container renamed
@@ -170,7 +170,7 @@ and did not decide. Each is a separate call.
 
 ## From the cleanup round (2026-09-24)
 
-- **The inner span: one part, four names, and a mode word nobody reads right.**
+- ~~**The inner span: one part, four names, and a mode word nobody reads right.**~~ — **resolved 2026-10-01, ADR-0024**: the part is `.text` everywhere, the mode word is `data-text-box`, `inline` is intent. Original:
   The engine container is `text-content` in Text, `heading-text` / `heading-link`
   in Heading, `Button-text` in Button — three dialects for the recipe's one part,
   `text`. Two questions, two answers so far (discussion 2026-09-24, nothing decided):
@@ -428,4 +428,4 @@ and did not decide. Each is a separate call.
 
 - ~~**Direction for the text-box engine.**~~ — **decided 2026-10-01, ADR-0024**
   (one generated kernel file, `data-text-box` gate on `.text`, `<Text inline />` as intent).
-  The build is next; the lab's correct demos move to control room in that job.
+  Built 2026-10-01 (PRs #85–#92), the benches in control room, `/lab/run` deleted.
