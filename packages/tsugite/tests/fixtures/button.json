@@ -1,5 +1,5 @@
 {
-  "$comment": "Button — the contract as data. `element` picks the front door (a → LinkButton, button → ActionButton); `text` is whether the renderer has label content, given as input so the recipe is testable alone. Attribute order is part of the contract: host attributes, the icon name, the axes in table order, the derived flag.",
+  "$comment": "Button — the contract as data. `element` picks the front door (a → LinkButton, button → ActionButton); `text` is whether the renderer has label content, given as input so the recipe is testable alone. Attribute order is part of the contract: host attributes, the icon name, the axes in table order, the derived flag. The derived voice (data-variant=\"button\") and text-box mode (data-text-box=\"block\") are constants, written last (ADR-0024 §5).",
   "component": "Button",
   "cases": [
     {
@@ -19,7 +19,9 @@
           "data-size": "md",
           "data-pill": "false",
           "data-grow-inline": "false",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -43,7 +45,9 @@
           "data-size": "sm",
           "data-pill": "true",
           "data-grow-inline": "false",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -67,7 +71,9 @@
           "data-size": "md",
           "data-pill": "false",
           "data-grow-inline": "false",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -91,7 +97,9 @@
           "data-pill": "false",
           "data-grow-inline": "false",
           "data-icon-position": "right",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -117,7 +125,9 @@
           "data-pill": "false",
           "data-grow-inline": "false",
           "data-icon-position": "right",
-          "data-icon-only": "true"
+          "data-icon-only": "true",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -139,7 +149,9 @@
           "data-size": "md",
           "data-pill": "false",
           "data-grow-inline": "true",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -161,7 +173,9 @@
           "data-size": "md",
           "data-pill": "false",
           "data-grow-inline": "false",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -183,7 +197,9 @@
           "data-size": "md",
           "data-pill": "false",
           "data-grow-inline": "false",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         },
         "parts": {
           "screenReaderSuffix": " about Widgets"
@@ -209,7 +225,9 @@
           "data-size": "md",
           "data-pill": "false",
           "data-grow-inline": "false",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         },
         "parts": {
           "screenReaderPrefix": "Page ",
@@ -238,7 +256,9 @@
           "data-pill": "false",
           "data-grow-inline": "false",
           "data-icon-position": "right",
-          "data-icon-only": "true"
+          "data-icon-only": "true",
+          "data-variant": "button",
+          "data-text-box": "block"
         },
         "parts": {
           "screenReaderPrefix": "Search"
@@ -314,7 +334,9 @@
           "data-size": "md",
           "data-pill": "false",
           "data-grow-inline": "false",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -337,7 +359,9 @@
           "data-size": "md",
           "data-pill": "false",
           "data-grow-inline": "false",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -362,7 +386,9 @@
           "data-pill": "false",
           "data-grow-inline": "false",
           "data-icon-position": "left",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -385,7 +411,9 @@
           "data-size": "md",
           "data-pill": "false",
           "data-grow-inline": "false",
-          "data-icon-only": "false"
+          "data-icon-only": "false",
+          "data-variant": "button",
+          "data-text-box": "block"
         }
       }
     },

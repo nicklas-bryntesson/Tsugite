@@ -107,8 +107,8 @@ describe(`${fixture.component}: the Astro and React front doors render every fix
       const react = viaReact(element, props, input.text);
       if (want.mode === "render") {
         expect(astro.startsWith(openingTag(want.tag!, want.className!, want.attrs!)), `astro opening tag\n${astro}`).toBe(true);
-        if (input.text) expect(astro).toContain('<span class="Button-text">x');
-        if (want.parts?.screenReaderPrefix) expect(astro).toContain(`<span class="ScreenReaderText">${want.parts.screenReaderPrefix}</span>${input.text ? '<span class="Button-text">' : ""}`);
+        if (input.text) expect(astro).toContain('<span class="text">x');
+        if (want.parts?.screenReaderPrefix) expect(astro).toContain(`<span class="ScreenReaderText">${want.parts.screenReaderPrefix}</span>${input.text ? '<span class="text">' : ""}`);
         if (want.parts?.screenReaderSuffix) expect(astro).toContain(`${input.text ? "</span>" : ""}<span class="ScreenReaderText">${want.parts.screenReaderSuffix}</span>`);
         if (input.icon) expect(astro).toContain(`<svg class="Button-icon" aria-hidden="true" focusable="false"><use href="#${input.icon}"></use></svg>`);
         expect(react, "react").toBe(astro);
