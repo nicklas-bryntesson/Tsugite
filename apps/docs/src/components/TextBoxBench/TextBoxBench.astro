@@ -1,19 +1,30 @@
 ---
 // The text-box bench (ADR-0024): every component on the engine, twice — as this browser
 // resolves it, and with the fallback forced (data-test-text-box="fallback" on the cell).
-// Each row puts the two side by side; the native text's cap line and baseline are drawn
-// across both, so a fallback that slides shows against the line. The composed card below
-// stacks every door the way a real page does, so drift that adds up shows too. "Visualize
-// spacing" paints padding, gaps and content boxes. A component joins with a row here when
-// it moves onto the engine.
+// Each sample sits in its own Card (neutral × primary); a row puts the two side by side,
+// and the native text's cap line and baseline are drawn across both, so a fallback that
+// slides shows against the line. The controls row sets every md control beside a field —
+// the one size that meets the field today. The composed card stacks every door the way
+// a real page does, so drift that adds up shows too. Two switches: the guides (on) and
+// "visualize spacing" (off), which paints padding, gaps and content boxes. A component
+// joins with a row here when it moves onto the engine.
 import "../../styles/instruments/instruments.css";
+import Card from "tsugite/Card/Card.astro";
+import ChoiceField from "tsugite/ChoiceField/ChoiceField.astro";
 import Text from "tsugite/Text/Text.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import Caption from "tsugite/Caption/Caption.astro";
 import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import ActionButton from "tsugite/Button/ActionButton.astro";
+import AffixField from "tsugite/AffixField/AffixField.astro";
 
-type Sample = { key: string; component: "Text" | "Heading" | "Caption" | "TextBlock" | "ActionButton"; props: Record<string, unknown>; label?: string; narrow?: true };
+type Sample = {
+  key: string;
+  component: "Text" | "Heading" | "Caption" | "TextBlock" | "ActionButton" | "Controls";
+  props?: Record<string, unknown>;
+  label?: string;
+  narrow?: true;
+};
 const samples: Sample[] = [
   { key: "Text sm", component: "Text", props: { size: "sm", text: "One line in body sm" } },
   { key: "Text md", component: "Text", props: { size: "md", text: "One line in body md" } },
@@ -37,16 +48,21 @@ const samples: Sample[] = [
   { key: "Button md, wrapped", component: "ActionButton", props: { size: "md", emphasis: "secondary" }, label: "Press this button, please", narrow: true },
   { key: "Button md, icon", component: "ActionButton", props: { size: "md", emphasis: "secondary", icon: "icon-search" }, label: "Search" },
   { key: "Button md, icon only", component: "ActionButton", props: { size: "md", emphasis: "secondary", icon: "icon-search", "aria-label": "Search" } },
+  { key: "Controls md", component: "Controls" },
 ];
 const components = { Text, Heading, Caption, TextBlock, ActionButton };
 const sides = ["native", "fallback"] as const;
 const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-test-text-box": "fallback" } : {});
+const voice = { "data-theme": "neutral", "data-prominence": "primary" };
 ---
 
-<div class="TextBoxBench" data-visualize="false">
+<div class="TextBoxBench" data-visualize="false" data-show-guides="true">
   <div class="controls">
     <p class="note" data-branch></p>
-    <ActionButton size="sm" emphasis="secondary" aria-pressed="false" data-visualize-toggle>Visualize spacing</ActionButton>
+    <div class="switches">
+      <ChoiceField type="checkbox" id="bench-guides" name="bench-guides" label="Show guides" checked />
+      <ChoiceField type="checkbox" id="bench-visualize" name="bench-visualize" label="Visualize spacing" />
+    </div>
   </div>
 
   <div class="head">
@@ -56,14 +72,23 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
 
   <div class="rows" data-guides>
     {samples.map((s) => {
-      const Component = components[s.component];
+      const Component = s.component === "Controls" ? null : components[s.component];
       return (
         <div class="row" data-sample={s.key}>
           {sides.map((side) => (
-            <div class="cell" data-side={side} {...forced(side)}>
-              <div class="probe" data-narrow={s.narrow ? "true" : "false"}>
-                <Component {...s.props}>{s.label}</Component>
-              </div>
+            <div class="cell" data-side={side} data-narrow={s.narrow ? "true" : "false"} {...forced(side)}>
+              <Card class="probe" border={true} padding="md" {...voice}>
+                {Component ? (
+                  <Component {...s.props}>{s.label}</Component>
+                ) : (
+                  <div class="control-line">
+                    <ActionButton size="md" emphasis="primary">Send</ActionButton>
+                    <ActionButton size="md" emphasis="secondary" icon="icon-search">Search</ActionButton>
+                    <ActionButton size="md" emphasis="secondary" icon="icon-search" aria-label="Search" />
+                    <AffixField id={`bench-field-${side}`} label="Amount" input={{ inputmode: "decimal" }} />
+                  </div>
+                )}
+              </Card>
             </div>
           ))}
         </div>
@@ -79,20 +104,24 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
   <div class="composed" data-guides>
     {sides.map((side) => (
       <div class="cell" data-side={side} {...forced(side)}>
-        <article class="card">
-          <Caption size="sm" text="For your team" />
-          <Heading element="h3" size="3" text="Your trial ends on Friday" />
-          <Text text="Your project is ready to go live, and the plan you are on keeps it running until the end of the week." />
-          <Text text="Here is a code for the first month of the next plan. It works on every plan above it, in any currency." />
-          <div class="inset">
-            <Caption size="sm" text="Your personal code" />
-            <Text text="TRIAL-20-K7QX takes the first month off any plan above the one you have. It works once." />
+        <Card element="article" class="card" border={true} padding="lg" {...voice}>
+          <div class="stack">
+            <Caption size="sm" text="For your team" />
+            <Heading element="h3" size="3" text="Your trial ends on Friday" />
+            <Text text="Your project is ready to go live, and the plan you are on keeps it running until the end of the week." />
+            <Text text="Here is a code for the first month of the next plan. It works on every plan above it, in any currency." />
+            <Card class="inset" border={true} padding="md">
+              <div class="stack tight">
+                <Caption size="sm" text="Your personal code" />
+                <Text text="TRIAL-20-K7QX takes the first month off any plan above the one you have. It works once." />
+              </div>
+            </Card>
+            <div>
+              <ActionButton size="md" emphasis="primary">Claim the month</ActionButton>
+            </div>
+            <Text size="sm" text="The code is personal to this account, works once, and cannot be combined with another offer." />
           </div>
-          <div>
-            <ActionButton size="md" emphasis="primary">Claim the month</ActionButton>
-          </div>
-          <Text size="sm" text="The code is personal to this account, works once, and cannot be combined with another offer." />
-        </article>
+        </Card>
       </div>
     ))}
   </div>
@@ -116,20 +145,26 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
     return mark;
   }
 
-  /** The native side's text boxes — cap line and last baseline — drawn across the whole
-      block, so the fallback side is read against them. */
+  /** The native side's text boxes — cap line and last baseline — and, in the controls row,
+      each control's outer box, drawn across the whole block so the fallback side is read
+      against them. */
   function drawGuides(block: HTMLElement) {
     block.querySelectorAll(":scope > .guide").forEach((g) => g.remove());
     const top = block.getBoundingClientRect().top;
-    const native = block.querySelectorAll<HTMLElement>('[data-side="native"] [data-text-box="block"] > .text');
-    for (const text of native) {
-      for (const y of [text.getBoundingClientRect().top, baselineMark(text).getBoundingClientRect().bottom]) {
-        const g = document.createElement("div");
-        g.className = "guide";
-        g.setAttribute("aria-hidden", "true");
-        g.style.insetBlockStart = `${y - top}px`;
-        block.append(g);
-      }
+    const edges: number[] = [];
+    for (const text of block.querySelectorAll<HTMLElement>('[data-side="native"] [data-text-box="block"] > .text')) {
+      edges.push(text.getBoundingClientRect().top, baselineMark(text).getBoundingClientRect().bottom);
+    }
+    for (const control of block.querySelectorAll<HTMLElement>('[data-side="native"] .control-line > :is(.Button, .AffixField)')) {
+      const r = control.getBoundingClientRect();
+      edges.push(r.top, r.bottom);
+    }
+    for (const y of edges) {
+      const g = document.createElement("div");
+      g.className = "guide";
+      g.setAttribute("aria-hidden", "true");
+      g.style.insetBlockStart = `${y - top}px`;
+      block.append(g);
     }
   }
 
@@ -143,21 +178,22 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
 
     // The two branches trim differently: native shrinks the text's own box, the fallback
     // pulls the cell in with negative margins and leaves the box whole. So the readout is
-    // what the cell gets — the footprint — and where the last baseline sits in it.
-    // An icon-only button has no text, so no baseline: its row reads the footprint only.
+    // what the cell gets — the footprint — and where the last baseline sits in it. An
+    // icon-only button has no text, so its row reads the footprint only.
     const read = (row: HTMLElement, side: string) => {
       const probe = row.querySelector<HTMLElement>(`[data-side="${side}"] .probe`)!;
       const text = probe.querySelector<HTMLElement>(":scope > * > .text");
       const p = probe.getBoundingClientRect();
       const cs = getComputedStyle(probe);
-      const contentBottom = p.bottom - parseFloat(cs.paddingBlockEnd);
+      const pad = parseFloat(cs.paddingBlockStart) + parseFloat(cs.paddingBlockEnd) + parseFloat(cs.borderBlockStartWidth) + parseFloat(cs.borderBlockEndWidth);
+      const contentBottom = p.bottom - parseFloat(cs.paddingBlockEnd) - parseFloat(cs.borderBlockEndWidth);
       return {
-        footprint: p.height - parseFloat(cs.paddingBlockStart) - parseFloat(cs.paddingBlockEnd),
+        footprint: p.height - pad,
         baseline: text ? contentBottom - baselineMark(text).getBoundingClientRect().bottom : null,
       };
     };
 
-    const rows = [...bench.querySelectorAll<HTMLElement>(".row")];
+    const rows = [...bench.querySelectorAll<HTMLElement>(".row")].filter((r) => r.dataset.sample !== "Controls md");
     const lines = rows.map((row) => {
       const n = read(row, "native");
       const f = read(row, "fallback");
@@ -165,14 +201,11 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
       return `${row.dataset.sample}: footprint ${px(n.footprint)} / ${px(f.footprint)} · Δ ${px(n.footprint - f.footprint)}${baseline}`;
     });
 
-    // One height for every content: the text button, the icon button and the icon-only
-    // button of a size must agree, with no height stated anywhere.
-    const row = (key: string) => rows.find((r) => r.dataset.sample === key)!;
-    const height = (key: string, side: string) => row(key).querySelector<HTMLElement>(`[data-side="${side}"] .Button`)!.getBoundingClientRect().height;
+    // One height for every md control: text, text and icon, icon only, and the field.
+    const controls = bench.querySelector<HTMLElement>('.row[data-sample="Controls md"]')!;
     for (const side of ["native", "fallback"]) {
-      lines.push(
-        `button md heights (${side}): text ${px(height("Button md", side))} · icon ${px(height("Button md, icon", side))} · icon only ${px(height("Button md, icon only", side))}`,
-      );
+      const h = [...controls.querySelectorAll<HTMLElement>(`[data-side="${side}"] .control-line > :is(.Button, .AffixField)`)].map((el) => px(el.getBoundingClientRect().height));
+      lines.push(`controls md (${side}): text ${h[0]} · icon ${h[1]} · icon only ${h[2]} · field ${h[3]}`);
     }
 
     // The composed card: how far the fallback's stack has slid by its last baseline.
@@ -196,13 +229,16 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
     document.querySelectorAll<HTMLElement>(".TextBoxBench").forEach(measure);
   }
 
+  // The two switches write the bench's state; the CSS reads it.
   for (const bench of document.querySelectorAll<HTMLElement>(".TextBoxBench")) {
-    const toggle = bench.querySelector<HTMLButtonElement>("[data-visualize-toggle]")!;
-    toggle.addEventListener("click", () => {
-      const on = bench.dataset.visualize !== "true";
-      bench.dataset.visualize = on ? "true" : "false";
-      toggle.setAttribute("aria-pressed", on ? "true" : "false");
-    });
+    const bind = (id: string, attr: "visualize" | "showGuides") => {
+      const box = bench.querySelector<HTMLInputElement>(`#${id}`)!;
+      const write = () => (bench.dataset[attr] = box.checked ? "true" : "false");
+      box.addEventListener("change", write);
+      write();
+    };
+    bind("bench-guides", "showGuides");
+    bind("bench-visualize", "visualize");
   }
 
   run();
@@ -221,6 +257,12 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
       gap: var(--size-md);
       align-items: center;
       justify-content: space-between;
+    }
+
+    & .switches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-lg);
     }
 
     & .note {
@@ -256,43 +298,43 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
       min-inline-size: 0;
     }
 
-    /* The probe is the cell the text lives in; the dashed outline is the text's box. */
-    & .probe {
-      padding: var(--size-md);
-      background: var(--color-surface-inset);
-      outline: 1px solid var(--color-border-default);
-
-      & > * > .text {
-        outline: 1px dashed var(--bench-outline);
-      }
-    }
-
-    & .probe[data-narrow="true"] {
+    & .cell[data-narrow="true"] {
       max-inline-size: 14rem;
     }
 
-    & .card {
+    /* The dashed outline is the text's box: what the engine trimmed. The parts below are
+       rendered by the components inside, so they carry no scope attribute of this file. */
+    & .probe > :global(* > .text) {
+      outline: 1px dashed var(--bench-guide);
+    }
+
+    & .control-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-sm);
+      align-items: center;
+    }
+
+    & .stack {
       display: flex;
       flex-direction: column;
       gap: var(--size-md);
-      padding: var(--size-lg);
-      background: var(--color-surface-inset);
     }
 
-    & .inset {
-      display: flex;
-      flex-direction: column;
+    & .stack.tight {
       gap: var(--size-sm);
-      padding: var(--size-md);
-      background: var(--color-surface-page);
     }
 
     /* The guides are drawn by the script, so they carry no scope attribute. */
     & :global(.guide) {
       position: absolute;
       inset-inline: 0;
-      border-block-start: 2px dashed var(--bench-guide);
+      border-block-start: 1px dashed var(--bench-guide);
       pointer-events: none;
+    }
+
+    &[data-show-guides="false"] :global(.guide) {
+      display: none;
     }
 
     /* Visualize spacing: a container's padding green, the gaps between its children pink,
@@ -313,9 +355,10 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
         box-shadow: inset 0 0 0 var(--size-lg) var(--bench-padding);
       }
 
-      & .probe > *,
-      & .card > :not(.inset),
-      & .inset > * {
+      & .probe > :global(:not(.control-line)),
+      & .control-line > :global(:is(.Button, .AffixField)),
+      & .stack > :global(:not(.inset)),
+      & .inset .stack > :global(*) {
         background: var(--bench-content);
       }
     }
