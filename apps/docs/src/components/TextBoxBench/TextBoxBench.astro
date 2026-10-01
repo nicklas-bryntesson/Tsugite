@@ -3,7 +3,7 @@
 // with the fallback forced (data-test-text-box="fallback" on the column), measured live.
 // In a browser that trims natively the two columns are the two branches side by side;
 // the numbers say how far the margin formula sits from the real trim.
-import "tsugite/kernel/css/debug.css";
+import "../../styles/instruments/instruments.css";
 import Text from "tsugite/Text/Text.astro";
 
 const samples = [
@@ -121,7 +121,7 @@ const samples = [
       outline: 1px solid var(--color-border-default);
 
       & > .Text > .text {
-        outline: 1px dashed var(--debug-outline);
+        outline: 1px dashed var(--bench-outline);
       }
     }
 
