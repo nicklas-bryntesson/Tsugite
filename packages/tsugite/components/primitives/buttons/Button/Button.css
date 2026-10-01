@@ -9,6 +9,9 @@
  *   data-intent         destructive | success, feedback colours over the emphasis
  *                       cell; actions only.
  *   data-size           sm | md | lg, the button voice's stops, padding and icon size.
+ *   data-variant        button, always: the voice the text-box engine's cell fills.
+ *   data-text-box       block, always: the label is a trimmed run on the engine
+ *                       (kernel/css/text-box.generated.css, ADR-0024).
  *   data-pill           the radius.
  *   data-grow-inline    the footprint on the inline axis (ADR-0015).
  *   data-icon-position  left | right, the grid areas and the gap.
@@ -17,11 +20,10 @@
 @import "../../../../kernel/css/debug.css";
 /* prettier-ignore */
 .Button {
-  /* knobs: the button voice's bundle, the border and the focus ring */
+  /* knobs: the button voice's face, the border and the focus ring; the leading and the
+     typeface geometry are the engine's voice cell (ADR-0024 §6) */
   --_bt-fontFamily:      var(--fontFamily-button);
   --_bt-fontWeight:      var(--fontWeight-button);
-  --_bt-lineHeight:      var(--lineHeight-button);
-  --_bt-fontBaselineOffset: var(--baseline-offset-button);
   --_bt-borderWidth: 1px;
   --_bt-outlineWidth: 2px;
   --_bt-outlineOffset: 3px;
@@ -34,7 +36,10 @@
   grid-template-areas: var(--_bt-gridTemplateAreas, "text");
   align-items: center;
 
-  padding-block: var(--_bt-paddingBlock);
+  /* The label is trimmed to its cap box, so the padding gives back what the trim took:
+     the size's padding plus half of (leading − cap box), in the label's size. The button
+     keeps the height it had — line-height × font-size + 2 × padding — and states none. */
+  padding-block: calc(var(--_bt-paddingBlock) + (var(--_tbx-lineHeight) - (var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent))) / 2 * var(--_bt-fontSize));
   padding-inline: var(--_bt-paddingInline);
   border-style: solid;
   border-width: var(--_bt-borderWidth);
@@ -388,38 +393,26 @@
     gap: var(--_bt-marginStart);
   }
 
-  /* Icon-only: one area, square padding. After the position rules on purpose — an
-     icon-only button still carries data-icon-position, and this must win. */
+  /* Icon-only: one area. After the position rules on purpose — an icon-only button
+     still carries data-icon-position, and this must win. Its height needs no rule: the
+     icon's place is one cap box tall, the same as a label's line, so an icon-only button
+     lands on the text button's height by construction. */
   &[data-icon-only="true"] {
     --_bt-gridTemplateColumns: auto;
     --_bt-gridTemplateAreas: "icon";
     padding-inline: var(--_bt-paddingBlock);
-
-    /* No label line to sit within: the icon carries the height itself, and the
-       button is a square of padding around it. */
-    & > .Button-icon {
-      margin-block: 0;
-    }
   }
 
-  & > .Button-text {
-    /* prettier-ignore */
-    --_bt-baselineOffset: var(--button--baselineOffset, 0);
-    --_bt-effectiveLineHeight: calc(var(--_bt-fontSize) * var(--_bt-lineHeight));
-    --_bt-marginBlock: calc((var(--_bt-fontSize) - var(--_bt-effectiveLineHeight)) / 2);
-    --_bt-marginBlockStart: calc(var(--_bt-marginBlock) + var(--_bt-baselineOffset));
-    --_bt-marginBlockEnd: calc(var(--_bt-marginBlock) - var(--_bt-baselineOffset));
-
+  /* The label: the text-box engine's container (ADR-0024). Its box and trim are the
+     engine's; the leading is the voice cell's. */
+  & > .text {
     position: relative;
     color: inherit;
     grid-area: text;
     font-size: var(--_bt-fontSize);
     font-family: var(--_bt-fontFamily);
     font-weight: var(--_bt-fontWeight);
-    line-height: var(--_bt-lineHeight);
-    /* negative margin compensating for line-height above and below while still keeping line-height inside the button text, with baseline offset */
-    margin-block-start: var(--_bt-marginBlockStart);
-    margin-block-end: var(--_bt-marginBlockEnd);
+    line-height: var(--_tbx-lineHeight);
     word-break: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
@@ -430,19 +423,23 @@
 
   /* The icon: a sprite <use> in an svg that has no size of its own (the browser would
      give it 300×150), so the size is the size slot on both axes, and it sits in the
-     icon area of the button's grid. The negative block margin keeps it from adding
-     height beyond the label's line. */
+     icon area of the button's grid. Its PLACE is as tall as one trimmed line of the
+     label — the voice's cap box — so a negative block margin of half of (cap box − icon)
+     on each side makes the outer box exactly that: beside a label it adds nothing, alone
+     it gives the text button's height. (1cap would say it directly; it is above the floor.) */
+  /* TODO(token): the icon sizes in the size gates are raw rem and do not step with the tier. */
   & > .Button-icon {
     grid-area: icon;
     display: block;
     inline-size: var(--_bt-iconSize);
     block-size: var(--_bt-iconSize);
     position: relative;
-    margin-block: calc((var(--_bt-iconSize) / 2) * -1);
+    margin-block: calc(((var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent)) * var(--_bt-fontSize) - var(--_bt-iconSize)) / 2);
   }
 }
 
-/* Developer debug styles: measuring overlays on the kernel's debug palette (kernel/css/debug.css). */
+/* Developer debug styles: measuring overlays on the kernel's debug palette (kernel/css/debug.css).
+   The padding bands repeat the base's padding formula: an overlay cannot read a padding. */
 :where(.Button[data-test-state="debug"]) {
   &::before {
     content: "";
@@ -450,7 +447,7 @@
     inset-inline: 0;
     inset-block-start: 0;
     width: 100%;
-    height: var(--_bt-paddingBlock);
+    height: calc(var(--_bt-paddingBlock) + (var(--_tbx-lineHeight) - (var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent))) / 2 * var(--_bt-fontSize));
     background-color: var(--debug-fill);
   }
 
@@ -460,29 +457,19 @@
     inset-inline: 0;
     inset-block-end: 0;
     width: 100%;
-    height: var(--_bt-paddingBlock);
+    height: calc(var(--_bt-paddingBlock) + (var(--_tbx-lineHeight) - (var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent))) / 2 * var(--_bt-fontSize));
     background-color: var(--debug-fill);
   }
 
-  & > .Button-text {
+  /* The label's box is the trimmed cap box now, so the measured extent is the box itself. */
+  & > .text {
     position: relative;
     outline: 0.0625rem dashed var(--debug-outline);
 
     &::after {
       content: "";
       position: absolute;
-      inset-inline: 0;
-      inset-block: 0;
-
-      /* TODO(dead): --_bt-marginAdjustment is set nowhere; height falls to auto and the
-         transform to none, so the box shows the text's full line box, not the
-         compensated one. */
-      height: calc(
-        100% - (2 * var(--_bt-marginAdjustment))
-      ); /* Subtract top & bottom */
-      transform: translateY(var(--_bt-marginAdjustment)); /* Shift it down */
-
-      width: 100%;
+      inset: 0;
       background-color: var(--debug-measure);
       z-index: 0;
     }

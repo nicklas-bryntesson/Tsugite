@@ -3,9 +3,12 @@
 import type { View } from "./recipe";
 import { escapeHtml } from "./html";
 
-/** The derived flags of the Button recipe, by name. Icon-only: an icon and no label. */
+/** The derived values of the Button recipe, by name. Icon-only: an icon and no label.
+ *  The voice and the text-box mode are constants (ADR-0024 §5). */
 export const buttonDerive = {
   iconOnly: ({ parts }: View) => !!parts.icon && !parts.text,
+  voice: () => "button",
+  textBox: () => "block",
 };
 
 /** The icon part as an HTML string, for string-building renderers. */
@@ -20,7 +23,7 @@ export function buttonAffixHtml(words: string | null): string {
   return words ? `<span class="ScreenReaderText">${escapeHtml(words)}</span>` : "";
 }
 
-/** The label part as an HTML string: the visible text. */
+/** The label part as an HTML string: the visible text, the text-box engine's container. */
 export function buttonTextHtml(childHtml: string): string {
-  return `<span class="Button-text">${childHtml}</span>`;
+  return `<span class="text">${childHtml}</span>`;
 }

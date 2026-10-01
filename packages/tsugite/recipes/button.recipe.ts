@@ -39,6 +39,11 @@ export const button = {
   },
   derived: {
     iconOnly: { attr: "data-icon-only", from: ["icon", "text"] },
+    /** ADR-0024 §5: the button voice, always — the engine's voice cell fills from it */
+    voice: { attr: "data-variant", from: [] },
+    /** ADR-0024 §5: a button is never in a line, so the engine's gate is always block —
+        written anyway, so the markup reads the same as every other door */
+    textBox: { attr: "data-text-box", from: [] },
   },
   absent: [
     // One accessible name per button: an affix builds it around the visible words, aria-label replaces it.

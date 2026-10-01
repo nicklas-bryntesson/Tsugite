@@ -3,6 +3,7 @@
 // differs (children instead of a slot, className, camelCase attribute props).
 import type { ReactNode } from "react";
 import { createElement } from "react";
+import "../../../../kernel/css/text-box.generated.css";
 import "./Button.css";
 import "../../ScreenReaderText/ScreenReaderText.css";
 import "../../../../kernel/css/debug.css";
@@ -39,7 +40,7 @@ function render(element: "a" | "button", name: string, props: Record<string, unk
     b.tag,
     { className: b.className, ...b.attrs, ...b.rest },
     b.parts.screenReaderPrefix && h("span", { className: "ScreenReaderText" }, b.parts.screenReaderPrefix),
-    b.parts.text && h("span", { className: "Button-text" }, children),
+    b.parts.text && h("span", { className: "text" }, children),
     b.parts.screenReaderSuffix && h("span", { className: "ScreenReaderText" }, b.parts.screenReaderSuffix),
     b.parts.icon && h("svg", { className: "Button-icon", "aria-hidden": "true", focusable: "false" }, h("use", { href: `#${b.parts.icon}` })),
   );

@@ -22,7 +22,7 @@ describe("LinkButton", () => {
     expect(html).toContain('data-size="md"');
     expect(html).toContain('data-pill="false"');
     expect(html).toContain('data-grow-inline="false"');
-    expect(html).toContain('<span class="Button-text">Get started</span>');
+    expect(html).toContain('<span class="text">Get started</span>');
     expect(html).not.toContain("data-intent");
   });
 
@@ -75,7 +75,7 @@ describe("ActionButton", () => {
     expect(html).toContain('type="button"');
     expect(html).toContain('data-intent="neutral"');
     expect(html).toContain('data-emphasis="primary"');
-    expect(html).toContain('<span class="Button-text">Save</span>');
+    expect(html).toContain('<span class="text">Save</span>');
     expect(html).not.toContain("disabled");
   });
 
@@ -108,9 +108,9 @@ describe("ActionButton", () => {
 
   it("writes the screen-reader affixes around the visible words, in name order", async () => {
     const html = await renderLink({ href: "/x", screenReaderSuffix: " about Widgets" }, { default: "Read more" });
-    expect(html).toContain('<span class="Button-text">Read more</span><span class="ScreenReaderText"> about Widgets</span>');
+    expect(html).toContain('<span class="text">Read more</span><span class="ScreenReaderText"> about Widgets</span>');
     const both = await renderAction({ screenReaderPrefix: "Page ", screenReaderSuffix: " of 12" }, { default: "3" });
-    expect(both).toContain('<span class="ScreenReaderText">Page </span><span class="Button-text">3</span><span class="ScreenReaderText"> of 12</span>');
+    expect(both).toContain('<span class="ScreenReaderText">Page </span><span class="text">3</span><span class="ScreenReaderText"> of 12</span>');
   });
 
   it("an icon-only button may take its name from an affix instead of aria-label", async () => {
