@@ -89,6 +89,14 @@ describe("the typography family contract", () => {
     expect(refused.sort()).toEqual(heading.element.values.filter((el) => !IN_LINE_ELEMENTS.includes(el)).sort());
   });
 
+  it("an inline Caption refuses exactly the elements that cannot sit in a line (ADR-0024)", () => {
+    const refused = caption.absent
+      .map((a) => a.cells as Record<string, unknown>)
+      .filter((c) => c.inline === true && "element" in c)
+      .map((c) => c.element as string);
+    expect(refused.sort()).toEqual(caption.element.values.filter((el) => !IN_LINE_ELEMENTS.includes(el)).sort());
+  });
+
   describe("the Text table agrees with the matrix", () => {
     const member = FAMILY.Text;
     it("speaks exactly the matrix's voices", () => {

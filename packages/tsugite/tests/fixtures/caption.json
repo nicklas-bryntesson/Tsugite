@@ -1,23 +1,23 @@
 {
-  "$comment": "Caption — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. Three UI voices, label, button and nav, three sizes each, md by default; the element is any of the family's farm, span by default (an inline run), and never decides the size. Attribute order: the axes in table order, the derived run last.",
+  "$comment": "Caption — the contract as data. `children` is the default slot's presence, reported by the renderer; `text` is a text part. Three UI voices, label, button and nav, three sizes each, md by default; the element is any of the family's farm, span by default (an inline run), and never decides the size. Attribute order: the axes in table order, the derived run last. The mode is intent (ADR-0024): a Caption is a block, a p by default; `inline` puts it in a line, the element follows (a span by default, label allowed) and the block-only elements are refused; inline is never written; the derived data-text-box comes last.",
   "component": "Caption",
   "cases": [
     {
-      "name": "default: a span in the label voice, md, inline run",
+      "name": "default: a p in the label voice, md, block",
       "input": {
         "text": "Email",
         "children": false
       },
       "expect": {
         "mode": "render",
-        "tag": "span",
+        "tag": "p",
         "className": "Caption",
         "attrs": {
           "data-variant": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
-          "data-run": "inline"
+          "data-text-box": "block"
         }
       }
     },
@@ -38,7 +38,7 @@
           "data-size": "sm",
           "data-align-inline": "start",
           "data-wrap": "pretty",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -59,7 +59,7 @@
           "data-size": "lg",
           "data-align-inline": "start",
           "data-wrap": "pretty",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -79,7 +79,7 @@
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -99,7 +99,7 @@
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -113,14 +113,14 @@
       },
       "expect": {
         "mode": "render",
-        "tag": "span",
+        "tag": "p",
         "className": "Caption",
         "attrs": {
           "data-variant": "button",
           "data-size": "lg",
           "data-align-inline": "start",
           "data-wrap": "pretty",
-          "data-run": "inline"
+          "data-text-box": "block"
         }
       }
     },
@@ -133,14 +133,14 @@
       },
       "expect": {
         "mode": "render",
-        "tag": "span",
+        "tag": "p",
         "className": "Caption",
         "attrs": {
           "data-variant": "nav",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
-          "data-run": "inline"
+          "data-text-box": "block"
         }
       }
     },
@@ -162,12 +162,12 @@
           "data-size": "md",
           "data-align-inline": "center",
           "data-wrap": "nowrap",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
     {
-      "name": "an unknown element falls back to span",
+      "name": "an unknown element falls back to p",
       "input": {
         "text": "T",
         "element": "th",
@@ -175,14 +175,14 @@
       },
       "expect": {
         "mode": "render",
-        "tag": "span",
+        "tag": "p",
         "className": "Caption",
         "attrs": {
           "data-variant": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
-          "data-run": "inline"
+          "data-text-box": "block"
         }
       }
     },
@@ -195,14 +195,14 @@
       },
       "expect": {
         "mode": "render",
-        "tag": "span",
+        "tag": "p",
         "className": "Caption extra",
         "attrs": {
           "data-variant": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
-          "data-run": "inline"
+          "data-text-box": "block"
         }
       }
     },
@@ -221,7 +221,7 @@
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
-          "data-run": "block"
+          "data-text-box": "block"
         }
       }
     },
@@ -267,6 +267,80 @@
       "expect": {
         "mode": "error",
         "errorMessage": "invalid size \"1\" for variant \"label\" — expected sm | md | lg"
+      }
+    },
+    {
+      "name": "inline: a span in a line",
+      "input": {
+        "text": "Email",
+        "inline": true,
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align-inline": "start",
+          "data-wrap": "pretty",
+          "data-text-box": "inline"
+        }
+      }
+    },
+    {
+      "name": "inline on a label",
+      "input": {
+        "text": "Email",
+        "inline": true,
+        "element": "label",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "label",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align-inline": "start",
+          "data-wrap": "pretty",
+          "data-text-box": "inline"
+        }
+      }
+    },
+    {
+      "name": "a span without inline is a block (ADR-0024)",
+      "input": {
+        "text": "T",
+        "element": "span",
+        "children": false
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "span",
+        "className": "Caption",
+        "attrs": {
+          "data-variant": "label",
+          "data-size": "md",
+          "data-align-inline": "start",
+          "data-wrap": "pretty",
+          "data-text-box": "block"
+        }
+      }
+    },
+    {
+      "name": "an inline legend is refused",
+      "input": {
+        "text": "T",
+        "inline": true,
+        "element": "legend",
+        "children": false
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "an inline Caption sits in a line, and legend cannot — use span or label"
       }
     }
   ]

@@ -7,8 +7,9 @@
 import "../../styles/instruments/instruments.css";
 import Text from "tsugite/Text/Text.astro";
 import Heading from "tsugite/Heading/Heading.astro";
+import Caption from "tsugite/Caption/Caption.astro";
 
-type Sample = { key: string; component: "Text" | "Heading"; props: Record<string, unknown>; narrow?: true };
+type Sample = { key: string; component: "Text" | "Heading" | "Caption"; props: Record<string, unknown>; narrow?: true };
 const samples: Sample[] = [
   { key: "Text sm", component: "Text", props: { size: "sm", text: "One line in body sm" } },
   { key: "Text md", component: "Text", props: { size: "md", text: "One line in body md" } },
@@ -19,8 +20,12 @@ const samples: Sample[] = [
   { key: "Display 2", component: "Heading", props: { variant: "display", size: "2", text: "Display 2" } },
   { key: "Heading 3, link", component: "Heading", props: { element: "h3", href: "#TextBox", text: "A heading that is a link" } },
   { key: "Heading 3, wrapped", component: "Heading", props: { element: "h3", text: "A wrapped heading, the leading between its lines" }, narrow: true },
+  { key: "Caption label sm", component: "Caption", props: { size: "sm", text: "A hint under a field" } },
+  { key: "Caption label md", component: "Caption", props: { text: "A form label" } },
+  { key: "Caption button md", component: "Caption", props: { variant: "button", text: "The button voice" } },
+  { key: "Caption nav md", component: "Caption", props: { variant: "nav", text: "The nav voice" } },
 ];
-const components = { Text, Heading };
+const components = { Text, Heading, Caption };
 ---
 
 <div class="TextBoxBench">
