@@ -1,14 +1,17 @@
 ---
 // The text-box bench (ADR-0024): every component on the engine, twice — as this browser
-// resolves it and with the fallback forced (data-test-text-box="fallback" on the column),
-// measured live. A component joins with a row here when it moves onto the engine.
-// In a browser that trims natively the two columns are the two branches side by side;
-// the numbers say how far the margin formula sits from the real trim.
+// resolves it, and with the fallback forced (data-test-text-box="fallback" on the cell).
+// Each row puts the two side by side; the native text's cap line and baseline are drawn
+// across both, so a fallback that slides shows against the line. The composed card below
+// stacks every door the way a real page does, so drift that adds up shows too. "Visualize
+// spacing" paints padding, gaps and content boxes. A component joins with a row here when
+// it moves onto the engine.
 import "../../styles/instruments/instruments.css";
 import Text from "tsugite/Text/Text.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import Caption from "tsugite/Caption/Caption.astro";
 import TextBlock from "tsugite/TextBlock/TextBlock.astro";
+import ActionButton from "tsugite/Button/ActionButton.astro";
 
 type Sample = { key: string; component: "Text" | "Heading" | "Caption" | "TextBlock"; props: Record<string, unknown>; narrow?: true };
 const samples: Sample[] = [
@@ -30,76 +33,159 @@ const samples: Sample[] = [
   { key: "TextBlock preamble, two field lines", component: "TextBlock", props: { text: "First line of the field\nSecond line of the field" } },
 ];
 const components = { Text, Heading, Caption, TextBlock };
+const sides = ["native", "fallback"] as const;
+const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-test-text-box": "fallback" } : {});
 ---
 
-<div class="TextBoxBench">
-  <p class="note" data-branch></p>
-  <div class="pair">
-    {(["native", "fallback"] as const).map((side) => (
-      <figure class="side" data-side={side} {...(side === "fallback" ? { "data-test-text-box": "fallback" } : {})}>
-        <figcaption>{side === "native" ? "As this browser resolves it" : "Fallback forced — the margin formula"}</figcaption>
-        {samples.map((s) => (
-          <div class="probe" data-sample={s.key} data-narrow={s.narrow ? "true" : "false"}>
-            {(() => {
-              const Component = components[s.component];
-              return <Component {...s.props} />;
-            })()}
+<div class="TextBoxBench" data-visualize="false">
+  <div class="controls">
+    <p class="note" data-branch></p>
+    <ActionButton size="sm" emphasis="secondary" aria-pressed="false" data-visualize-toggle>Visualize spacing</ActionButton>
+  </div>
+
+  <div class="head">
+    <span>As this browser resolves it</span>
+    <span>Fallback forced — the margin formula</span>
+  </div>
+
+  <div class="rows" data-guides>
+    {samples.map((s) => {
+      const Component = components[s.component];
+      return (
+        <div class="row" data-sample={s.key}>
+          {sides.map((side) => (
+            <div class="cell" data-side={side} {...forced(side)}>
+              <div class="probe" data-narrow={s.narrow ? "true" : "false"}>
+                <Component {...s.props} />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    })}
+  </div>
+
+  <p class="note">
+    Composed: every door stacked as a page would stack them — eyebrow, heading, two
+    paragraphs, an inset with its own label, a button, the small print. The guides run
+    from every native text box across both cards.
+  </p>
+  <div class="composed" data-guides>
+    {sides.map((side) => (
+      <div class="cell" data-side={side} {...forced(side)}>
+        <article class="card">
+          <Caption size="sm" text="For your team" />
+          <Heading element="h3" size="3" text="Your trial ends on Friday" />
+          <Text text="Your project is ready to go live, and the plan you are on keeps it running until the end of the week." />
+          <Text text="Here is a code for the first month of the next plan. It works on every plan above it, in any currency." />
+          <div class="inset">
+            <Caption size="sm" text="Your personal code" />
+            <Text text="TRIAL-20-K7QX takes the first month off any plan above the one you have. It works once." />
           </div>
-        ))}
-      </figure>
+          <div>
+            <ActionButton size="md" emphasis="primary">Claim the month</ActionButton>
+          </div>
+          <Text size="sm" text="The code is personal to this account, works once, and cannot be combined with another offer." />
+        </article>
+      </div>
     ))}
   </div>
+
   <output class="readout"></output>
 </div>
 
 <script>
   const px = (n: number) => `${n.toFixed(2)}px`;
 
+  /** An empty inline-block at the end of a text: its bottom edge is the last baseline. */
+  function baselineMark(text: HTMLElement) {
+    let mark = text.querySelector<HTMLElement>(":scope > [data-baseline-mark]");
+    if (!mark) {
+      mark = document.createElement("span");
+      mark.dataset.baselineMark = "";
+      mark.setAttribute("aria-hidden", "true");
+      Object.assign(mark.style, { display: "inline-block", inlineSize: "0", blockSize: "0" });
+      text.append(mark);
+    }
+    return mark;
+  }
+
+  /** The native side's text boxes — cap line and last baseline — drawn across the whole
+      block, so the fallback side is read against them. */
+  function drawGuides(block: HTMLElement) {
+    block.querySelectorAll(":scope > .guide").forEach((g) => g.remove());
+    const top = block.getBoundingClientRect().top;
+    const native = block.querySelectorAll<HTMLElement>('[data-side="native"] [data-text-box="block"] > .text');
+    for (const text of native) {
+      for (const y of [text.getBoundingClientRect().top, baselineMark(text).getBoundingClientRect().bottom]) {
+        const g = document.createElement("div");
+        g.className = "guide";
+        g.setAttribute("aria-hidden", "true");
+        g.style.insetBlockStart = `${y - top}px`;
+        block.append(g);
+      }
+    }
+  }
+
   function measure(bench: HTMLElement) {
-    // What the CSS did, not what the browser claims: the native column's computed trim.
+    // What the CSS did, not what the browser claims: the native side's computed trim.
     const sample = bench.querySelector<HTMLElement>('[data-side="native"] [data-text-box="block"] > .text')!;
     const native = getComputedStyle(sample).getPropertyValue("text-box-trim") === "trim-both";
     bench.querySelector<HTMLElement>("[data-branch]")!.textContent = native
-      ? "This browser trims natively: the left column is the native branch, the right the fallback."
-      : "This browser cannot trim natively: both columns run the fallback, and they must agree to the pixel.";
+      ? "This browser trims natively: the left side is the native branch, the right the fallback."
+      : "This browser cannot trim natively: both sides run the fallback, and they must agree to the pixel.";
 
     // The two branches trim differently: native shrinks the text's own box, the fallback
-    // pulls the cell in with negative margins and leaves the box whole. So the instrument
-    // reads what the cell gets — the footprint — and where the last baseline sits in it,
-    // through an empty inline-block at the end of the text (its bottom edge is the baseline).
-    const read = (side: string, key: string) => {
-      const probe = bench.querySelector<HTMLElement>(`[data-side="${side}"] [data-sample="${key}"]`)!;
+    // pulls the cell in with negative margins and leaves the box whole. So the readout is
+    // what the cell gets — the footprint — and where the last baseline sits in it.
+    const read = (row: HTMLElement, side: string) => {
+      const probe = row.querySelector<HTMLElement>(`[data-side="${side}"] .probe`)!;
       const text = probe.querySelector<HTMLElement>(":scope > * > .text")!;
-      let mark = text.querySelector<HTMLElement>(":scope > [data-baseline-mark]");
-      if (!mark) {
-        mark = document.createElement("span");
-        mark.dataset.baselineMark = "";
-        mark.setAttribute("aria-hidden", "true");
-        Object.assign(mark.style, { display: "inline-block", inlineSize: "0", blockSize: "0" });
-        text.append(mark);
-      }
       const p = probe.getBoundingClientRect();
       const cs = getComputedStyle(probe);
       const contentBottom = p.bottom - parseFloat(cs.paddingBlockEnd);
       return {
         footprint: p.height - parseFloat(cs.paddingBlockStart) - parseFloat(cs.paddingBlockEnd),
-        baseline: contentBottom - mark.getBoundingClientRect().bottom,
+        baseline: contentBottom - baselineMark(text).getBoundingClientRect().bottom,
       };
     };
 
-    const keys = [...bench.querySelectorAll<HTMLElement>('[data-side="native"] [data-sample]')].map((el) => el.dataset.sample!);
-    bench.querySelector("output")!.textContent = keys
-      .map((key) => {
-        const n = read("native", key);
-        const f = read("fallback", key);
-        return `${key}: footprint ${px(n.footprint)} / ${px(f.footprint)} · Δ ${px(n.footprint - f.footprint)} · last baseline above the cell's end ${px(n.baseline)} / ${px(f.baseline)}`;
-      })
-      .join("\n");
+    const lines = [...bench.querySelectorAll<HTMLElement>(".row")].map((row) => {
+      const n = read(row, "native");
+      const f = read(row, "fallback");
+      return `${row.dataset.sample}: footprint ${px(n.footprint)} / ${px(f.footprint)} · Δ ${px(n.footprint - f.footprint)} · last baseline above the cell's end ${px(n.baseline)} / ${px(f.baseline)}`;
+    });
+
+    // The composed card: how far the fallback's stack has slid by its last baseline.
+    const cardEnd = (side: string) => {
+      const card = bench.querySelector<HTMLElement>(`.composed [data-side="${side}"] .card`)!;
+      const texts = card.querySelectorAll<HTMLElement>('[data-text-box="block"] > .text');
+      const c = card.getBoundingClientRect();
+      return { height: c.height, baseline: baselineMark(texts[texts.length - 1]).getBoundingClientRect().bottom - c.top };
+    };
+    const cn = cardEnd("native");
+    const cf = cardEnd("fallback");
+    lines.push(
+      `composed card: height ${px(cn.height)} / ${px(cf.height)} · Δ ${px(cn.height - cf.height)} · last baseline from the card's top ${px(cn.baseline)} / ${px(cf.baseline)} · Δ ${px(cn.baseline - cf.baseline)}`,
+    );
+
+    bench.querySelector("output")!.textContent = lines.join("\n");
+    bench.querySelectorAll<HTMLElement>("[data-guides]").forEach(drawGuides);
   }
 
   function run() {
     document.querySelectorAll<HTMLElement>(".TextBoxBench").forEach(measure);
   }
+
+  for (const bench of document.querySelectorAll<HTMLElement>(".TextBoxBench")) {
+    const toggle = bench.querySelector<HTMLButtonElement>("[data-visualize-toggle]")!;
+    toggle.addEventListener("click", () => {
+      const on = bench.dataset.visualize !== "true";
+      bench.dataset.visualize = on ? "true" : "false";
+      toggle.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+
   run();
   addEventListener("resize", run);
   document.fonts?.ready.then(run);
@@ -110,29 +196,45 @@ const components = { Text, Heading, Caption, TextBlock };
     display: grid;
     gap: var(--size-md);
 
+    & .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-md);
+      align-items: center;
+      justify-content: space-between;
+    }
+
     & .note {
       margin: 0;
       color: var(--color-text-secondary);
       font-size: var(--fontSize-label);
     }
 
-    & .pair {
+    & .head,
+    & .row,
+    & .composed {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: var(--size-md);
-      align-items: start;
     }
 
-    & .side {
+    & .head {
+      color: var(--color-text-secondary);
+      font-size: var(--fontSize-label);
+    }
+
+    & .rows {
       display: grid;
       gap: var(--size-sm);
-      margin: 0;
-      min-inline-size: 0;
+    }
 
-      & figcaption {
-        color: var(--color-text-secondary);
-        font-size: var(--fontSize-label);
-      }
+    & .rows,
+    & .composed {
+      position: relative;
+    }
+
+    & .cell {
+      min-inline-size: 0;
     }
 
     /* The probe is the cell the text lives in; the dashed outline is the text's box. */
@@ -148,6 +250,55 @@ const components = { Text, Heading, Caption, TextBlock };
 
     & .probe[data-narrow="true"] {
       max-inline-size: 14rem;
+    }
+
+    & .card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-md);
+      padding: var(--size-lg);
+      background: var(--color-surface-inset);
+    }
+
+    & .inset {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-sm);
+      padding: var(--size-md);
+      background: var(--color-surface-page);
+    }
+
+    /* The guides are drawn by the script, so they carry no scope attribute. */
+    & :global(.guide) {
+      position: absolute;
+      inset-inline: 0;
+      border-block-start: 2px dashed var(--bench-guide);
+      pointer-events: none;
+    }
+
+    /* Visualize spacing: a container's padding green, the gaps between its children pink,
+       each component's own box white — a slide shows as colour that does not line up. */
+    &[data-visualize="true"] {
+      & .probe,
+      & .card,
+      & .inset {
+        background: var(--bench-gap);
+      }
+
+      & .probe,
+      & .inset {
+        box-shadow: inset 0 0 0 var(--size-md) var(--bench-padding);
+      }
+
+      & .card {
+        box-shadow: inset 0 0 0 var(--size-lg) var(--bench-padding);
+      }
+
+      & .probe > *,
+      & .card > :not(.inset),
+      & .inset > * {
+        background: var(--bench-content);
+      }
     }
 
     & .readout {
