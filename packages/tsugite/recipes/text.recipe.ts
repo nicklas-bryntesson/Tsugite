@@ -47,7 +47,7 @@ export const text = {
   },
   absent: [
     { cells: { text: true, children: true }, message: "use text OR child content, not both" },
-    ...BLOCK_ONLY.map((element) => ({ cells: { inline: true, element }, message: `an inline Text sits in a line — <${element}> cannot; use span or label` })),
+    ...BLOCK_ONLY.map((element) => ({ cells: { inline: true, element }, message: `an inline Text sits in a line, and ${element} cannot — use span or label` })),
   ],
   content: { empty: "suppress", unless: ["text"] },
 } as const satisfies Recipe;

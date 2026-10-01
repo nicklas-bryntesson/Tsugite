@@ -51,7 +51,7 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
               {voice === "body" ? (
                 <Text inline variant="body" size={size} text={label} />
               ) : (
-                <Heading element="span" variant={voice} size={size} text={label} />
+                <Heading inline variant={voice} size={size} text={label} />
               )}
             </span>
             <output class="specimen-value" data-measure={token}></output>

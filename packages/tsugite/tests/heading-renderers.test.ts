@@ -31,7 +31,7 @@ const propsOf = (input: Record<string, unknown>) => {
   const { children, ...props } = input;
   return props;
 };
-const ctx = (children: boolean) => ({ slots: { children }, derive: headingDerive, defaults: headingDefaults });
+const ctx = (children: boolean, props: Record<string, unknown>) => ({ slots: { children }, derive: headingDerive, defaults: headingDefaults(props) });
 
 const viaAstro = async (props: Record<string, unknown>, children: boolean) =>
   normalise(await container.renderToString(HeadingAstro, { props, slots: children ? { default: CHILD } : undefined }));
@@ -47,7 +47,7 @@ const openingTag = (tag: string, className: string, attrs: Record<string, string
 describe(`${fixture.component}: the recipe resolves every fixture case`, () => {
   for (const { name, input, expect: want } of fixture.cases) {
     it(name, () => {
-      const got = resolve(heading, propsOf(input), ctx(input.children));
+      const got = resolve(heading, propsOf(input), ctx(input.children, propsOf(input)));
       expect(got.mode).toBe(want.mode);
       if (want.mode === "render") {
         expect(got.tag).toBe(want.tag);
@@ -69,8 +69,8 @@ describe(`${fixture.component}: Astro and React render every fixture case identi
       const react = viaReact(props, input.children);
       if (want.mode === "render") {
         expect(astro.startsWith(openingTag(want.tag!, want.className!, want.attrs!)), `astro root\n${astro}`).toBe(true);
-        if (input.href) expect(astro).toContain(`<a href="${input.href}" class="heading-link">`);
-        else expect(astro).toContain('<span class="heading-text">');
+        if (input.href) expect(astro).toContain(`<a href="${input.href}" class="text">`);
+        else expect(astro).toContain('<span class="text">');
         if (input.highlight) expect(astro).toContain(`<mark>${input.highlight}</mark>`);
         // the child wrapper differs by one span (React needs an element to carry raw HTML); the root and container agree
         expect(react.replace(`<span>${CHILD}</span>`, CHILD), "react").toBe(astro);

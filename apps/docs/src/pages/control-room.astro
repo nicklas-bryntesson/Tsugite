@@ -4,7 +4,8 @@
 //   1. Resolution — which branch of every support gate THIS browser and
 //      display actually resolve (drag the window to another monitor and
 //      watch the gamut row change).
-//   2. Text box — Text natively trimmed beside the forced fallback (ADR-0024).
+//   2. Text box — every component on the text-box engine, natively trimmed beside
+//      the forced fallback (ADR-0024).
 //   3. Alignment — the comparison table: the field control (one height,
 //      2.5rem) against each button size, between dashed guides. Which
 //      button stop lines up with a field is a finding, not a given.
@@ -51,7 +52,7 @@ const buttonSizes = ["sm", "md", "lg"];
       <section class="KitchenSink-section" id="TextBox">
         <Heading element="h2" size="2" text="Text box" />
         <p class="note">
-          The text-box engine's two branches on the same Text: the height the cell gets
+          The text-box engine's two branches on every component that runs on it: the height the cell gets
           and where the last baseline sits in it, native / fallback. Δ is the drift the
           margin formula carries.
         </p>

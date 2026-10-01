@@ -9,7 +9,7 @@ const render = (props: Record<string, unknown>, slots?: Record<string, string>) 
   container.renderToString(Heading, { props, slots });
 
 describe("Heading", () => {
-  it("renders default heading/2 with text wrapped in .heading-text", async () => {
+  it("renders default heading/2 with text wrapped in .text", async () => {
     const html = await render({ text: "Hello" });
     expect(html).toContain("<h2");
     expect(html).toContain('class="Heading"');
@@ -17,7 +17,7 @@ describe("Heading", () => {
     expect(html).toContain('data-size="2"');
     expect(html).toContain('data-align-inline="start"');
     expect(html).toContain('data-wrap="balance"');
-    expect(html).toContain('<span class="heading-text">Hello</span>');
+    expect(html).toContain('<span class="text">Hello</span>');
   });
 
   it("infers heading size from element when size omitted", async () => {
@@ -46,7 +46,7 @@ describe("Heading", () => {
 
   it("wraps text in a link when href is set", async () => {
     const html = await render({ text: "Latest posts", element: "h3", href: "/blog" });
-    expect(html).toContain('<a href="/blog" class="heading-link">Latest posts</a>');
+    expect(html).toContain('<a href="/blog" class="text">Latest posts</a>');
   });
 
   it("wraps highlight words in <mark>, marked by default", async () => {
@@ -74,7 +74,7 @@ describe("Heading", () => {
     // The old contract rendered children bare, which bypassed the
     // typography engine (no size/leading/trim). No path skips the engine.
     const html = await render({}, { default: "Rich <em>content</em>" });
-    expect(html).toContain('<span class="heading-text">Rich <em>content</em></span>');
+    expect(html).toContain('<span class="text">Rich <em>content</em></span>');
   });
 
   it("renders nothing when no text and no child content", async () => {

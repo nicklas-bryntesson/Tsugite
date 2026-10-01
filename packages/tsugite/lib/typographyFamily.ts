@@ -36,8 +36,8 @@
 
 /** Law (c), ADR-0012 §3: run mode follows element shape — a span is an inline run
  *  (flows on the line, no trim), every other element a block run. ADR-0024 reverses it:
- *  the mode is intent and the element follows. Text has moved; Heading, Caption and
- *  TextBlock still derive their mode here until their step. */
+ *  the mode is intent and the element follows. Text and Heading have moved; Caption
+ *  and TextBlock still derive their mode here until their step. */
 export const runOf = (tag: string): "inline" | "block" => (tag === "span" ? "inline" : "block");
 
 /** ADR-0024: the elements a text may sit in a line on. An inline door refuses every other

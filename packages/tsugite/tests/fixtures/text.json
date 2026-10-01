@@ -499,7 +499,7 @@
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "an inline Text sits in a line — <p> cannot; use span or label"
+        "errorMessage": "an inline Text sits in a line, and p cannot — use span or label"
       }
     },
     {
@@ -512,7 +512,7 @@
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "an inline Text sits in a line — <h2> cannot; use span or label"
+        "errorMessage": "an inline Text sits in a line, and h2 cannot — use span or label"
       }
     },
     {
