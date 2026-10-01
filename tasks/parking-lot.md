@@ -426,35 +426,6 @@ and did not decide. Each is a separate call.
 
 ## From the run-engine lab (2026-09-30)
 
-- **Direction for the text-box engine (not decided; the ADRs come from here).** Discussion
-  2026-09-30, after PR #82 closed the lab's first round. Supersedes the `run.css` / `.run` /
-  `data-flow` candidates in the two rows above ("four copies", "the inner span").
-  - *One formula, generated.* The fallback trim reads variables (em box, cap gap, descent,
-    baseline offset, line height, font size), not magic numbers, so a JS generator writes the
-    kernel file (`kernel/css/text-box.generated.css`, hard rule 4) and emits the same formula
-    in three mutually exclusive blocks: native under `@supports (text-box-trim …)` excluding
-    forced regions; fallback under `@supports not (…)`; fallback again under a forced-fallback
-    ancestor (`[data-test-text-trim="false"]`, word open). The duplication lives in the output,
-    not the source, which answers the objection to the earlier `data-test-supports` twin
-    spike. The forced block must exclude the native one, never win by source order.
-    Goal: native and fallback side by side in one modern browser, measured live.
-  - *The gate is a data attribute, not a class.* The engine keys on the root's attribute
-    and the `.text` part. The word `run` goes: it reads as "makes the component block".
-  - *The mode is intent, the element follows.* `<Text inline />`, boolean, default false:
-    the author says "this text sits in a line" and the component picks the root element, the
-    container and the gates. Authors never need to know that one component writes two
-    elements. This reverses law (c), ADR-0012 §3 (`runOf(tag)` in lib/typographyFamily.ts,
-    mode follows element) — an ADR change, not a rename. Forbidden cells for the negative
-    list: `inline` with a block-only element (p, div, h1–h6, legend, figcaption); `inline`
-    with `cap-inline` (a line inside a line has no reading ceiling). `tag="span"` without
-    `inline` becomes a block — new behaviour, allowed. `inline` is right as a prop but
-    collides in the DOM with the `-inline` axis suffix (`align-inline`, `grow-inline`,
-    `cap-inline`), so the attribute the engine reads gets its own word (candidate
-    `data-text-box="block | inline"`).
-  - *Open:* whether Button always writes the gate (`block`, its only value — lean: yes, so
-    markup reads the same everywhere) or the engine keys on presence; `.text` stays as the
-    part name or becomes an attribute too.
-  - *At build:* the correct demos from /lab/run (A engine parity, D label + icon + one
-    height, G input beside button, whatever of F holds) move to
-    apps/docs/src/pages/control-room.astro as permanent benches, with a native-vs-fallback
-    pair per bench; the lab page is deleted in the same job.
+- ~~**Direction for the text-box engine.**~~ — **decided 2026-10-01, ADR-0024**
+  (one generated kernel file, `data-text-box` gate on `.text`, `<Text inline />` as intent).
+  The build is next; the lab's correct demos move to control room in that job.
