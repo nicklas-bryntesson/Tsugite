@@ -1,0 +1,12 @@
+/* Instruments — the docs app's own colours for its benches and labs: the rulers and
+   outlines control room draws over real components to measure them. They belong to the
+   instrument, not to the system, so they live here and never in the package (the
+   package's debug palette, kernel/css/debug.css, is for its own diagnostics: DevError
+   and data-test-state="debug"). Raw oklch on purpose: a measurement must look the same
+   on every brand, in every voice, in every mode. Imported by the benches that use it. */
+:root {
+  /* a dashed outline around the box being measured */
+  --bench-outline: oklch(0.8 0.25 145 / 0.7);
+  /* a guide line: a measured edge drawn across neighbours so they compare by eye */
+  --bench-guide: oklch(0.6 0.22 27 / 0.8);
+}
