@@ -14,7 +14,10 @@
  *   data-emphasis      true | false, a stronger surface.
  *   data-media         true | false, derived from the content: a picture is present.
  *   data-cap-inline    true | false, a reading ceiling on the inline size (ADR-0021).
- *   data-run           block | inline, derived from the element (ADR-0012 §3).
+ *
+ * A run of words in a voice gets its box and trim from the text-box engine
+ * (kernel/css/text-box.generated.css, ADR-0024): the component writes data-text-box and
+ * a .text part, and never repeats the engine's gate or its trim here.
  */
 
 /* One root rule per component, PascalCase, the name to look up in recipes/. Everything
@@ -131,7 +134,7 @@
     max-inline-size: none;
   }
 
-  &[data-run="block"][data-cap-inline="true"] > .body {
+  &[data-cap-inline="true"] > .body {
     max-inline-size: var(--_co-lineLength);
   }
 
