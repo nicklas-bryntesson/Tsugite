@@ -3,10 +3,15 @@
 // the map cannot lie about the system, because it IS the system's data.
 // Three pillars stand on the ground strip (Foundations + Kernel — the
 // no-DOM material); Chrome gets its own box; the test bench is linked
-// but lives outside the map.
+// but lives outside the map. Every word goes through a typography door,
+// every frame is a Card, every ground a Surface; this file only arranges.
 import Layout from "../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
-import Prose from "tsugite/Prose/Prose.astro";
+import Text from "tsugite/Text/Text.astro";
+import TextBlock from "tsugite/TextBlock/TextBlock.astro";
+import Caption from "tsugite/Caption/Caption.astro";
+import Card from "tsugite/Card/Card.astro";
+import Surface from "tsugite/Surface/Surface.astro";
 import { manifest, foundations, kernelModules, pillarLabels, pillarMeta, foundationsMeta, type Pillar } from "../lib/manifest.ts";
 
 const pillars: Pillar[] = ["primitive", "composition", "region"];
@@ -17,93 +22,140 @@ const pillarNotes: Record<string, string> = {
   composition: "Owns arrangement only.",
   region: "Governs a capability, projects state.",
 };
+
+/** One row of the map: a link when the page exists, the title and "soon" when it does not. */
+type Row = { title: string; href?: string; badge?: string };
+const rowsOf = (p: Pillar): Row[] =>
+  byPillar(p).map((e) => (e.published ? { title: e.title, href: `/docs/${e.slug}`, badge: e.family } : { title: e.title, badge: "soon" }));
+const foundationRows: Row[] = foundations.map((f) => (f.published ? { title: f.title, href: f.href } : { title: f.title, badge: "soon" }));
+const chromeRows: Row[] = chrome.map((e) => ({ title: e.title, href: e.demoHref ?? `/docs/${e.slug}` }));
 ---
 
 <Layout title="Map">
   <main class="Main MapPage grid-container">
     <div class="content">
       <Heading element="h1" size="1" text="Map" />
-      <Prose variant="basic">
-        <p>Everything in the system, sorted by what each piece owns.</p>
-      </Prose>
+      <TextBlock text="Everything in the system, sorted by what each piece owns." />
 
       <div class="pillars">
         {pillars.map((p) => (
-          <section class="pillar" aria-labelledby={`pillar-${p}`}>
-            {pillarMeta[p].romaji && (
-              <p class="pillar-eyebrow">
-                {pillarMeta[p].romaji} <span lang="ja" aria-hidden="true">{pillarMeta[p].kanji}</span>
-              </p>
-            )}
-            <Heading element="h2" size="4" text={pillarLabels[p]} id={`pillar-${p}`} />
-            <p class="pillar-note">{pillarNotes[p]}</p>
-            <ul class="cards">
-              {byPillar(p).map((e) => (
-                <li>
-                  {e.published ? (
-                    <a class="card" href={`/docs/${e.slug}`}>
-                      <span class="card-title">{e.title}</span>
-                      {e.family && <span class="badge" data-family={e.family}>{e.family}</span>}
-                    </a>
-                  ) : (
-                    <span class="card" data-unpublished>
-                      <span class="card-title">{e.title}</span>
-                      <span class="badge">soon</span>
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </section>
+          <Card border={true} padding="none">
+            <Surface element="section" theme="neutral" prominence="primary" capInline={false} class="pillar" aria-labelledby={`pillar-${p}`}>
+              <div class="pillar-body">
+              <header class="pillar-head">
+                {pillarMeta[p].romaji && (
+                  <Caption size="sm">
+                    {pillarMeta[p].romaji}{" "}<span lang="ja" aria-hidden="true">{pillarMeta[p].kanji}</span>
+                  </Caption>
+                )}
+                <Heading element="h2" size="4" text={pillarLabels[p]} id={`pillar-${p}`} />
+                <Text size="sm" text={pillarNotes[p]} />
+              </header>
+              <ul class="rows">
+                {rowsOf(p).map((r) => {
+                  const Tag = r.href ? "a" : "div";
+                  return (
+                  <li>
+                    <Tag class="minicard" href={r.href} data-unpublished={r.href ? undefined : ""}>
+                      <Card border={true} padding="none">
+                        <Surface theme="neutral" prominence="subtle" capInline={false} class="row"><div class="row-line">
+                          <Caption variant="nav" text={r.title} />
+                          {r.badge && (
+                            <div class="badge">
+                              <Surface theme="inverse" prominence="primary" capInline={false} class="pill"><Caption size="sm" text={r.badge} /></Surface>
+                            </div>
+                          )}
+                        </div></Surface>
+                      </Card>
+                    </Tag>
+                  </li>
+                  );
+                })}
+              </ul>
+              </div>
+            </Surface>
+          </Card>
         ))}
       </div>
 
       <section class="ground" aria-label="Foundations">
         <div class="ground-col">
-          <p class="pillar-eyebrow">
-            {foundationsMeta.romaji} <span lang="ja" aria-hidden="true">{foundationsMeta.kanji}</span>
-          </p>
-          <Heading element="h2" size="5" text={foundationsMeta.label} />
-          <p class="pillar-note">Tokens — what everything is made of.</p>
-          <ul class="cards">
-            {foundations.map((f) => (
+          <header class="pillar-head">
+            <Caption size="sm">
+              {foundationsMeta.romaji}{" "}<span lang="ja" aria-hidden="true">{foundationsMeta.kanji}</span>
+            </Caption>
+            <Heading element="h2" size="5" text={foundationsMeta.label} />
+            <Text size="sm" text="Tokens — what everything is made of." />
+          </header>
+          <ul class="rows">
+            {foundationRows.map((r) => {
+              const Tag = r.href ? "a" : "div";
+              return (
               <li>
-                {f.published ? (
-                  <a class="card" href={f.href}><span class="card-title">{f.title}</span></a>
-                ) : (
-                  <span class="card" data-unpublished><span class="card-title">{f.title}</span><span class="badge">soon</span></span>
-                )}
+                <Tag class="minicard" href={r.href} data-unpublished={r.href ? undefined : ""}>
+                  <Card border={true} padding="none">
+                    <Surface theme="neutral" prominence="subtle" capInline={false} class="row"><div class="row-line">
+                      <Caption variant="nav" text={r.title} />
+                      {r.badge && (
+                        <div class="badge">
+                          <Surface theme="inverse" prominence="primary" capInline={false} class="pill"><Caption size="sm" text={r.badge} /></Surface>
+                        </div>
+                      )}
+                    </div></Surface>
+                  </Card>
+                </Tag>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </div>
         <div class="ground-col">
-          <Heading element="h2" size="5" text="Kernel" />
-          <p class="pillar-note">Logic without DOM.</p>
+          <header class="pillar-head">
+            <Heading element="h2" size="5" text="Kernel" />
+            <Text size="sm" text="Logic without DOM." />
+          </header>
           <ul class="kernel-list">
-            {kernelModules.map((m) => <li><code>{m}</code></li>)}
+            {kernelModules.map((m) => (
+              <li class="chip"><Caption size="sm"><code>{m}</code></Caption></li>
+            ))}
           </ul>
         </div>
         <div class="ground-col">
-          <Heading element="h2" size="5" text="Chrome" />
-          <p class="pillar-note">The site’s own shell.</p>
-          <ul class="cards">
-            {chrome.map((e) => (
-              <li><a class="card" href={e.demoHref ?? `/docs/${e.slug}`}><span class="card-title">{e.title}</span></a></li>
-            ))}
+          <header class="pillar-head">
+            <Heading element="h2" size="5" text="Chrome" />
+            <Text size="sm" text="The site’s own shell." />
+          </header>
+          <ul class="rows">
+            {chromeRows.map((r) => {
+              const Tag = r.href ? "a" : "div";
+              return (
+              <li>
+                <Tag class="minicard" href={r.href} data-unpublished={r.href ? undefined : ""}>
+                  <Card border={true} padding="none">
+                    <Surface theme="neutral" prominence="subtle" capInline={false} class="row"><div class="row-line">
+                      <Caption variant="nav" text={r.title} />
+                    </div></Surface>
+                  </Card>
+                </Tag>
+              </li>
+              );
+            })}
           </ul>
         </div>
       </section>
 
-      <p class="bench-link">
-        <a href="/kitchen-sink">Test bench</a> — everything on one page ·
+      <Text size="sm">
+        <a href="/kitchen-sink">Test bench</a> — everything on one page ·{" "}
         <a href="/control-room">Control room</a> — drift checks
-      </p>
+      </Text>
     </div>
   </main>
 </Layout>
 
 <style is:global>
+/* Arrangement only: the words are the typography doors', the frames Card's, the grounds
+   Surface's (its own knobs set here, ADR-0013 §3). The texts are trimmed to their letters,
+   so every gap below is all the air between them — none comes from a line height. */
 .MapPage {
   padding-block: 4rem;
   background-color: var(--color-surface-page);
@@ -112,84 +164,108 @@ const pillarNotes: Record<string, string> = {
     /* placed in the main area by the .grid-container > * default */
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--size-xl);
   }
 
   & .pillars {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
     gap: 1.25rem;
+    align-items: start;
     inline-size: 100%;
   }
 
   & .pillar {
-    border: 1px solid var(--color-border-subtle);
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    background-color: var(--color-surface-chrome);
+    --_sf-paddingBlock: var(--size-lg);
+    --_sf-paddingInline: var(--size-lg);
+  }
+
+  & .pillar-body {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--size-lg);
   }
 
-  & .pillar-eyebrow {
-    margin: 0 0 -0.25rem;
-    font-size: var(--fontSize-label-small);
-    font-weight: var(--fontWeight-body-bold);
-    /* tracked manner stays raw pending the Eyebrow primitive (map G2) */
-    letter-spacing: 0.1em;
-    color: var(--color-text-secondary);
-
-    & [lang="ja"] { letter-spacing: 0; margin-inline-start: 0.25rem; }
+  & .pillar-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-md);
   }
 
-  & .pillar-note {
-    margin: 0;
-    font-size: var(--fontSize-label-small);
-    color: var(--color-text-secondary);
-  }
-
-  & .cards {
+  & .rows,
+  & .kernel-list {
     list-style: none;
-    margin: 0.25rem 0 0;
+    margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+    gap: var(--size-sm);
   }
 
-  & .card {
+  & .rows {
+    flex-direction: column;
+  }
+
+  & .kernel-list {
+    flex-wrap: wrap;
+  }
+
+  & .row {
+    --_sf-paddingBlock: var(--size-md);
+    --_sf-paddingInline: var(--size-md);
+  }
+
+  & .row-line {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.55rem 0.8rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--color-border-subtle);
-    background-color: var(--color-surface-page);
-    color: var(--color-text-primary);
+    gap: var(--size-sm);
+  }
+
+  /* TODO(decide): the mini card — a whole card that is one link, authored words, grouped
+     information and something at the end (an icon, here a pill) — is a component the
+     system does not have yet (the "Found a mistake? Contact us →" row is the other case).
+     Until its decisions are made it lives in this template; pull it out into its own
+     component when it gets them. */
+  & .minicard {
+    display: block;
+    color: inherit;
     text-decoration: none;
-    font-size: var(--fontSize-label);
+    border-radius: 0.5rem;
   }
 
-  & a.card:hover {
-    border-color: var(--color-interactive-primary);
+  /* Card's own border knob, set on its root (ADR-0013 §3). */
+  & a.minicard:hover > .Card {
+    --_cd-borderColor: var(--color-interactive-primary);
   }
 
-  & .card[data-unpublished] {
+  & a.minicard:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  & [data-unpublished] {
     opacity: 0.6;
   }
 
+  /* TODO(decide): the badge and the kernel chip are a Caption in a frame until the pill
+     primitive is designed (parking lot: badges, the resolution panel's chips and the doc
+     chips together). */
+  /* The faux pill: an inverse × primary Surface owns the ground and the ink; the wrapper
+     only rounds and clips it. */
   & .badge {
-    font-size: var(--fontSize-label-small);
-    font-weight: var(--fontWeight-body-bold);
-    /* tracked-caps manner stays raw pending the Eyebrow/pill primitives */
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.15rem 0.5rem;
     border-radius: 999px;
-    border: 1px solid var(--color-border-default);
-    color: var(--color-text-secondary);
+    overflow: hidden;
+  }
+
+  & .pill {
+    --_sf-paddingBlock: var(--size-xs);
+    --_sf-paddingInline: var(--size-sm);
+  }
+
+  & .chip {
+    padding: var(--size-xs) var(--size-sm);
+    border-radius: var(--size-xs);
+    background-color: var(--color-surface-inset);
   }
 
   /* the ground strip the pillars stand on */
@@ -205,33 +281,7 @@ const pillarNotes: Record<string, string> = {
   & .ground-col {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  & .kernel-list {
-    list-style: none;
-    margin: 0.25rem 0 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-
-    & code {
-      display: inline-block;
-      padding: 0.3rem 0.6rem;
-      border-radius: 0.4rem;
-      background-color: var(--color-surface-inset);
-      color: var(--color-text-primary);
-      font-size: var(--fontSize-code);
-    }
-  }
-
-  & .bench-link {
-    margin: 0.5rem 0 0;
-    font-size: var(--fontSize-label);
-    color: var(--color-text-secondary);
-
-    & a { color: var(--color-interactive-secondary-text); }
+    gap: var(--size-lg);
   }
 }
 </style>
