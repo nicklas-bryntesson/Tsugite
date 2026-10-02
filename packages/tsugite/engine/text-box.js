@@ -10,6 +10,11 @@
 // The fallback is written twice — for the browser that cannot trim, and for a region
 // forced to the fallback (data-test-text-box="fallback") — so control room can show
 // both branches in one modern browser. The duplication lives here, in the output.
+//
+// Deleting the fallback (when text-box-trim reaches the browser floor) is one edit here:
+// the @supports not block and the forced block. The docs app's control room bench
+// (apps/docs/src/components/TextBoxBench) is built around the two branches and is
+// reworked in the same change.
 import { typeVoices } from "../theme-default/typography.tokens.js";
 import { METRIC_TOKEN, GEOMETRY_TOKEN } from "./collector.js";
 

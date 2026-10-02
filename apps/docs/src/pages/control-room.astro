@@ -7,14 +7,12 @@
 //   2. Text box — every component on the text-box engine, natively trimmed beside
 //      the forced fallback (ADR-0024), and the md controls beside a field: which
 //      control lines up with the field (one height, 2.5rem) is a finding, not a given.
-//   3. Baseline trim — the heading text-trim check (shared with the bench).
-//   4. The donut matrix — voices × volumes (shared with the bench).
+//   3. The donut matrix — voices × volumes (shared with the bench).
 import Layout from "../layouts/Layout.astro";
 import ResolutionPanel from "../components/ResolutionPanel/ResolutionPanel.astro";
 import TextBoxBench from "../components/TextBoxBench/TextBoxBench.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import TextBlock from "tsugite/TextBlock/TextBlock.astro";
-import Misc from "tsugite/fixtures/Misc.astro";
 import ThemesSection from "tsugite/fixtures/ThemesSection.astro";
 ---
 
@@ -44,15 +42,9 @@ import ThemesSection from "tsugite/fixtures/ThemesSection.astro";
 
       <section class="KitchenSink-section" id="TextBox">
         <Heading element="h2" size="2" text="Text box" />
-        <p class="note">
-          The text-box engine's two branches on every component that runs on it: the height the cell gets
-          and where the last baseline sits in it, native / fallback. Δ is the drift the
-          margin formula carries.
-        </p>
+        <TextBlock text="Every component on the text-box engine, measured twice: on the left as this browser trims it, on the right with the fallback forced, so both branches can be compared in one browser. Each section ends with its readout — the height the cell gets and where the last baseline sits in it, native / fallback; Δ is the drift between the two." />
         <TextBoxBench />
       </section>
-
-      <Misc />
 
       <ThemesSection />
     </div>

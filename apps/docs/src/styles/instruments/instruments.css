@@ -9,6 +9,9 @@
      a measured box, a baseline check — one colour on the whole page, so a line reads as
      "measurement" and never as design */
   --bench-guide: oklch(0.62 0.13 250 / 0.75);
+  /* the outline around a text's box — what the engine trimmed; its own colour, so a box
+     never reads as a guide */
+  --bench-textbox: oklch(0.68 0.15 150 / 0.9);
   /* "visualize spacing": a container's padding */
   --bench-padding: oklch(0.85 0.12 145 / 0.6);
   /* "visualize spacing": the gap between a container's children */
