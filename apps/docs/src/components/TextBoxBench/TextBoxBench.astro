@@ -1,14 +1,19 @@
 ---
 // The text-box bench (ADR-0024): every component on the engine, twice — as this browser
 // resolves it, and with the fallback forced (data-test-text-box="fallback" on the cell).
-// Each sample sits in its own Card on a Surface (neutral × primary — the Surface owns the
-// ground and the voice claim, the Card is the frame); a row puts the two side by side,
+// Each sample is a Card holding a Surface (neutral × primary): the Card is the frame — border,
+// radius, clipping — and the Surface inside it owns the ground, the voice claim and the
+// inset; a row puts the two side by side,
 // and the native text's cap line and baseline are drawn across both, so a fallback that
 // slides shows against the line. The controls row sets every md control beside a field —
 // the one size that meets the field today. The composed card stacks every door the way
-// a real page does, so drift that adds up shows too. Two switches: the guides (on) and
-// "visualize spacing" (off), which paints padding, gaps and content boxes. A component
+// a real page does, so drift that adds up shows too. Three switches: the guides (on), the
+// text boxes (off) and "visualize spacing" (off), which paints padding, gaps and content boxes. A component
 // joins with a row here when it moves onto the engine.
+//
+// Lives as long as the fallback does: when the fallback leaves engine/text-box.js, the
+// forced side, the fallback column's texts and the per-row Δ have nothing left to show —
+// rework this bench in the same change.
 import "../../styles/instruments/instruments.css";
 import Card from "tsugite/Card/Card.astro";
 import Surface from "tsugite/Surface/Surface.astro";
@@ -49,66 +54,131 @@ const samples: Sample[] = [
   { key: "Button lg", component: "ActionButton", props: { size: "lg", emphasis: "secondary" }, label: "Press" },
   { key: "Button md, wrapped", component: "ActionButton", props: { size: "md", emphasis: "secondary" }, label: "Press this button, please", narrow: true },
   { key: "Button md, icon", component: "ActionButton", props: { size: "md", emphasis: "secondary", icon: "icon-search" }, label: "Search" },
-  { key: "Button md, icon only", component: "ActionButton", props: { size: "md", emphasis: "secondary", icon: "icon-search", "aria-label": "Search" } },
-  { key: "Controls md", component: "Controls" },
+  { key: "Buttons, with and without words", component: "Controls" },
+  { key: "A field with a value, a button", component: "Controls" },
+  { key: "A field with a placeholder, an icon button", component: "Controls" },
+  { key: "Fields with affixes, a button", component: "Controls" },
 ];
 const components = { Text, Heading, Caption, TextBlock, ActionButton };
+/** The bench in sections, one per component: rows, then that section's readout. */
+const sections = [
+  { name: "Text", keys: samples.filter((s) => s.component === "Text") },
+  { name: "Heading", keys: samples.filter((s) => s.component === "Heading") },
+  { name: "Caption", keys: samples.filter((s) => s.component === "Caption") },
+  { name: "TextBlock", keys: samples.filter((s) => s.component === "TextBlock") },
+  { name: "Button", keys: samples.filter((s) => s.component === "ActionButton") },
+  { name: "Controls", keys: samples.filter((s) => s.component === "Controls") },
+];
 const sides = ["native", "fallback"] as const;
 const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-test-text-box": "fallback" } : {});
 ---
 
-<div class="TextBoxBench" data-visualize="false" data-show-guides="true">
-  <div class="controls">
-    <p class="note" data-branch></p>
-    <div class="switches">
-      <ChoiceField type="checkbox" id="bench-guides" name="bench-guides" label="Show guides" checked />
-      <ChoiceField type="checkbox" id="bench-visualize" name="bench-visualize" label="Visualize spacing" />
+<div class="TextBoxBench" data-visualize="false" data-show-guides="true" data-show-text-boxes="false">
+  <div class="head">
+    <div class="column">
+      <Heading element="h3" size="4" text="Native — text-box-trim" />
+      <Text>
+        The browser trims the text's own box to the text: from the top of the capitals on
+        the first line to the baseline of the last. No space above the first word, none
+        below the last — the line height lives only between the lines.
+      </Text>
+    </div>
+    <div class="column">
+      <Heading element="h3" size="4" text="Fallback — negative margins" />
+      <Text>
+        For a browser without{" "}<code>text-box-trim</code>: the same cut, made from the
+        typeface's own metrics. Half the leading is pulled in above and below, then the
+        gap above the capitals at the top and the descent at the bottom; the voice's
+        baseline offset nudges both. The box stays whole, the margins pull the cell in.
+      </Text>
+      <pre class="formula" tabindex="0"><code>margin-block-start: ((emBox − lineHeight) / 2 − capGap + baselineOffset) × 1em
+margin-block-end:   ((emBox − lineHeight) / 2 − descent − baselineOffset) × 1em</code></pre>
+      <Text>
+        Deletable by design: the fallback is generated, so when text-box-trim
+        reaches the browser floor it leaves in one edit — its two blocks in{" "}
+        <code>engine/text-box.js</code>, the forced twin with them — and the native rule
+        keeps working as written.
+      </Text>
     </div>
   </div>
 
-  <div class="head">
-    <span>As this browser resolves it</span>
-    <span>Fallback forced — the margin formula</span>
-  </div>
+  <fieldset class="switches">
+    <legend class="ScreenReaderText">Bench instruments</legend>
+    <ChoiceField type="checkbox" id="bench-guides" name="bench-guides" label="Show guides" checked />
+    <ChoiceField type="checkbox" id="bench-text-boxes" name="bench-text-boxes" label="Show text boxes" />
+    <ChoiceField type="checkbox" id="bench-visualize" name="bench-visualize" label="Visualize spacing" />
+  </fieldset>
 
-  <div class="rows" data-guides>
-    {samples.map((s) => {
-      const Component = s.component === "Controls" ? null : components[s.component];
-      return (
-        <div class="row" data-sample={s.key}>
-          {sides.map((side) => (
-            <div class="cell" data-side={side} data-narrow={s.narrow ? "true" : "false"} {...forced(side)}>
-              <Surface theme="neutral" prominence="primary" capInline={false} class="ground">
-              <Card class="probe" border={true} padding="md">
-                {Component ? (
-                  <Component {...s.props}>{s.label}</Component>
-                ) : (
-                  <div class="control-line">
-                    <ActionButton size="md" emphasis="primary">Send</ActionButton>
-                    <ActionButton size="md" emphasis="secondary" icon="icon-search">Search</ActionButton>
-                    <ActionButton size="md" emphasis="secondary" icon="icon-search" aria-label="Search" />
-                    <AffixField id={`bench-field-${side}`} label="Amount" input={{ inputmode: "decimal" }} />
-                  </div>
-                )}
-              </Card>
-              </Surface>
+  {sections.map((section) => (
+    <section class="section" data-section={section.name}>
+      <Heading element="h3" size="5" text={section.name} />
+      <div class="rows" data-guides>
+        {section.keys.map((s) => {
+          const Component = s.component === "Controls" ? null : components[s.component];
+          return (
+            <div class="row" data-sample={s.key}>
+              {sides.map((side) => (
+                <div class="cell" data-side={side} data-narrow={s.narrow ? "true" : "false"} {...forced(side)}>
+                  <Card border={true} padding="none">
+                    <Surface theme="neutral" prominence="primary" capInline={false} class="probe">
+                      {Component ? (
+                        <Component {...s.props}>{s.label}</Component>
+                      ) : (
+                        <div class="control-line">
+                          {s.key === "Buttons, with and without words" && (
+                            <>
+                              <ActionButton size="md" emphasis="primary" data-control="text, primary">Send</ActionButton>
+                              <ActionButton size="md" emphasis="secondary" data-control="text, secondary">Cancel</ActionButton>
+                              <ActionButton size="md" emphasis="secondary" icon="icon-search" data-control="text and icon">Search</ActionButton>
+                              <ActionButton size="md" emphasis="secondary" icon="icon-search" aria-label="Search" data-control="icon only, secondary" />
+                              <ActionButton size="md" emphasis="primary" icon="icon-search" aria-label="Search" data-control="icon only, primary" />
+                            </>
+                          )}
+                          {s.key === "A field with a value, a button" && (
+                            <>
+                              <AffixField id={`bench-amount-${side}`} label="Amount" root={{ "data-control": "field, value" }} input={{ inputmode: "decimal", value: "1 200" }} />
+                              <ActionButton size="md" emphasis="primary" data-control="text, primary">Send</ActionButton>
+                            </>
+                          )}
+                          {s.key === "A field with a placeholder, an icon button" && (
+                            <>
+                              <AffixField id={`bench-search-${side}`} label="Search" root={{ "data-control": "field, placeholder" }} input={{ type: "search", placeholder: "Search the docs" }} />
+                              <ActionButton size="md" emphasis="secondary" icon="icon-search" aria-label="Search" data-control="icon only, secondary" />
+                            </>
+                          )}
+                          {s.key === "Fields with affixes, a button" && (
+                            <>
+                              <AffixField id={`bench-url-${side}`} label="Address" root={{ "data-control": "field, prefix" }} prefix={{ text: "https://" }} input={{ value: "tsugite.dev" }} />
+                              <AffixField id={`bench-price-${side}`} label="Price" root={{ "data-control": "field, suffix" }} suffix={{ text: "SEK" }} input={{ inputmode: "decimal", value: "450" }} />
+                              <ActionButton size="md" emphasis="secondary" data-control="text, secondary">Apply</ActionButton>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </Surface>
+                  </Card>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      );
-    })}
-  </div>
+          );
+        })}
+      </div>
+      <output class="readout" data-readout={section.name} tabindex="0"></output>
+    </section>
+  ))}
 
+  <section class="section" data-section="Composed">
+  <Heading element="h3" size="5" text="Composed" />
   <p class="note">
-    Composed: every door stacked as a page would stack them — eyebrow, heading, two
-    paragraphs, an inset with its own label, a button, the small print. The guides run
-    from every native text box across both cards.
+    Every door stacked as a page would stack them — eyebrow, heading, two paragraphs, an
+    inset with its own label, a button, the small print. The guides run from every native
+    text box across both cards.
   </p>
   <div class="composed" data-guides>
     {sides.map((side) => (
       <div class="cell" data-side={side} {...forced(side)}>
-        <Surface theme="neutral" prominence="primary" capInline={false} class="ground">
-        <Card element="article" class="card" border={true} padding="lg">
+        <Card element="article" border={true} padding="none">
+        <Surface theme="neutral" prominence="primary" capInline={false} class="card">
           <div class="stack">
             <Caption size="sm" text="For your team" />
             <Heading element="h3" size="3" text="Your trial ends on Friday" />
@@ -125,17 +195,24 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
             </div>
             <Text size="sm" text="The code is personal to this account, works once, and cannot be combined with another offer." />
           </div>
-        </Card>
         </Surface>
+        </Card>
       </div>
     ))}
   </div>
-
-  <output class="readout"></output>
+  <output class="readout" data-readout="Composed" tabindex="0"></output>
+  </section>
 </div>
 
 <script>
   const px = (n: number) => `${n.toFixed(2)}px`;
+
+  /** A readout as a plain-text table: columns padded to their widest cell, a rule under the head. */
+  function tabulate(rows: string[][]) {
+    const widths = rows[0].map((_, c) => Math.max(...rows.map((r) => r[c].length)));
+    const line = (r: string[]) => r.map((cell, c) => cell.padEnd(widths[c])).join("   ").trimEnd();
+    return [line(rows[0]), widths.map((w) => "─".repeat(w)).join("   "), ...rows.slice(1).map(line)].join("\n");
+  }
 
   /** An empty inline-block at the end of a text: its bottom edge is the last baseline. */
   function baselineMark(text: HTMLElement) {
@@ -160,7 +237,7 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
     for (const text of block.querySelectorAll<HTMLElement>('[data-side="native"] [data-text-box="block"] > .text')) {
       edges.push(text.getBoundingClientRect().top, baselineMark(text).getBoundingClientRect().bottom);
     }
-    for (const control of block.querySelectorAll<HTMLElement>('[data-side="native"] .control-line > :is(.Button, .AffixField)')) {
+    for (const control of block.querySelectorAll<HTMLElement>('[data-side="native"] [data-control]')) {
       const r = control.getBoundingClientRect();
       edges.push(r.top, r.bottom);
     }
@@ -174,20 +251,13 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
   }
 
   function measure(bench: HTMLElement) {
-    // What the CSS did, not what the browser claims: the native side's computed trim.
-    const sample = bench.querySelector<HTMLElement>('[data-side="native"] [data-text-box="block"] > .text')!;
-    const native = getComputedStyle(sample).getPropertyValue("text-box-trim") === "trim-both";
-    bench.querySelector<HTMLElement>("[data-branch]")!.textContent = native
-      ? "This browser trims natively: the left side is the native branch, the right the fallback."
-      : "This browser cannot trim natively: both sides run the fallback, and they must agree to the pixel.";
-
     // The two branches trim differently: native shrinks the text's own box, the fallback
     // pulls the cell in with negative margins and leaves the box whole. So the readout is
     // what the cell gets — the footprint — and where the last baseline sits in it. An
     // icon-only button has no text, so its row reads the footprint only.
     const read = (row: HTMLElement, side: string) => {
       const probe = row.querySelector<HTMLElement>(`[data-side="${side}"] .probe`)!;
-      const text = probe.querySelector<HTMLElement>(":scope > * > .text");
+      const text = probe.querySelector<HTMLElement>(":scope > .content > * > .text");
       const p = probe.getBoundingClientRect();
       const cs = getComputedStyle(probe);
       const pad = parseFloat(cs.paddingBlockStart) + parseFloat(cs.paddingBlockEnd) + parseFloat(cs.borderBlockStartWidth) + parseFloat(cs.borderBlockEndWidth);
@@ -198,20 +268,34 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
       };
     };
 
-    const rows = [...bench.querySelectorAll<HTMLElement>(".row")].filter((r) => r.dataset.sample !== "Controls md");
-    const lines = rows.map((row) => {
-      const n = read(row, "native");
-      const f = read(row, "fallback");
-      const baseline = n.baseline === null || f.baseline === null ? "" : ` · last baseline above the cell's end ${px(n.baseline)} / ${px(f.baseline)}`;
-      return `${row.dataset.sample}: footprint ${px(n.footprint)} / ${px(f.footprint)} · Δ ${px(n.footprint - f.footprint)}${baseline}`;
-    });
+    const write = (section: string, table: string[][]) => {
+      bench.querySelector<HTMLOutputElement>(`output[data-readout="${section}"]`)!.textContent = tabulate(table);
+    };
 
-    // One height for every md control: text, text and icon, icon only, and the field.
-    const controls = bench.querySelector<HTMLElement>('.row[data-sample="Controls md"]')!;
-    for (const side of ["native", "fallback"]) {
-      const h = [...controls.querySelectorAll<HTMLElement>(`[data-side="${side}"] .control-line > :is(.Button, .AffixField)`)].map((el) => px(el.getBoundingClientRect().height));
-      lines.push(`controls md (${side}): text ${h[0]} · icon ${h[1]} · icon only ${h[2]} · field ${h[3]}`);
+    for (const section of bench.querySelectorAll<HTMLElement>(".section[data-section]")) {
+      const name = section.dataset.section!;
+      if (name === "Controls" || name === "Composed") continue;
+      const table = [["sample", "footprint native / fallback", "Δ", "last baseline native / fallback"]];
+      for (const row of section.querySelectorAll<HTMLElement>(".row")) {
+        const n = read(row, "native");
+        const f = read(row, "fallback");
+        const baseline = n.baseline === null || f.baseline === null ? "—" : `${px(n.baseline)} / ${px(f.baseline)}`;
+        table.push([row.dataset.sample!, `${px(n.footprint)} / ${px(f.footprint)}`, px(n.footprint - f.footprint), baseline]);
+      }
+      write(name, table);
     }
+
+    // One height for every md control in a line: each control's outer height, native /
+    // fallback, named by its data-control word.
+    const controlRows = [["line", "control", "height native / fallback"]];
+    for (const row of bench.querySelectorAll<HTMLElement>('.section[data-section="Controls"] .row')) {
+      const heights = (side: string) =>
+        [...row.querySelectorAll<HTMLElement>(`[data-side="${side}"] [data-control]`)].map((el) => [el.dataset.control!, px(el.getBoundingClientRect().height)]);
+      const n = heights("native");
+      const f = heights("fallback");
+      n.forEach(([control, h], i) => controlRows.push([i === 0 ? row.dataset.sample! : "", control, `${h} / ${f[i][1]}`]));
+    }
+    write("Controls", controlRows);
 
     // The composed card: how far the fallback's stack has slid by its last baseline.
     const cardEnd = (side: string) => {
@@ -222,11 +306,12 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
     };
     const cn = cardEnd("native");
     const cf = cardEnd("fallback");
-    lines.push(
-      `composed card: height ${px(cn.height)} / ${px(cf.height)} · Δ ${px(cn.height - cf.height)} · last baseline from the card's top ${px(cn.baseline)} / ${px(cf.baseline)} · Δ ${px(cn.baseline - cf.baseline)}`,
-    );
+    write("Composed", [
+      ["", "native / fallback", "Δ"],
+      ["card height", `${px(cn.height)} / ${px(cf.height)}`, px(cn.height - cf.height)],
+      ["last baseline from the card's top", `${px(cn.baseline)} / ${px(cf.baseline)}`, px(cn.baseline - cf.baseline)],
+    ]);
 
-    bench.querySelector("output")!.textContent = lines.join("\n");
     bench.querySelectorAll<HTMLElement>("[data-guides]").forEach(drawGuides);
   }
 
@@ -236,13 +321,14 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
 
   // The two switches write the bench's state; the CSS reads it.
   for (const bench of document.querySelectorAll<HTMLElement>(".TextBoxBench")) {
-    const bind = (id: string, attr: "visualize" | "showGuides") => {
+    const bind = (id: string, attr: "visualize" | "showGuides" | "showTextBoxes") => {
       const box = bench.querySelector<HTMLInputElement>(`#${id}`)!;
       const write = () => (bench.dataset[attr] = box.checked ? "true" : "false");
       box.addEventListener("change", write);
       write();
     };
     bind("bench-guides", "showGuides");
+    bind("bench-text-boxes", "showTextBoxes");
     bind("bench-visualize", "visualize");
   }
 
@@ -256,18 +342,26 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
     display: grid;
     gap: var(--size-md);
 
-    & .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--size-md);
-      align-items: center;
-      justify-content: space-between;
-    }
-
+    /* The instruments, framed like the resolution panel's cells. */
     & .switches {
       display: flex;
       flex-wrap: wrap;
       gap: var(--size-lg);
+      margin: 0;
+      padding: var(--size-lg) var(--size-md);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--size-sm);
+    }
+
+    /* The fallback's two margins, one formula a line, never wrapped. */
+    & .formula {
+      margin: 0;
+      overflow-x: auto;
+      padding: var(--size-md);
+      border: 1px solid var(--color-border-subtle);
+      background: var(--color-surface-page);
+      font-family: var(--fontFamily-code);
+      font-size: var(--fontSize-label-small);
     }
 
     & .note {
@@ -284,9 +378,10 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
       gap: var(--size-md);
     }
 
-    & .head {
-      color: var(--color-text-secondary);
-      font-size: var(--fontSize-label);
+    & .column {
+      display: grid;
+      gap: var(--size-md);
+      align-content: start;
     }
 
     & .rows {
@@ -307,17 +402,23 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
       max-inline-size: 14rem;
     }
 
-    /* Surface is built for page bands (2xl block, the site offset inline); a bench cell
-       sets the Surface's own knobs on its root to a cell's measure (ADR-0013 §3). */
-    & .ground {
-      --_sf-paddingBlock: var(--size-sm);
-      --_sf-paddingInline: var(--size-sm);
+    /* Surface is built for page bands (2xl block, the site offset inline); inside a bench
+       Card it is the card's inset, so the bench sets the Surface's own knobs on its root
+       (ADR-0013 §3). */
+    & .probe {
+      --_sf-paddingBlock: var(--size-md);
+      --_sf-paddingInline: var(--size-md);
     }
 
-    /* The dashed outline is the text's box: what the engine trimmed. The parts below are
-       rendered by the components inside, so they carry no scope attribute of this file. */
-    & .probe > :global(* > .text) {
-      outline: 1px dashed var(--bench-guide);
+    & .card {
+      --_sf-paddingBlock: var(--size-lg);
+      --_sf-paddingInline: var(--size-lg);
+    }
+
+    /* "Show text boxes": the outline is the text's box, what the engine trimmed. The parts
+       are rendered by the components inside, so they carry no scope attribute of this file. */
+    &[data-show-text-boxes="true"] .cell :global([data-text-box="block"] > .text) {
+      outline: 1px dashed var(--bench-textbox);
     }
 
     & .control-line {
@@ -367,16 +468,27 @@ const forced = (side: (typeof sides)[number]) => (side === "fallback" ? { "data-
         box-shadow: inset 0 0 0 var(--size-lg) var(--bench-padding);
       }
 
-      & .probe > :global(:not(.control-line)),
-      & .control-line > :global(:is(.Button, .AffixField)),
+      & .probe > :global(.content > :not(.control-line)),
+      & .control-line :global([data-control]),
       & .stack > :global(:not(.inset)),
       & .inset .stack > :global(*) {
         background: var(--bench-content);
       }
     }
 
+    & .section {
+      display: grid;
+      gap: var(--size-md);
+    }
+
+    /* A section's readout: the measured numbers as a plain-text table under its rows. */
     & .readout {
-      white-space: pre-wrap;
+      display: block;
+      overflow-x: auto;
+      padding: var(--size-md);
+      border: 1px solid var(--color-border-subtle);
+      background: var(--color-surface-page);
+      white-space: pre;
       font-family: var(--fontFamily-code);
       font-size: var(--fontSize-label-small);
     }

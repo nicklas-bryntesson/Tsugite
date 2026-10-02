@@ -56,7 +56,7 @@ test('control room: the field-height contract holds in the controls row', async 
   // it is a FINDING the row exists to show — not asserted here.
   await page.goto('/control-room')
   for (const side of ['native', 'fallback']) {
-    const affix = await page.locator(`#TextBox .row[data-sample="Controls md"] [data-side="${side}"] .AffixField .input`).boundingBox()
+    const affix = await page.locator(`#TextBox .row[data-sample="A field with a value, a button"] [data-side="${side}"] .AffixField .input`).boundingBox()
     expect(affix.height, `controls row, ${side}: AffixField input = 2.5rem`).toBe(40)
   }
 })
@@ -69,11 +69,6 @@ test('control room: the resolution panel answers every probe live', async ({ pag
   // headless Chromium resolves the modern branches
   await expect(page.locator('[data-probe="oklch"]')).toHaveText('supported')
   await expect(page.locator('[data-probe="gamut"]')).toHaveText(/rec2020|p3|srgb/)
-})
-
-test('control room: the baseline-trim check is mounted', async ({ page }) => {
-  await page.goto('/control-room')
-  await expect(page.locator('.text-alignment .Heading')).toBeVisible()
 })
 
 test('the control room shares the donut matrix with the bench', async ({ page }) => {
