@@ -4,6 +4,8 @@
 // AffixField.generate.ts; the verbatim AffixField.ts gap-fills presence
 // attributes and character sizing at runtime.
 
+import Caption from "../../typography/Caption/Caption.astro";
+
 interface Affix {
   text: string;
   attrs?: Record<string, string>;
@@ -43,7 +45,9 @@ if (!bare) {
 const inputAttrs = { type: "text", ...input };
 ---
 
-<label for={id} set:html={label} />
+{/* The label speaks the label voice through Caption on a <label>: the field's label
+    and every other form label share one door. */}
+<Caption element="label" for={id}><Fragment set:html={label} /></Caption>
 <div class="AffixField" data-component="AffixField" data-id={rootId} {...presence} {...root}>
   {prefix && <span class="prefix" {...(prefix.attrs ?? {})}>{prefix.text}</span>}
   <input class="input" id={id} name={id} {...inputAttrs} />
