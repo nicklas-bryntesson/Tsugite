@@ -7,6 +7,9 @@ import CoverComposition from "tsugite/CoverComposition/CoverComposition.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import Prose from "tsugite/Prose/Prose.astro";
 import LinkButton from "tsugite/Button/LinkButton.astro";
+import Text from "tsugite/Text/Text.astro";
+import Card from "tsugite/Card/Card.astro";
+import Surface from "tsugite/Surface/Surface.astro";
 
 const cover = {
   title: "Tsugite",
@@ -60,7 +63,7 @@ const principles = [
     </section>
 
     <section class="HomeIntro">
-      <p class="kanji-mark" lang="ja" aria-hidden="true">継手</p>
+      <div class="kanji-mark"><Heading element="p" variant="display" size="2" text="継手" lang="ja" aria-hidden="true" /></div>
       <Heading element="h2" size="2" text="Joints, not glue" />
       <Prose variant="basic">
         <p>
@@ -77,31 +80,36 @@ const principles = [
 
     <div class="HomePrinciples">
       {principles.map((p) => (
-        <section class="principle" data-theme={p.voice} data-prominence="subtle">
-          <Heading element="h3" size="4" text={p.title} />
-          <p class="principle-body">{p.body}</p>
-          <LinkButton href={p.href} size="sm" emphasis="primary">{p.link}</LinkButton>
-        </section>
+        <Card padding="none">
+          <Surface element="section" theme={p.voice} prominence="subtle" capInline={false} class="principle">
+            <div class="principle-body">
+              <Heading element="h3" size="4" text={p.title} />
+              <Text text={p.body} />
+              <LinkButton href={p.href} size="md" emphasis="primary">{p.link}</LinkButton>
+            </div>
+          </Surface>
+        </Card>
       ))}
     </div>
   </main>
 </Layout>
 
 <style is:global>
+/* Arrangement only: the words are the typography doors', each principle a Card holding a
+   Surface that claims its voice (the Surface's own knobs set here, ADR-0013 §3). The
+   texts are trimmed to their letters, so the gaps are all the air between them. */
 .Home {
   & .HomeIntro {
     padding-block: 4rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: var(--size-lg);
     max-inline-size: 46rem;
+  }
 
-    & .kanji-mark {
-      margin: 0;
-      font-size: var(--fontSize-display-2);
-      line-height: var(--lineHeight-display);
-      color: var(--color-text-secondary);
-    }
+  /* the kanji mark is quieter than the words around it: the muted channel, inherited */
+  & .kanji-mark {
+    color: var(--color-text-secondary);
   }
 
   & .HomePrinciples {
@@ -112,24 +120,35 @@ const principles = [
     padding-block: 2rem 4rem;
   }
 
-  /* The principle cards are theme donuts: the voice supplies every color
-     through the channels; this CSS only arranges and consumes with chain
-     fallbacks. */
   & .principle {
+    --_sf-paddingBlock: var(--size-lg);
+    --_sf-paddingInline: var(--size-lg);
+
+    /* the Card is a flex column and the grid stretches it, so the ground fills the card */
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    align-items: flex-start;
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    background-color: var(--theme-surface, var(--color-surface-inset));
-    color: var(--theme-text, var(--color-text-primary));
 
-    & .principle-body {
-      margin: 0;
-      font-size: var(--fontSize-label);
-      color: var(--theme-textMuted, var(--color-text-secondary));
+    /* TODO(decide): this reaches into Surface's own part (.content) so the body can fill
+       the card's height; Surface has no way to say "my content fills me". A knob or axis
+       on Surface would end this. */
+    & > .content {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  & .principle-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-lg);
+    align-items: flex-start;
+
+    /* the button sits at the card's foot, whatever the length of the words above it */
+    & > .Button {
+      margin-block-start: auto;
     }
   }
 }
