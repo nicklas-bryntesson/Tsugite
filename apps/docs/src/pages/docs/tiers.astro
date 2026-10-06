@@ -7,28 +7,43 @@ import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import Text from "tsugite/Text/Text.astro";
 import Caption from "tsugite/Caption/Caption.astro";
+import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
 import { TIERS, typeSizes } from "tsugite/theme-default/typography.tokens.js";
 import { spaceSteps, sizeConstantName } from "tsugite/theme-default/size.tokens.js";
 import { siteOffset, siteOffsetConstantName } from "tsugite/theme-default/site.tokens.js";
 
-// Each specimen is rendered THROUGH THE FAMILY, in its own voice — display in the display
-// face, heading in the heading face, body in the body face — as an inline run on a span,
-// so what steps with the tier is the real bundle, not one face at twelve sizes.
-const typeRamp: Array<{ token: string; label: string; voice: "display" | "heading" | "body"; size: string }> = [
-  { token: "--fontSize-display-1", label: "Display 1", voice: "display", size: "1" },
-  { token: "--fontSize-display-2", label: "Display 2", voice: "display", size: "2" },
-  { token: "--fontSize-display-3", label: "Display 3", voice: "display", size: "3" },
-  { token: "--fontSize-h1", label: "Heading 1", voice: "heading", size: "1" },
-  { token: "--fontSize-h2", label: "Heading 2", voice: "heading", size: "2" },
-  { token: "--fontSize-h3", label: "Heading 3", voice: "heading", size: "3" },
-  { token: "--fontSize-h4", label: "Heading 4", voice: "heading", size: "4" },
-  { token: "--fontSize-h5", label: "Heading 5", voice: "heading", size: "5" },
-  { token: "--fontSize-h6", label: "Heading 6", voice: "heading", size: "6" },
-  { token: "--fontSize-body-large", label: "Body large", voice: "body", size: "lg" },
-  { token: "--fontSize-body", label: "Body", voice: "body", size: "md" },
-  { token: "--fontSize-body-small", label: "Body small", voice: "body", size: "sm" },
-];
+// Each specimen is rendered THROUGH THE FAMILY, in its own voice and through its own door —
+// display and heading through Heading, body through Text, the UI voices through Caption,
+// preamble through TextBlock — so what steps with the tier is the real bundle, not one face
+// at many sizes. The rows come from typeSizes itself, so no voice can be missing; a voice
+// with no door yet (code) shows its values without a specimen.
+const ORDER = ["display", "heading", "body", "preamble", "label", "button", "nav", "code"];
+const voiceOf = (key: string): { voice: string; size: string } => {
+  const h = key.match(/^h(\d)$/);
+  if (h) return { voice: "heading", size: h[1] };
+  const d = key.match(/^display-(\d)$/);
+  if (d) return { voice: "display", size: d[1] };
+  const q = key.match(/^(\w+?)(?:-(small|large))?$/)!;
+  return { voice: q[1], size: q[2] === "small" ? "sm" : q[2] === "large" ? "lg" : "md" };
+};
+const DOORS: Record<string, { door: any; inline: boolean }> = {
+  display: { door: Heading, inline: true },
+  heading: { door: Heading, inline: true },
+  body: { door: Text, inline: true },
+  label: { door: Caption, inline: true },
+  button: { door: Caption, inline: true },
+  nav: { door: Caption, inline: true },
+  preamble: { door: TextBlock, inline: false },
+};
+const sizeRank = (size: string) => ["1", "2", "3", "4", "5", "6", "lg", "md", "sm"].indexOf(size);
+const typeRamp = Object.keys(typeSizes)
+  .map((key) => ({ token: `--fontSize-${key}`, ...voiceOf(key) }))
+  .sort((a, b) => ORDER.indexOf(a.voice) - ORDER.indexOf(b.voice) || sizeRank(a.size) - sizeRank(b.size))
+  .map((r) => {
+    const d = DOORS[r.voice];
+    return { ...r, Door: d?.door, props: d ? { voice: r.voice, size: r.size, text: "Aa", ...(d.inline ? { inline: true } : {}) } : null };
+  });
 
 // The four tiers, side by side, from the same sources that generate the CSS: each cell
 // sets the token to that tier's RAW constant on a wrapper, through the chain the
@@ -88,20 +103,20 @@ const sizeRows = [
               </tr>
             </thead>
             <tbody>
-              {typeRows.map(({ token, voice, size, cells }) => (
+              {typeRows.map(({ token, Door, props, cells }) => (
                 <tr>
                   <td class="muted"><Caption size="sm"><code>{token}</code></Caption></td>
                   {cells.map((c) => (
                     <td>
                       <div class="specimen" style={c.style}>
-                        {voice === "body" ? <Text inline voice="body" size={size} text="Aa" /> : <Heading inline voice={voice} size={size} text="Aa" />}
+                        {Door ? <Door {...props} /> : <span class="muted"><Caption inline size="sm" text="—" /></span>}
                       </div>
                       <div class="muted"><Caption size="sm"><code>{c.value}</code></Caption></div>
                     </td>
                   ))}
                   <td class="live">
                     <div class="specimen">
-                      {voice === "body" ? <Text inline voice="body" size={size} text="Aa" /> : <Heading inline voice={voice} size={size} text="Aa" />}
+                      {Door ? <Door {...props} /> : <span class="muted"><Caption inline size="sm" text="—" /></span>}
                     </div>
                     <div class="muted"><Caption size="sm"><code><output data-measure={token}></output></code></Caption></div>
                   </td>
