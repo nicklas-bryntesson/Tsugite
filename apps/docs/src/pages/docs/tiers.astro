@@ -35,9 +35,13 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
     section="Foundations"
     title="Tiers"
     tags={[{ text: "Foundations", primary: true }]}
-    lead="FLOOR · MOBILE · DESKTOP · WIDE — explicit stops, never fluid. Everything below paints with var(token). Resize the window and watch the ladder step."
+    lead="The screen widths the system is designed for. There are four tiers — floor, mobile, desktop and wide — and every size in the system has one value per tier. A page uses the values of the tier it is in; nothing scales smoothly in between."
   >
     <div class="TiersDoc">
+      <div class="note">
+        <Text text="The tiers are explicit stops, not fluid ranges: FLOOR up to 21.25rem, MOBILE up to 48.75rem, DESKTOP up to 90rem, WIDE beyond. The tokens carry the ladder, so a component reads one name and gets its tier’s value. Everything below paints with var(token): resize the window and watch the values step." />
+      </div>
+
       <section class="block">
       <Heading element="h2" size="3" text="Type ramp" />
       <ul class="ramp">
@@ -139,6 +143,7 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
     }
   }
 
+  & .note,
   & .specimen-token,
   & .specimen-value {
     color: var(--color-text-secondary);
