@@ -13,11 +13,11 @@ test('the map renders a card for every published manifest entry', async ({ page 
   // The manifest is the truth; the map must not drop entries.
   const { manifest } = await import('../../src/lib/manifest.ts')
   await page.goto('/map')
-  for (const entry of manifest.filter((e) => e.published && e.pillar !== 'chrome')) {
+  for (const entry of manifest.filter((e) => e.published)) {
     await expect(page.locator(`.MapPage a.minicard[href="/docs/${entry.slug}"]`), entry.slug).toHaveCount(1)
   }
   // pillars + ground strip exist
-  for (const label of ['Primitives', 'Compositions', 'Regions', 'Foundations', 'Kernel', 'Chrome']) {
+  for (const label of ['Primitives', 'Compositions', 'Regions', 'Foundations', 'Kernel']) {
     await expect(page.getByRole('heading', { name: label })).toBeVisible()
   }
 })

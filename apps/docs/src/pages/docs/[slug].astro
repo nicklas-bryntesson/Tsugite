@@ -4,6 +4,7 @@
 // component the conformance suite runs against. An explicit page
 // (docs/notice.astro) wins by Astro's route priority; it is also excluded
 // here so the two never both build.
+import Text from "tsugite/Text/Text.astro";
 import Layout from "../../layouts/Layout.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
 import { manifest } from "../../lib/manifest.ts";
@@ -15,7 +16,7 @@ export function getStaticPaths() {
     Object.keys(import.meta.glob("./*.astro")).map((p) => p.replace("./", "").replace(".astro", "")),
   );
   return manifest
-    .filter((e) => e.published && e.pillar !== "chrome" && !explicit.has(e.slug))
+    .filter((e) => e.published && !explicit.has(e.slug))
     .map((e) => ({ params: { slug: e.slug }, props: { entry: e } }));
 }
 
@@ -30,9 +31,7 @@ const Section = entry.section ? sections[entry.section] : undefined;
         <Section />
       </div>
     ) : entry.demoHref ? (
-      <p class="doc-note">
-        Lives in the page flow — see <a href={entry.demoHref}>{entry.demoHref}</a>.
-      </p>
+      <div class="doc-note"><Text>Lives in the page flow — see <a href={entry.demoHref}>{entry.demoHref}</a>.</Text></div>
     ) : null}
   </DocPage>
 </Layout>

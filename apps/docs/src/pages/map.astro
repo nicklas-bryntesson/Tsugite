@@ -2,8 +2,8 @@
 // /map — the system map, rendered entirely from the docs manifest:
 // the map cannot lie about the system, because it IS the system's data.
 // Three pillars stand on the ground strip (Foundations + Kernel — the
-// no-DOM material); Chrome gets its own box; the test bench is linked
-// but lives outside the map. Every word goes through a typography door,
+// no-DOM material); the test bench is linked but lives outside the map.
+// The site's own shell is the docs app's, not the system's, and is not on it. Every word goes through a typography door,
 // every frame is a Card, every ground a Surface; this file only arranges.
 import Layout from "../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
@@ -16,7 +16,6 @@ import { manifest, foundations, kernelModules, pillarLabels, pillarMeta, foundat
 
 const pillars: Pillar[] = ["primitive", "composition", "region"];
 const byPillar = (p: Pillar) => manifest.filter((e) => e.pillar === p);
-const chrome = byPillar("chrome");
 const pillarNotes: Record<string, string> = {
   primitive: "Owns its own vocabulary — is content.",
   composition: "Owns arrangement only.",
@@ -28,7 +27,6 @@ type Row = { title: string; href?: string; badge?: string };
 const rowsOf = (p: Pillar): Row[] =>
   byPillar(p).map((e) => (e.published ? { title: e.title, href: `/docs/${e.slug}`, badge: e.family } : { title: e.title, badge: "soon" }));
 const foundationRows: Row[] = foundations.map((f) => (f.published ? { title: f.title, href: f.href } : { title: f.title, badge: "soon" }));
-const chromeRows: Row[] = chrome.map((e) => ({ title: e.title, href: e.demoHref ?? `/docs/${e.slug}` }));
 ---
 
 <Layout title="Map">
@@ -118,28 +116,6 @@ const chromeRows: Row[] = chrome.map((e) => ({ title: e.title, href: e.demoHref 
             {kernelModules.map((m) => (
               <li class="chip"><Caption size="sm"><code>{m}</code></Caption></li>
             ))}
-          </ul>
-        </div>
-        <div class="ground-col">
-          <header class="pillar-head">
-            <Heading element="h2" size="5" text="Chrome" />
-            <Text size="sm" text="The site’s own shell." />
-          </header>
-          <ul class="rows">
-            {chromeRows.map((r) => {
-              const Tag = r.href ? "a" : "div";
-              return (
-              <li>
-                <Tag class="minicard" href={r.href} data-unpublished={r.href ? undefined : ""}>
-                  <Card border={true} padding="none">
-                    <Surface theme="neutral" prominence="subtle" capInline={false} class="row"><div class="row-line">
-                      <Caption voice="nav" text={r.title} />
-                    </div></Surface>
-                  </Card>
-                </Tag>
-              </li>
-              );
-            })}
           </ul>
         </div>
       </section>
