@@ -66,9 +66,13 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     section="Foundations"
     title="Color"
     tags={[{ text: "Foundations", primary: true }]}
-    lead="Rendered from the same sources that generate the CSS. The live now column paints with var(token) and should match your active mode’s column — if it doesn’t, something broke."
+    lead="Every colour in the system comes from one palette and reaches a component through a role. The palette holds the colours themselves, in families of steps; a role names what a colour is for — a page’s ground, its text, an action — in each appearance mode; a voice pairs a surface with the text that sits on it."
   >
     <div class="ColorDoc">
+      <div class="note">
+        <Text text="Rendered from the same sources that generate the CSS. The authored values paint as literals in all four modes — light, dark and their contrast twins — resolved at build. The live now column paints with var(token) and should match your active mode’s column; if it does not, something broke." />
+      </div>
+
       <section class="block">
       <Heading element="h2" size="3" text="RAW palette" />
       <div class="note">
