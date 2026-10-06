@@ -14,8 +14,8 @@ describe("the text-box engine", () => {
   it("writes one voice cell per voice with block metrics, none for an inline voice", () => {
     const block = Object.entries(typeVoices).filter(([, d]) => !(d as { inline?: boolean }).inline).map(([v]) => v);
     expect(textBoxVoices()).toEqual(block);
-    for (const voice of block) expect(count(`[data-variant="${voice}"] {`), voice).toBe(1);
-    expect(css).not.toContain('[data-variant="code"]');
+    for (const voice of block) expect(count(`[data-voice="${voice}"] {`), voice).toBe(1);
+    expect(css).not.toContain('[data-voice="code"]');
   });
 
   it("every voice the family speaks has a cell", () => {
@@ -23,17 +23,17 @@ describe("the text-box engine", () => {
     for (const voice of spoken) expect(textBoxVoices(), voice).toContain(voice);
   });
 
-  // The voice cells key on data-variant alone, so no other component may use a voice's
-  // name as its own variant value — it would pick up the voice's metrics.
-  it("no non-typography recipe uses a voice name as a variant value", async () => {
+  // The voice cells key on data-voice alone, so the word belongs to the voices: a door of
+  // the typography family chooses one, any other component writes a constant (Button), and
+  // no other table may grow a voice axis of its own.
+  it("no non-typography recipe has a voice axis", async () => {
     const typography = new Set(["Heading", "Text", "Caption", "TextBlock"]);
-    const voices = new Set(textBoxVoices());
     const dir = new URL("../../recipes/", import.meta.url);
     for (const file of readdirSync(dir).filter((f) => f.endsWith(".recipe.ts"))) {
       const mod = await import(new URL(file, dir).href);
-      for (const recipe of Object.values(mod) as Array<{ name?: string; axes?: Record<string, { values?: readonly string[] }> }>) {
+      for (const recipe of Object.values(mod) as Array<{ name?: string; axes?: Record<string, unknown> }>) {
         if (!recipe?.name || typography.has(recipe.name)) continue;
-        for (const value of recipe.axes?.variant?.values ?? []) expect(voices.has(value), `${recipe.name} variant "${value}" is a voice`).toBe(false);
+        expect(recipe.axes?.voice, `${recipe.name} has a voice axis`).toBeUndefined();
       }
     }
   });

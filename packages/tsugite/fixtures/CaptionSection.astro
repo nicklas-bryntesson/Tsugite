@@ -28,7 +28,7 @@ const VARIANTS = ["label", "button", "nav"];
     VARIANTS.map((variant) => (
       <section class="component-map">
         <header>
-          <Heading element="h3" text={`variant: ${variant}`} />
+          <Heading element="h3" text={`voice: ${variant}`} />
           <Prose variant="basic" size="sm">
             <p>the {variant} bundle · label / legend / figcaption / p / span / div / h3 · size lg–sm</p>
           </Prose>
@@ -48,7 +48,7 @@ const VARIANTS = ["label", "button", "nav"];
                 <th scope="row">size {size}</th>
                 {ELEMENTS.map((el) => (
                   <td>
-                    <Caption element={el} variant={variant} size={size} text={`${variant} ${size}`} />
+                    <Caption element={el} voice={variant} size={size} text={`${variant} ${size}`} />
                   </td>
                 ))}
               </tr>
@@ -73,7 +73,7 @@ const VARIANTS = ["label", "button", "nav"];
             <th scope="row">size {size}</th>
             <td>
               <ActionButton size={size}>Save changes</ActionButton>
-              <Caption inline variant="button" size={size} text=" — the button voice, standalone" />
+              <Caption inline voice="button" size={size} text=" — the button voice, standalone" />
             </td>
           </tr>
         ))}

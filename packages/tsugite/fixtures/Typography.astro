@@ -19,13 +19,13 @@ const displaySizes = ["1", "2", "3"];
 ---
 
 {/* ═══════════════════════════════════════════
-    HEADING — variant: heading
+    HEADING — voice: heading
     ═══════════════════════════════════════════ */}
 
 <section class="component-map" style="--_colWidth: 10rem;">
   <header>
     <Heading element="h3" text="Heading" />
-    <Prose variant="basic" size="sm"><p>variant: heading, size: 1–6</p></Prose>
+    <Prose variant="basic" size="sm"><p>voice: heading, size: 1–6</p></Prose>
   </header>
 
   {
@@ -46,7 +46,7 @@ const displaySizes = ["1", "2", "3"];
               <th scope="row">size {size}</th>
               {ELEMENTS.map((el) => (
                 <td>
-                  <Heading text={`h${size}`} element={el} variant="heading" size={size} />
+                  <Heading text={`h${size}`} element={el} voice="heading" size={size} />
                 </td>
               ))}
             </tr>
@@ -58,13 +58,13 @@ const displaySizes = ["1", "2", "3"];
 </section>
 
 {/* ═══════════════════════════════════════════
-    HEADING — variant: display
+    HEADING — voice: display
     ═══════════════════════════════════════════ */}
 
 <section class="component-map" style="--_colWidth: 10rem;">
   <header>
     <Heading element="h3" text="Display" />
-    <Prose variant="basic" size="sm"><p>variant: display, size: 1–3</p></Prose>
+    <Prose variant="basic" size="sm"><p>voice: display, size: 1–3</p></Prose>
   </header>
 
   {
@@ -85,7 +85,7 @@ const displaySizes = ["1", "2", "3"];
               <th scope="row">size {size}</th>
               {ELEMENTS.map((el) => (
                 <td>
-                  <Heading text={`d${size}`} element={el} variant="display" size={size} />
+                  <Heading text={`d${size}`} element={el} voice="display" size={size} />
                 </td>
               ))}
             </tr>

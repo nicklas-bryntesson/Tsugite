@@ -11,7 +11,7 @@ const ELEMENT_SIZE: Record<string, string> = { h1: "1", h2: "2", h3: "3", h4: "4
  *  follows the element. */
 export const headingDefaults = (props: Record<string, unknown>) => ({
   element: () => (booleanOf(props.inline) ? "span" : "h2"),
-  size: ({ tag, axes }: View) => (axes.variant === "display" ? "2" : (ELEMENT_SIZE[tag] ?? "2")),
+  size: ({ tag, axes }: View) => (axes.voice === "display" ? "2" : (ELEMENT_SIZE[tag] ?? "2")),
 });
 
 /** Derived values. The engine's mode is the intent, whatever the element. */

@@ -119,3 +119,18 @@ magic numbers — so it can be written by code.
   after the selector is rethought (TODOS(?) in Caption.css).
 - The `code` voice's `inline: true` means "no block metrics" — a different
   thing from the prop; renamed when Prose is taken up.
+
+## Amendment 2026-10-06 — the voice attribute is `data-voice`
+
+The voice cells key on `[data-voice="<voice>"]`, not `[data-variant="<voice>"]`, and
+every mention of `data-variant` as the voice in §§ above reads `data-voice`. The
+typography doors' axis is `voice` (`<Text voice="body">`), Button's derived constant
+writes `data-voice="button"`, and law (d)'s exemption in ADR-0012 §4 keys on
+`[data-voice]`.
+
+`variant` was a generic word holding a specific meaning in a global selector: a
+component with a look axis of its own (CtaButton's `gradient`, Notice's `error`,
+Prose's `basic`) could not also reach a voice cell, since one attribute holds one value,
+and law (d) counted a Notice inside a run as voiced. With the voice on its own attribute,
+voice and look are independent axes on any component, and a component that needs a
+voice of its own adds a cell, not a rename. `variant` stays free for a component's look.

@@ -33,8 +33,8 @@ export const text = {
   axes: {
     /** ADR-0024: the words sit in a line — no box, no trim, no reading ceiling */
     inline: { type: "boolean", default: false, unwritten: true },
-    variant: { values: ["body"], default: "body" },
-    size: { valuesBy: { axis: "variant", values: { body: ["sm", "md", "lg"] } }, default: "md" },
+    voice: { values: ["body"], default: "body" },
+    size: { valuesBy: { axis: "voice", values: { body: ["sm", "md", "lg"] } }, default: "md" },
     alignInline: { values: ["start", "center", "end"], default: "start" },
     wrap: { values: ["balance", "pretty", "stable", "nowrap"], default: "pretty" },
     /** ADR-0021: a reading ceiling on the inline size, the stop's line length; a text in a

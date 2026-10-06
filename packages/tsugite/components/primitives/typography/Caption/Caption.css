@@ -6,7 +6,7 @@
  * them standalone.
  *
  * Gates over the engine:
- *   data-variant   label | button | nav, the voice bundle; the engine's voice cell holds its metrics.
+ *   data-voice     label | button | nav, the voice bundle; the engine's voice cell holds its metrics.
  *   data-size      sm | md | lg, the voice's size stop.
  *   data-align-inline  start | center | end, logical.
  *   data-wrap      balance | pretty | stable | nowrap.
@@ -25,9 +25,9 @@
   }
 
   /* Law (d) — voice sovereignty: an UNVOICED inline element inherits the run's metrics; a
-     voiced child (data-variant) — and everything inside it — owns its own bundle, at zero
+     voiced child (data-voice) — and everything inside it — owns its own bundle, at zero
      added specificity: nearest voice wins by inheritance, never by specificity. */
-  & > .text :where(a, span, strong, em, b, i):where(:not(:is(.Caption [data-variant]), :is(.Caption [data-variant]) *)) {
+  & > .text :where(a, span, strong, em, b, i):where(:not(:is(.Caption [data-voice]), :is(.Caption [data-voice]) *)) {
     font: inherit;
     line-height: inherit;
     letter-spacing: inherit;
@@ -36,16 +36,16 @@
   /* Law (b), the open door: strong asks for the voice's bold weight with one fallback to
      the voice's own (ADR-0008). A theme that gives the voice one weight — Inter 400 here —
      gets flat emphasis by VALUE, not by law; a theme that adds a bold weight opens the
-     door without a line of CSS changing. The voice's bold token is set per variant below. */
-  & > .text :where(strong, b):where(:not(:is(.Caption [data-variant]) *)) {
+     door without a line of CSS changing. The voice's bold token is set per voice below. */
+  & > .text :where(strong, b):where(:not(:is(.Caption [data-voice]) *)) {
     font-weight: var(--_cp-boldWeight);
   }
 
-  & > .text :where(em, i):where(:not(:is(.Caption [data-variant]) *)) {
+  & > .text :where(em, i):where(:not(:is(.Caption [data-voice]) *)) {
     font-style: italic;
   }
 
-  &[data-variant="label"] {
+  &[data-voice="label"] {
     --_cp-boldWeight: var(--fontWeight-label-bold, var(--fontWeight-label));
 
     font-family: var(--fontFamily-label);
@@ -66,7 +66,7 @@
     }
   }
 
-  &[data-variant="button"] {
+  &[data-voice="button"] {
     --_cp-boldWeight: var(--fontWeight-button-bold, var(--fontWeight-button));
 
     font-family: var(--fontFamily-button);
@@ -87,7 +87,7 @@
     }
   }
 
-  &[data-variant="nav"] {
+  &[data-voice="nav"] {
     --_cp-boldWeight: var(--fontWeight-nav-bold, var(--fontWeight-nav));
 
     font-family: var(--fontFamily-nav);

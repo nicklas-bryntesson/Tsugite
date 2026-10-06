@@ -63,7 +63,7 @@ export function generateTextBoxStylesheet(voices = typeVoices) {
 
   for (const voice of textBoxVoices(voices)) {
     lines.push(
-      `[data-variant="${voice}"] {`,
+      `[data-voice="${voice}"] {`,
       `  ${SLOT.lineHeight}: var(${METRIC_TOKEN.lineHeight(voice)});`,
       `  ${SLOT.baselineOffset}: var(${METRIC_TOKEN.baselineOffset(voice)});`,
       `  ${SLOT.emBox}: var(${GEOMETRY_TOKEN.emBox(voice)});`,

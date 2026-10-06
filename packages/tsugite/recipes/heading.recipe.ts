@@ -36,9 +36,9 @@ export const heading = {
   axes: {
     /** ADR-0024: the words sit in a line — no box, no trim, no reading ceiling */
     inline: { type: "boolean", default: false, unwritten: true },
-    variant: { values: ["heading", "display"], default: "heading" },
+    voice: { values: ["heading", "display"], default: "heading" },
     size: {
-      valuesBy: { axis: "variant", values: { heading: ["1", "2", "3", "4", "5", "6"], display: ["1", "2", "3"] } },
+      valuesBy: { axis: "voice", values: { heading: ["1", "2", "3", "4", "5", "6"], display: ["1", "2", "3"] } },
       default: { hole: true },
     },
     alignInline: { values: ["start", "center", "end"], default: "start" },

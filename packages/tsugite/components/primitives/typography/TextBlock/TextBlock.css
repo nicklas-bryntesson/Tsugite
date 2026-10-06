@@ -5,7 +5,7 @@
  * leading, the field's line breaks, the reading ceiling and how the words sit.
  *
  * Gates over the engine:
- *   data-variant       preamble | body, the voice bundle; the engine's voice cell holds its metrics.
+ *   data-voice         preamble | body, the voice bundle; the engine's voice cell holds its metrics.
  *   data-size          sm | md | lg, the voice's size stop.
  *   data-align-inline  start | center | end, logical; once capped, the box moves too.
  *   data-wrap          balance | pretty | stable — no nowrap, a field keeps its breaks.
@@ -26,7 +26,7 @@
     white-space: pre-line;
   }
 
-  &[data-variant="preamble"] {
+  &[data-voice="preamble"] {
     font-family: var(--fontFamily-preamble);
     font-weight: var(--fontWeight-preamble);
     letter-spacing: var(--letterSpacing-preamble);
@@ -48,7 +48,7 @@
     }
   }
 
-  &[data-variant="body"] {
+  &[data-voice="body"] {
     font-family: var(--fontFamily-body);
     font-weight: var(--fontWeight-body);
     letter-spacing: var(--letterSpacing-body);

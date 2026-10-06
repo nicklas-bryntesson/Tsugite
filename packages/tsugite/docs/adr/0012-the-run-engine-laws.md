@@ -127,3 +127,8 @@ bundle).
 - **"Defaults owned by the component"** (commit message) — the run mode
   is derived, with no override. Whether an author-facing override is
   foreseen or excluded is not stated.
+
+## Amendment 2026-10-06 (ADR-0024)
+
+The voice attribute is `data-voice`; where this ADR says `data-variant` for the voice,
+including law (d)'s exemption selector, read `data-voice`.

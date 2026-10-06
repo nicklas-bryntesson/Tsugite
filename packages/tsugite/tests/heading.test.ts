@@ -13,7 +13,7 @@ describe("Heading", () => {
     const html = await render({ text: "Hello" });
     expect(html).toContain("<h2");
     expect(html).toContain('class="Heading"');
-    expect(html).toContain('data-variant="heading"');
+    expect(html).toContain('data-voice="heading"');
     expect(html).toContain('data-size="2"');
     expect(html).toContain('data-align-inline="start"');
     expect(html).toContain('data-wrap="balance"');
@@ -26,21 +26,21 @@ describe("Heading", () => {
     expect(html).toContain('data-size="4"');
   });
 
-  it("defaults display variant to size 2", async () => {
-    const html = await render({ text: "T", element: "h1", variant: "display" });
-    expect(html).toContain('data-variant="display"');
+  it("defaults the display voice to size 2", async () => {
+    const html = await render({ text: "T", element: "h1", voice: "display" });
+    expect(html).toContain('data-voice="display"');
     expect(html).toContain('data-size="2"');
   });
 
   it("accepts explicit display size", async () => {
-    const html = await render({ text: "T", element: "h1", variant: "display", size: "1" });
+    const html = await render({ text: "T", element: "h1", voice: "display", size: "1" });
     expect(html).toContain('data-size="1"');
   });
 
   it("does not speak the body voice — that cell is Text's (ADR-0023)", async () => {
-    const html = await render({ text: "T", element: "h3", variant: "body" });
+    const html = await render({ text: "T", element: "h3", voice: "body" });
     expect(html).toContain("Heading:");
-    expect(html).toContain('invalid variant "body"');
+    expect(html).toContain('invalid voice "body"');
     expect(html).not.toContain('class="Heading"');
   });
 
@@ -67,7 +67,7 @@ describe("Heading", () => {
 
   it("refuses a size outside the voice's set (ADR-0019)", async () => {
     const html = await render({ text: "T", size: "lg" });
-    expect(html).toContain('invalid size "lg" for variant "heading"');
+    expect(html).toContain('invalid size "lg" for voice "heading"');
   });
 
   it("wraps slot content in the engine container (run engine law a)", async () => {

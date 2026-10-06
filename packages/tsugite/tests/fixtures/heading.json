@@ -13,7 +13,7 @@
         "tag": "h2",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "2",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -34,7 +34,7 @@
         "tag": "h4",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "4",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -48,7 +48,7 @@
       "input": {
         "text": "T",
         "element": "h1",
-        "variant": "display",
+        "voice": "display",
         "children": false
       },
       "expect": {
@@ -56,7 +56,7 @@
         "tag": "h1",
         "className": "Heading",
         "attrs": {
-          "data-variant": "display",
+          "data-voice": "display",
           "data-size": "2",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -70,7 +70,7 @@
       "input": {
         "text": "T",
         "element": "h1",
-        "variant": "display",
+        "voice": "display",
         "size": "1",
         "children": false
       },
@@ -79,7 +79,7 @@
         "tag": "h1",
         "className": "Heading",
         "attrs": {
-          "data-variant": "display",
+          "data-voice": "display",
           "data-size": "1",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -100,7 +100,7 @@
         "tag": "span",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "2",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -122,7 +122,7 @@
         "tag": "h3",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "3",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -146,7 +146,7 @@
         "tag": "h2",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "2",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -172,7 +172,7 @@
         "tag": "h2",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "2",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -195,7 +195,7 @@
         "tag": "h2",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "2",
           "data-align-inline": "center",
           "data-wrap": "pretty",
@@ -216,7 +216,7 @@
         "tag": "h2",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "2",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -237,7 +237,7 @@
         "tag": "h2",
         "className": "Heading extra",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "2",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -256,7 +256,7 @@
         "tag": "h2",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "2",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -305,7 +305,7 @@
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "invalid size \"lg\" for variant \"heading\" — expected 1 | 2 | 3 | 4 | 5 | 6"
+        "errorMessage": "invalid size \"lg\" for voice \"heading\" — expected 1 | 2 | 3 | 4 | 5 | 6"
       }
     },
     {
@@ -344,7 +344,7 @@
         "tag": "h2",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "2",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -365,7 +365,7 @@
         "tag": "span",
         "className": "Heading",
         "attrs": {
-          "data-variant": "heading",
+          "data-voice": "heading",
           "data-size": "2",
           "data-align-inline": "start",
           "data-wrap": "balance",
@@ -378,7 +378,7 @@
       "input": {
         "text": "T",
         "inline": true,
-        "variant": "display",
+        "voice": "display",
         "size": "1",
         "children": false
       },
@@ -387,7 +387,7 @@
         "tag": "span",
         "className": "Heading",
         "attrs": {
-          "data-variant": "display",
+          "data-voice": "display",
           "data-size": "1",
           "data-align-inline": "start",
           "data-wrap": "balance",

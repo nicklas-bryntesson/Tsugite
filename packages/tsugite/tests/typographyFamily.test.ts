@@ -59,7 +59,7 @@ describe("the typography family contract", () => {
   describe("the Heading table agrees with the matrix", () => {
     const member = FAMILY.Heading;
     it("speaks exactly the matrix's voices", () => {
-      expect([...heading.axes.variant.values]).toEqual(Object.keys(member.voices));
+      expect([...heading.axes.voice.values]).toEqual(Object.keys(member.voices));
     });
     it("offers each voice exactly its sizes", () => {
       for (const voice of Object.keys(member.voices)) {
@@ -75,8 +75,8 @@ describe("the typography family contract", () => {
       const missing = Object.entries(member.voices).flatMap(([voice, elements]) => farm.filter((el) => !elements.includes(el)).map((el) => `${voice}/${el}`));
       const declared = heading.absent
         .map((a) => a.cells as Record<string, unknown>)
-        .filter((c) => "variant" in c && "element" in c)
-        .map((c) => `${c.variant}/${c.element}`);
+        .filter((c) => "voice" in c && "element" in c)
+        .map((c) => `${c.voice}/${c.element}`);
       expect(declared.sort()).toEqual(missing.sort());
     });
   });
@@ -100,7 +100,7 @@ describe("the typography family contract", () => {
   describe("the Text table agrees with the matrix", () => {
     const member = FAMILY.Text;
     it("speaks exactly the matrix's voices", () => {
-      expect([...text.axes.variant.values]).toEqual(Object.keys(member.voices));
+      expect([...text.axes.voice.values]).toEqual(Object.keys(member.voices));
     });
     it("offers each voice exactly its sizes", () => {
       for (const voice of Object.keys(member.voices)) {
@@ -112,7 +112,7 @@ describe("the typography family contract", () => {
       expect([...text.element.values]).toEqual(farm);
       const missing = Object.entries(member.voices).flatMap(([voice, elements]) => farm.filter((el) => !elements.includes(el)).map((el) => `${voice}/${el}`));
       expect(missing).toEqual([]);
-      const declared = text.absent.map((a) => a.cells as Record<string, unknown>).filter((c) => "variant" in c && "element" in c);
+      const declared = text.absent.map((a) => a.cells as Record<string, unknown>).filter((c) => "voice" in c && "element" in c);
       expect(declared).toEqual([]);
     });
     it("an inline Text refuses exactly the elements that cannot sit in a line (ADR-0024)", () => {
@@ -127,7 +127,7 @@ describe("the typography family contract", () => {
   describe("the TextBlock table agrees with the matrix", () => {
     const member = FAMILY.TextBlock;
     it("speaks exactly the matrix's voices", () => {
-      expect([...textblock.axes.variant.values]).toEqual(Object.keys(member.voices));
+      expect([...textblock.axes.voice.values]).toEqual(Object.keys(member.voices));
     });
     it("offers each voice exactly its sizes", () => {
       for (const voice of Object.keys(member.voices)) {
@@ -149,7 +149,7 @@ describe("the typography family contract", () => {
   describe("the Caption table agrees with the matrix", () => {
     const member = FAMILY.Caption;
     it("speaks exactly the matrix's voices", () => {
-      expect([...caption.axes.variant.values]).toEqual(Object.keys(member.voices));
+      expect([...caption.axes.voice.values]).toEqual(Object.keys(member.voices));
     });
     it("offers each voice exactly its sizes", () => {
       for (const voice of Object.keys(member.voices)) {

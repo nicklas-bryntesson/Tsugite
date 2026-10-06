@@ -5,7 +5,7 @@
  * size and leading, the reading ceiling and how the words sit on their line.
  *
  * Gates over the engine:
- *   data-variant       body, the voice bundle; the engine's voice cell holds its metrics.
+ *   data-voice         body, the voice bundle; the engine's voice cell holds its metrics.
  *   data-size          sm | md | lg, the voice's size stop.
  *   data-align-inline  start | center | end, logical; once capped, the box moves too.
  *   data-wrap          balance | pretty | stable | nowrap.
@@ -26,11 +26,11 @@
   }
 
   /* Law (d) — voice sovereignty: an UNVOICED inline element inherits the run's metrics; a
-     voiced child (data-variant) — and everything inside it — owns its own bundle, at zero
+     voiced child (data-voice) — and everything inside it — owns its own bundle, at zero
      added specificity: nearest voice wins by inheritance, never by specificity. The
      exemption names a NESTED voiced child — the voiced root is an ancestor of every run,
-     so a bare [data-variant] * would exempt everything. */
-  & > .text :where(a, span, strong, em, b, i):where(:not(:is(.Text [data-variant]), :is(.Text [data-variant]) *)) {
+     so a bare [data-voice] * would exempt everything. */
+  & > .text :where(a, span, strong, em, b, i):where(:not(:is(.Text [data-voice]), :is(.Text [data-voice]) *)) {
     font: inherit;
     line-height: inherit;
     letter-spacing: inherit;
@@ -38,15 +38,15 @@
 
   /* Law (b) — inline emphasis keeps its semantics in the quiet voices: strong takes the
      role convention's strong weight, em stays italic. */
-  & > .text :where(strong, b):where(:not(:is(.Text [data-variant]) *)) {
+  & > .text :where(strong, b):where(:not(:is(.Text [data-voice]) *)) {
     font-weight: var(--fontWeight-body-bold);
   }
 
-  & > .text :where(em, i):where(:not(:is(.Text [data-variant]) *)) {
+  & > .text :where(em, i):where(:not(:is(.Text [data-voice]) *)) {
     font-style: italic;
   }
 
-  &[data-variant="body"] {
+  &[data-voice="body"] {
     font-family: var(--fontFamily-body);
     font-weight: var(--fontWeight-body);
     letter-spacing: var(--letterSpacing-body);

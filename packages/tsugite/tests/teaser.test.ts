@@ -42,7 +42,7 @@ describe("Teaser", () => {
 
   it("the heading goes through the text-box engine (data-text-box, ADR-0024)", async () => {
     const html = await render({ heading: "Engine", href: "/post" });
-    expect(html).toMatch(/<h2 class="Heading"[^>]*data-variant="heading"/);
+    expect(html).toMatch(/<h2 class="Heading"[^>]*data-voice="heading"/);
     expect(html).toMatch(/<h2 class="Heading"[^>]*data-size="4"/);
     expect(html).toMatch(/<h2 class="Heading"[^>]*data-text-box="block"/);
   });

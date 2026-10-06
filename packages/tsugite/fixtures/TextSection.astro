@@ -47,17 +47,17 @@ const VARIANTS = ["body"];
         <tr>
           <th scope="row">two-voice chain</th>
           <td>
-            <Text element="p" variant="body" size="lg">
-              <Caption inline variant="label" size="lg" text="Upptäckt ett fel?" /> Kontakta oss.
+            <Text element="p" voice="body" size="lg">
+              <Caption inline voice="label" size="lg" text="Upptäckt ett fel?" /> Kontakta oss.
             </Text>
           </td>
         </tr>
         <tr>
           <th scope="row">sovereignty</th>
           <td>
-            <Text element="p" variant="body" size="md">
+            <Text element="p" voice="body" size="md">
               An unvoiced <span>span inherits the run</span>; a voiced child
-              <Caption inline variant="label" size="md" text=" owns its own bundle" />.
+              <Caption inline voice="label" size="md" text=" owns its own bundle" />.
             </Text>
           </td>
         </tr>
@@ -69,7 +69,7 @@ const VARIANTS = ["body"];
     VARIANTS.map((variant) => (
       <section class="component-map">
         <header>
-          <Heading element="h3" text={`variant: ${variant}`} />
+          <Heading element="h3" text={`voice: ${variant}`} />
           <Prose variant="basic" size="sm">
             <p>the body bundle — Noto Serif · p / span / div / legend / figcaption / label · size lg–sm</p>
           </Prose>
@@ -89,7 +89,7 @@ const VARIANTS = ["body"];
                 <th scope="row">size {size}</th>
                 {ELEMENTS.map((el) => (
                   <td>
-                    <Text element={el} variant={variant} size={size} text={`${variant} ${size}`} />
+                    <Text element={el} voice={variant} size={size} text={`${variant} ${size}`} />
                   </td>
                 ))}
               </tr>
