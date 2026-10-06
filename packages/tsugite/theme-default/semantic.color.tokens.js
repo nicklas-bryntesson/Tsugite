@@ -270,34 +270,36 @@ export const semanticColorTokens = {
   },
 
   // ── The CTA gradient ───────────────────────────────────────────────────────
-  // Four stops the CtaButton's animated gradient sweeps through: indigo, onsen water,
-  // cypress, amber — YU's first role. Decor, not a reading surface: the ink is tuned
-  // for the brand stops and the contrast modes collapse the sweep to one solid step.
+  // Four stops the CtaButton's animated gradient sweeps through, all in the blue: indigo,
+  // deeper indigo, onsen water at its deep step, the deepest indigo. One family keeps the
+  // sweep a shift of shade, not a change of hue, and every stop carries the ink — light
+  // stops dark enough for white words (AI-60 at 7.0:1 is the lightest), dark stops light
+  // enough for dark ones. The contrast modes collapse the sweep to one solid step.
   /** Gradient stop 1. */
   "--color-cta-gradient-1": {
-    "light": raw("AI-50"),
+    "light": raw("AI-60"),
     "dark": raw("AI-30"),
     "light-contrast": raw("AI-80"),
     "dark-contrast": raw("AI-10"),
   },
   /** Gradient stop 2. */
   "--color-cta-gradient-2": {
-    "light": raw("YU-50"),
-    "dark": raw("YU-25"),
+    "light": raw("AI-70"),
+    "dark": raw("AI-20"),
     "light-contrast": raw("AI-80"),
     "dark-contrast": raw("AI-10"),
   },
   /** Gradient stop 3. */
   "--color-cta-gradient-3": {
-    "light": raw("HINOKI-40"),
-    "dark": raw("HINOKI-20"),
+    "light": raw("YU-70"),
+    "dark": raw("YU-25"),
     "light-contrast": raw("AI-80"),
     "dark-contrast": raw("AI-10"),
   },
   /** Gradient stop 4. */
   "--color-cta-gradient-4": {
-    "light": raw("KOHAKU-30"),
-    "dark": raw("KOHAKU-30"),
+    "light": raw("AI-80"),
+    "dark": raw("AI-10"),
     "light-contrast": raw("AI-80"),
     "dark-contrast": raw("AI-10"),
   },
