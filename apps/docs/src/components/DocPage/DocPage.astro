@@ -13,7 +13,8 @@ type Props =
   | { section: string; title: string; tags?: Tag[]; lead?: string };
 const props = Astro.props;
 
-// The row, read as a head: the pillar is the section and the page's own kind.
+// The row, read as a head: the pillar is the section and the page's own kind, the
+// family a second tag. ADR numbers are the repo's record, not the reader's, and stay off.
 const head =
   "entry" in props
     ? {
@@ -22,7 +23,6 @@ const head =
         tags: [
           { text: pillarLabels[props.entry.pillar], primary: true },
           ...(props.entry.family ? [{ text: props.entry.family }] : []),
-          ...(props.entry.adrs ?? []).map((n) => ({ text: `ADR-${n}` })),
         ],
       }
     : { section: props.section, title: props.title, tags: props.tags };
