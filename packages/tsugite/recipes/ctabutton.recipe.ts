@@ -30,12 +30,18 @@ export const ctabutton = {
   axes: {
     /** the look, one name each; a project extends this list with its own */
     variant: { values: ["gradient"], default: "gradient" },
-    size: { values: ["md", "lg", "jumbo"], default: "md" },
+    size: { values: ["sm", "md", "lg"], default: "md" },
     /** the cast shadow — the gradient itself, tilted toward the viewer and blurred */
     shadow: { type: "boolean", default: true },
     /** the sheen along the top edge */
     reflection: { type: "boolean", default: true },
     iconPosition: { values: ["left", "right"], default: "right", when: { part: "icon" } },
+  },
+  derived: {
+    /** ADR-0024 §5: the button voice, always — the engine's voice cell fills from it */
+    voice: { attr: "data-voice", from: [] },
+    /** ADR-0024 §5: a button is never in a line, so the engine's gate is always block */
+    textBox: { attr: "data-text-box", from: [] },
   },
   content: { empty: "suppress", unless: ["aria-label"] },
 } as const satisfies Recipe;

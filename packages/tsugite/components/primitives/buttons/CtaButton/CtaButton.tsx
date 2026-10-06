@@ -3,11 +3,12 @@
 // host differs.
 import type { ReactNode } from "react";
 import { createElement } from "react";
+import "../../../../kernel/css/text-box.generated.css";
 import "./CtaButton.css";
 import "../../../../kernel/css/debug.css";
 import { ctabutton } from "../../../../recipes/ctabutton.recipe";
 import { resolve, type InputOf } from "../../../../lib/recipe";
-import { CTA_LAYERS } from "../../../../lib/ctabutton";
+import { ctaLayers, ctaDerive } from "../../../../lib/ctabutton";
 
 type Input = InputOf<typeof ctabutton>;
 type Shared = Omit<Input, "element" | "class" | "aria-label" | "href" | "target" | "type" | "disabled"> & {
@@ -24,18 +25,18 @@ const hasContent = (c: ReactNode) => c != null && c !== false && c !== "";
 
 function render(element: "a" | "button", name: string, props: Record<string, unknown>, children: ReactNode) {
   const { ariaLabel, className, buttonType, ...rest } = props;
-  const c = resolve(ctabutton, { ...rest, element, class: className, "aria-label": ariaLabel, type: buttonType }, { slots: { text: hasContent(children) } });
+  const c = resolve(ctabutton, { ...rest, element, class: className, "aria-label": ariaLabel, type: buttonType }, { slots: { text: hasContent(children) }, derive: ctaDerive });
   if (c.mode === "suppress") return null;
   if (c.mode === "error") {
     if (process.env.NODE_ENV === "production") return null;
     return h("div", { style: { color: "var(--debug-ink)", border: "2px solid var(--debug-ink)", padding: "0.5rem" } }, `× ${name}: ${c.errorMessage}`);
   }
-  const layers = (CTA_LAYERS[c.attrs["data-variant"] as string] ?? []).map((l) => h("span", { key: l, className: `CtaButton-${l}`, "aria-hidden": "true" }));
+  const layers = ctaLayers(c.attrs["data-variant"] as string).map((l) => h("span", { key: l, className: l, "aria-hidden": "true" }));
   return h(
     c.tag,
     { className: c.className, ...c.attrs, ...c.rest },
     ...layers,
-    c.parts.text && h("span", { className: "CtaButton-text" }, children),
+    c.parts.text && h("span", { className: "text" }, children),
     c.parts.icon && h("svg", { className: "CtaButton-icon", "aria-hidden": "true", focusable: "false" }, h("use", { href: `#${c.parts.icon}` })),
   );
 }
