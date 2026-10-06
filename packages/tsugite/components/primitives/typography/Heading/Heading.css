@@ -4,7 +4,7 @@
  * size and leading, the reading ceiling, the marked words and how the run sits on its line.
  *
  * Gates over the engine:
- *   data-variant   heading | display, the voice bundle; the engine's voice cell holds its metrics.
+ *   data-voice     heading | display, the voice bundle; the engine's voice cell holds its metrics.
  *   data-size      per voice: 1–6, 1–3.
  *   data-align-inline  start | center | end, logical; once capped, the box moves too.
  *   data-wrap      balance | pretty | stable | nowrap.
@@ -32,9 +32,9 @@
 
   /* ADR-0012 §4, voice sovereignty: an unvoiced inline element inherits the run's
      metrics. In the loud voices that includes strong and em; partial bolding of a
-     heading is drift, deliberately flattened. A voiced child (data-variant) and
+     heading is drift, deliberately flattened. A voiced child (data-voice) and
      everything inside it owns its own bundle. */
-  & > .text :where(a, span, strong, em, b, i):where(:not(:is(.Heading [data-variant]), :is(.Heading [data-variant]) *)) {
+  & > .text :where(a, span, strong, em, b, i):where(:not(:is(.Heading [data-voice]), :is(.Heading [data-voice]) *)) {
     font: inherit;
     line-height: inherit;
     letter-spacing: inherit;
@@ -63,7 +63,7 @@
     text-underline-offset: 0.12em;
   }
 
-  &[data-variant="heading"] {
+  &[data-voice="heading"] {
     font-family: var(--fontFamily-heading);
     font-weight: var(--fontWeight-heading);
     letter-spacing: var(--letterSpacing-heading);
@@ -100,7 +100,7 @@
     }
   }
 
-  &[data-variant="display"] {
+  &[data-voice="display"] {
     font-family: var(--fontFamily-display);
     font-weight: var(--fontWeight-display);
     letter-spacing: var(--letterSpacing-display);

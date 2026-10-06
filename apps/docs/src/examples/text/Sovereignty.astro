@@ -3,9 +3,9 @@ import Text from "tsugite/Text/Text.astro";
 import Caption from "tsugite/Caption/Caption.astro";
 ---
 {/* Law (d): an UNVOICED inline element inherits the run's metrics; a
-    VOICED child (data-variant) owns its own bundle. Nearest voice wins by
+    VOICED child (data-voice) owns its own bundle. Nearest voice wins by
     inheritance, never by specificity. */}
-<Text element="p" variant="body">
+<Text element="p" voice="body">
   An unvoiced <span>span inherits the run</span>; a voiced child
   <Caption inline text=" owns its own bundle" />.
 </Text>

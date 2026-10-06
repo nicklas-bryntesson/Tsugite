@@ -37,7 +37,7 @@ describe("CoverComposition — video variant", () => {
   it("content is display-1 heading on the requested element + basic prose + lg buttons", async () => {
     const html = await render(videoProps);
     expect(html).toContain("<h1");
-    expect(html).toContain('data-variant="display"');
+    expect(html).toContain('data-voice="display"');
     expect(html).toContain('data-size="1"');
     expect(html).toContain('data-variant="basic"');
     expect(html).toContain("A short preamble.");

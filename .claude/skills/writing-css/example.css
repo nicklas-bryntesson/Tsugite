@@ -91,7 +91,7 @@
      Zero specificity on purpose, so "nearest voice wins" is decided by inheritance,
      never by a selector. Anywhere else :where is an invitation to be overridden from
      outside, which ADR-0015 forbids — a consumer styles only its own parts. */
-  & .title :where(a, span, strong, em):where(:not(:is(.Component [data-variant]), :is(.Component [data-variant]) *)) {
+  & .title :where(a, span, strong, em):where(:not(:is(.Component [data-voice]), :is(.Component [data-voice]) *)) {
     font: inherit;
   }
 

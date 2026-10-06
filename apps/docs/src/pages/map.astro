@@ -59,7 +59,7 @@ const chromeRows: Row[] = chrome.map((e) => ({ title: e.title, href: e.demoHref 
                     <Tag class="minicard" href={r.href} data-unpublished={r.href ? undefined : ""}>
                       <Card border={true} padding="none">
                         <Surface theme="neutral" prominence="subtle" capInline={false} class="row"><div class="row-line">
-                          <Caption variant="nav" text={r.title} />
+                          <Caption voice="nav" text={r.title} />
                           {r.badge && (
                             <div class="badge">
                               <Surface theme="inverse" prominence="primary" capInline={false} class="pill"><Caption size="sm" text={r.badge} /></Surface>
@@ -95,7 +95,7 @@ const chromeRows: Row[] = chrome.map((e) => ({ title: e.title, href: e.demoHref 
                 <Tag class="minicard" href={r.href} data-unpublished={r.href ? undefined : ""}>
                   <Card border={true} padding="none">
                     <Surface theme="neutral" prominence="subtle" capInline={false} class="row"><div class="row-line">
-                      <Caption variant="nav" text={r.title} />
+                      <Caption voice="nav" text={r.title} />
                       {r.badge && (
                         <div class="badge">
                           <Surface theme="inverse" prominence="primary" capInline={false} class="pill"><Caption size="sm" text={r.badge} /></Surface>
@@ -133,7 +133,7 @@ const chromeRows: Row[] = chrome.map((e) => ({ title: e.title, href: e.demoHref 
                 <Tag class="minicard" href={r.href} data-unpublished={r.href ? undefined : ""}>
                   <Card border={true} padding="none">
                     <Surface theme="neutral" prominence="subtle" capInline={false} class="row"><div class="row-line">
-                      <Caption variant="nav" text={r.title} />
+                      <Caption voice="nav" text={r.title} />
                     </div></Surface>
                   </Card>
                 </Tag>

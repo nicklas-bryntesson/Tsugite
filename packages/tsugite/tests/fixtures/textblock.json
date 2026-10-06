@@ -13,7 +13,7 @@
         "tag": "p",
         "className": "TextBlock",
         "attrs": {
-          "data-variant": "preamble",
+          "data-voice": "preamble",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -34,7 +34,7 @@
         "tag": "p",
         "className": "TextBlock",
         "attrs": {
-          "data-variant": "preamble",
+          "data-voice": "preamble",
           "data-size": "lg",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -48,7 +48,7 @@
       "input": {
         "text": "T",
         "element": "div",
-        "variant": "body",
+        "voice": "body",
         "size": "sm",
         "children": false
       },
@@ -57,7 +57,7 @@
         "tag": "div",
         "className": "TextBlock",
         "attrs": {
-          "data-variant": "body",
+          "data-voice": "body",
           "data-size": "sm",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -79,7 +79,7 @@
         "tag": "p",
         "className": "TextBlock",
         "attrs": {
-          "data-variant": "preamble",
+          "data-voice": "preamble",
           "data-size": "md",
           "data-align-inline": "center",
           "data-wrap": "stable",
@@ -100,7 +100,7 @@
         "tag": "p",
         "className": "TextBlock",
         "attrs": {
-          "data-variant": "preamble",
+          "data-voice": "preamble",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -121,7 +121,7 @@
         "tag": "p",
         "className": "TextBlock extra",
         "attrs": {
-          "data-variant": "preamble",
+          "data-voice": "preamble",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -169,19 +169,19 @@
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "invalid size \"xl\" for variant \"preamble\" — expected sm | md | lg"
+        "errorMessage": "invalid size \"xl\" for voice \"preamble\" — expected sm | md | lg"
       }
     },
     {
       "name": "an unknown voice",
       "input": {
         "text": "T",
-        "variant": "label",
+        "voice": "label",
         "children": false
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "invalid variant \"label\" — expected preamble | body"
+        "errorMessage": "invalid voice \"label\" — expected preamble | body"
       }
     },
     {
@@ -196,7 +196,7 @@
         "tag": "p",
         "className": "TextBlock",
         "attrs": {
-          "data-variant": "preamble",
+          "data-voice": "preamble",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",

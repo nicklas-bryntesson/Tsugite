@@ -9,7 +9,7 @@
  *   data-intent         destructive | success, feedback colours over the emphasis
  *                       cell; actions only.
  *   data-size           sm | md | lg, the button voice's stops, padding and icon size.
- *   data-variant        button, always: the voice the text-box engine's cell fills.
+ *   data-voice          button, always: the voice the text-box engine's cell fills.
  *   data-text-box       block, always: the label is a trimmed run on the engine
  *                       (kernel/css/text-box.generated.css, ADR-0024).
  *   data-pill           the radius.

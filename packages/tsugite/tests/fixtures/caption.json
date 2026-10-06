@@ -13,7 +13,7 @@
         "tag": "p",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -34,7 +34,7 @@
         "tag": "label",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "sm",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -55,7 +55,7 @@
         "tag": "legend",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "lg",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -75,7 +75,7 @@
         "tag": "h3",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -95,7 +95,7 @@
         "tag": "figcaption",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -107,7 +107,7 @@
       "name": "the button voice, standalone",
       "input": {
         "text": "Save",
-        "variant": "button",
+        "voice": "button",
         "size": "lg",
         "children": false
       },
@@ -116,7 +116,7 @@
         "tag": "p",
         "className": "Caption",
         "attrs": {
-          "data-variant": "button",
+          "data-voice": "button",
           "data-size": "lg",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -128,7 +128,7 @@
       "name": "the nav voice, standalone",
       "input": {
         "text": "Products",
-        "variant": "nav",
+        "voice": "nav",
         "children": false
       },
       "expect": {
@@ -136,7 +136,7 @@
         "tag": "p",
         "className": "Caption",
         "attrs": {
-          "data-variant": "nav",
+          "data-voice": "nav",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -158,7 +158,7 @@
         "tag": "p",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "md",
           "data-align-inline": "center",
           "data-wrap": "nowrap",
@@ -178,7 +178,7 @@
         "tag": "p",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -198,7 +198,7 @@
         "tag": "p",
         "className": "Caption extra",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -217,7 +217,7 @@
         "tag": "label",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -249,12 +249,12 @@
       "name": "body is not a UI voice",
       "input": {
         "text": "T",
-        "variant": "body",
+        "voice": "body",
         "children": false
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "invalid variant \"body\" — expected label | button | nav"
+        "errorMessage": "invalid voice \"body\" — expected label | button | nav"
       }
     },
     {
@@ -266,7 +266,7 @@
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "invalid size \"1\" for variant \"label\" — expected sm | md | lg"
+        "errorMessage": "invalid size \"1\" for voice \"label\" — expected sm | md | lg"
       }
     },
     {
@@ -281,7 +281,7 @@
         "tag": "span",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -302,7 +302,7 @@
         "tag": "label",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",
@@ -322,7 +322,7 @@
         "tag": "span",
         "className": "Caption",
         "attrs": {
-          "data-variant": "label",
+          "data-voice": "label",
           "data-size": "md",
           "data-align-inline": "start",
           "data-wrap": "pretty",

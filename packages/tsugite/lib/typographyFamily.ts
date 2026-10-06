@@ -2,7 +2,7 @@
 //
 // Four axes that look like one, kept apart on purpose:
 //   1. VOICE            the look bundle: heading, display, body, label, button, nav, preamble
-//                       (data-variant, each with its own size stops). Seven siblings;
+//                       (data-voice, each with its own size stops). Seven siblings;
 //                       none is a kind of another. Display is not "a heading of type
 //                       display", button is not "a kind of label": each pair happens
 //                       to share a door (Heading; Caption).
@@ -71,7 +71,7 @@ const CAPTION_FARM = [...HEADING_SHAPED, "p", "span", "div", "legend", "figcapti
 //       the words in a line — no trim, trim is a block concept — and the
 //       element follows; TextBlock has no inline, it is always a block
 //   (d) voice sovereignty: an unvoiced inline element inherits the run's
-//       metrics; a voiced child (data-variant) owns its own bundle —
+//       metrics; a voiced child (data-voice) owns its own bundle —
 //       nearest voice wins by inheritance, never by specificity
 
 export interface FamilyMember {

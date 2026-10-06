@@ -4,7 +4,7 @@
    that asks for it, each excluding the others.
    Regenerate: pnpm tokens   (freshness guarded by tests) */
 
-[data-variant="heading"] {
+[data-voice="heading"] {
   --_tbx-lineHeight: var(--lineHeight-heading);
   --_tbx-baselineOffset: var(--baseline-offset-heading);
   --_tbx-emBox: var(--fontEmBox-heading);
@@ -12,7 +12,7 @@
   --_tbx-descent: var(--fontDescent-heading);
 }
 
-[data-variant="display"] {
+[data-voice="display"] {
   --_tbx-lineHeight: var(--lineHeight-display);
   --_tbx-baselineOffset: var(--baseline-offset-display);
   --_tbx-emBox: var(--fontEmBox-display);
@@ -20,7 +20,7 @@
   --_tbx-descent: var(--fontDescent-display);
 }
 
-[data-variant="body"] {
+[data-voice="body"] {
   --_tbx-lineHeight: var(--lineHeight-body);
   --_tbx-baselineOffset: var(--baseline-offset-body);
   --_tbx-emBox: var(--fontEmBox-body);
@@ -28,7 +28,7 @@
   --_tbx-descent: var(--fontDescent-body);
 }
 
-[data-variant="label"] {
+[data-voice="label"] {
   --_tbx-lineHeight: var(--lineHeight-label);
   --_tbx-baselineOffset: var(--baseline-offset-label);
   --_tbx-emBox: var(--fontEmBox-label);
@@ -36,7 +36,7 @@
   --_tbx-descent: var(--fontDescent-label);
 }
 
-[data-variant="button"] {
+[data-voice="button"] {
   --_tbx-lineHeight: var(--lineHeight-button);
   --_tbx-baselineOffset: var(--baseline-offset-button);
   --_tbx-emBox: var(--fontEmBox-button);
@@ -44,7 +44,7 @@
   --_tbx-descent: var(--fontDescent-button);
 }
 
-[data-variant="nav"] {
+[data-voice="nav"] {
   --_tbx-lineHeight: var(--lineHeight-nav);
   --_tbx-baselineOffset: var(--baseline-offset-nav);
   --_tbx-emBox: var(--fontEmBox-nav);
@@ -52,7 +52,7 @@
   --_tbx-descent: var(--fontDescent-nav);
 }
 
-[data-variant="preamble"] {
+[data-voice="preamble"] {
   --_tbx-lineHeight: var(--lineHeight-preamble);
   --_tbx-baselineOffset: var(--baseline-offset-preamble);
   --_tbx-emBox: var(--fontEmBox-preamble);

@@ -23,8 +23,8 @@ export const textblock = {
     children: { kind: "slot" },
   },
   axes: {
-    variant: { values: ["preamble", "body"], default: "preamble" },
-    size: { valuesBy: { axis: "variant", values: { preamble: ["sm", "md", "lg"], body: ["sm", "md", "lg"] } }, default: "md" },
+    voice: { values: ["preamble", "body"], default: "preamble" },
+    size: { valuesBy: { axis: "voice", values: { preamble: ["sm", "md", "lg"], body: ["sm", "md", "lg"] } }, default: "md" },
     alignInline: { values: ["start", "center", "end"], default: "start" },
     /** no nowrap: the multiline contract (white-space: pre-line) honours the field's breaks;
         a plain field that must not wrap is a contradiction, so the word is not on this table */

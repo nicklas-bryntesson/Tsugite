@@ -35,8 +35,8 @@ export const caption = {
   axes: {
     /** ADR-0024: the words sit in a line — no box, no trim */
     inline: { type: "boolean", default: false, unwritten: true },
-    variant: { values: ["label", "button", "nav"], default: "label" },
-    size: { valuesBy: { axis: "variant", values: { label: ["sm", "md", "lg"], button: ["sm", "md", "lg"], nav: ["sm", "md", "lg"] } }, default: "md" },
+    voice: { values: ["label", "button", "nav"], default: "label" },
+    size: { valuesBy: { axis: "voice", values: { label: ["sm", "md", "lg"], button: ["sm", "md", "lg"], nav: ["sm", "md", "lg"] } }, default: "md" },
     alignInline: { values: ["start", "center", "end"], default: "start" },
     wrap: { values: ["balance", "pretty", "stable", "nowrap"], default: "pretty" },
   },
