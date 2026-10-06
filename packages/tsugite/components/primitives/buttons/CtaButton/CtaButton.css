@@ -19,7 +19,7 @@
  *   data-test-state     hover | active | focus | disabled — the hooks the suites use.
  *
  * Motion: the gradient sweeps and the button lifts on hover; both stop under
- * prefers-reduced-motion. Forced colours: a border, no effects.
+ * prefers-reduced-motion. Forced colours: the border drawn, no effects.
  */
 .CtaButton {
   /* invariants — the button voice's bundle; the bold weight through the open door */
@@ -27,6 +27,9 @@
   --_cta-fontWeight: var(--fontWeight-button-bold, var(--fontWeight-button));
   --_cta-letterSpacing: var(--letterSpacing-button);
   --_cta-radius: 3em;
+  /* Button's border width: a border is snapped to whole device pixels and padding is not,
+     so only a border of the same width keeps the two buttons one height on every screen */
+  --_cta-borderWidth: 1px;
   --_cta-outlineWidth: 2px;
   --_cta-outlineOffset: 3px;
   --_cta-outlineColor: var(--color-focus-ring);
@@ -39,7 +42,9 @@
 
   /* reset the two elements to one shape */
   appearance: none;
-  border: 0;
+  border-style: solid;
+  border-width: var(--_cta-borderWidth);
+  border-color: transparent;
   margin: 0;
   text-decoration: none;
   cursor: pointer;
@@ -202,6 +207,8 @@
     background-color: var(--color-cta-gradient-1);
     background-image: var(--_cta-gradient);
     background-size: 600%;
+    /* the sweep covers the border box, so the transparent border shows gradient, no seam */
+    background-origin: border-box;
     animation: cta-sweep var(--_cta-sweep) linear infinite;
 
     /* the reflection: a sheen along the top edge */
@@ -291,7 +298,7 @@
   @media (forced-colors: active) {
     &,
     &[data-variant] {
-      border: 2px solid ButtonText;
+      border-color: ButtonText;
       animation: none;
     }
 
