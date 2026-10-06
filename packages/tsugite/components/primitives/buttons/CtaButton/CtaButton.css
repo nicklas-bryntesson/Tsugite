@@ -221,7 +221,9 @@
       content: "";
       position: absolute;
       inset-inline: 0;
-      inset-block-start: calc(1.85 * var(--_cta-fontSize));
+      /* three quarters down the button's own box, so the shadow follows the button's height
+         whatever its size and padding, not the size of its words */
+      inset-block-start: 75%;
       inline-size: 100%;
       block-size: 100%;
       border-radius: 5em;
@@ -251,7 +253,7 @@
     /* the lift takes the shadow with it, a little further */
     &:hover::after,
     &[data-test-state="hover"]::after {
-      inset-block-start: calc(1.85 * var(--_cta-fontSize) + var(--_cta-lift) * 2);
+      inset-block-start: calc(75% + var(--_cta-lift) * 2);
     }
 
     /* pressed and hovered: the sweep hurries */
