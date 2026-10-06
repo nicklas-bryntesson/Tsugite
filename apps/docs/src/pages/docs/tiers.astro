@@ -209,8 +209,10 @@ const sizeRows = [
   }
 
   /* the column you are in now: the receipt that the side-by-side cells are the real chain */
+  /* TODO(token): halfway between page and chrome has no role; runtime color-mix is unguarded
+     under the Chrome 109 floor (parking lot, gradients and shadows row). */
   & .live {
-    background-color: var(--color-surface-chrome);
+    background-color: color-mix(in oklch, var(--color-surface-chrome) 50%, var(--color-surface-page));
   }
 
   /* TODO(token): the bar's radius is raw; the radius ramp is in the parking lot. */
