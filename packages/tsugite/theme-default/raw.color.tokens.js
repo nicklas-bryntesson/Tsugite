@@ -71,7 +71,7 @@ export const palette = {
   yu: {
     label: "YU",
     glyph: "湯",
-    note: "Onsen water. No role points at it today: info is AI, and water as a voice overreached. Decor, glow, illustration, data-viz accent — or it shrinks. Deliberately left in the map.",
+    note: "Onsen water. One role: the CTA gradient's third stop (YU-70 light, YU-25 dark), a cooler shade inside the blue sweep. Info is AI, and water as a voice overreached. Decor, glow, illustration, data-viz accent — or it shrinks.",
     steps: [
       ["05", "oklch(96.5% 0.016 205)"],
       ["10", "oklch(93% 0.028 204)"],
