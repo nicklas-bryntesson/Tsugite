@@ -10,7 +10,7 @@ import { createElement } from "react";
 import { describe, it, expect } from "vitest";
 import { resolve } from "../lib/recipe";
 import { ctabutton as button } from "../recipes/ctabutton.recipe";
-const buttonDerive = {};
+import { ctaDerive } from "../lib/ctabutton";
 import LinkAstro from "../components/primitives/buttons/CtaButton/CtaLinkButton.astro";
 import ActionAstro from "../components/primitives/buttons/CtaButton/CtaActionButton.astro";
 import { CtaLinkButton as LinkReact, CtaActionButton as ActionReact } from "../components/primitives/buttons/CtaButton/CtaButton.tsx";
@@ -83,7 +83,7 @@ const openingTag = (tag: string, className: string, attrs: Record<string, string
 describe(`${fixture.component}: the recipe resolves every fixture case`, () => {
   for (const { name, input, expect: want } of fixture.cases) {
     it(name, () => {
-      const got = resolve(button, propsOf(input) as Record<string, unknown> & { element?: string }, { slots: { text: input.text }, derive: buttonDerive });
+      const got = resolve(button, propsOf(input) as Record<string, unknown> & { element?: string }, { slots: { text: input.text }, derive: ctaDerive });
       expect(got.mode).toBe(want.mode);
       if (want.mode === "render") {
         expect(got.tag).toBe(want.tag);
@@ -107,7 +107,7 @@ describe(`${fixture.component}: the Astro and React front doors render every fix
       const react = viaReact(element, props, input.text);
       if (want.mode === "render") {
         expect(astro.startsWith(openingTag(want.tag!, want.className!, want.attrs!)), `astro opening tag\n${astro}`).toBe(true);
-        if (input.text) expect(astro).toContain('<span class="CtaButton-text">x');
+        if (input.text) expect(astro).toContain('<span class="text">x');
         if (input.icon) expect(astro).toContain(`<svg class="CtaButton-icon" aria-hidden="true" focusable="false"><use href="#${input.icon}"></use></svg>`);
         expect(react, "react").toBe(astro);
       } else if (want.mode === "suppress") {

@@ -1,10 +1,10 @@
 ---
 import CtaLinkButton from "tsugite/CtaButton/CtaLinkButton.astro";
 ---
-{/* Three sizes of the button voice; everything else is em, so the sheen, the shadow and
-    the padding scale with the words. */}
-<div style="display: flex; flex-wrap: wrap; gap: var(--size-md); padding-block-end: 2.5em;">
+{/* Button's three sizes: the button voice's stops and Button's padding. The effects
+    are multiples of the label's size, so the sheen and the shadow scale with the words. */}
+<div style="display: flex; flex-wrap: wrap; align-items: start; gap: var(--size-md); padding-block-end: 2.5em;">
+  <CtaLinkButton href="#" size="sm">Small</CtaLinkButton>
   <CtaLinkButton href="#" size="md">Medium</CtaLinkButton>
   <CtaLinkButton href="#" size="lg">Large</CtaLinkButton>
-  <CtaLinkButton href="#" size="jumbo">Jumbo</CtaLinkButton>
 </div>

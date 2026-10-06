@@ -1,5 +1,5 @@
 {
-  "$comment": "CtaButton — the contract as data. `element` picks the front door (a → CtaLinkButton, button → CtaActionButton); `text` is whether the renderer has label content. Attribute order: host attributes, the icon name, the axes in table order. The variant list is a project's to extend; gradient is the house's first.",
+  "$comment": "CtaButton — the contract as data. `element` picks the front door (a → CtaLinkButton, button → CtaActionButton); `text` is whether the renderer has label content. Attribute order: host attributes, the icon name, the axes in table order, then the derived voice (data-voice=\"button\") and text-box mode (data-text-box=\"block\"), constants written last (ADR-0024 §5). The variant list is a project's to extend; gradient is the house's first.",
   "component": "CtaButton",
   "cases": [
     {
@@ -18,16 +18,18 @@
           "data-variant": "gradient",
           "data-size": "md",
           "data-shadow": "true",
-          "data-reflection": "true"
+          "data-reflection": "true",
+          "data-voice": "button",
+          "data-text-box": "block"
         }
       }
     },
     {
-      "name": "jumbo link with an icon",
+      "name": "lg link with an icon",
       "input": {
         "element": "a",
         "href": "/x",
-        "size": "jumbo",
+        "size": "lg",
         "icon": "icon-info",
         "text": true
       },
@@ -39,10 +41,12 @@
           "href": "/x",
           "data-icon": "icon-info",
           "data-variant": "gradient",
-          "data-size": "jumbo",
+          "data-size": "lg",
           "data-shadow": "true",
           "data-reflection": "true",
-          "data-icon-position": "right"
+          "data-icon-position": "right",
+          "data-voice": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -66,7 +70,9 @@
           "data-size": "md",
           "data-shadow": "true",
           "data-reflection": "true",
-          "data-icon-position": "left"
+          "data-icon-position": "left",
+          "data-voice": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -88,7 +94,9 @@
           "data-variant": "gradient",
           "data-size": "md",
           "data-shadow": "false",
-          "data-reflection": "false"
+          "data-reflection": "false",
+          "data-voice": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -111,7 +119,9 @@
           "data-variant": "gradient",
           "data-size": "md",
           "data-shadow": "true",
-          "data-reflection": "true"
+          "data-reflection": "true",
+          "data-voice": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -132,7 +142,9 @@
           "data-variant": "gradient",
           "data-size": "md",
           "data-shadow": "true",
-          "data-reflection": "true"
+          "data-reflection": "true",
+          "data-voice": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -151,7 +163,9 @@
           "data-variant": "gradient",
           "data-size": "md",
           "data-shadow": "true",
-          "data-reflection": "true"
+          "data-reflection": "true",
+          "data-voice": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -174,7 +188,9 @@
           "data-variant": "gradient",
           "data-size": "lg",
           "data-shadow": "true",
-          "data-reflection": "true"
+          "data-reflection": "true",
+          "data-voice": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -196,7 +212,9 @@
           "data-variant": "gradient",
           "data-size": "md",
           "data-shadow": "true",
-          "data-reflection": "true"
+          "data-reflection": "true",
+          "data-voice": "button",
+          "data-text-box": "block"
         }
       }
     },
@@ -234,7 +252,7 @@
       },
       "expect": {
         "mode": "error",
-        "errorMessage": "invalid size \"xl\" — expected md | lg | jumbo"
+        "errorMessage": "invalid size \"xl\" — expected sm | md | lg"
       }
     },
     {

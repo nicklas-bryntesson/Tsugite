@@ -6,7 +6,12 @@
  *
  * Gates:
  *   data-variant        gradient — the house's first; a project adds its own below.
- *   data-size           md | lg | jumbo, the size of the words; everything else is em.
+ *   data-size           sm | md | lg, Button's cells: the button voice's stops, padding and
+ *                       icon size; the effects are multiples of the label's size, so the
+ *                       sheen, the lift and the shadow scale with the words.
+ *   data-voice          button, always: the voice the text-box engine's cell fills.
+ *   data-text-box       block, always: the label is a trimmed run on the engine
+ *                       (kernel/css/text-box.generated.css, ADR-0024).
  *   data-shadow         the cast shadow: the gradient itself, tilted toward the viewer,
  *                       blurred, under the button. false keeps the geometry, hides it.
  *   data-reflection     the sheen along the top edge.
@@ -20,7 +25,6 @@
   /* invariants — the button voice's bundle; the bold weight through the open door */
   --_cta-fontFamily: var(--fontFamily-button);
   --_cta-fontWeight: var(--fontWeight-button-bold, var(--fontWeight-button));
-  --_cta-lineHeight: var(--lineHeight-button);
   --_cta-letterSpacing: var(--letterSpacing-button);
   --_cta-radius: 3em;
   --_cta-outlineWidth: 2px;
@@ -29,7 +33,7 @@
   /* own by variant */
   --_cta-ink: var(--color-text-primary);
   --_cta-surface: var(--color-surface-inset);
-  --_cta-lift: 0.25em;
+  --_cta-lift: calc(0.25 * var(--_cta-fontSize));
   --_cta-sweep: 20s;
   --_cta-shadowOpacity: 0;
 
@@ -49,15 +53,16 @@
   grid-template-areas: var(--_cta-areas, "text");
   align-items: center;
   gap: var(--_cta-iconMargin);
-  padding-block: var(--_cta-paddingBlock);
+  /* The label is trimmed to its cap box, so the padding gives back what the trim took:
+     the size's padding plus half of (leading − cap box), in the label's size — Button's
+     formula, so the two stand on the same height at the same size. */
+  padding-block: calc(var(--_cta-paddingBlock) + (var(--_tbx-lineHeight) - (var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent))) / 2 * var(--_cta-fontSize));
   padding-inline: var(--_cta-paddingInline);
   max-inline-size: fit-content;
   border-radius: var(--_cta-radius);
 
   font-family: var(--_cta-fontFamily);
   font-weight: var(--_cta-fontWeight);
-  font-size: var(--_cta-fontSize);
-  line-height: var(--_cta-lineHeight);
   letter-spacing: var(--_cta-letterSpacing);
   text-align: center;
   white-space: nowrap;
@@ -65,16 +70,41 @@
   background-color: var(--_cta-surface);
   transition: transform 250ms ease, background-color 250ms ease, color 250ms ease;
 
-  & > .CtaButton-text {
-    grid-area: text;
+  /* The reach: the hover lift moves the button out from under a pointer near its lower
+     edge, which ends the hover, which drops the button back under the pointer — a loop
+     that flickers. While lifted, an empty layer fills the lift's gap below, so the pointer
+     that started the hover stays inside. At rest it has no size and reaches nothing. */
+  & > .hit {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 100%;
   }
 
-  /* the sprite svg has no size of its own: the em, in the icon area, in the ink */
+  &:hover > .hit,
+  &[data-test-state="hover"] > .hit {
+    block-size: var(--_cta-lift);
+  }
+
+  /* The label: the text-box engine's container (ADR-0024). Its box and trim are the
+     engine's; the leading is the voice cell's. */
+  & > .text {
+    grid-area: text;
+    font-size: var(--_cta-fontSize);
+    line-height: var(--_tbx-lineHeight);
+  }
+
+  /* The sprite svg has no size of its own: the size slot on both axes, in the icon area,
+     in the ink. Its place is one trimmed line tall — the voice's cap box — as on Button,
+     so a negative block margin of half of (cap box − icon) keeps the height the label's. */
   & > .CtaButton-icon {
     grid-area: icon;
     display: block;
     inline-size: var(--_cta-iconSize);
+    /* An svg is compressible: squeezed by a narrow parent, the grid shrinks its track below
+       the size. The icon keeps its size, and the button overflows instead. */
+    min-inline-size: var(--_cta-iconSize);
     block-size: var(--_cta-iconSize);
+    margin-block: calc(((var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent)) * var(--_cta-fontSize) - var(--_cta-iconSize)) / 2);
     fill: currentColor;
   }
 
@@ -117,30 +147,30 @@
     }
   }
 
-  /* ── Sizes: the button voice's stops; jumbo borrows the h3 stop ── */
-  /* TODO(token): jumbo reads a heading size stop; a fourth button stop is a theme decision. */
+  /* ── Sizes: Button's cells, the button voice's stops ── */
+  /* TODO(token): the icon sizes are raw rem and do not step with the tier, as on Button. */
+  &[data-size="sm"] {
+    --_cta-fontSize: var(--fontSize-button-small);
+    --_cta-iconSize: 1.125rem;
+    --_cta-iconMargin: 0.5rem;
+    --_cta-paddingBlock: var(--size-sm);
+    --_cta-paddingInline: 1.4em;
+  }
+
   &[data-size="md"] {
     --_cta-fontSize: var(--fontSize-button);
-    --_cta-iconSize: 1em;
-    --_cta-iconMargin: 0.5em;
-    --_cta-paddingBlock: 0.55em;
-    --_cta-paddingInline: 1.2em;
+    --_cta-iconSize: 1.5rem;
+    --_cta-iconMargin: 0.75rem;
+    --_cta-paddingBlock: var(--size-sm);
+    --_cta-paddingInline: 1.4em;
   }
 
   &[data-size="lg"] {
     --_cta-fontSize: var(--fontSize-button-large);
-    --_cta-iconSize: 1em;
-    --_cta-iconMargin: 0.5em;
-    --_cta-paddingBlock: 0.55em;
-    --_cta-paddingInline: 1.2em;
-  }
-
-  &[data-size="jumbo"] {
-    --_cta-fontSize: var(--fontSize-h3);
-    --_cta-iconSize: 1em;
-    --_cta-iconMargin: 0.5em;
-    --_cta-paddingBlock: 0.55em;
-    --_cta-paddingInline: 1.2em;
+    --_cta-iconSize: 1.75rem;
+    --_cta-iconMargin: 1rem;
+    --_cta-paddingBlock: 0.8em;
+    --_cta-paddingInline: 1.6em;
   }
 
   /* ── Icon layout ── */
@@ -178,8 +208,8 @@
     &::before {
       content: "";
       position: absolute;
-      inset-block-start: 0.2em;
-      inset-inline: 0.6em;
+      inset-block-start: calc(0.2 * var(--_cta-fontSize));
+      inset-inline: calc(0.6 * var(--_cta-fontSize));
       block-size: 25%;
       background: linear-gradient(var(--_cta-reflection), transparent);
       border-radius: 10em 10em 8em 10em / 10em 10em 0 0;
@@ -191,15 +221,15 @@
       content: "";
       position: absolute;
       inset-inline: 0;
-      inset-block-start: 1.85em;
+      inset-block-start: calc(1.85 * var(--_cta-fontSize));
       inline-size: 100%;
       block-size: 100%;
       border-radius: 5em;
       background-image: var(--_cta-gradient);
       background-size: 500%;
       animation: cta-sweep var(--_cta-sweep) linear infinite;
-      transform: perspective(1em) rotateX(40deg) scale(1, 0.35);
-      filter: blur(0.75em);
+      transform: perspective(var(--_cta-fontSize)) rotateX(40deg) scale(1, 0.35);
+      filter: blur(calc(0.75 * var(--_cta-fontSize)));
       opacity: var(--_cta-shadowOpacity);
       z-index: -1;
       pointer-events: none;
@@ -221,7 +251,7 @@
     /* the lift takes the shadow with it, a little further */
     &:hover::after,
     &[data-test-state="hover"]::after {
-      inset-block-start: calc(1.85em + var(--_cta-lift) * 2);
+      inset-block-start: calc(1.85 * var(--_cta-fontSize) + var(--_cta-lift) * 2);
     }
 
     /* pressed and hovered: the sweep hurries */
