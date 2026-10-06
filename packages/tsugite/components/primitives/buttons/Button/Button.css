@@ -432,6 +432,9 @@
     grid-area: icon;
     display: block;
     inline-size: var(--_bt-iconSize);
+    /* An svg is compressible: squeezed by a narrow parent, the grid shrinks its track below
+       the size. The icon keeps its size, and the button overflows instead. */
+    min-inline-size: var(--_bt-iconSize);
     block-size: var(--_bt-iconSize);
     position: relative;
     margin-block: calc(((var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent)) * var(--_bt-fontSize) - var(--_bt-iconSize)) / 2);
