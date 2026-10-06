@@ -1,21 +1,36 @@
 ---
 // DocPage — the shell every /docs page shares: the head (ExamplePageHead), then
 // the page's own content. Explicit pages (docs/notice.astro) and the fallback
-// (docs/[slug].astro) both use it, so the chrome lives here once.
-import ExamplePageHead from "../ExamplePageHead/ExamplePageHead.astro";
-import type { ManifestEntry } from "../../lib/manifest.ts";
+// (docs/[slug].astro) both use it, and so do the foundation pages, which have
+// no manifest row and hand their head's words in themselves.
+import ExamplePageHead, { type Tag } from "../ExamplePageHead/ExamplePageHead.astro";
+import { pillarLabels, type ManifestEntry } from "../../lib/manifest.ts";
 
-interface Props {
-  entry: ManifestEntry;
-  /** The preamble, handed to the head. */
-  lead?: string;
-}
-const { entry, lead } = Astro.props;
+/** A component's page hands its manifest row; a page that has none (a foundation)
+ *  hands its head's words itself. */
+type Props =
+  | { entry: ManifestEntry; lead?: string }
+  | { section: string; title: string; tags?: Tag[]; lead?: string };
+const props = Astro.props;
+
+// The row, read as a head: the pillar is the section and the page's own kind, the
+// family a second tag. ADR numbers are the repo's record, not the reader's, and stay off.
+const head =
+  "entry" in props
+    ? {
+        section: pillarLabels[props.entry.pillar],
+        title: props.entry.title,
+        tags: [
+          { text: pillarLabels[props.entry.pillar], primary: true },
+          ...(props.entry.family ? [{ text: props.entry.family }] : []),
+        ],
+      }
+    : { section: props.section, title: props.title, tags: props.tags };
 ---
 
 <main class="Main DocPage grid-container">
   <div class="content">
-    <ExamplePageHead entry={entry} lead={lead} />
+    <ExamplePageHead {...head} lead={props.lead} />
 
     <slot />
   </div>

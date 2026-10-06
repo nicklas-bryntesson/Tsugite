@@ -2,80 +2,164 @@
 // /docs/tiers — Foundations: the viewport tier ladder and the type ramp,
 // LIVE-RENDERED: every specimen and bar paints with var(token), so the page
 // shows exactly what the active tier resolves. Resize and watch the steps.
-// (Size tokens live in SCSS constants; live rendering is the truth here.)
+// Every word goes through a typography door; this file only arranges.
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import Text from "tsugite/Text/Text.astro";
-import Prose from "tsugite/Prose/Prose.astro";
+import Caption from "tsugite/Caption/Caption.astro";
+import TextBlock from "tsugite/TextBlock/TextBlock.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { TIERS, typeSizes } from "tsugite/theme-default/typography.tokens.js";
+import { spaceSteps, sizeConstantName } from "tsugite/theme-default/size.tokens.js";
+import { siteOffset, siteOffsetConstantName } from "tsugite/theme-default/site.tokens.js";
 
-// Each specimen is rendered THROUGH THE FAMILY, in its own voice — display in the display
-// face, heading in the heading face, body in the body face — as an inline run on a span,
-// so what steps with the tier is the real bundle, not one face at twelve sizes.
-const typeRamp: Array<{ token: string; label: string; voice: "display" | "heading" | "body"; size: string }> = [
-  { token: "--fontSize-display-1", label: "Display 1", voice: "display", size: "1" },
-  { token: "--fontSize-display-2", label: "Display 2", voice: "display", size: "2" },
-  { token: "--fontSize-display-3", label: "Display 3", voice: "display", size: "3" },
-  { token: "--fontSize-h1", label: "Heading 1", voice: "heading", size: "1" },
-  { token: "--fontSize-h2", label: "Heading 2", voice: "heading", size: "2" },
-  { token: "--fontSize-h3", label: "Heading 3", voice: "heading", size: "3" },
-  { token: "--fontSize-h4", label: "Heading 4", voice: "heading", size: "4" },
-  { token: "--fontSize-h5", label: "Heading 5", voice: "heading", size: "5" },
-  { token: "--fontSize-h6", label: "Heading 6", voice: "heading", size: "6" },
-  { token: "--fontSize-body-large", label: "Body large", voice: "body", size: "lg" },
-  { token: "--fontSize-body", label: "Body", voice: "body", size: "md" },
-  { token: "--fontSize-body-small", label: "Body small", voice: "body", size: "sm" },
+// Each specimen is rendered THROUGH THE FAMILY, in its own voice and through its own door —
+// display and heading through Heading, body through Text, the UI voices through Caption,
+// preamble through TextBlock — so what steps with the tier is the real bundle, not one face
+// at many sizes. The rows come from typeSizes itself, so no voice can be missing; a voice
+// with no door yet (code) shows its values without a specimen.
+const ORDER = ["display", "heading", "body", "preamble", "label", "button", "nav", "code"];
+const voiceOf = (key: string): { voice: string; size: string } => {
+  const h = key.match(/^h(\d)$/);
+  if (h) return { voice: "heading", size: h[1] };
+  const d = key.match(/^display-(\d)$/);
+  if (d) return { voice: "display", size: d[1] };
+  const q = key.match(/^(\w+?)(?:-(small|large))?$/)!;
+  return { voice: q[1], size: q[2] === "small" ? "sm" : q[2] === "large" ? "lg" : "md" };
+};
+const DOORS: Record<string, { door: any; inline: boolean }> = {
+  display: { door: Heading, inline: true },
+  heading: { door: Heading, inline: true },
+  body: { door: Text, inline: true },
+  label: { door: Caption, inline: true },
+  button: { door: Caption, inline: true },
+  nav: { door: Caption, inline: true },
+  preamble: { door: TextBlock, inline: false },
+};
+const sizeRank = (size: string) => ["1", "2", "3", "4", "5", "6", "lg", "md", "sm"].indexOf(size);
+const typeRamp = Object.keys(typeSizes)
+  .map((key) => ({ token: `--fontSize-${key}`, ...voiceOf(key) }))
+  .sort((a, b) => ORDER.indexOf(a.voice) - ORDER.indexOf(b.voice) || sizeRank(a.size) - sizeRank(b.size))
+  .map((r) => {
+    const d = DOORS[r.voice];
+    return { ...r, Door: d?.door, props: d ? { voice: r.voice, size: r.size, text: "Aa", ...(d.inline ? { inline: true } : {}) } : null };
+  });
+
+// The four tiers, side by side, from the same sources that generate the CSS: each cell
+// sets the token to that tier's RAW constant on a wrapper, through the chain the
+// generated CSS writes, and the door reads the token as it always does. The literal
+// under each specimen is the authored value; the live column is the tier you are in.
+const tiers = TIERS as readonly string[];
+const up = (v: string) => v.toUpperCase();
+const typeRows = typeRamp.map((r) => {
+  const key = r.token.replace("--fontSize-", "");
+  return {
+    ...r,
+    cells: tiers.map((tier) => ({
+      tier,
+      style: `${r.token}: calc(var(--FONTSIZE-${up(key)}-${up(tier)}) * var(--TYPE-SCALE, 1))`,
+      value: (typeSizes as Record<string, Record<string, string>>)[key][tier],
+    })),
+  };
+});
+
+const sizeRows = [
+  ...["xs", "sm", "md", "lg", "xl", "2xl"].map((step) => ({
+    token: `--size-${step}`,
+    cells: tiers.map((tier) => ({
+      tier,
+      width: `calc(var(${sizeConstantName(step, tier)}) * var(--SPACE-SCALE, 1))`,
+      value: (spaceSteps as Record<string, Record<string, string>>)[step][tier],
+    })),
+  })),
+  {
+    token: "--site-offset",
+    cells: tiers.map((tier) => ({ tier, width: `var(${siteOffsetConstantName(tier)})`, value: (siteOffset as Record<string, string>)[tier] })),
+  },
 ];
-
-const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl", "--size-2xl"];
 ---
 
 <Layout title="Tiers">
-  <main class="Main TiersDoc grid-container">
-    <div class="content">
-      <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Foundations</nav>
-      <Heading element="h1" size="1" text="Tiers" />
-      <Prose variant="basic">
-        <p>
-          <strong>FLOOR · MOBILE · DESKTOP · WIDE</strong> — explicit stops, never fluid.
-          Everything below paints with <code>var(token)</code>. Resize the window and
-          watch the ladder step.
-        </p>
-      </Prose>
+  <DocPage
+    section="Foundations"
+    title="Tiers"
+    tags={[{ text: "Foundations", primary: true }]}
+    lead="The screen widths the system is designed for. There are four tiers — floor, mobile, desktop and wide — and every size in the system has one value per tier. A page uses the values of the tier it is in; nothing scales smoothly in between."
+  >
+    <div class="TiersDoc">
+      <div class="note">
+        <Text text="The tiers are explicit stops, not fluid ranges: FLOOR up to 21.25rem, MOBILE up to 48.75rem, DESKTOP up to 90rem, WIDE beyond. The tokens carry the ladder, so a component reads one name and gets its tier’s value. Everything below paints with var(token): resize the window and watch the values step." />
+      </div>
 
-      <Heading element="h2" size="3" text="Type ramp" />
-      <ul class="ramp">
-        {typeRamp.map(({ token, label, voice, size }) => (
-          <li class="specimen">
-            <code class="specimen-token">{token}</code>
-            <span class="specimen-text">
-              {voice === "body" ? (
-                <Text inline voice="body" size={size} text={label} />
-              ) : (
-                <Heading inline voice={voice} size={size} text={label} />
-              )}
-            </span>
-            <output class="specimen-value" data-measure={token}></output>
-          </li>
-        ))}
-      </ul>
+      <section class="block">
+        <Heading element="h2" size="3" text="Type ramp" />
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th><Caption size="sm" text="token" /></th>
+                {tiers.map((t) => <th><Caption size="sm" text={up(t)} /></th>)}
+                <th><Caption size="sm" text="live now" /></th>
+              </tr>
+            </thead>
+            <tbody>
+              {typeRows.map(({ token, Door, props, cells }) => (
+                <tr>
+                  <td class="muted"><Caption size="sm"><code>{token}</code></Caption></td>
+                  {cells.map((c) => (
+                    <td>
+                      <div class="specimen" style={c.style}>
+                        {Door ? <Door {...props} /> : <span class="muted"><Caption inline size="sm" text="—" /></span>}
+                      </div>
+                      <div class="muted"><Caption size="sm"><code>{c.value}</code></Caption></div>
+                    </td>
+                  ))}
+                  <td class="live">
+                    <div class="specimen">
+                      {Door ? <Door {...props} /> : <span class="muted"><Caption inline size="sm" text="—" /></span>}
+                    </div>
+                    <div class="muted"><Caption size="sm"><code><output data-measure={token}></output></code></Caption></div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-      <Heading element="h2" size="3" text="Size ramp + site offset" />
-      <ul class="bars">
-        {sizeRamp.map((token) => (
-          <li class="bar-row">
-            <code>{token}</code>
-            <span class="bar" style={`inline-size: var(${token})`}></span>
-            <output class="specimen-value" data-measure={token}></output>
-          </li>
-        ))}
-        <li class="bar-row">
-          <code>--site-offset</code>
-          <span class="bar" style="inline-size: var(--site-offset)"></span>
-          <output class="specimen-value" data-measure="--site-offset"></output>
-        </li>
-      </ul>
+      <section class="block">
+        <Heading element="h2" size="3" text="Size ramp + site offset" />
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th><Caption size="sm" text="token" /></th>
+                {tiers.map((t) => <th><Caption size="sm" text={up(t)} /></th>)}
+                <th><Caption size="sm" text="live now" /></th>
+              </tr>
+            </thead>
+            <tbody>
+              {sizeRows.map(({ token, cells }) => (
+                <tr>
+                  <td class="muted"><Caption size="sm"><code>{token}</code></Caption></td>
+                  {cells.map((c) => (
+                    <td>
+                      <span class="bar" style={`inline-size: ${c.width}`}></span>
+                      <div class="muted"><Caption size="sm"><code>{c.value}</code></Caption></div>
+                    </td>
+                  ))}
+                  <td class="live">
+                    <span class="bar" style={`inline-size: var(${token})`}></span>
+                    <div class="muted"><Caption size="sm"><code><output data-measure={token}></output></code></Caption></div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
-  </main>
+  </DocPage>
 </Layout>
 
 <script>
@@ -102,65 +186,55 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
 </script>
 
 <style is:global>
+/* Arrangement and ink only: the words are the typography doors'. The muted channel rides
+   wrappers, since the doors set no colour. One flow on every docs page: --size-md inside a
+   block, --size-xl between blocks. */
 .TiersDoc {
-  padding-block: 3rem 4rem;
-  background-color: var(--color-surface-page);
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-xl);
 
-  & .content {
-    /* placed in the main area by the .grid-container > * default */
+  & .block {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--size-md);
   }
 
-  & .doc-breadcrumb {
-    font-size: var(--fontSize-label-small);
+  & .note,
+  & .muted {
     color: var(--color-text-secondary);
-    & a { color: var(--color-interactive-secondary-text); }
   }
 
-  & .ramp, & .bars {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+  & .table-scroll {
+    overflow-x: auto;
     inline-size: 100%;
   }
 
-  & .specimen {
-    display: grid;
-    grid-template-columns: 12rem 1fr auto;
-    align-items: baseline;
-    gap: 1rem;
-    border-block-end: 1px solid var(--color-border-subtle);
-    padding-block-end: 0.5rem;
-  }
-  @media (max-width: 48rem) {
-    & .specimen { grid-template-columns: 1fr; gap: 0.2rem; }
-  }
-
-  & .specimen-token { font-size: var(--fontSize-label-small); color: var(--color-text-secondary); }
-  /* the specimen's face, weight and leading are the component's; the row only keeps it on one line */
-  & .specimen-text {
-    color: var(--color-text-primary);
+  & th,
+  & td {
+    text-align: start;
+    vertical-align: bottom;
     white-space: nowrap;
   }
-  & .specimen-value { font-family: var(--fontFamily-code); font-size: var(--fontSize-label-small); color: var(--color-text-secondary); }
 
-  & .bar-row {
-    display: grid;
-    grid-template-columns: 12rem auto 1fr;
-    align-items: center;
-    gap: 1rem;
-
-    & code { font-size: 0.875em; /* inline code scales relatively — the Prose mechanism */ color: var(--color-text-secondary); }
+  /* the specimen keeps its line; its face, size and leading are the door's */
+  & .specimen {
+    white-space: nowrap;
+    margin-block-end: var(--size-xs);
   }
 
+  /* the column you are in now: the receipt that the side-by-side cells are the real chain */
+  /* TODO(token): halfway between page and chrome has no role; runtime color-mix is unguarded
+     under the Chrome 109 floor (parking lot, gradients and shadows row). */
+  & .live {
+    background-color: color-mix(in oklch, var(--color-surface-chrome) 50%, var(--color-surface-page));
+  }
+
+  /* TODO(token): the bar's radius is raw; the radius ramp is in the parking lot. */
   & .bar {
     display: block;
     block-size: 1rem;
+    margin-block-end: var(--size-xs);
     border-radius: 0.2rem;
     background-color: var(--color-interactive-primary);
   }

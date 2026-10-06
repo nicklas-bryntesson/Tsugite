@@ -1,33 +1,41 @@
 ---
 // ExamplePageHead — the head every /docs page shares, so each one opens the same way:
-// the breadcrumb to the map, the component's title, its tags (pillar, family, ADRs) and
-// the preamble. The parts are one group and sit close; the page's sections keep their
+// the breadcrumb to the map, the title, the tags (kind and family) and the preamble. It knows nothing of
+// the manifest: DocPage hands a component's row in as section, title and tags, and a
+// foundation page hands its own. The parts are one group and sit close; the page's sections keep their
 // distance from the group, not from each other part of it.
 import Heading from "tsugite/Heading/Heading.astro";
 import Caption from "tsugite/Caption/Caption.astro";
 import TextBlock from "tsugite/TextBlock/TextBlock.astro";
-import { pillarLabels, type ManifestEntry } from "../../lib/manifest.ts";
+/** One tag: its words, and whether it is the page's own kind (drawn stronger). */
+export interface Tag {
+  text: string;
+  primary?: boolean;
+}
 
 interface Props {
-  entry: ManifestEntry;
-  /** The preamble: what the component is, in a sentence or three. */
+  /** Where the page sits on the map: the breadcrumb's last step. */
+  section: string;
+  title: string;
+  tags?: Tag[];
+  /** The preamble: what the page is about, in a sentence or three. */
   lead?: string;
 }
-const { entry, lead } = Astro.props;
+const { section, title, tags = [], lead } = Astro.props;
 ---
 
 <header class="ExamplePageHead">
   <nav class="breadcrumb" aria-label="Map">
-    <Caption element="p" size="sm"><a href="/map">Map</a> <span aria-hidden="true">/</span> {pillarLabels[entry.pillar]}</Caption>
+    <Caption element="p" size="sm"><a href="/map">Map</a> <span aria-hidden="true">/</span> {section}</Caption>
   </nav>
 
-  <Heading element="h1" size="1" text={entry.title} />
+  <Heading element="h1" size="1" text={title} />
 
-  <ul class="tags">
-    <li class="chip" data-kind="pillar"><Caption size="sm" text={pillarLabels[entry.pillar]} /></li>
-    {entry.family && <li class="chip" data-kind="family"><Caption size="sm" text={entry.family} /></li>}
-    {entry.adrs?.map((n) => <li class="chip" data-kind="adr"><Caption size="sm" text={`ADR-${n}`} /></li>)}
-  </ul>
+  {tags.length > 0 && (
+    <ul class="tags">
+      {tags.map((t) => <li class="chip" data-primary={t.primary ? "true" : "false"}><Caption size="sm" text={t.text} /></li>)}
+    </ul>
+  )}
 
   {lead && <TextBlock text={lead} />}
 </header>
@@ -67,7 +75,7 @@ const { entry, lead } = Astro.props;
     color: var(--color-text-secondary);
     background-color: var(--color-surface-chrome);
 
-    &[data-kind="pillar"] {
+    &[data-primary="true"] {
       border-color: var(--color-interactive-primary);
       color: var(--color-text-primary);
     }

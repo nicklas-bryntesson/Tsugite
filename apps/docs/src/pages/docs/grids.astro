@@ -4,9 +4,14 @@
 // track, so what the page shows is exactly what the active step resolves. The
 // readout under each figure is measured from the browser, not typed. Resize and
 // watch the tracks step. The grid has its own ladder (40 / 48 / 80rem, grid.tokens.js).
+// The figures meet the page's edge, so the page is not a DocPage: it opens with the
+// same head inside its own container. Every word goes through a door.
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import Prose from "tsugite/Prose/Prose.astro";
+import Text from "tsugite/Text/Text.astro";
+import Caption from "tsugite/Caption/Caption.astro";
+import ExamplePageHead from "../../components/ExamplePageHead/ExamplePageHead.astro";
 
 // The cell counts come from the generated token CSS (the public contract), not from a
 // number typed here: the largest column count any step declares. Redefine the grids and
@@ -33,21 +38,19 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
   {/* main is not a grid: every child is either a grid-container of text or a demo grid
       at full width, so each figure meets the page's edge exactly as the recipe does. */}
   <main class="Main GridsDoc">
-    <header class="grid-container text">
-      <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Foundations</nav>
-      <Heading element="h1" size="1" text="Grids" />
-      <Prose variant="basic">
-        <p>
-          Three recipes on one table of tokens: <strong>container</strong>, <strong>layout</strong>, <strong>breakout</strong>.
-          Each figure below is the real class on the real tokens, one cell per
-          track, at the page's full width. The numbers are measured live; resize the window and watch the tracks
-          step. The <em>LAB</em> button bottom right lays the same grid over any page,
-          and <a href="/lab/grid">the grid lab</a> shows the three recipes in use: eleven
-          page layouts placed on them, copy and pictures as sketch strokes.
-        </p>
-      </Prose>
-    </header>
+    <div class="grid-container text">
+      <ExamplePageHead
+        section="Foundations"
+        title="Grids"
+        tags={[{ text: "Foundations", primary: true }]}
+        lead="The columns every page is laid out on. Three grids cover it: the container centres the content between two gutters, the layout divides it into equal columns, and breakout joins the two, so a child can run from the screen’s edge into the columns."
+      />
+      <div class="note">
+        <Text>Three recipes on one table of tokens. Each figure below is the real class on the real tokens, one cell per track, at the page’s full width; the numbers are measured live, so resize the window and watch the tracks step. The <em>LAB</em> button bottom right lays the same grid over any page, and <a href="/lab/grid">the grid lab</a> shows the three recipes in use: eleven page layouts placed on them, copy and pictures as sketch strokes.</Text>
+      </div>
+    </div>
 
+    <div class="block">
     <section class="grid-container text">
       <Heading element="h2" size="3" text="Container" />
       <Prose variant="basic">
@@ -67,13 +70,15 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
         </div>
       </div>
       <figcaption class="grid-container readout">
-        <output data-readout="container"></output>
+        <Caption size="sm"><code><output data-readout="container"></output></code></Caption>
         <ul class="tokens">
-          {containerTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
+          {containerTokens.map((t) => <li><Caption size="sm"><code class="token">{t}</code> <code><output class="value" data-measure={t}></output></code></Caption></li>)}
         </ul>
       </figcaption>
     </figure>
+    </div>
 
+    <div class="block">
     <section class="grid-container text">
       <Heading element="h2" size="3" text="Layout" />
       <Prose variant="basic">
@@ -92,13 +97,15 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
         </div>
       </div>
       <figcaption class="grid-container readout">
-        <output data-readout="layout"></output>
+        <Caption size="sm"><code><output data-readout="layout"></output></code></Caption>
         <ul class="tokens">
-          {layoutTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
+          {layoutTokens.map((t) => <li><Caption size="sm"><code class="token">{t}</code> <code><output class="value" data-measure={t}></output></code></Caption></li>)}
         </ul>
       </figcaption>
     </figure>
+    </div>
 
+    <div class="block">
     <section class="grid-container text">
       <Heading element="h2" size="3" text="Breakout" />
       <Prose variant="basic">
@@ -123,12 +130,13 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
         </div>
       </div>
       <figcaption class="grid-container readout">
-        <output data-readout="breakout"></output>
+        <Caption size="sm"><code><output data-readout="breakout"></output></code></Caption>
         <ul class="tokens">
-          {breakoutTokens.map((t) => <li><code>{t}</code> <output class="value" data-measure={t}></output></li>)}
+          {breakoutTokens.map((t) => <li><Caption size="sm"><code class="token">{t}</code> <code><output class="value" data-measure={t}></output></code></Caption></li>)}
         </ul>
       </figcaption>
     </figure>
+    </div>
   </main>
 </Layout>
 
@@ -170,30 +178,38 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
 .GridsDoc {
   padding-block: 3rem 4rem;
   background-color: var(--color-surface-page);
+  /* Arrangement and ink only: the words are the typography doors' and Prose's. */
 
+  /* One flow on every docs page: --size-md inside a block, --size-xl between blocks. A
+     block here is a section's words and its figure, which runs to the page's edge. */
   display: flex;
   flex-direction: column;
-  gap: var(--size-lg);
+  gap: var(--size-xl);
 
-  & .text {
-    row-gap: var(--size-lg);
+  & .block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-md);
   }
 
-  & .doc-breadcrumb {
-    font-size: var(--fontSize-label-small);
+  & .text {
+    row-gap: var(--size-md);
+  }
+
+  /* the muted channel rides wrappers; the doors set no colour */
+  & .note {
     color: var(--color-text-secondary);
-    & a { color: var(--color-interactive-secondary-text); }
   }
 
   & .figure {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: var(--size-md);
   }
 
   & .demo {
-    padding-block: 0.75rem;
+    padding-block: var(--size-sm);
     border-block: 1px dashed var(--color-border-subtle);
   }
 
@@ -223,9 +239,7 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
   }
 
   & .readout {
-    row-gap: 0.25rem;
-    font-family: var(--fontFamily-code);
-    font-size: var(--fontSize-label-small);
+    row-gap: var(--size-xs);
     color: var(--color-text-secondary);
     overflow-wrap: anywhere;
   }
@@ -236,9 +250,11 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.125rem;
+    gap: var(--size-xs);
 
-    & code { color: var(--color-text-primary); }
+    & .token {
+      color: var(--color-text-primary);
+    }
   }
 }
 </style>

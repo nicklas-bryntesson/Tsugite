@@ -25,7 +25,7 @@ test('the map renders a card for every published manifest entry', async ({ page 
 test('a docs page mounts its section with metadata chips', async ({ page }) => {
   await page.goto('/docs/notice')
   await expect(page.getByRole('heading', { level: 1, name: 'Notice' })).toBeVisible()
-  await expect(page.locator('.chip[data-kind="pillar"]')).toHaveText('Primitives')
+  await expect(page.locator('.ExamplePageHead .chip[data-primary="true"]')).toHaveText('Primitives')
   // an explicit page: its own examples first, and the fixture section mounted as the bench
   await expect(page.locator('.Example').first()).toBeVisible()
   await expect(page.locator('.doc-bench .KitchenSink-section#Notice')).toBeVisible()
@@ -33,7 +33,7 @@ test('a docs page mounts its section with metadata chips', async ({ page }) => {
 
 test('a fields page carries the family badge and attaches its component', async ({ page }) => {
   await page.goto('/docs/affix-field')
-  await expect(page.locator('.chip[data-kind="family"]')).toHaveText('fields')
+  await expect(page.locator('.ExamplePageHead .chip[data-primary="false"]', { hasText: 'fields' })).toHaveCount(1)
   await expect(page.locator('[data-component="AffixField"][data-initialized="true"]').first()).toBeVisible()
 })
 
@@ -41,7 +41,7 @@ test('foundations: the color page renders from the factories', async ({ page }) 
   const { rawColorTokens } = await import('tsugite/theme-default/raw.color.tokens.js')
   await page.goto('/docs/color')
   // every RAW color gets a card — the count comes from the same source as the CSS
-  await expect(page.locator('.raw-card')).toHaveCount(Object.keys(rawColorTokens).length)
+  await expect(page.locator('.ColorDoc .ramp > li')).toHaveCount(Object.keys(rawColorTokens).length)
   // the live column resolves (no empty swatch)
   const bg = await page.evaluate(() => {
     const sw = document.querySelector('.cell-swatch.live')

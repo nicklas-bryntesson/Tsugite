@@ -3,10 +3,14 @@
 // The page imports the same JS sources that generate the CSS, so it cannot
 // drift from the system. Authored values paint as literals (all four modes,
 // resolved at build); the "live now" column paints with var(token) and
-// shows what YOUR active mode actually resolves.
+// shows what YOUR active mode actually resolves. Every word goes through a
+// typography door, every frame is a Card; this file only arranges.
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
-import Prose from "tsugite/Prose/Prose.astro";
+import Text from "tsugite/Text/Text.astro";
+import Caption from "tsugite/Caption/Caption.astro";
+import Card from "tsugite/Card/Card.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
 import { palette, rawColorTokens, rawName, rawRefName } from "tsugite/theme-default/raw.color.tokens.js";
 import { semanticColorTokens } from "tsugite/theme-default/semantic.color.tokens.js";
 import { themeVoices, voiceMatrix } from "tsugite/theme-default/theme.voices.tokens.js";
@@ -58,63 +62,68 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
 ---
 
 <Layout title="Color">
-  <main class="Main ColorDoc grid-container">
-    <div class="content">
-      <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> Foundations</nav>
-      <Heading element="h1" size="1" text="Color" />
-      <Prose variant="basic">
-        <p>
-          Rendered from the same sources that generate the CSS. The <strong>live now</strong>
-          column paints with <code>var(token)</code> and should match your active mode’s
-          column — if it doesn’t, something broke.
-        </p>
-      </Prose>
+  <DocPage
+    section="Foundations"
+    title="Color"
+    tags={[{ text: "Foundations", primary: true }]}
+    lead="Every colour in the system comes from one palette and reaches a component through a role. The palette holds the colours themselves, in families of steps; a role names what a colour is for — a page’s ground, its text, an action — in each appearance mode; a voice pairs a surface with the text that sits on it."
+  >
+    <div class="ColorDoc">
+      <div class="note">
+        <Text text="Rendered from the same sources that generate the CSS. The authored values paint as literals in all four modes — light, dark and their contrast twins — resolved at build. The live now column paints with var(token) and should match your active mode’s column; if it does not, something broke." />
+      </div>
 
+      <section class="block">
       <Heading element="h2" size="3" text="RAW palette" />
-      <p class="note">
-        Authored in oklch, as families (ADR-0020). A family is a label and an ordered ladder of
-        steps; the CSS names are derived from it. Hex is the build-computed sRGB rendering.
-      </p>
+      <div class="note">
+        <Text text="Authored in oklch, as families (ADR-0020). A family is a label and an ordered ladder of steps; the CSS names are derived from it. Hex is the build-computed sRGB rendering." />
+      </div>
       {families.map((f) => (
         <section class="family" aria-labelledby={`family-${f.key}`}>
           <header class="family-head">
             <Heading element="h3" size="5" id={`family-${f.key}`} text={f.label} />
-            {f.glyph && <span class="family-glyph" aria-hidden="true">{f.glyph}</span>}
-            <span class="family-count">{f.steps.length} steps</span>
+            {f.glyph && <div class="family-glyph" aria-hidden="true"><Caption size="md" text={f.glyph} lang="ja" /></div>}
+            <div class="family-count"><Caption size="sm" text={`${f.steps.length} steps`} /></div>
           </header>
-          {f.note && <p class="family-note">{f.note}</p>}
+          {f.note && <div class="note"><Text size="sm" text={f.note} /></div>}
           <ul class="ramp">
             {f.steps.map((r) => (
-              <li class="raw-card">
-                <span class="raw-swatch" style={`background: ${r.literal}`}></span>
-                <code class="raw-name">{f.label}-{r.step}</code>
-                <code class="raw-val">{r.literal}</code>
-                <code class="raw-val">{r.hex}</code>
+              <li>
+                <Card border={true} padding="sm">
+                  <div class="raw">
+                    <span class="raw-swatch" style={`background: ${r.literal}`}></span>
+                    <Caption size="sm"><code>{f.label}-{r.step}</code></Caption>
+                    <div class="raw-val"><Caption size="sm"><code>{r.literal}</code></Caption></div>
+                    <div class="raw-val"><Caption size="sm"><code>{r.hex}</code></Caption></div>
+                  </div>
+                </Card>
               </li>
             ))}
           </ul>
         </section>
       ))}
+      </section>
 
+      <section class="block">
       <Heading element="h2" size="3" text="Semantic roles" />
       <div class="table-scroll">
         <table>
           <thead>
             <tr>
-              <th>token</th>
-              {MODES.map((m) => <th>{m}</th>)}
-              <th>live now</th>
+              <th><Caption size="sm" text="token" /></th>
+              {MODES.map((m) => <th><Caption size="sm" text={m} /></th>)}
+              <th><Caption size="sm" text="live now" /></th>
             </tr>
           </thead>
           <tbody>
             {semantics.map((row) => (
               <tr>
-                <td><code>{row.name}</code></td>
+                <td><Caption size="sm"><code>{row.name}</code></Caption></td>
                 {row.cells.map((c) =>
                   c ? (
                     <td><span class="cell-swatch" style={`background: ${c}`}></span></td>
                   ) : (
-                    <td class="nonpaint">list</td>
+                    <td class="nonpaint"><Caption size="sm" text="list" /></td>
                   ),
                 )}
                 <td><span class="cell-swatch live" style={`background: var(${row.name})`}></span></td>
@@ -123,21 +132,25 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
           </tbody>
         </table>
       </div>
+      </section>
 
+      <section class="block">
       <Heading element="h2" size="3" text="Voices × volumes" />
-      <p class="note">Surface + text per mode. The <a href="/control-room">control room</a> shows the living matrix.</p>
+      <div class="note">
+        <Text>Surface + text per mode. The <a href="/control-room">control room</a> shows the living matrix.</Text>
+      </div>
       <div class="table-scroll">
         <table>
           <thead>
-            <tr><th>voice × volume</th>{MODES.map((m) => <th>{m}</th>)}</tr>
+            <tr><th><Caption size="sm" text="voice × volume" /></th>{MODES.map((m) => <th><Caption size="sm" text={m} /></th>)}</tr>
           </thead>
           <tbody>
             {voices.map((v) => (
               <tr>
-                <td><code>{v.voice}</code> × <code>{v.volume}</code></td>
+                <td><Caption size="sm"><code>{v.voice}</code> × <code>{v.volume}</code></Caption></td>
                 {v.cells.map((c) => (
                   <td>
-                    <span class="voice-swatch" style={`background: ${c.surface}; color: ${c.text}`}>Aa</span>
+                    <span class="voice-swatch" style={`background: ${c.surface}; color: ${c.text}`}><Caption inline size="sm" text="Aa" /></span>
                   </td>
                 ))}
               </tr>
@@ -145,46 +158,51 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
           </tbody>
         </table>
       </div>
+      </section>
     </div>
-  </main>
+  </DocPage>
 </Layout>
 
 <style is:global>
+/* Arrangement and ink only: the words are the typography doors', the frames Card's. The muted channel rides wrappers, since the doors set no colour. */
+/* One flow on every docs page: --size-md inside a block, --size-xl between blocks. */
 .ColorDoc {
-  padding-block: 3rem 4rem;
-  background-color: var(--color-surface-page);
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-xl);
 
-  & .content {
-    /* placed in the main area by the .grid-container > * default */
+  & .block {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--size-md);
   }
 
-  & .doc-breadcrumb {
-    font-size: var(--fontSize-label-small);
+  & .note,
+  & .family-glyph,
+  & .family-count,
+  & .raw-val,
+  & .nonpaint {
     color: var(--color-text-secondary);
-    & a { color: var(--color-interactive-secondary-text); }
   }
 
-  & .note { margin: 0; color: var(--color-text-secondary); font-size: var(--fontSize-label); }
-
+  /* a family is a block of its own inside the palette's */
   & .family {
     display: grid;
-    gap: 0.5rem;
+    gap: var(--size-md);
     inline-size: 100%;
+    margin-block-start: var(--size-md);
   }
 
   & .family-head {
     display: flex;
     align-items: baseline;
-    gap: 0.6rem;
+    gap: var(--size-sm);
     flex-wrap: wrap;
   }
 
-  & .family-glyph { color: var(--color-text-secondary); }
-  & .family-count { margin-inline-start: auto; color: var(--color-text-secondary); font-size: var(--fontSize-label-small); }
-  & .family-note { margin: 0; color: var(--color-text-secondary); font-size: var(--fontSize-label); max-inline-size: 72ch; }
+  & .family-count {
+    margin-inline-start: auto;
+  }
 
   & .ramp {
     list-style: none;
@@ -192,19 +210,17 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(9rem, 100%), 1fr));
-    gap: 0.5rem;
+    gap: var(--size-sm);
     inline-size: 100%;
   }
 
-  & .raw-card {
-    border: 1px solid var(--color-border-subtle);
-    border-radius: 0.6rem;
-    padding: 0.6rem;
+  /* the raw card's inner layout; the frame is Card's */
+  & .raw {
     display: grid;
-    gap: 0.15rem;
-    background-color: var(--color-surface-chrome);
+    gap: var(--size-xs);
   }
 
+  /* TODO(token): swatch radii are raw; the radius ramp is in the parking lot. */
   & .raw-swatch {
     display: block;
     block-size: 2.5rem;
@@ -212,22 +228,20 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     border: 1px solid var(--color-border-subtle);
   }
 
-  & .raw-name { font-weight: var(--fontWeight-body-bold); font-size: var(--fontSize-label-small); color: var(--color-text-primary); }
-  & .raw-val { font-size: var(--fontSize-label-small); color: var(--color-text-secondary); overflow-wrap: anywhere; }
+  & .raw-val {
+    overflow-wrap: anywhere;
+  }
 
-  & .table-scroll { overflow-x: auto; inline-size: 100%; }
+  & .table-scroll {
+    overflow-x: auto;
+    inline-size: 100%;
+  }
 
-  & table { border-collapse: collapse; font-size: var(--fontSize-label); }
-  & th, & td {
+  & th,
+  & td {
     text-align: start;
-    padding: 0.35rem 0.6rem;
-    border-block-end: 1px solid var(--color-border-subtle);
     white-space: nowrap;
   }
-  /* th tracked-caps manner stays raw pending the Eyebrow primitive; inline
-     code scales relatively — the Prose mechanism */
-  & th { color: var(--color-text-secondary); font-weight: var(--fontWeight-body-bold); font-size: var(--fontSize-label-small); text-transform: uppercase; letter-spacing: 0.08em; }
-  & td code { font-size: 0.875em; }
 
   & .cell-swatch {
     display: inline-block;
@@ -236,8 +250,11 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     border-radius: 0.3rem;
     border: 1px solid var(--color-border-subtle);
   }
-  & .cell-swatch.live { outline: 2px solid var(--color-interactive-primary); outline-offset: 1px; }
-  & .nonpaint { color: var(--color-text-secondary); font-size: var(--fontSize-label-small); }
+
+  & .cell-swatch.live {
+    outline: 2px solid var(--color-interactive-primary);
+    outline-offset: 1px;
+  }
 
   & .voice-swatch {
     display: inline-grid;
@@ -246,8 +263,6 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     block-size: 1.8rem;
     border-radius: 0.35rem;
     border: 1px solid var(--color-border-subtle);
-    font-size: var(--fontSize-label-small);
-    font-weight: var(--fontWeight-body-bold);
   }
 }
 </style>
