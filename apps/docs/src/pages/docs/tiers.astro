@@ -38,6 +38,7 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
     lead="FLOOR · MOBILE · DESKTOP · WIDE — explicit stops, never fluid. Everything below paints with var(token). Resize the window and watch the ladder step."
   >
     <div class="TiersDoc">
+      <section class="block">
       <Heading element="h2" size="3" text="Type ramp" />
       <ul class="ramp">
         {typeRamp.map(({ token, label, voice, size }) => (
@@ -54,7 +55,9 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
           </li>
         ))}
       </ul>
+      </section>
 
+      <section class="block">
       <Heading element="h2" size="3" text="Size ramp + site offset" />
       <ul class="bars">
         {[...sizeRamp, "--site-offset"].map((token) => (
@@ -65,6 +68,7 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
           </li>
         ))}
       </ul>
+      </section>
     </div>
   </DocPage>
 </Layout>
@@ -95,10 +99,17 @@ const sizeRamp = ["--size-xs", "--size-sm", "--size-md", "--size-lg", "--size-xl
 <style is:global>
 /* Arrangement and ink only: the words are the typography doors'. The muted channel rides
    wrappers, since the doors set no colour. */
+/* One flow on every docs page: --size-md inside a block, --size-xl between blocks. */
 .TiersDoc {
   display: flex;
   flex-direction: column;
-  gap: var(--size-md);
+  gap: var(--size-xl);
+
+  & .block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-md);
+  }
 
   & .ramp,
   & .bars {

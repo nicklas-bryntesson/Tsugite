@@ -50,6 +50,7 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
       </div>
     </div>
 
+    <div class="block">
     <section class="grid-container text">
       <Heading element="h2" size="3" text="Container" />
       <Prose variant="basic">
@@ -75,7 +76,9 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
         </ul>
       </figcaption>
     </figure>
+    </div>
 
+    <div class="block">
     <section class="grid-container text">
       <Heading element="h2" size="3" text="Layout" />
       <Prose variant="basic">
@@ -100,7 +103,9 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
         </ul>
       </figcaption>
     </figure>
+    </div>
 
+    <div class="block">
     <section class="grid-container text">
       <Heading element="h2" size="3" text="Breakout" />
       <Prose variant="basic">
@@ -131,6 +136,7 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
         </ul>
       </figcaption>
     </figure>
+    </div>
   </main>
 </Layout>
 
@@ -174,12 +180,20 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
   background-color: var(--color-surface-page);
   /* Arrangement and ink only: the words are the typography doors' and Prose's. */
 
+  /* One flow on every docs page: --size-md inside a block, --size-xl between blocks. A
+     block here is a section's words and its figure, which runs to the page's edge. */
   display: flex;
   flex-direction: column;
-  gap: var(--size-lg);
+  gap: var(--size-xl);
+
+  & .block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-md);
+  }
 
   & .text {
-    row-gap: var(--size-lg);
+    row-gap: var(--size-md);
   }
 
   /* the muted channel rides wrappers; the doors set no colour */
@@ -191,11 +205,11 @@ const breakoutTokens = ["--grid-breakout-gap", "--grid-breakout-columns"];
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: var(--size-md);
   }
 
   & .demo {
-    padding-block: 0.75rem;
+    padding-block: var(--size-sm);
     border-block: 1px dashed var(--color-border-subtle);
   }
 

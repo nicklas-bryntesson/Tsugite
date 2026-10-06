@@ -69,6 +69,7 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     lead="Rendered from the same sources that generate the CSS. The live now column paints with var(token) and should match your active mode’s column — if it doesn’t, something broke."
   >
     <div class="ColorDoc">
+      <section class="block">
       <Heading element="h2" size="3" text="RAW palette" />
       <div class="note">
         <Text text="Authored in oklch, as families (ADR-0020). A family is a label and an ordered ladder of steps; the CSS names are derived from it. Hex is the build-computed sRGB rendering." />
@@ -97,7 +98,9 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
           </ul>
         </section>
       ))}
+      </section>
 
+      <section class="block">
       <Heading element="h2" size="3" text="Semantic roles" />
       <div class="table-scroll">
         <table>
@@ -125,7 +128,9 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
           </tbody>
         </table>
       </div>
+      </section>
 
+      <section class="block">
       <Heading element="h2" size="3" text="Voices × volumes" />
       <div class="note">
         <Text>Surface + text per mode. The <a href="/control-room">control room</a> shows the living matrix.</Text>
@@ -149,16 +154,24 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
           </tbody>
         </table>
       </div>
+      </section>
     </div>
   </DocPage>
 </Layout>
 
 <style is:global>
 /* Arrangement and ink only: the words are the typography doors', the frames Card's. The muted channel rides wrappers, since the doors set no colour. */
+/* One flow on every docs page: --size-md inside a block, --size-xl between blocks. */
 .ColorDoc {
   display: flex;
   flex-direction: column;
-  gap: var(--size-md);
+  gap: var(--size-xl);
+
+  & .block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-md);
+  }
 
   & .note,
   & .family-glyph,
@@ -168,10 +181,12 @@ const voices = Object.entries(voiceMatrix).flatMap(([voice, volumes]) =>
     color: var(--color-text-secondary);
   }
 
+  /* a family is a block of its own inside the palette's */
   & .family {
     display: grid;
-    gap: var(--size-sm);
+    gap: var(--size-md);
     inline-size: 100%;
+    margin-block-start: var(--size-md);
   }
 
   & .family-head {
