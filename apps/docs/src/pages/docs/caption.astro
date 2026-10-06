@@ -2,9 +2,9 @@
 // /docs/caption — explicit page. The page is the view: it imports exactly the
 // examples it shows, each one file under src/examples/caption/, mounted twice
 // (Figure + Code). The CaptionSection fixture is mounted last as the bench.
+import Text from "tsugite/Text/Text.astro";
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
-import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import CaptionSection from "tsugite/fixtures/CaptionSection.astro";
 import Example from "../../components/Example/Example.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
@@ -21,11 +21,10 @@ const entry = entryFor("caption");
 ---
 
 <Layout title={entry.title}>
-  <DocPage entry={entry}>
-    <TextBlock
-      text="The UI voices of the typography family: label marks the interface up — form labels, legends, figcaptions, table headers, hints; button is the pressable voice; nav is the wayfinding voice. The controls read their voice as tokens; this door speaks every UI voice standalone, so the door is total. Three sibling voices, one door, like Heading with heading and display, on whatever element the semantics need."
-    />
-
+  <DocPage
+    entry={entry}
+    lead="The UI voices of the typography family: label marks the interface up — form labels, legends, figcaptions, table headers, hints; button is the pressable voice; nav is the wayfinding voice. The controls read their voice as tokens; this door speaks every UI voice standalone, so the door is total. Three sibling voices, one door, like Heading with heading and display, on whatever element the semantics need."
+  >
     <Example id="voices" title="Three voices, three steps" lead="label, button and nav are siblings that share a door, not a voice and its variants. In this theme they carry the same values — Inter 400 — on purpose: same value, separate knob, so a brand can turn one without the others." source={voicesSrc} block>
       <Voices />
     </Example>
@@ -40,7 +39,7 @@ const entry = entryFor("caption");
 
     <section class="doc-bench" id="test-bench">
       <Heading text="Test bench" element="h2" size="2" />
-      <p class="doc-note">The Caption fixture — every voice × size × element, and the button voice beside a Button, mounted unchanged.</p>
+      <div class="doc-note"><Text text="The Caption fixture — every voice × size × element, and the button voice beside a Button, mounted unchanged." /></div>
       <CaptionSection />
     </section>
   </DocPage>

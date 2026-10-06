@@ -5,6 +5,9 @@
 // it. It owns the frame only; the example inside is the same component the
 // package ships, so what is shown is what is used. Pair it with <Code> via
 // <Example>, which feeds both from one source file.
+import Card from "tsugite/Card/Card.astro";
+import Caption from "tsugite/Caption/Caption.astro";
+
 interface Props {
   /** Visible caption under the frame. */
   caption?: string;
@@ -18,10 +21,12 @@ const { caption, block = false, row = false, class: className } = Astro.props;
 ---
 
 <figure class:list={["Figure", className]} data-block={block ? "true" : undefined} data-row={row ? "true" : undefined}>
-  <div class="Figure-stage">
-    <slot />
-  </div>
-  {caption && <figcaption class="Figure-caption">{caption}</figcaption>}
+  <Card border={true} padding="lg">
+    <div class="Figure-stage">
+      <slot />
+    </div>
+  </Card>
+  {caption && <figcaption class="Figure-caption"><Caption element="p" size="sm" text={caption} /></figcaption>}
 </figure>
 
 <style is:global>
@@ -30,11 +35,8 @@ const { caption, block = false, row = false, class: className } = Astro.props;
   display: grid;
   gap: var(--size-sm);
 
+  /* the frame is Card's; the stage only arranges what the example puts in it */
   & .Figure-stage {
-    padding: var(--size-lg);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--ui-radius);
-    background-color: var(--color-surface-page);
     /* the example decides its own width; a layout example asks for the frame */
     display: flex;
     flex-direction: column;
@@ -53,7 +55,6 @@ const { caption, block = false, row = false, class: className } = Astro.props;
   }
 
   & .Figure-caption {
-    font-size: var(--fontSize-label-small);
     color: var(--color-text-secondary);
   }
 }

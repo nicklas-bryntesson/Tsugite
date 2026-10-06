@@ -2,9 +2,9 @@
 // /docs/button — explicit page. The page is the view: it imports exactly the
 // examples it shows, each one file under src/examples/button/, mounted twice
 // (Figure + Code). The Buttons fixture is mounted last as the bench.
+import Text from "tsugite/Text/Text.astro";
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
-import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import Buttons from "tsugite/fixtures/Buttons.astro";
 import Example from "../../components/Example/Example.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
@@ -31,11 +31,10 @@ const entry = entryFor("button");
 ---
 
 <Layout title={entry.title}>
-  <DocPage entry={entry}>
-    <TextBlock
-      text="One contract, two components. Button is the class and its four axes — emphasis, intent, size, pill — but the element decides which component you write: LinkButton renders an a and navigates, ActionButton renders a button and acts. They share Button.css, so the look can never be picked apart from the meaning. Intent belongs to actions alone."
-    />
-
+  <DocPage
+    entry={entry}
+    lead="One contract, two components. Button is the class and its four axes — emphasis, intent, size, pill — but the element decides which component you write: LinkButton renders an a and navigates, ActionButton renders a button and acts. They share Button.css, so the look can never be picked apart from the meaning. Intent belongs to actions alone."
+  >
     <Example id="element" title="Element" lead="Same look, different element. A link goes somewhere; an action does something. The shared class is the reason there is no way to style an a as a button by hand — you pick the component, and the element follows." source={elementSrc} row>
       <Element />
     </Example>
@@ -70,7 +69,7 @@ const entry = entryFor("button");
 
     <section class="doc-bench" id="test-bench">
       <Heading text="Test bench" element="h2" size="2" />
-      <p class="doc-note">The Buttons fixture — link and action, both emphases, three sizes, every state, intents — mounted unchanged.</p>
+      <div class="doc-note"><Text text="The Buttons fixture — link and action, both emphases, three sizes, every state, intents — mounted unchanged." /></div>
       <Buttons />
     </section>
   </DocPage>

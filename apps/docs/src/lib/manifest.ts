@@ -8,10 +8,11 @@
 //   primitive    owns its own vocabulary, IS content
 //   composition  owns arrangement + theme claims only
 //   region       governs a capability over hosted content, projects state
-//   chrome       the site's shell (Header/Footer) — its own box on the map
 // `family: "fields"` is a BADGE within primitives (shared field contracts).
+// The site's own shell (Header, Footer, the docs page chrome) is the docs app's,
+// not the system's, and has no row.
 
-export type Pillar = "primitive" | "composition" | "region" | "chrome";
+export type Pillar = "primitive" | "composition" | "region";
 
 export interface ManifestEntry {
   slug: string;
@@ -75,9 +76,6 @@ export const manifest: ManifestEntry[] = [
   { slug: "surface", title: "Surface", pillar: "region", origin: "own", section: "SurfaceSection", adrs: ["0006", "0016"], published: true },
   { slug: "scroll-area", title: "ScrollArea", pillar: "region", origin: "ref-comps", section: "ScrollAreaSection", suite: "tests/e2e/scrollarea.e2e.test.js", published: true },
 
-  // ── Chrome ──────────────────────────────────────────────────────────────────
-  { slug: "header", title: "Header", pillar: "chrome", origin: "own", demoHref: "/", suite: "tests/e2e/header.e2e.test.js", published: true },
-  { slug: "footer", title: "Footer", pillar: "chrome", origin: "aipoc", demoHref: "/", published: true },
 ];
 
 /** The ground strip on /map: the no-DOM material everything stands on. */
@@ -108,14 +106,12 @@ export const pillarLabels: Record<Pillar, string> = {
   primitive: "Primitives",
   composition: "Compositions",
   region: "Regions",
-  chrome: "Chrome",
 };
 
 export const pillarMeta: Record<Pillar, { romaji?: string; kanji?: string }> = {
   primitive: { romaji: "Kigumi", kanji: "木組み" },
   composition: { romaji: "Kumiko", kanji: "組子" },
   region: { romaji: "Masugumi", kanji: "枡組" },
-  chrome: {},
 };
 
 export const foundationsMeta = { label: "Foundations", romaji: "Dodai", kanji: "土台" };

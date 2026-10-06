@@ -2,9 +2,9 @@
 // /docs/cta-button — explicit page. The page is the view: it imports exactly the examples
 // it shows, each one file under src/examples/cta-button/, mounted twice (Figure + Code).
 // The CtaButtonSection fixture is mounted last as the bench.
+import Text from "tsugite/Text/Text.astro";
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
-import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import CtaButtonSection from "tsugite/fixtures/CtaButtonSection.astro";
 import Example from "../../components/Example/Example.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
@@ -23,11 +23,10 @@ const entry = entryFor("cta-button");
 ---
 
 <Layout title={entry.title}>
-  <DocPage entry={entry}>
-    <TextBlock
-      text="One thing to press that asks to be pressed. Button grows only by axes that combine with everything — size, emphasis, pill, intent — and stays small. CtaButton is the umbrella for the buttons a designer means with 'but this one should…': it grows by variants, one look with a name, each owning its effect layers and its CSS. The list is a project's to extend; gradient is the house's first. Same anatomy as Button, same button voice as tokens — a special button may invent effects, never typography."
-    />
-
+  <DocPage
+    entry={entry}
+    lead="One thing to press that asks to be pressed. Button grows only by axes that combine with everything — size, emphasis, pill, intent — and stays small. CtaButton is the umbrella for the buttons a designer means with 'but this one should…': it grows by variants, one look with a name, each owning its effect layers and its CSS. The list is a project's to extend; gradient is the house's first. Same anatomy as Button, same button voice as tokens — a special button may invent effects, never typography."
+  >
     <Example id="gradient" title="gradient" lead="A sweep through four semantic stops, all in the blue — indigo, deeper indigo, deep onsen water, the deepest indigo: the YU family's first role — with a sheen along the top edge and the same sweep cast as a shadow toward the viewer. Hover lifts the button and hurries the sweep; prefers-reduced-motion stills both; forced colours draw a border and drop the effects." source={gradientSrc} block>
       <Gradient />
     </Example>
@@ -46,7 +45,7 @@ const entry = entryFor("cta-button");
 
     <section class="doc-bench" id="test-bench">
       <Heading text="Test bench" element="h2" size="2" />
-      <p class="doc-note">The CtaButton fixture — both front doors at three sizes, every state, and the effects toggled, mounted unchanged.</p>
+      <div class="doc-note"><Text text="The CtaButton fixture — both front doors at three sizes, every state, and the effects toggled, mounted unchanged." /></div>
       <CtaButtonSection />
     </section>
   </DocPage>
