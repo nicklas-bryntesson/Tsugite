@@ -5,9 +5,9 @@
 // source in the Code — so the documentation can never drift from the demo.
 // The test bench (the package fixture the conformance suite runs against)
 // is mounted last, unchanged.
+import Text from "tsugite/Text/Text.astro";
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
-import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import NoticeSection from "tsugite/fixtures/NoticeSection.astro";
 import Example from "../../components/Example/Example.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
@@ -30,11 +30,10 @@ const entry = entryFor("notice");
 ---
 
 <Layout title={entry.title}>
-  <DocPage entry={entry}>
-    <TextBlock
-      text="A presentational message: severity, icon and text. Payload only — no live role, no announcement, no dismissal. To announce it, the context renders it into a persistent live region."
-    />
-
+  <DocPage
+    entry={entry}
+    lead="A presentational message: severity, icon and text. Payload only — no live role, no announcement, no dismissal. To announce it, the context renders it into a persistent live region."
+  >
     <Example
       id="variants"
       title="Variants"
@@ -92,9 +91,7 @@ const entry = entryFor("notice");
 
     <section class="doc-bench" id="test-bench">
       <Heading text="Test bench" element="h2" size="2" />
-      <p class="doc-note">
-        The package fixture the conformance suite runs against — every variant and state, mounted unchanged.
-      </p>
+      <div class="doc-note"><Text text="The package fixture the conformance suite runs against — every variant and state, mounted unchanged." /></div>
       <NoticeSection />
     </section>
   </DocPage>

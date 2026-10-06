@@ -2,9 +2,9 @@
 // /docs/text — explicit page. The page is the view: it imports exactly the
 // examples it shows, each one file under src/examples/text/, mounted twice
 // (Figure + Code). The TextSection fixture is mounted last as the bench.
+import Text from "tsugite/Text/Text.astro";
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
-import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import TextSection from "tsugite/fixtures/TextSection.astro";
 import Example from "../../components/Example/Example.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
@@ -31,11 +31,10 @@ const entry = entryFor("text");
 ---
 
 <Layout title={entry.title}>
-  <DocPage entry={entry}>
-    <TextBlock
-      text="The text primitive. Authored single-run reading text in the body voice, on p, span and div, on the captions legend, figcaption and label, and on h1–h6 when the outline needs a heading that reads like text. The family litmus: do you author the element? Text for reading, Caption for the UI voices, Heading for the loud ones. A flow you don't control? Prose."
-    />
-
+  <DocPage
+    entry={entry}
+    lead="The text primitive. Authored single-run reading text in the body voice, on p, span and div, on the captions legend, figcaption and label, and on h1–h6 when the outline needs a heading that reads like text. The family litmus: do you author the element? Text for reading, Caption for the UI voices, Heading for the loud ones. A flow you don't control? Prose."
+  >
     <Example id="sizes" title="Sizes" lead="The body voice has three steps, md by default. Unlike Heading, the element never decides the size." source={sizesSrc} block>
       <Sizes />
     </Example>
@@ -69,7 +68,7 @@ const entry = entryFor("text");
 
     <section class="doc-bench" id="test-bench">
       <Heading text="Test bench" element="h2" size="2" />
-      <p class="doc-note">The Text fixture — the run engine laws and every size × element the body voice allows, mounted unchanged.</p>
+      <div class="doc-note"><Text text="The Text fixture — the run engine laws and every size × element the body voice allows, mounted unchanged." /></div>
       <TextSection />
     </section>
   </DocPage>

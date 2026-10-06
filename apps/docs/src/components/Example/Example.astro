@@ -39,7 +39,7 @@ const shown = frontmatter ? source : source.replace(/^---[\s\S]*?---\s*/, "");
 
 <section class="Example" id={id}>
   {title && <Text text={title} element="h3" size="lg" />}
-  {lead && <p class="Example-lead">{lead}</p>}
+  {lead && <div class="Example-lead"><Text text={lead} /></div>}
   <Figure caption={caption} block={block} row={row}>
     <slot />
   </Figure>
@@ -51,10 +51,9 @@ const shown = frontmatter ? source : source.replace(/^---[\s\S]*?---\s*/, "");
   display: grid;
   gap: var(--size-md);
 
+  /* the muted channel rides the wrapper; Text sets no colour and inherits it */
   & .Example-lead {
-    margin: 0;
     color: var(--color-text-secondary);
-    max-inline-size: 65ch;
   }
 }
 </style>

@@ -2,9 +2,9 @@
 // /docs/nav-item — explicit page. The page is the view: it imports exactly the examples
 // it shows, each one file under src/examples/nav-item/, mounted twice (Figure + Code).
 // The NavItemSection fixture is mounted last as the bench.
+import Text from "tsugite/Text/Text.astro";
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
-import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import NavItemSection from "tsugite/fixtures/NavItemSection.astro";
 import Example from "../../components/Example/Example.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
@@ -23,11 +23,10 @@ const entry = entryFor("nav-item");
 ---
 
 <Layout title={entry.title}>
-  <DocPage entry={entry}>
-    <TextBlock
-      text="One item of a site's navigation: a link that takes the reader somewhere within the site, or a button that opens the next level of it. Button's shape exactly — one table, the element as the gate, two front doors — because two components sharing typography by copy is the drift a table exists to stop. It reads the nav voice as tokens; Nav, when it comes, arranges items."
-    />
-
+  <DocPage
+    entry={entry}
+    lead="One item of a site's navigation: a link that takes the reader somewhere within the site, or a button that opens the next level of it. Button's shape exactly — one table, the element as the gate, two front doors — because two components sharing typography by copy is the drift a table exists to stop. It reads the nav voice as tokens; Nav, when it comes, arranges items."
+  >
     <Example id="link" title="NavLink" lead="A link within the site. current says here you are on both elements; the link alone also says it to assistive technology, as aria-current=&quot;page&quot; — a derived attribute that is present or not." source={linkSrc} row>
       <Link />
     </Example>
@@ -46,7 +45,7 @@ const entry = entryFor("nav-item");
 
     <section class="doc-bench" id="test-bench">
       <Heading text="Test bench" element="h2" size="2" />
-      <p class="doc-note">The NavItem fixture — both front doors at three sizes, every state, current and expanded, mounted unchanged.</p>
+      <div class="doc-note"><Text text="The NavItem fixture — both front doors at three sizes, every state, current and expanded, mounted unchanged." /></div>
       <NavItemSection />
     </section>
   </DocPage>

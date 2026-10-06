@@ -2,6 +2,7 @@
 // /docs/text-block — explicit page. The page is the view: it imports exactly
 // the examples it shows, each one file under src/examples/text-block/,
 // mounted twice (Figure + Code). The TextBlockSection fixture is the bench.
+import Text from "tsugite/Text/Text.astro";
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import TextBlock from "tsugite/TextBlock/TextBlock.astro";
@@ -27,11 +28,10 @@ const entry = entryFor("text-block");
 ---
 
 <Layout title={entry.title}>
-  <DocPage entry={entry}>
-    <TextBlock
-      text="The textarea contract. The family's third input shape: not a flow you don't control (Prose), not an authored run (Text), but a plain multiline string the way a CMS field delivers it. Only the text prop is accepted, line breaks are honored, and sub-typography cannot be authored."
-    />
-
+  <DocPage
+    entry={entry}
+    lead="The textarea contract. The family's third input shape: not a flow you don't control (Prose), not an authored run (Text), but a plain multiline string the way a CMS field delivers it. Only the text prop is accepted, line breaks are honored, and sub-typography cannot be authored."
+  >
     <Example id="sizes" title="Sizes" lead="preamble is the default voice — the standfirst, with its own leading. Three steps, md by default." source={sizesSrc} block>
       <Sizes />
     </Example>
@@ -58,7 +58,7 @@ const entry = entryFor("text-block");
 
     <section class="doc-bench" id="test-bench">
       <Heading text="Test bench" element="h2" size="2" />
-      <p class="doc-note">The TextBlock fixture — the preamble steps and the multiline specimen, mounted unchanged.</p>
+      <div class="doc-note"><Text text="The TextBlock fixture — the preamble steps and the multiline specimen, mounted unchanged." /></div>
       <TextBlockSection />
     </section>
   </DocPage>

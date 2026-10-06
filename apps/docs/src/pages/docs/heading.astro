@@ -2,9 +2,9 @@
 // /docs/heading — explicit page. The page is the view: it imports exactly
 // the examples it shows, each one file under src/examples/heading/, mounted
 // twice (Figure + Code). The typography fixture is mounted last as the bench.
+import Text from "tsugite/Text/Text.astro";
 import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
-import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import Typography from "tsugite/fixtures/Typography.astro";
 import Example from "../../components/Example/Example.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
@@ -31,11 +31,10 @@ const entry = entryFor("heading");
 ---
 
 <Layout title={entry.title}>
-  <DocPage entry={entry}>
-    <TextBlock
-      text="The heading primitive. Two voices — heading and display — on the heading-shaped elements, the text shapes and the captions. The element is the outline, the size is the visual step, and the two are independent. A heading that should read like text is Text on an h-element (ADR-0023)."
-    />
-
+  <DocPage
+    entry={entry}
+    lead="The heading primitive. Two voices — heading and display — on the heading-shaped elements, the text shapes and the captions. The element is the outline, the size is the visual step, and the two are independent. A heading that should read like text is Text on an h-element (ADR-0023)."
+  >
     <Example id="sizes" title="Sizes" lead="The heading voice has six steps. By default the element decides the size: h1 is 1, h6 is 6." source={sizesSrc} block>
       <Sizes />
     </Example>
@@ -71,7 +70,7 @@ const entry = entryFor("heading");
 
     <section class="doc-bench" id="test-bench">
       <Heading text="Test bench" element="h2" size="2" />
-      <p class="doc-note">The typography fixture — every voice × element × size the family allows, mounted unchanged.</p>
+      <div class="doc-note"><Text text="The typography fixture — every voice × element × size the family allows, mounted unchanged." /></div>
       <Typography />
     </section>
   </DocPage>
