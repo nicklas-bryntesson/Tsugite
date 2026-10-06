@@ -429,3 +429,19 @@ and did not decide. Each is a separate call.
 - ~~**Direction for the text-box engine.**~~ — **decided 2026-10-01, ADR-0024**
   (one generated kernel file, `data-text-box` gate on `.text`, `<Text inline />` as intent).
   Built 2026-10-01 (PRs #85–#92), the benches in control room, `/lab/run` deleted.
+
+## From the entry-page sweep (2026-10-06)
+
+- **The site's shell: header and main navigation.** Header's "Home" and "Map" are raw `<a>`,
+  the nav is rough and needs real design work, and the site logo sits outside the doors.
+  Parked on purpose: the shell is the docs app's, not the system's (it left the map in
+  #100), and it is solved inside the docs site once the site has come further. Likely tied
+  to NavItem and a Nav composition when one exists.
+- **The code block and the code voice.** `Code.astro`'s label and Copy button are raw, and
+  the readouts on grids and tiers sit in bare `<code>` (the browser's monospace, not
+  `--fontFamily-code`). `code` is an inline-only voice with no door; a door, or a manner,
+  decides both.
+- **A `surface-hint` role?** The tiers page's live column needs a ground between page and
+  chrome; it uses runtime `color-mix` with a `TODO(token)` today (see the Chrome 109 row).
+- **The manifest's `adrs` field has no reader.** ADR tags left the page heads (#101); the
+  field can go, or wait for a use.
