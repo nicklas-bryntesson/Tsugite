@@ -44,6 +44,14 @@
   --_tbx-descent: var(--fontDescent-button);
 }
 
+[data-voice="field"] {
+  --_tbx-lineHeight: var(--lineHeight-field);
+  --_tbx-baselineOffset: var(--baseline-offset-field);
+  --_tbx-emBox: var(--fontEmBox-field);
+  --_tbx-capGap: var(--fontCapGap-field);
+  --_tbx-descent: var(--fontDescent-field);
+}
+
 [data-voice="nav"] {
   --_tbx-lineHeight: var(--lineHeight-nav);
   --_tbx-baselineOffset: var(--baseline-offset-nav);

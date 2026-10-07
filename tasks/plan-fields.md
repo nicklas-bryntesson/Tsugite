@@ -78,6 +78,14 @@ Identical in all three engines:
 - **The `:invalid` trap holds:** an empty required input is `:invalid` at load.
 - **A disabled input takes no focus** (asserted).
 
+**The invalid source — decided 2026-10-07: `aria-invalid`, set by a kernel script.** The skin
+reads `aria-invalid="true"` only, never `:invalid` or `:user-invalid`: what is seen and what is
+announced are one truth. A small kernel script runs `checkValidity()` when a field is left and
+when its form is submitted, sets `aria-invalid` and wires the error message
+(`aria-describedby`); a server sets the same attribute without any script. That gives
+`:user-invalid`'s timing in every engine above the floor, and the server's own rules ("this
+address is taken") land in the same state.
+
 Still open: the autofill cells (manual, by hand on `/lab/field-states`), and the floor — these
 are current engines, not Chrome 109.
 
@@ -87,8 +95,9 @@ are current engines, not Chrome 109.
    required, `aria-invalid`, empty or filled); an `@engines` test drives hover and keyboard focus
    and records which pseudo-classes match, per engine, as a report. It decides the `?` cells;
    autofill cannot be driven by Playwright and stays a manual reading.
-2. Decide the state order and the invalid source from the report.
-3. The `field` voice and the `--color-field-*` roles in the theme.
+2. Decide the state order from the report. (The invalid source is decided: `aria-invalid`.)
+3. The `field` voice (done: md only, button's values, a text-box cell) and the `--color-field-*`
+   roles in the theme.
 4. The skin on the base fields (TextField, Select, Textarea), the height contract rewritten to
    field == Button md (native and forced fallback, 0.1px), tagged `@engines`.
 5. AffixField onto the model. Stop.
