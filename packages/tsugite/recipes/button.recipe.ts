@@ -51,6 +51,9 @@ export const button = {
     { cells: { "aria-label": true, screenReaderSuffix: true }, message: "aria-label and a screen-reader affix are two names for one button — use one" },
     // ADR-0015: a square icon button never spans a row — there is no geometry for it.
     { cells: { iconOnly: true, growInline: true }, message: "icon-only buttons cannot grow: growInline requires a label" },
+    // Closed until it has a design: tertiary writes no colour and no hover (Button.css), so
+    // it is refused rather than shipped half-made. The coverage page draws the closed cell.
+    { cells: { emphasis: "tertiary" }, message: "tertiary is not designed yet — use primary or secondary" },
   ],
   content: { empty: "suppress", unless: ["icon", "aria-label"] },
 } as const satisfies Recipe;

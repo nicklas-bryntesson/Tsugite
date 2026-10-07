@@ -37,6 +37,12 @@ describe("LinkButton", () => {
     expect(html).not.toContain('class="Button"');
   });
 
+  it("refuses tertiary until it has a design (closed cell, dev error)", async () => {
+    const html = await renderLink({ href: "/x", emphasis: "tertiary" }, { default: "Quiet" });
+    expect(html).toContain("tertiary is not designed yet");
+    expect(html).not.toContain('class="Button"');
+  });
+
   it("adds rel noopener for target=_blank", async () => {
     const html = await renderLink({ href: "https://x.se", target: "_blank" }, { default: "x" });
     expect(html).toContain('target="_blank"');
