@@ -1,0 +1,37 @@
+---
+// ButtonCell — one state-matrix cell for a button: the cell's props drawn at every size,
+// side by side, so the size scale reads in every state without tripling the tables. The
+// label arrives as a prop because StateMatrix renders its component without children.
+import ActionButton from "../../components/primitives/buttons/Button/ActionButton.astro";
+import LinkButton from "../../components/primitives/buttons/Button/LinkButton.astro";
+
+const SIZES = ["sm", "md", "lg"] as const;
+const { element, label, "aria-label": name, ...props } = Astro.props;
+---
+
+<div class="ButtonCell">
+  {SIZES.map((size) =>
+    element === "a" ? (
+      <LinkButton href="#" {...props} size={size} aria-label={label ? undefined : `${name}, ${size}`}>{label}</LinkButton>
+    ) : (
+      <ActionButton {...props} size={size} aria-label={label ? undefined : `${name}, ${size}`}>{label}</ActionButton>
+    ),
+  )}
+</div>
+
+<style is:global>
+/* A bench instrument: arrangement only. */
+.ButtonCell {
+  /* one row: the size scale reads left to right; the matrix scrolls rather than wrap it */
+  display: flex;
+  align-items: center;
+  gap: var(--size-sm);
+  /* the row claims its full width, so the table cell grows to hold it */
+  min-inline-size: max-content;
+
+  /* a button keeps its own width; the table grows and scrolls instead of squeezing it */
+  & > * {
+    flex: none;
+  }
+}
+</style>

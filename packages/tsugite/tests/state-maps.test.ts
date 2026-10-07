@@ -3,8 +3,9 @@
 import { describe, it, expect } from "vitest";
 import { pairKey, type StateMap } from "../fixtures/states/types";
 import { fieldStates } from "../fixtures/states/field.states";
+import { actionStates, linkStates } from "../fixtures/states/button.states";
 
-const maps: Record<string, StateMap> = { field: fieldStates };
+const maps: Record<string, StateMap> = { field: fieldStates, action: actionStates, link: linkStates };
 
 describe("state maps answer every pair", () => {
   for (const [name, map] of Object.entries(maps)) {

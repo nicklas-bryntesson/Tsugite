@@ -4,6 +4,11 @@ import Heading from "../components/primitives/typography/Heading/Heading.astro";
 import Prose from "../components/primitives/Prose/Prose.astro";
 import LinkButton from "../components/primitives/buttons/Button/LinkButton.astro";
 import ActionButton from "../components/primitives/buttons/Button/ActionButton.astro";
+import Text from "../components/primitives/typography/Text/Text.astro";
+import Caption from "../components/primitives/typography/Caption/Caption.astro";
+import StateMatrix from "./states/StateMatrix.astro";
+import ButtonCell from "./states/ButtonCell.astro";
+import { actionStates } from "./states/button.states";
 
 const EMPHASES = ["primary", "secondary"] as const;
 const SIZES = ["lg", "md", "sm"] as const;
@@ -17,6 +22,12 @@ const VIEWPORTS = [
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 ---
+
+<section class="KitchenSink-section ButtonStates" id="ButtonStates">
+  <Text text="The state map" element="h3" size="lg" />
+  <Caption element="p" text="An action, primary, neutral: one table per content — a label, a label and an icon, an icon alone — with sm, md and lg in every cell. Idle stands above the table; each state is alone on the diagonal and two states meet below it. What cannot happen is hatched with its reason; pairs not yet measured are marked." />
+  <StateMatrix map={actionStates} component={ButtonCell} name="Button" />
+</section>
 
 {/* ═══════════════════════════════════════════
     LINK BUTTON
