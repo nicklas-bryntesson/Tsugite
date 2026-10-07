@@ -58,6 +58,7 @@ export const manifest: ManifestEntry[] = [
   { slug: "range-field", title: "RangeField", pillar: "primitive", family: "fields", origin: "ref-comps", section: "RangeFieldSection", suite: "tests/e2e/rangefield.e2e.test.js", published: true },
   { slug: "range-scale", title: "RangeScale", pillar: "primitive", family: "fields", origin: "ref-comps", section: "RangeScaleSection", suite: "tests/e2e/rangescale.e2e.test.js", published: true },
   { slug: "range-group", title: "RangeGroup", pillar: "primitive", family: "fields", origin: "ref-comps", section: "RangeGroupSection", suite: "tests/e2e/rangegroup.e2e.test.js", published: true },
+  { slug: "input", title: "Input", pillar: "primitive", family: "fields", origin: "own", section: "InputSection", published: true },
   { slug: "affix-field", title: "AffixField", pillar: "primitive", family: "fields", origin: "ref-comps", section: "AffixFieldSection", suite: "tests/e2e/affixfield.e2e.test.js", published: true },
   { slug: "date-field", title: "DateField", pillar: "primitive", family: "fields", origin: "ref-comps", section: "DateFieldSection", suite: "tests/e2e/datefield.e2e.test.js", published: true },
   { slug: "date-time-field", title: "DateTimeField", pillar: "primitive", family: "fields", origin: "ref-comps", section: "DateTimeFieldSection", suite: "tests/e2e/datetimefield.e2e.test.js", published: true },

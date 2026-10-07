@@ -1,0 +1,170 @@
+---
+// StateMatrix — a state map drawn: once per content (a field empty, with a placeholder,
+// with a value): the rest (idle) as one cell above the table, then the states as rows and
+// columns — each state alone on the diagonal, every pair below it as a real instance —
+// and the triples worth seeing under the table. Read a cell as "the row's state and the
+// column's state at once"; the same cell across the contents shows what each state does
+// to each kind of content. What cannot hold an instance is hatched: the mirror above the
+// diagonal, a pair that cannot meet (with its reason), a state the content excludes
+// (with its reason). A pair reached only through an attribute,
+// or not yet measured, is drawn and marked. The map is data (types.ts), so the matrix is
+// complete by construction: a new state is a new row and column in every table.
+import Caption from "../../components/primitives/typography/Caption/Caption.astro";
+import Text from "../../components/primitives/typography/Text/Text.astro";
+import ScrollArea from "../../components/regions/ScrollArea/ScrollArea.astro";
+import { excludedBy, pairKey, propsFor, type StateMap } from "./types";
+
+interface Props {
+  map: StateMap;
+  /** the component each cell renders */
+  component: (props: Record<string, unknown>) => unknown;
+  /** the accessible name of each instance, from the cell's state labels */
+  name?: string;
+}
+const { map, component: Component, name = "field" } = Astro.props;
+const order = map.states.map((s) => s.key);
+const labelOf = (key: string) => map.states.find((s) => s.key === key)!.label;
+const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeasured" } as const;
+---
+
+<div class="StateMatrix">
+  {map.contents.map((content) => (
+    <section class="content-block">
+      <Text element="h4" size="md" text={content.label} />
+      <div class="rest">
+        <Caption element="p" size="sm" text={map.rest.label} />
+        <Component {...propsFor(map, [], content)} aria-label={`${name}: ${map.rest.label}, ${content.key}`} />
+      </div>
+      <ScrollArea id={`state-matrix-${name}-${content.key}`} ariaLabel={`${name} state map, ${content.label}`}>
+        <table>
+          <thead>
+            <tr>
+              <th />
+              {map.states.map((s) => <th scope="col"><Caption size="sm" text={s.label} /></th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {map.states.map((row, i) => (
+              <tr>
+                <th scope="row"><Caption size="sm" text={row.label} /></th>
+                {map.states.map((col, j) => {
+                  if (j > i) return <td class="above" />;
+                  const keys = i === j ? [row.key] : [col.key, row.key];
+                  const excluded = excludedBy(content, keys);
+                  const pair = i === j ? { reach: "yes" as const, note: undefined } : map.pairs[pairKey(col.key, row.key, order)];
+                  const reach = excluded ? "no" : pair.reach;
+                  const note = excluded ?? pair.note;
+                  return (
+                    <td data-reach={reach}>
+                      {reach === "no" ? (
+                        <div class="mark"><Caption size="sm" text={MARK.no} /></div>
+                      ) : (
+                        <Component {...propsFor(map, keys, content)} aria-label={`${name}: ${keys.map(labelOf).join(" + ")}, ${content.key}`} />
+                      )}
+                      {reach !== "yes" && reach !== "no" && <div class="mark"><Caption size="sm" text={MARK[reach]} /></div>}
+                      {note && <div class="note"><Caption size="sm" text={note} /></div>}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </ScrollArea>
+
+      {map.triples.some((t) => !excludedBy(content, t.keys)) && (
+        <div class="triples">
+          {map.triples
+            .filter((t) => !excludedBy(content, t.keys))
+            .map((t) => (
+              <div class="triple">
+                <Caption element="p" size="sm" text={t.keys.map(labelOf).join(" + ")} />
+                <Component {...propsFor(map, t.keys, content)} aria-label={`${name}: ${t.keys.map(labelOf).join(" + ")}, ${content.key}`} />
+                <div class="note"><Caption size="sm" text={t.note} /></div>
+              </div>
+            ))}
+        </div>
+      )}
+    </section>
+  ))}
+</div>
+
+<style is:global>
+/* A bench instrument: arrangement and ink only. */
+/* One flow, as on every docs page: --size-md inside a block, --size-xl between blocks. A
+   block is one content's matrix with its triples. */
+.StateMatrix {
+  display: grid;
+  gap: var(--size-xl);
+
+  & .content-block {
+    display: grid;
+    gap: var(--size-md);
+  }
+
+  /* the rest: one cell, the content with no state, a cell's width */
+  & .rest {
+    display: grid;
+    gap: var(--size-sm);
+    inline-size: 13rem;
+  }
+
+  & th,
+  & td {
+    text-align: start;
+    vertical-align: top;
+  }
+
+  & td {
+    min-inline-size: 13rem;
+  }
+
+  /* Cells that cannot hold an instance and need no word — the mirror above the diagonal,
+     and a pair that cannot meet with no reason given — are struck through with the tables'
+     diagonal hatch, so what can happen reads at a glance. */
+  & td.above,
+  & td[data-reach="no"]:not(:has(.note)) {
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--color-surface-chrome),
+      var(--color-surface-chrome) 0.125rem,
+      transparent 0.125rem,
+      transparent 0.5rem
+    );
+  }
+
+  /* The row labels are a head: no docs-table row hatch —
+     here the hatch means "cannot happen". */
+  & tbody th[scope="row"] {
+    background-image: none;
+  }
+
+  /* The row labels and a pair that cannot meet and says why share one quiet fill, so the
+     reason reads as something to read rather than something struck out. */
+  & tbody th[scope="row"],
+  & td[data-reach="no"]:has(.note) {
+    /* TODO(token): trial on the raw ramp — no semantic role sits at SUMI-05 but disabled */
+    background-color: var(--COLOR-SUMI-05);
+  }
+
+  & .mark,
+  & .note {
+    margin-block-start: var(--size-xs);
+    color: var(--color-text-secondary);
+  }
+
+
+  /* the triples stand a step further from the table than the table from its heading */
+  & .triples {
+    margin-block-start: var(--size-md);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+    gap: var(--size-md);
+  }
+
+  & .triple {
+    display: grid;
+    gap: var(--size-sm);
+  }
+}
+</style>

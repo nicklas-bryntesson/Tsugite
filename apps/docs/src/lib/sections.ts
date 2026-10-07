@@ -1,6 +1,7 @@
 // Explicit section map — import.meta.glob cannot cross the package
 // boundary, and explicit beats clever anyway. One line per fixture.
 import AffixFieldSection from "tsugite/fixtures/AffixFieldSection.astro";
+import InputSection from "tsugite/fixtures/InputSection.astro";
 import Buttons from "tsugite/fixtures/Buttons.astro";
 import ChoiceFieldSection from "tsugite/fixtures/ChoiceFieldSection.astro";
 import ChoiceGroupSection from "tsugite/fixtures/ChoiceGroupSection.astro";
@@ -34,6 +35,7 @@ import WeekFieldSection from "tsugite/fixtures/WeekFieldSection.astro";
 
 export const sections: Record<string, any> = {
   AffixFieldSection,
+  InputSection,
   Buttons,
   ChoiceFieldSection,
   ChoiceGroupSection,

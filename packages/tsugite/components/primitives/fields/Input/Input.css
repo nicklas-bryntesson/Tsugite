@@ -1,0 +1,140 @@
+/*
+ * Input — one native text field, the skin on the element: no box around it, so every
+ * state is the element's own and nothing mirrors it (tasks/plan-fields.md).
+ *
+ * Gates over one base:
+ *   data-voice          field, always: the text-box engine's cell gives the leading.
+ *   aria-invalid        "true" marks the field invalid; set by kernel/js/field-validity.ts
+ *                       on leave and submit, or by a server. :invalid is never read.
+ *   data-test-state     hover | autofill | focus | readonly, space-separated, any number:
+ *                       the twins the benches use to render a state without a pointer.
+ */
+.Input {
+  /* knobs: the face, the geometry and the rest-state colours; a state reads its own */
+  --_in-fontFamily: var(--fontFamily-field);
+  --_in-fontWeight: var(--fontWeight-field);
+  --_in-fontSize: var(--fontSize-field);
+  --_in-letterSpacing: var(--letterSpacing-field);
+  --_in-fontFeatureSettings: var(--fontFeatureSettings-field);
+  --_in-paddingBlock: var(--size-sm);
+  /* TODO(token): the inline padding and the radius are raw; the spacing and radius ramps
+     are in the parking lot. The radius is Button's non-pill corner. */
+  --_in-paddingInline: 0.75rem;
+  --_in-borderRadius: 0.375rem;
+  --_in-borderWidth: 1px;
+  --_in-outlineWidth: 2px;
+  --_in-outlineOffset: 2px;
+  --_in-outlineColor: var(--color-focus-ring);
+  --_in-color: var(--color-field-text);
+  --_in-placeholderColor: var(--color-field-placeholder);
+  --_in-backgroundColor: var(--color-field-surface);
+  --_in-backgroundColor-hover: var(--color-field-surface-hover);
+  --_in-backgroundColor-autofill: var(--color-field-surface-autofill);
+  --_in-borderColor: var(--color-field-border);
+  --_in-borderColor-hover: var(--color-field-border-hover);
+  --_in-borderColor-invalid: var(--color-field-border-invalid);
+
+  /* reset the engine's own field to one shape */
+  appearance: none;
+  margin: 0;
+  box-sizing: border-box;
+  min-inline-size: 0;
+
+  font-family: var(--_in-fontFamily);
+  font-weight: var(--_in-fontWeight);
+  font-size: var(--_in-fontSize);
+  /* ADR-0024 §6: the leading is the voice cell's */
+  line-height: var(--_tbx-lineHeight);
+  letter-spacing: var(--_in-letterSpacing);
+  font-feature-settings: var(--_in-fontFeatureSettings);
+
+  /* The height is a Button md's by construction: an input's content is one line, so
+     leading × size + 2 × padding + 2 × border is the button's trimmed formula unrolled. */
+  padding-block: var(--_in-paddingBlock);
+  padding-inline: var(--_in-paddingInline);
+  border-style: solid;
+  border-width: var(--_in-borderWidth);
+  border-color: var(--_in-borderColor);
+  border-radius: var(--_in-borderRadius);
+
+  color: var(--_in-color);
+  caret-color: var(--_in-color);
+  background-color: var(--_in-backgroundColor);
+  transition: background-color 250ms ease, border-color 250ms ease;
+
+  &::placeholder {
+    color: var(--_in-placeholderColor);
+    opacity: 1;
+  }
+
+  /* The states, lowest first; a later one wins a property both set (tasks/plan-fields.md):
+     rest → hover → autofill → focus → invalid → read-only → disabled. Focus sets only the
+     outline, so it stands beside every other state. */
+  &:hover,
+  &[data-test-state~="hover"] {
+    border-color: var(--_in-borderColor-hover);
+    background-color: var(--_in-backgroundColor-hover);
+  }
+
+  /* autofill — an owned state. The engines paint their own ground over the field and
+     refuse to let background-color win, so the tone is an inset shadow that covers the
+     whole padding box, and the text fill is set back to the field's ink. Firefox tints
+     with a filter instead, which is cleared. Two rules, not one list: an engine that
+     does not know one of the pseudo-classes would drop the whole list. */
+  &:autofill {
+    box-shadow: inset 0 0 0 100vmax var(--_in-backgroundColor-autofill);
+    -webkit-text-fill-color: var(--_in-color);
+    filter: none;
+  }
+
+  &:-webkit-autofill {
+    box-shadow: inset 0 0 0 100vmax var(--_in-backgroundColor-autofill);
+    -webkit-text-fill-color: var(--_in-color);
+  }
+
+  &[data-test-state~="autofill"] {
+    background-color: var(--_in-backgroundColor-autofill);
+  }
+
+  /* focus: the outline only, so it stands beside every other state */
+  &:focus:not(:focus-visible) {
+    outline: 0;
+  }
+
+  &:focus-visible,
+  &[data-test-state~="focus"] {
+    outline-style: solid;
+    outline-width: var(--_in-outlineWidth);
+    outline-color: var(--_in-outlineColor);
+    outline-offset: var(--_in-outlineOffset);
+  }
+
+  /* invalid: the attribute is the state; it is its own test twin */
+  &[aria-invalid="true"] {
+    border-color: var(--_in-borderColor-invalid);
+  }
+
+  /* read-only: selectable, not editable; it keeps the rest ground under the pointer.
+     :read-only also matches a disabled field, which is excluded here. */
+  &:read-only:not(:disabled),
+  &[data-test-state~="readonly"] {
+    border-style: dashed;
+    border-color: var(--_in-borderColor);
+    background-color: var(--_in-backgroundColor);
+  }
+
+  /* disabled: last, so it answers whatever else matches */
+  &:disabled {
+    color: var(--color-disabled-text);
+    -webkit-text-fill-color: var(--color-disabled-text);
+    border-color: var(--color-disabled-border);
+    background-color: var(--color-disabled-surface);
+    box-shadow: none;
+    opacity: 1;
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

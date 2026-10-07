@@ -1,0 +1,29 @@
+---
+// Input — the front door to the Input table for Astro: one native text field. The table
+// is recipes/input.recipe.ts, read by lib/recipe.ts (ADR-0018); Input.tsx renders the
+// same table. The kernel's field-validity script marks the field aria-invalid on leave
+// and submit.
+import "../../../../kernel/css/text-box.generated.css";
+import "./Input.css";
+import DevError from "../../../DevError/DevError.astro";
+import { input as recipe } from "../../../../recipes/input.recipe";
+import { resolve, type InputOf } from "../../../../lib/recipe";
+import { inputDerive } from "../../../../lib/input";
+
+type Props = Omit<InputOf<typeof recipe>, "element"> & { [key: string]: unknown };
+
+const r = resolve(recipe, { ...Astro.props, element: "input" }, { derive: inputDerive });
+---
+
+{
+  r.mode === "render" ? (
+    <input class={r.className} {...r.attrs} {...r.rest} />
+  ) : r.mode === "error" ? (
+    <DevError name={recipe.name} message={r.errorMessage} />
+  ) : null
+}
+
+<script>
+  import { attachFieldValidity } from "../../../../kernel/js/field-validity";
+  attachFieldValidity();
+</script>

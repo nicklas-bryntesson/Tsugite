@@ -449,3 +449,10 @@ and did not decide. Each is a separate call.
   2/3 about 8m; the wall clock (~13–14 min) is shard 3's. Even shards would land near 9–10 min.
   Playwright shards by file, so one or two heavy suites sit together; split them, or move to
   more shards.
+- **Button's bench on the state matrix.** The Buttons fixture shows one state per column, so
+  no combination is ever drawn — the hidden complexity Button.css's `TODO(investigate)` names.
+  The fields job built the cure (2026-10-07): a state map as data (`fixtures/states/*.states.ts`,
+  every pair answered yes / no / aria / unknown, held complete by `tests/state-maps.test.ts`) and
+  `StateMatrix.astro`, which draws any component's map. A `button.states.ts` (hover, active,
+  focus, disabled, intent, emphasis as context), Button's `data-test-state` to `~=`, and the
+  matrix on the Button bench; the probe page in three engines decides the unknown cells.

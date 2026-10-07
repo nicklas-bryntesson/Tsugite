@@ -1,0 +1,86 @@
+---
+// Input — the bench: the field state map drawn as a matrix (fixtures/states/field.states.ts),
+// every state alone and every pair; then the text types, a validity field, and the height
+// row the contract test measures: an Input beside a Button md, on the native text-box and
+// on the forced fallback.
+import Heading from "../components/primitives/typography/Heading/Heading.astro";
+import Text from "../components/primitives/typography/Text/Text.astro";
+import Caption from "../components/primitives/typography/Caption/Caption.astro";
+import Input from "../components/primitives/fields/Input/Input.astro";
+import LinkButton from "../components/primitives/buttons/Button/LinkButton.astro";
+import StateMatrix from "./states/StateMatrix.astro";
+import { fieldStates } from "./states/field.states";
+
+const TYPES = ["text", "email", "number", "password", "search", "tel", "url", "date", "time"];
+---
+
+<section class="KitchenSink-section InputBench" id="Input">
+  <Heading text="Input" element="h2" size="2" />
+
+  <Text text="The state map" element="h3" size="lg" />
+  <Caption element="p" text="One table per content — empty, a placeholder, a value. Idle, the field with no state, stands above each table; in the table each state is alone on the diagonal and two states meet below it. The same cell across the three tables shows what a state does to each kind of content. What cannot happen is hatched with its reason; pairs reached only through aria-invalid, or not yet measured, are marked." />
+  <StateMatrix map={fieldStates} component={Input} name="Input" />
+
+  <Text text="Types" element="h3" size="lg" />
+  <div class="grid">
+    {TYPES.map((type) => (
+      <div class="cell">
+        <Caption element="p" size="sm" text={type} />
+        <Input type={type} aria-label={type} />
+      </div>
+    ))}
+  </div>
+
+  <Text text="Validity" element="h3" size="lg" />
+  <Caption element="p" text="A required email. Untouched, it stays quiet; type and leave it, or submit, and the kernel marks it aria-invalid; correct it and the mark clears." />
+  <form class="validity" data-validity-form onsubmit="event.preventDefault()">
+    <Input type="email" required name="email" id="input-validity" aria-label="Email" placeholder="you@example.com" />
+    <LinkButton href="#" size="md" onclick="event.preventDefault(); this.closest('form').requestSubmit()">Submit</LinkButton>
+  </form>
+
+  <Text text="Height: an Input beside a Button md" element="h3" size="lg" />
+  <Caption element="p" text="The same height by construction, on the native text-box and on the forced fallback." />
+  <div class="height-rows">
+    <div class="height-row" data-height-row="native">
+      <Input value="1 200" aria-label="Amount, native" />
+      <LinkButton href="#" size="md">Send</LinkButton>
+    </div>
+    <div class="height-row" data-height-row="fallback" data-test-text-box="fallback">
+      <Input value="1 200" aria-label="Amount, fallback" />
+      <LinkButton href="#" size="md">Send</LinkButton>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+/* The bench's arrangement only; the fields are the component's. */
+.InputBench {
+  & .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+    gap: var(--size-md);
+  }
+
+  & .cell {
+    display: grid;
+    gap: var(--size-xs);
+  }
+
+  & .validity {
+    display: flex;
+    align-items: center;
+    gap: var(--size-sm);
+  }
+
+  & .height-rows {
+    display: grid;
+    gap: var(--size-md);
+  }
+
+  & .height-row {
+    display: flex;
+    align-items: center;
+    gap: var(--size-sm);
+  }
+}
+</style>

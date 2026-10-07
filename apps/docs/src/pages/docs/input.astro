@@ -1,0 +1,25 @@
+---
+// /docs/input — explicit page: the head with its preamble, then the Input fixture as the
+// bench — the state map as a matrix, the text types, validity and the height row.
+import Text from "tsugite/Text/Text.astro";
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import InputSection from "tsugite/fixtures/InputSection.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+const entry = entryFor("input");
+---
+
+<Layout title={entry.title}>
+  <DocPage
+    entry={entry}
+    lead="One native text field, styled on the element itself: no box around it, so every state — hover, autofill, focus, invalid, read-only, disabled — is the field's own and nothing has to mirror it. It speaks the field voice and stands on a button's height; whether it is invalid is decided once, by aria-invalid, so what is seen and what is announced agree."
+  >
+    <section class="doc-bench" id="test-bench">
+      <Heading text="Test bench" element="h2" size="2" />
+      <div class="doc-note"><Text text="The Input fixture — the state map as a matrix, the text types, validity and the height row, mounted unchanged." /></div>
+      <InputSection />
+    </section>
+  </DocPage>
+</Layout>

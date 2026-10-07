@@ -1,0 +1,76 @@
+{
+  "$comment": "Input — the contract as data. One native text field; the element is always input. Attribute order: the host attributes in table order (type is always written, text by default), then the derived voice (data-voice=\"field\"), a constant. The choice and action types are refused: each is another control.",
+  "component": "Input",
+  "cases": [
+    {
+      "name": "default: a text field in the field voice",
+      "input": {},
+      "expect": {
+        "mode": "render",
+        "tag": "input",
+        "className": "Input",
+        "attrs": { "type": "text", "data-voice": "field" }
+      }
+    },
+    {
+      "name": "an email field, named, required, autofillable",
+      "input": { "type": "email", "id": "email", "name": "email", "placeholder": "you@example.com", "autocomplete": "email", "required": true },
+      "expect": {
+        "mode": "render",
+        "tag": "input",
+        "className": "Input",
+        "attrs": { "type": "email", "id": "email", "name": "email", "placeholder": "you@example.com", "autocomplete": "email", "required": true, "data-voice": "field" }
+      }
+    },
+    {
+      "name": "a number with its range",
+      "input": { "type": "number", "value": "12", "min": "0", "max": "99", "step": "1" },
+      "expect": {
+        "mode": "render",
+        "tag": "input",
+        "className": "Input",
+        "attrs": { "type": "number", "value": "12", "min": "0", "max": "99", "step": "1", "data-voice": "field" }
+      }
+    },
+    {
+      "name": "read-only and disabled are bare attributes",
+      "input": { "value": "fixed", "readonly": true, "disabled": true },
+      "expect": {
+        "mode": "render",
+        "tag": "input",
+        "className": "Input",
+        "attrs": { "type": "text", "value": "fixed", "disabled": true, "readonly": true, "data-voice": "field" }
+      }
+    },
+    {
+      "name": "a server's invalid mark, described",
+      "input": { "value": "taken@example.com", "aria-invalid": "true", "aria-describedby": "email-error" },
+      "expect": {
+        "mode": "render",
+        "tag": "input",
+        "className": "Input",
+        "attrs": { "type": "text", "value": "taken@example.com", "aria-invalid": "true", "aria-describedby": "email-error", "data-voice": "field" }
+      }
+    },
+    {
+      "name": "a native date is a text field too",
+      "input": { "type": "date" },
+      "expect": {
+        "mode": "render",
+        "tag": "input",
+        "className": "Input",
+        "attrs": { "type": "date", "data-voice": "field" }
+      }
+    },
+    {
+      "name": "a checkbox is another control",
+      "input": { "type": "checkbox" },
+      "expect": { "mode": "error", "errorMessage": "type=\"checkbox\" is not a text field — use its own control" }
+    },
+    {
+      "name": "a submit is another control",
+      "input": { "type": "submit" },
+      "expect": { "mode": "error", "errorMessage": "type=\"submit\" is not a text field — use its own control" }
+    }
+  ]
+}
