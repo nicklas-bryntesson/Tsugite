@@ -1,12 +1,12 @@
 ---
 // StateMatrix — a state map drawn: once per content (a field empty, with a placeholder,
-// with a value), the states as rows and columns, read from the left: the rest (idle) in
-// the corner, each state alone down the idle column, every pair below the diagonal as a
-// real instance, and the triples worth seeing under the table. Read a cell as "the row's
-// state and the column's state at once"; the same cell across the contents shows what
-// each state does to each kind of content. What cannot hold an instance is hatched: the
-// diagonal (a state with itself), the mirror above it, a pair that cannot meet (with its
-// reason), a state the content excludes (with its reason). A pair reached only through an attribute,
+// with a value): the rest (idle) as one cell above the table, then the states as rows and
+// columns — each state alone on the diagonal, every pair below it as a real instance —
+// and the triples worth seeing under the table. Read a cell as "the row's state and the
+// column's state at once"; the same cell across the contents shows what each state does
+// to each kind of content. What cannot hold an instance is hatched: the mirror above the
+// diagonal, a pair that cannot meet (with its reason), a state the content excludes
+// (with its reason). A pair reached only through an attribute,
 // or not yet measured, is drawn and marked. The map is data (types.ts), so the matrix is
 // complete by construction: a new state is a new row and column in every table.
 import Caption from "../../components/primitives/typography/Caption/Caption.astro";
@@ -23,8 +23,7 @@ interface Props {
 }
 const { map, component: Component, name = "field" } = Astro.props;
 const order = map.states.map((s) => s.key);
-const axis = [map.rest, ...map.states];
-const labelOf = (key: string) => axis.find((s) => s.key === key)!.label;
+const labelOf = (key: string) => map.states.find((s) => s.key === key)!.label;
 const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeasured" } as const;
 ---
 
@@ -32,26 +31,27 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
   {map.contents.map((content) => (
     <section class="content-block">
       <Text element="h4" size="md" text={content.label} />
+      <div class="rest">
+        <Caption element="p" size="sm" text={map.rest.label} />
+        <Component {...propsFor(map, [], content)} aria-label={`${name}: ${map.rest.label}, ${content.key}`} />
+      </div>
       <ScrollArea id={`state-matrix-${name}-${content.key}`} ariaLabel={`${name} state map, ${content.label}`}>
         <table>
           <thead>
             <tr>
               <th />
-              {axis.map((s) => <th scope="col"><Caption size="sm" text={s.label} /></th>)}
+              {map.states.map((s) => <th scope="col"><Caption size="sm" text={s.label} /></th>)}
             </tr>
           </thead>
           <tbody>
-            {axis.map((row, i) => (
+            {map.states.map((row, i) => (
               <tr>
                 <th scope="row"><Caption size="sm" text={row.label} /></th>
-                {axis.map((col, j) => {
+                {map.states.map((col, j) => {
                   if (j > i) return <td class="above" />;
-                  // the corner is the rest; the rest column is each state alone; the diagonal
-                  // past the corner is a state with itself, which says nothing
-                  if (i === j && i > 0) return <td class="above" />;
-                  const keys = j === 0 ? (i === 0 ? [] : [row.key]) : [col.key, row.key];
+                  const keys = i === j ? [row.key] : [col.key, row.key];
                   const excluded = excludedBy(content, keys);
-                  const pair = j === 0 ? { reach: "yes" as const, note: undefined } : map.pairs[pairKey(col.key, row.key, order)];
+                  const pair = i === j ? { reach: "yes" as const, note: undefined } : map.pairs[pairKey(col.key, row.key, order)];
                   const reach = excluded ? "no" : pair.reach;
                   const note = excluded ?? pair.note;
                   return (
@@ -59,7 +59,7 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
                       {reach === "no" ? (
                         <div class="mark"><Caption size="sm" text={MARK.no} /></div>
                       ) : (
-                        <Component {...propsFor(map, keys, content)} aria-label={`${name}: ${keys.length ? keys.map(labelOf).join(" + ") : map.rest.label}, ${content.key}`} />
+                        <Component {...propsFor(map, keys, content)} aria-label={`${name}: ${keys.map(labelOf).join(" + ")}, ${content.key}`} />
                       )}
                       {reach !== "yes" && reach !== "no" && <div class="mark"><Caption size="sm" text={MARK[reach]} /></div>}
                       {note && <div class="note"><Caption size="sm" text={note} /></div>}
@@ -100,6 +100,13 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
   & .content-block {
     display: grid;
     gap: var(--size-md);
+  }
+
+  /* the rest: one cell, the content with no state, a cell's width */
+  & .rest {
+    display: grid;
+    gap: var(--size-xs);
+    inline-size: 13rem;
   }
 
   & th,
