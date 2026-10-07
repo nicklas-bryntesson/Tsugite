@@ -1,7 +1,8 @@
 ---
 // StateMatrix — a state map drawn: the states as rows and columns, each state alone on the
 // diagonal, every pair below it as a real instance, and the triples worth seeing under the
-// matrix. A pair that cannot meet is drawn empty with its reason; one reached only through
+// matrix. A pair that cannot meet, and the mirror above the diagonal, are hatched — the
+// pair keeps its reason; one reached only through
 // an attribute, or not yet measured, is drawn and marked. The map is data (types.ts), so
 // the matrix is complete by construction: a new state is a new row and column.
 import Caption from "../../components/primitives/typography/Caption/Caption.astro";
@@ -85,8 +86,18 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
     min-inline-size: 13rem;
   }
 
-  & td.above {
-    background-color: transparent;
+  /* Cells that cannot hold an instance — the mirror above the diagonal, and a pair that
+     cannot meet — are struck through with the tables' diagonal hatch, so what can happen
+     reads at a glance. */
+  & td.above,
+  & td[data-reach="no"] {
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--color-surface-chrome),
+      var(--color-surface-chrome) 0.125rem,
+      transparent 0.125rem,
+      transparent 0.5rem
+    );
   }
 
   & .mark,
@@ -95,10 +106,6 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
     color: var(--color-text-secondary);
   }
 
-  & td[data-reach="no"] .mark {
-    padding: var(--size-sm);
-    border: 1px dashed var(--color-border-subtle);
-  }
 
   & .triples {
     display: grid;
