@@ -28,6 +28,7 @@
   --_bt-outlineWidth: 2px;
   --_bt-outlineOffset: 3px;
   --_bt-outlineColor: var(--color-focus-ring);
+  --_bt-outlineColor-pressed: var(--color-focus-pressedRing);
   --_bt-hoverRingColor: var(--color-interactive-hoverRing);
 
   position: relative;
@@ -103,6 +104,13 @@
     outline-width:        var(--_bt-outlineWidth);
     outline-color:        var(--_bt-outlineColor);
     outline-offset:       var(--_bt-outlineOffset);
+  }
+
+  /* Focus-visible and active at once — a held Space. A combination is gated by both
+     states, so it wins by specificity, not by its place in the file. */
+  &:focus-visible:active,
+  &[data-test-state~="focus"][data-test-state~="active"] {
+    outline-color:        var(--_bt-outlineColor-pressed);
   }
 
   &:disabled,
