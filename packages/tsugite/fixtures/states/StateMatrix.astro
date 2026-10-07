@@ -1,0 +1,117 @@
+---
+// StateMatrix — a state map drawn: the states as rows and columns, each state alone on the
+// diagonal, every pair below it as a real instance, and the triples worth seeing under the
+// matrix. A pair that cannot meet is drawn empty with its reason; one reached only through
+// an attribute, or not yet measured, is drawn and marked. The map is data (types.ts), so
+// the matrix is complete by construction: a new state is a new row and column.
+import Caption from "../../components/primitives/typography/Caption/Caption.astro";
+import { pairKey, propsFor, type StateMap } from "./types";
+
+interface Props {
+  map: StateMap;
+  /** the component each cell renders */
+  component: (props: Record<string, unknown>) => unknown;
+  /** the accessible name of each instance, from the cell's state labels */
+  name?: string;
+}
+const { map, component: Component, name = "field" } = Astro.props;
+const order = map.states.map((s) => s.key);
+const labelOf = (key: string) => map.states.find((s) => s.key === key)!.label;
+const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeasured" } as const;
+---
+
+<div class="StateMatrix">
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr>
+          <th />
+          {map.states.map((s) => <th scope="col"><Caption size="sm" text={s.label} /></th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {map.states.map((row, i) => (
+          <tr>
+            <th scope="row"><Caption size="sm" text={row.label} /></th>
+            {map.states.map((col, j) => {
+              if (j > i) return <td class="above" />;
+              const keys = i === j ? [row.key] : [col.key, row.key];
+              const pair = i === j ? { reach: "yes" as const } : map.pairs[pairKey(col.key, row.key, order)];
+              return (
+                <td data-reach={pair.reach} title={"note" in pair ? pair.note : undefined}>
+                  {pair.reach === "no" ? (
+                    <div class="mark"><Caption size="sm" text={MARK.no} /></div>
+                  ) : (
+                    <Component {...propsFor(map, keys)} aria-label={`${name}: ${keys.map(labelOf).join(" + ")}`} />
+                  )}
+                  {pair.reach !== "yes" && pair.reach !== "no" && <div class="mark"><Caption size="sm" text={MARK[pair.reach]} /></div>}
+                  {"note" in pair && pair.note && <div class="note"><Caption size="sm" text={pair.note} /></div>}
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  {map.triples.length > 0 && (
+    <div class="triples">
+      {map.triples.map((t) => (
+        <div class="triple">
+          <Caption element="p" size="sm" text={t.keys.map(labelOf).join(" + ")} />
+          <Component {...propsFor(map, t.keys)} aria-label={`${name}: ${t.keys.map(labelOf).join(" + ")}`} />
+          <div class="note"><Caption size="sm" text={t.note} /></div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+<style is:global>
+/* A bench instrument: arrangement and ink only. */
+.StateMatrix {
+  display: grid;
+  gap: var(--size-md);
+
+  & .scroll {
+    overflow-x: auto;
+  }
+
+  & th,
+  & td {
+    text-align: start;
+    vertical-align: top;
+  }
+
+  & td {
+    min-inline-size: 13rem;
+  }
+
+  & td.above {
+    background-color: transparent;
+  }
+
+  & .mark,
+  & .note {
+    margin-block-start: var(--size-xs);
+    color: var(--color-text-secondary);
+  }
+
+  & td[data-reach="no"] .mark {
+    padding: var(--size-sm);
+    border: 1px dashed var(--color-border-subtle);
+  }
+
+  & .triples {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+    gap: var(--size-md);
+  }
+
+  & .triple {
+    display: grid;
+    gap: var(--size-xs);
+  }
+}
+</style>

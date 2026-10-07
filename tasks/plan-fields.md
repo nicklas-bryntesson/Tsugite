@@ -34,6 +34,10 @@ skin") once the model for typography, padding and states is complete.
 
 ## The state map — the spec for the probe
 
+The map now lives as data, `packages/tsugite/fixtures/states/field.states.ts`, drawn as a matrix
+on the Input bench (`fixtures/states/StateMatrix.astro`) and held complete by
+`tests/state-maps.test.ts`. The table below is its first draft.
+
 Eight conditions: hover, focus (focus-visible), invalid, disabled, read-only, autofill, empty
 (`:placeholder-shown`), and invalid carried by `aria-invalid` alone.
 
