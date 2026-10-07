@@ -17,6 +17,7 @@
     "./DevError/*": "./components/DevError/*",
     "./FileUpload/*": "./components/primitives/fields/FileUpload/*",
     "./Heading/*": "./components/primitives/typography/Heading/*",
+    "./Input/*": "./components/primitives/fields/Input/*",
     "./MonthField/*": "./components/primitives/fields/MonthField/*",
     "./MotionRegion/*": "./components/regions/MotionRegion/*",
     "./NavItem/*": "./components/primitives/NavItem/*",
