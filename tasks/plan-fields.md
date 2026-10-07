@@ -95,9 +95,13 @@ are current engines, not Chrome 109.
    required, `aria-invalid`, empty or filled); an `@engines` test drives hover and keyboard focus
    and records which pseudo-classes match, per engine, as a report. It decides the `?` cells;
    autofill cannot be driven by Playwright and stays a manual reading.
-2. Decide the state order from the report. (The invalid source is decided: `aria-invalid`.)
+2. **Decided:** the state order, lowest first: rest → hover → autofill → focus → invalid →
+   read-only (excluding disabled) → disabled; `:active` is not a field state. The invalid source
+   is `aria-invalid`.
 3. The `field` voice (done: md only, button's values, a text-box cell) and the `--color-field-*`
    roles in the theme.
-4. The skin on the base fields (TextField, Select, Textarea), the height contract rewritten to
+4. **Input** (in progress, 2026-10-07: the primitive, its skin in the decided order, the kernel's
+   field-validity script, the bench at /docs/input, height and validity tested @engines). Then
+   the skin on the other base fields (Select, Textarea), then TextField, the height contract rewritten to
    field == Button md (native and forced fallback, 0.1px), tagged `@engines`.
 5. AffixField onto the model. Stop.

@@ -1,0 +1,122 @@
+---
+// Input — the bench: every state alone, the combinations the state map says can meet
+// (tasks/plan-fields.md), the text types, and the height row the contract test measures:
+// an Input beside a Button md, on the native text-box and on the forced fallback.
+import Heading from "../components/primitives/typography/Heading/Heading.astro";
+import Text from "../components/primitives/typography/Text/Text.astro";
+import Caption from "../components/primitives/typography/Caption/Caption.astro";
+import Input from "../components/primitives/fields/Input/Input.astro";
+import LinkButton from "../components/primitives/buttons/Button/LinkButton.astro";
+
+const STATES: Array<{ label: string; props: Record<string, unknown> }> = [
+  { label: "rest", props: { value: "A value" } },
+  { label: "empty", props: { placeholder: "A placeholder" } },
+  { label: "hover", props: { value: "A value", "data-test-state": "hover" } },
+  { label: "autofill", props: { value: "you@example.com", "data-test-state": "autofill" } },
+  { label: "focus", props: { value: "A value", "data-test-state": "focus" } },
+  { label: "invalid", props: { value: "not an address", "aria-invalid": "true" } },
+  { label: "read-only", props: { value: "A value", readonly: true } },
+  { label: "disabled", props: { value: "A value", disabled: true } },
+];
+
+// The pairs and triples the state map calls reachable and worth seeing.
+const COMBINATIONS: Array<{ label: string; props: Record<string, unknown> }> = [
+  { label: "hover + focus", props: { value: "A value", "data-test-state": "hover focus" } },
+  { label: "focus + invalid", props: { value: "not an address", "aria-invalid": "true", "data-test-state": "focus" } },
+  { label: "hover + focus + invalid", props: { value: "not an address", "aria-invalid": "true", "data-test-state": "hover focus" } },
+  { label: "autofill + focus + invalid", props: { value: "you@example", "aria-invalid": "true", "data-test-state": "autofill focus" } },
+  { label: "read-only + focus", props: { value: "A value", readonly: true, "data-test-state": "focus" } },
+  { label: "read-only + invalid (aria)", props: { value: "A value", readonly: true, "aria-invalid": "true" } },
+  { label: "disabled + hover", props: { value: "A value", disabled: true, "data-test-state": "hover" } },
+  { label: "disabled + invalid (aria)", props: { value: "A value", disabled: true, "aria-invalid": "true" } },
+];
+
+const TYPES = ["text", "email", "number", "password", "search", "tel", "url", "date", "time"];
+---
+
+<section class="KitchenSink-section InputBench" id="Input">
+  <Heading text="Input" element="h2" size="2" />
+
+  <Text text="States" element="h3" size="lg" />
+  <div class="grid">
+    {STATES.map((s) => (
+      <div class="cell">
+        <Caption element="p" size="sm" text={s.label} />
+        <Input {...s.props} aria-label={s.label} />
+      </div>
+    ))}
+  </div>
+
+  <Text text="Combinations" element="h3" size="lg" />
+  <div class="grid">
+    {COMBINATIONS.map((s) => (
+      <div class="cell">
+        <Caption element="p" size="sm" text={s.label} />
+        <Input {...s.props} aria-label={s.label} />
+      </div>
+    ))}
+  </div>
+
+  <Text text="Types" element="h3" size="lg" />
+  <div class="grid">
+    {TYPES.map((type) => (
+      <div class="cell">
+        <Caption element="p" size="sm" text={type} />
+        <Input type={type} aria-label={type} />
+      </div>
+    ))}
+  </div>
+
+  <Text text="Validity" element="h3" size="lg" />
+  <Caption element="p" text="A required email. Untouched, it stays quiet; type and leave it, or submit, and the kernel marks it aria-invalid; correct it and the mark clears." />
+  <form class="validity" data-validity-form onsubmit="event.preventDefault()">
+    <Input type="email" required name="email" id="input-validity" aria-label="Email" placeholder="you@example.com" />
+    <LinkButton href="#" size="md" onclick="event.preventDefault(); this.closest('form').requestSubmit()">Submit</LinkButton>
+  </form>
+
+  <Text text="Height: an Input beside a Button md" element="h3" size="lg" />
+  <Caption element="p" text="The same height by construction, on the native text-box and on the forced fallback." />
+  <div class="height-rows">
+    <div class="height-row" data-height-row="native">
+      <Input value="1 200" aria-label="Amount, native" />
+      <LinkButton href="#" size="md">Send</LinkButton>
+    </div>
+    <div class="height-row" data-height-row="fallback" data-test-text-box="fallback">
+      <Input value="1 200" aria-label="Amount, fallback" />
+      <LinkButton href="#" size="md">Send</LinkButton>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+/* The bench's arrangement only; the fields are the component's. */
+.InputBench {
+  & .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+    gap: var(--size-md);
+  }
+
+  & .cell {
+    display: grid;
+    gap: var(--size-xs);
+  }
+
+  & .validity {
+    display: flex;
+    align-items: center;
+    gap: var(--size-sm);
+  }
+
+  & .height-rows {
+    display: grid;
+    gap: var(--size-md);
+  }
+
+  & .height-row {
+    display: flex;
+    align-items: center;
+    gap: var(--size-sm);
+  }
+}
+</style>
