@@ -18,7 +18,7 @@ const TYPES = ["text", "email", "number", "password", "search", "tel", "url", "d
   <Heading text="Input" element="h2" size="2" />
 
   <Text text="The state map" element="h3" size="lg" />
-  <Caption element="p" text="Every state alone on the diagonal, every pair below it. Unreachable pairs are empty, pairs reached only through aria-invalid and pairs not yet measured are marked. Hover a cell for its note." />
+  <Caption element="p" text="Every state alone on the diagonal, every pair below it. Cells that cannot happen are hatched — the mirror above the diagonal, and the unreachable pairs, with their reason. Pairs reached only through aria-invalid and pairs not yet measured are marked." />
   <StateMatrix map={fieldStates} component={Input} name="Input" />
 
   <Text text="Types" element="h3" size="lg" />

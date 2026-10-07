@@ -1,10 +1,10 @@
 ---
 // StateMatrix — a state map drawn: the states as rows and columns, each state alone on the
 // diagonal, every pair below it as a real instance, and the triples worth seeing under the
-// matrix. A pair that cannot meet, and the mirror above the diagonal, are hatched — the
-// pair keeps its reason; one reached only through
-// an attribute, or not yet measured, is drawn and marked. The map is data (types.ts), so
-// the matrix is complete by construction: a new state is a new row and column.
+// matrix. A pair that cannot meet, and the mirror above the diagonal, are hatched (the
+// pair keeps its reason); one reached only through an attribute, or not yet measured, is
+// drawn and marked. The map is data (types.ts), so the matrix is complete by construction:
+// a new state is a new row and column.
 import Caption from "../../components/primitives/typography/Caption/Caption.astro";
 import ScrollArea from "../../components/regions/ScrollArea/ScrollArea.astro";
 import { pairKey, propsFor, type StateMap } from "./types";
