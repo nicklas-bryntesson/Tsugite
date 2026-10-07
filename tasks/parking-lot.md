@@ -445,3 +445,7 @@ and did not decide. Each is a separate call.
   chrome; it uses runtime `color-mix` with a `TODO(token)` today (see the Chrome 109 row).
 - **The manifest's `adrs` field has no reader.** ADR tags left the page heads (#101); the
   field can go, or wait for a use.
+- **The e2e shards are uneven.** CI run 2026-10-07: tsugite e2e shard 3/3 took 12m14s, 1/3 and
+  2/3 about 8m; the wall clock (~13–14 min) is shard 3's. Even shards would land near 9–10 min.
+  Playwright shards by file, so one or two heavy suites sit together; split them, or move to
+  more shards.
