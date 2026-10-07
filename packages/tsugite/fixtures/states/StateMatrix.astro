@@ -5,6 +5,7 @@
 // an attribute, or not yet measured, is drawn and marked. The map is data (types.ts), so
 // the matrix is complete by construction: a new state is a new row and column.
 import Caption from "../../components/primitives/typography/Caption/Caption.astro";
+import ScrollArea from "../../components/regions/ScrollArea/ScrollArea.astro";
 import { pairKey, propsFor, type StateMap } from "./types";
 
 interface Props {
@@ -21,7 +22,7 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
 ---
 
 <div class="StateMatrix">
-  <div class="scroll">
+  <ScrollArea id={`state-matrix-${name}`} ariaLabel={`${name} state map`}>
     <table>
       <thead>
         <tr>
@@ -53,7 +54,7 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
         ))}
       </tbody>
     </table>
-  </div>
+  </ScrollArea>
 
   {map.triples.length > 0 && (
     <div class="triples">
@@ -73,10 +74,6 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
 .StateMatrix {
   display: grid;
   gap: var(--size-md);
-
-  & .scroll {
-    overflow-x: auto;
-  }
 
   & th,
   & td {
