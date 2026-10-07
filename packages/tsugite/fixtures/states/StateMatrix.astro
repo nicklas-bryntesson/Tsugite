@@ -74,7 +74,8 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
 /* A bench instrument: arrangement and ink only. */
 .StateMatrix {
   display: grid;
-  gap: var(--size-md);
+  /* the matrix and the triples are two blocks: --size-xl between, as on every docs page */
+  gap: var(--size-xl);
 
   & th,
   & td {
