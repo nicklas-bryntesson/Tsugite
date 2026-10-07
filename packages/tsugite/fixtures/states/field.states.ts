@@ -20,6 +20,7 @@ export const fieldStates: StateMap = {
     },
     { key: "value", label: "Value", props: { value: "A value" } },
   ],
+  rest: { key: "idle", label: "idle" },
   states: [
     { key: "hover", label: "hover", props: { "data-test-state": "hover" } },
     { key: "autofill", label: "autofill", props: { "data-test-state": "autofill" } },

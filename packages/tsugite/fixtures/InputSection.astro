@@ -18,7 +18,7 @@ const TYPES = ["text", "email", "number", "password", "search", "tel", "url", "d
   <Heading text="Input" element="h2" size="2" />
 
   <Text text="The state map" element="h3" size="lg" />
-  <Caption element="p" text="One table per content — empty, a placeholder, a value. Read a cell as the row's state and the column's state at once; each state alone is on the diagonal. The same cell across the three tables shows what a state does to each kind of content. What cannot happen is hatched with its reason; pairs reached only through aria-invalid, or not yet measured, are marked." />
+  <Caption element="p" text="One table per content — empty, a placeholder, a value. Read from the left: idle in the corner, each state alone down the idle column, two states at once below the diagonal. The same cell across the three tables shows what a state does to each kind of content. What cannot happen is hatched with its reason; pairs reached only through aria-invalid, or not yet measured, are marked." />
   <StateMatrix map={fieldStates} component={Input} name="Input" />
 
   <Text text="Types" element="h3" size="lg" />

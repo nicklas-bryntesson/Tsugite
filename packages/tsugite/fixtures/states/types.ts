@@ -36,6 +36,8 @@ export interface StateMap {
   /** the props every cell starts from */
   base: Record<string, unknown>;
   contents: Content[];
+  /** the state with no interaction: the first row and column, never in a pair */
+  rest: { key: string; label: string };
   states: State[];
   /** every unordered pair, keyed "a+b" in the order of `states` */
   pairs: Record<string, { reach: Reach; note?: string }>;
