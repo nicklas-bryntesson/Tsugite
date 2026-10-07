@@ -61,7 +61,7 @@ jobs:
           retention-days: 7
 
   e2e-docs:
-    # The docs app's own rooms: eleven tests, one server.
+    # The docs app's own rooms, Chromium only: one server.
     name: e2e (docs)
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -74,10 +74,33 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter docs exec playwright install --with-deps chromium
-      - run: pnpm --filter docs exec playwright test --reporter=line
+      - run: pnpm --filter docs exec playwright test --project=chromium --reporter=line
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-report-docs
+          path: apps/docs/test-results
+          retention-days: 7
+
+  e2e-engines:
+    # The @engines tests in Firefox and WebKit: contracts that must hold in every engine and
+    # probes that ask how engines differ. Chromium runs them in e2e (docs). Not required.
+    name: e2e (engines)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter docs exec playwright install --with-deps firefox webkit
+      - run: pnpm --filter docs exec playwright test --project=engines-firefox --project=engines-webkit --reporter=line
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-engines
           path: apps/docs/test-results
           retention-days: 7

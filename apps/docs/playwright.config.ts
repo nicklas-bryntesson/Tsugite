@@ -8,8 +8,15 @@ export default defineConfig({
   testMatch: ["**/*.e2e.test.js"],
   use: {
     baseURL: externalBase ?? "http://localhost:4321",
-    ...devices["Desktop Chrome"],
   },
+  // Every suite runs in Chromium. Tests tagged @engines — contracts that must hold in every
+  // engine, and probes that ask how engines differ — also run in Firefox and WebKit, as their
+  // own projects, so the main run never needs the other two browsers installed.
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    { name: "engines-firefox", grep: /@engines/, use: { ...devices["Desktop Firefox"] } },
+    { name: "engines-webkit", grep: /@engines/, use: { ...devices["Desktop Safari"] } },
+  ],
   webServer: externalBase
     ? undefined
     : {
