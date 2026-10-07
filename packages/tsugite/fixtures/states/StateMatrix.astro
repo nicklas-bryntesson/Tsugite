@@ -119,11 +119,11 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
     min-inline-size: 13rem;
   }
 
-  /* Cells that cannot hold an instance — the mirror above the diagonal, and a pair that
-     cannot meet — are struck through with the tables' diagonal hatch, so what can happen
-     reads at a glance. */
+  /* Cells that cannot hold an instance and need no word — the mirror above the diagonal,
+     and a pair that cannot meet with no reason given — are struck through with the tables'
+     diagonal hatch, so what can happen reads at a glance. */
   & td.above,
-  & td[data-reach="no"] {
+  & td[data-reach="no"]:not(:has(.note)) {
     background-image: repeating-linear-gradient(
       45deg,
       var(--color-surface-chrome),
@@ -131,6 +131,20 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
       transparent 0.125rem,
       transparent 0.5rem
     );
+  }
+
+  /* The row labels are a head: no docs-table row hatch —
+     here the hatch means "cannot happen". */
+  & tbody th[scope="row"] {
+    background-image: none;
+  }
+
+  /* The row labels and a pair that cannot meet and says why share one quiet fill, so the
+     reason reads as something to read rather than something struck out. */
+  & tbody th[scope="row"],
+  & td[data-reach="no"]:has(.note) {
+    /* TODO(token): trial on the raw ramp — no semantic role sits at SUMI-05 but disabled */
+    background-color: var(--COLOR-SUMI-05);
   }
 
   & .mark,
