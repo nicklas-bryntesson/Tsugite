@@ -172,6 +172,60 @@
   initial-value: rgb(237, 231, 223);
 }
 
+@property --color-field-surface {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(255, 255, 255);
+}
+
+@property --color-field-surface-hover {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(248, 244, 240);
+}
+
+@property --color-field-surface-autofill {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(238, 244, 254);
+}
+
+@property --color-field-text {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(18, 14, 10);
+}
+
+@property --color-field-placeholder {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(114, 106, 96);
+}
+
+@property --color-field-affix {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(114, 106, 96);
+}
+
+@property --color-field-border {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(18, 14, 10);
+}
+
+@property --color-field-border-hover {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(17, 36, 80);
+}
+
+@property --color-field-border-invalid {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(211, 62, 37);
+}
+
 @property --color-cta-gradient-1 {
   syntax: "<color>";
   inherits: true;
@@ -242,6 +296,15 @@
     --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
     --color-border-default: var(--COLOR-SUMI-30);
     --color-border-subtle: var(--COLOR-SUMI-20);
+    --color-field-surface: var(--COLOR-SUMI-00);
+    --color-field-surface-hover: var(--COLOR-SUMI-10);
+    --color-field-surface-autofill: var(--COLOR-AI-05);
+    --color-field-text: var(--COLOR-SUMI-90);
+    --color-field-placeholder: var(--COLOR-SUMI-60);
+    --color-field-affix: var(--COLOR-SUMI-60);
+    --color-field-border: var(--COLOR-SUMI-90);
+    --color-field-border-hover: var(--COLOR-AI-80);
+    --color-field-border-invalid: var(--COLOR-KAKI-50);
     --color-cta-gradient-1: var(--COLOR-AI-60);
     --color-cta-gradient-2: var(--COLOR-AI-70);
     --color-cta-gradient-3: var(--COLOR-YU-70);
@@ -281,6 +344,15 @@
     --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
     --color-border-default: var(--COLOR-SUMI-95);
     --color-border-subtle: var(--COLOR-SUMI-95);
+    --color-field-surface: var(--COLOR-SUMI-00);
+    --color-field-surface-hover: transparent;
+    --color-field-surface-autofill: var(--COLOR-SUMI-00);
+    --color-field-text: var(--COLOR-SUMI-95);
+    --color-field-placeholder: var(--COLOR-SUMI-95);
+    --color-field-affix: var(--COLOR-SUMI-95);
+    --color-field-border: var(--COLOR-SUMI-95);
+    --color-field-border-hover: var(--COLOR-SUMI-95);
+    --color-field-border-invalid: var(--COLOR-KAKI-80);
     --color-cta-gradient-1: var(--COLOR-AI-80);
     --color-cta-gradient-2: var(--COLOR-AI-80);
     --color-cta-gradient-3: var(--COLOR-AI-80);
@@ -320,6 +392,15 @@
     --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
     --color-border-default: var(--COLOR-SUMI-60);
     --color-border-subtle: var(--COLOR-SUMI-70);
+    --color-field-surface: var(--COLOR-SUMI-90);
+    --color-field-surface-hover: var(--COLOR-SUMI-80);
+    --color-field-surface-autofill: var(--COLOR-AI-90);
+    --color-field-text: var(--COLOR-SUMI-05);
+    --color-field-placeholder: var(--COLOR-SUMI-35);
+    --color-field-affix: var(--COLOR-SUMI-35);
+    --color-field-border: var(--COLOR-SUMI-05);
+    --color-field-border-hover: var(--COLOR-AI-30);
+    --color-field-border-invalid: var(--COLOR-KAKI-30);
     --color-cta-gradient-1: var(--COLOR-AI-30);
     --color-cta-gradient-2: var(--COLOR-AI-20);
     --color-cta-gradient-3: var(--COLOR-YU-25);
@@ -359,6 +440,15 @@
     --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
     --color-border-default: var(--COLOR-SUMI-00);
     --color-border-subtle: var(--COLOR-SUMI-00);
+    --color-field-surface: var(--COLOR-SUMI-95);
+    --color-field-surface-hover: transparent;
+    --color-field-surface-autofill: var(--COLOR-SUMI-95);
+    --color-field-text: var(--COLOR-SUMI-00);
+    --color-field-placeholder: var(--COLOR-SUMI-00);
+    --color-field-affix: var(--COLOR-SUMI-00);
+    --color-field-border: var(--COLOR-SUMI-00);
+    --color-field-border-hover: var(--COLOR-SUMI-00);
+    --color-field-border-invalid: var(--COLOR-KAKI-10);
     --color-cta-gradient-1: var(--COLOR-AI-10);
     --color-cta-gradient-2: var(--COLOR-AI-10);
     --color-cta-gradient-3: var(--COLOR-AI-10);
@@ -402,6 +492,15 @@
     --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
     --color-border-default: var(--COLOR-SUMI-30);
     --color-border-subtle: var(--COLOR-SUMI-20);
+    --color-field-surface: var(--COLOR-SUMI-00);
+    --color-field-surface-hover: var(--COLOR-SUMI-10);
+    --color-field-surface-autofill: var(--COLOR-AI-05);
+    --color-field-text: var(--COLOR-SUMI-90);
+    --color-field-placeholder: var(--COLOR-SUMI-60);
+    --color-field-affix: var(--COLOR-SUMI-60);
+    --color-field-border: var(--COLOR-SUMI-90);
+    --color-field-border-hover: var(--COLOR-AI-80);
+    --color-field-border-invalid: var(--COLOR-KAKI-50);
     --color-cta-gradient-1: var(--COLOR-AI-60);
     --color-cta-gradient-2: var(--COLOR-AI-70);
     --color-cta-gradient-3: var(--COLOR-YU-70);
@@ -441,6 +540,15 @@
     --color-shadow-popup: 0px 0px 1px rgba(3, 7, 18, 0.01), 0px 1px 4px rgba(3, 7, 18, 0.01), 0px 2px 9px rgba(3, 7, 18, 0.02), 0px 4px 17px rgba(3, 7, 18, 0.02), 0px 7px 26px rgba(3, 7, 18, 0.03), 0px 10px 37px rgba(3, 7, 18, 0.03), 0px 13px 51px rgba(3, 7, 18, 0.04), 0px 17px 66px rgba(3, 7, 18, 0.04), 0px 22px 84px rgba(3, 7, 18, 0.05);
     --color-border-default: var(--COLOR-SUMI-95);
     --color-border-subtle: var(--COLOR-SUMI-95);
+    --color-field-surface: var(--COLOR-SUMI-00);
+    --color-field-surface-hover: transparent;
+    --color-field-surface-autofill: var(--COLOR-SUMI-00);
+    --color-field-text: var(--COLOR-SUMI-95);
+    --color-field-placeholder: var(--COLOR-SUMI-95);
+    --color-field-affix: var(--COLOR-SUMI-95);
+    --color-field-border: var(--COLOR-SUMI-95);
+    --color-field-border-hover: var(--COLOR-SUMI-95);
+    --color-field-border-invalid: var(--COLOR-KAKI-80);
     --color-cta-gradient-1: var(--COLOR-AI-80);
     --color-cta-gradient-2: var(--COLOR-AI-80);
     --color-cta-gradient-3: var(--COLOR-AI-80);
@@ -480,6 +588,15 @@
     --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
     --color-border-default: var(--COLOR-SUMI-60);
     --color-border-subtle: var(--COLOR-SUMI-70);
+    --color-field-surface: var(--COLOR-SUMI-90);
+    --color-field-surface-hover: var(--COLOR-SUMI-80);
+    --color-field-surface-autofill: var(--COLOR-AI-90);
+    --color-field-text: var(--COLOR-SUMI-05);
+    --color-field-placeholder: var(--COLOR-SUMI-35);
+    --color-field-affix: var(--COLOR-SUMI-35);
+    --color-field-border: var(--COLOR-SUMI-05);
+    --color-field-border-hover: var(--COLOR-AI-30);
+    --color-field-border-invalid: var(--COLOR-KAKI-30);
     --color-cta-gradient-1: var(--COLOR-AI-30);
     --color-cta-gradient-2: var(--COLOR-AI-20);
     --color-cta-gradient-3: var(--COLOR-YU-25);
@@ -519,6 +636,15 @@
     --color-shadow-popup: 0px 0px 1px rgba(0, 0, 0, 0.20), 0px 1px 4px rgba(0, 0, 0, 0.20), 0px 2px 9px rgba(0, 0, 0, 0.24), 0px 4px 17px rgba(0, 0, 0, 0.24), 0px 7px 26px rgba(0, 0, 0, 0.28), 0px 10px 37px rgba(0, 0, 0, 0.28), 0px 13px 51px rgba(0, 0, 0, 0.32), 0px 17px 66px rgba(0, 0, 0, 0.32), 0px 22px 84px rgba(0, 0, 0, 0.36);
     --color-border-default: var(--COLOR-SUMI-00);
     --color-border-subtle: var(--COLOR-SUMI-00);
+    --color-field-surface: var(--COLOR-SUMI-95);
+    --color-field-surface-hover: transparent;
+    --color-field-surface-autofill: var(--COLOR-SUMI-95);
+    --color-field-text: var(--COLOR-SUMI-00);
+    --color-field-placeholder: var(--COLOR-SUMI-00);
+    --color-field-affix: var(--COLOR-SUMI-00);
+    --color-field-border: var(--COLOR-SUMI-00);
+    --color-field-border-hover: var(--COLOR-SUMI-00);
+    --color-field-border-invalid: var(--COLOR-KAKI-10);
     --color-cta-gradient-1: var(--COLOR-AI-10);
     --color-cta-gradient-2: var(--COLOR-AI-10);
     --color-cta-gradient-3: var(--COLOR-AI-10);

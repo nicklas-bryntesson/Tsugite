@@ -122,6 +122,18 @@ export const typeVoices = {
     featureSettings: "normal",
     baselineOffset: "0",
   },
+  field: {
+    // The voice inside a field: the value, the placeholder, the affixes, and in time the
+    // type inside the custom overlays (calendar cells, picklist options). Button's values
+    // today, on purpose: same value, separate knob, and at the same size a field and a
+    // button stand on one height. Its colours are roles (--color-field-*), not the voice.
+    family: "--INTER",
+    weights: { default: "--INTER-400" },
+    lineHeight: "1.3",
+    letterSpacing: "normal",
+    featureSettings: "normal",
+    baselineOffset: "0",
+  },
   nav: {
     // The wayfinding voice: what a site's navigation is set in. Label's values today,
     // same value, separate knob — condensed navigation over airy labels is one row away.
@@ -175,6 +187,9 @@ export const typeSizes = {
   "button": { floor: "0.9375rem", mobile: "1rem", desktop: "1.125rem", wide: "1.125rem" },
   "button-large": { floor: "1.0625rem", mobile: "1.25rem", desktop: "1.375rem", wide: "1.375rem" },
 
+  // One stop: fields come in md only. Button md's values, so the heights meet.
+  "field": { floor: "0.9375rem", mobile: "1rem", desktop: "1.125rem", wide: "1.125rem" },
+
   "nav-small": { floor: "0.75rem", mobile: "0.75rem", desktop: "0.85rem", wide: "0.85rem" },
   "nav": { floor: "0.9375rem", mobile: "1rem", desktop: "1.125rem", wide: "1.125rem" },
   "nav-large": { floor: "1.0625rem", mobile: "1.25rem", desktop: "1.375rem", wide: "1.375rem" },
@@ -202,6 +217,7 @@ export const typeLineLengths = {
   "code": "80ch",
   "label-small": "50ch", "label": "50ch", "label-large": "50ch",
   "button-small": "30ch", "button": "30ch", "button-large": "30ch",
+  "field": "30ch",
   "nav-small": "30ch", "nav": "30ch", "nav-large": "30ch",
   "preamble-small": "60ch", "preamble": "56ch", "preamble-large": "52ch",
 };

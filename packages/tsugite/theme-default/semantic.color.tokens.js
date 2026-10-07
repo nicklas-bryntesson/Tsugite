@@ -269,6 +269,76 @@ export const semanticColorTokens = {
     "dark-contrast": "var(--COLOR-SUMI-00)",
   },
 
+  // ── Fields ───────────────────────────────────────────────────────────────────
+  // The field skin's roles (the fields job, tasks/plan-fields.md). Each starts at the value
+  // the fields show today, with two exceptions: the hover outline, a system colour
+  // (CanvasText) today, becomes the primary interactive blue; and the autofill ground is
+  // new, a hint of the brand blue that reads as "filled for you", neither an error nor a
+  // warning. Disabled reads --color-disabled-*, focus the shared ring.
+  /** Ground of a field. */
+  "--color-field-surface": {
+    "light": "var(--COLOR-SUMI-00)",
+    "dark": "var(--COLOR-SUMI-90)",
+    "light-contrast": "var(--COLOR-SUMI-00)",
+    "dark-contrast": "var(--COLOR-SUMI-95)",
+  },
+  /** Ground of a hovered field. */
+  "--color-field-surface-hover": {
+    "light": "var(--COLOR-SUMI-10)",
+    "dark": "var(--COLOR-SUMI-80)",
+    "light-contrast": "transparent",
+    "dark-contrast": "transparent",
+  },
+  /** Ground of a field the browser filled: the owned autofill state. */
+  "--color-field-surface-autofill": {
+    "light": "var(--COLOR-AI-05)",
+    "dark": "var(--COLOR-AI-90)",
+    "light-contrast": "var(--COLOR-SUMI-00)",
+    "dark-contrast": "var(--COLOR-SUMI-95)",
+  },
+  /** Ink of a field's value. */
+  "--color-field-text": {
+    "light": "var(--COLOR-SUMI-90)",
+    "dark": "var(--COLOR-SUMI-05)",
+    "light-contrast": "var(--COLOR-SUMI-95)",
+    "dark-contrast": "var(--COLOR-SUMI-00)",
+  },
+  /** Ink of a field's placeholder. */
+  "--color-field-placeholder": {
+    "light": "var(--COLOR-SUMI-60)",
+    "dark": "var(--COLOR-SUMI-35)",
+    "light-contrast": "var(--COLOR-SUMI-95)",
+    "dark-contrast": "var(--COLOR-SUMI-00)",
+  },
+  /** Ink of a field's prefix and suffix. */
+  "--color-field-affix": {
+    "light": "var(--COLOR-SUMI-60)",
+    "dark": "var(--COLOR-SUMI-35)",
+    "light-contrast": "var(--COLOR-SUMI-95)",
+    "dark-contrast": "var(--COLOR-SUMI-00)",
+  },
+  /** Outline of a field at rest. */
+  "--color-field-border": {
+    "light": "var(--COLOR-SUMI-90)",
+    "dark": "var(--COLOR-SUMI-05)",
+    "light-contrast": "var(--COLOR-SUMI-95)",
+    "dark-contrast": "var(--COLOR-SUMI-00)",
+  },
+  /** Outline of a hovered field. */
+  "--color-field-border-hover": {
+    "light": "var(--COLOR-AI-80)",
+    "dark": "var(--COLOR-AI-30)",
+    "light-contrast": "var(--COLOR-SUMI-95)",
+    "dark-contrast": "var(--COLOR-SUMI-00)",
+  },
+  /** Outline of a field marked aria-invalid. */
+  "--color-field-border-invalid": {
+    "light": raw("KAKI-50"),
+    "dark": raw("KAKI-30"),
+    "light-contrast": raw("KAKI-80"),
+    "dark-contrast": raw("KAKI-10"),
+  },
+
   // ── The CTA gradient ───────────────────────────────────────────────────────
   // Four stops the CtaButton's animated gradient sweeps through, all in the blue: indigo,
   // deeper indigo, onsen water at its deep step, the deepest indigo. One family keeps the
