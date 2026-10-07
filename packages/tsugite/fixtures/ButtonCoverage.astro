@@ -1,0 +1,92 @@
+---
+// ButtonCoverage — every button, every state: the button state maps (states/button.states.ts)
+// drawn for each emphasis × intent of an action and each emphasis of a link, one table per
+// content, sm, md and lg in every cell, square and pill. Nothing is picked out: what the bench shows for two
+// emphases, this shows for all of them. /docs/button/coverage mounts it.
+import Heading from "../components/primitives/typography/Heading/Heading.astro";
+import Text from "../components/primitives/typography/Text/Text.astro";
+import Caption from "../components/primitives/typography/Caption/Caption.astro";
+import StateMatrix from "./states/StateMatrix.astro";
+import ButtonCell from "./states/ButtonCell.astro";
+import { actionStates, linkStates } from "./states/button.states";
+import { button } from "../recipes/button.recipe";
+
+const EMPHASES = button.axes.emphasis.values;
+const INTENTS = button.axes.intent.values;
+/** An emphasis the recipe closes (an absent cell on emphasis alone) is drawn as one closed
+ *  cell with the recipe's reason, not as tables of refusals; opening it in the recipe draws
+ *  its tables here with no change to this file. */
+const closedBy = (emphasis: string) =>
+  button.absent.find((a) => Object.keys(a.cells).length === 1 && (a.cells as Record<string, unknown>).emphasis === emphasis)?.message ?? null;
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+---
+
+<div class="ButtonCoverage">
+  <section class="group" id="action">
+    <Heading text="Action — <button>" element="h2" size="2" />
+    {EMPHASES.map((emphasis) =>
+      closedBy(emphasis) ? (
+        <section class="variant" id={`action-${emphasis}`}>
+          <Text text={`${capitalize(emphasis)} — closed`} element="h3" size="lg" />
+          <div class="closed"><Caption element="p" size="sm" text={closedBy(emphasis)!} /></div>
+        </section>
+      ) : INTENTS.map((intent) => (
+        <section class="variant" id={`action-${emphasis}-${intent}`}>
+          <Text text={`${capitalize(emphasis)}, ${intent}`} element="h3" size="lg" />
+          <StateMatrix
+            map={{ ...actionStates, base: { ...actionStates.base, emphasis, intent, withPill: true } }}
+            component={ButtonCell}
+            name={`${capitalize(emphasis)} ${intent} button`}
+          />
+        </section>
+      )),
+    )}
+  </section>
+
+  <section class="group" id="link">
+    <Heading text="Link — <a>" element="h2" size="2" />
+    {EMPHASES.map((emphasis) => closedBy(emphasis) ? (
+      <section class="variant" id={`link-${emphasis}`}>
+        <Text text={`${capitalize(emphasis)} — closed`} element="h3" size="lg" />
+        <div class="closed"><Caption element="p" size="sm" text={closedBy(emphasis)!} /></div>
+      </section>
+    ) : (
+      <section class="variant" id={`link-${emphasis}`}>
+        <Text text={capitalize(emphasis)} element="h3" size="lg" />
+        <StateMatrix map={{ ...linkStates, base: { ...linkStates.base, emphasis, withPill: true } }} component={ButtonCell} name={`${capitalize(emphasis)} link button`} />
+      </section>
+    ))}
+  </section>
+</div>
+
+<style is:global>
+/* A bench instrument: arrangement only. Two steps of flow — between variants, and a larger
+   one between the action and the link. */
+.ButtonCoverage {
+  display: grid;
+  gap: var(--size-2xl);
+
+  & .group {
+    display: grid;
+    gap: var(--size-xl);
+  }
+
+  & .variant {
+    display: grid;
+    gap: var(--size-md);
+  }
+
+  /* a closed emphasis: the state matrix's hatch for "cannot happen", with the recipe's reason */
+  & .closed {
+    padding: var(--size-md);
+    color: var(--color-text-secondary);
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--color-surface-chrome),
+      var(--color-surface-chrome) 0.125rem,
+      transparent 0.125rem,
+      transparent 0.5rem
+    );
+  }
+}
+</style>

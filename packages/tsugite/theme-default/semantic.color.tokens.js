@@ -110,6 +110,13 @@ export const semanticColorTokens = {
     "light-contrast": "var(--COLOR-SUMI-95)",
     "dark-contrast": "var(--COLOR-SUMI-00)",
   },
+  /** Keyboard focus ring while pressed (a held Space): one step more contrast than the focus ring. */
+  "--color-focus-pressedRing": {
+    "light": "var(--COLOR-AI-60)",
+    "dark": "var(--COLOR-AI-20)",
+    "light-contrast": "var(--COLOR-SUMI-95)",
+    "dark-contrast": "var(--COLOR-SUMI-00)",
+  },
 
   /** Decorative promo glow (CtaButton) — calm/off in the contrast modes. */
   "--color-interactive-glow": {

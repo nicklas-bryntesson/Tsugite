@@ -88,6 +88,12 @@
   initial-value: rgb(78, 131, 219);
 }
 
+@property --color-focus-pressedRing {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(45, 86, 164);
+}
+
 @property --color-interactive-glow {
   syntax: "<color>";
   inherits: true;
@@ -281,6 +287,7 @@
     --color-interactive-secondary-hoverSurface: var(--COLOR-SUMI-10);
     --color-interactive-hoverRing: rgba(173, 204, 244, 0.6);
     --color-focus-ring: var(--COLOR-AI-50);
+    --color-focus-pressedRing: var(--COLOR-AI-60);
     --color-interactive-glow: var(--COLOR-AI-50);
     --color-scrim-media: rgba(5, 16, 44, 0.55);
     --color-disabled-text: var(--COLOR-SUMI-70);
@@ -329,6 +336,7 @@
     --color-interactive-secondary-hoverSurface: transparent;
     --color-interactive-hoverRing: var(--COLOR-SUMI-95);
     --color-focus-ring: var(--COLOR-SUMI-95);
+    --color-focus-pressedRing: var(--COLOR-SUMI-95);
     --color-interactive-glow: transparent;
     --color-scrim-media: rgba(6, 4, 2, 0.78);
     --color-disabled-text: var(--COLOR-SUMI-70);
@@ -377,6 +385,7 @@
     --color-interactive-secondary-hoverSurface: var(--COLOR-SUMI-80);
     --color-interactive-hoverRing: rgba(45, 86, 164, 0.6);
     --color-focus-ring: var(--COLOR-AI-30);
+    --color-focus-pressedRing: var(--COLOR-AI-20);
     --color-interactive-glow: var(--COLOR-AI-40);
     --color-scrim-media: rgba(6, 4, 2, 0.65);
     --color-disabled-text: var(--COLOR-SUMI-40);
@@ -425,6 +434,7 @@
     --color-interactive-secondary-hoverSurface: transparent;
     --color-interactive-hoverRing: var(--COLOR-SUMI-00);
     --color-focus-ring: var(--COLOR-SUMI-00);
+    --color-focus-pressedRing: var(--COLOR-SUMI-00);
     --color-interactive-glow: transparent;
     --color-scrim-media: rgba(6, 4, 2, 0.78);
     --color-disabled-text: var(--COLOR-SUMI-40);
@@ -477,6 +487,7 @@
     --color-interactive-secondary-hoverSurface: var(--COLOR-SUMI-10);
     --color-interactive-hoverRing: rgba(173, 204, 244, 0.6);
     --color-focus-ring: var(--COLOR-AI-50);
+    --color-focus-pressedRing: var(--COLOR-AI-60);
     --color-interactive-glow: var(--COLOR-AI-50);
     --color-scrim-media: rgba(5, 16, 44, 0.55);
     --color-disabled-text: var(--COLOR-SUMI-70);
@@ -525,6 +536,7 @@
     --color-interactive-secondary-hoverSurface: transparent;
     --color-interactive-hoverRing: var(--COLOR-SUMI-95);
     --color-focus-ring: var(--COLOR-SUMI-95);
+    --color-focus-pressedRing: var(--COLOR-SUMI-95);
     --color-interactive-glow: transparent;
     --color-scrim-media: rgba(6, 4, 2, 0.78);
     --color-disabled-text: var(--COLOR-SUMI-70);
@@ -573,6 +585,7 @@
     --color-interactive-secondary-hoverSurface: var(--COLOR-SUMI-80);
     --color-interactive-hoverRing: rgba(45, 86, 164, 0.6);
     --color-focus-ring: var(--COLOR-AI-30);
+    --color-focus-pressedRing: var(--COLOR-AI-20);
     --color-interactive-glow: var(--COLOR-AI-40);
     --color-scrim-media: rgba(6, 4, 2, 0.65);
     --color-disabled-text: var(--COLOR-SUMI-40);
@@ -621,6 +634,7 @@
     --color-interactive-secondary-hoverSurface: transparent;
     --color-interactive-hoverRing: var(--COLOR-SUMI-00);
     --color-focus-ring: var(--COLOR-SUMI-00);
+    --color-focus-pressedRing: var(--COLOR-SUMI-00);
     --color-interactive-glow: transparent;
     --color-scrim-media: rgba(6, 4, 2, 0.78);
     --color-disabled-text: var(--COLOR-SUMI-40);

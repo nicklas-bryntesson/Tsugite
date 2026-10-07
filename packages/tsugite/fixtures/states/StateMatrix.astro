@@ -35,7 +35,7 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
         <Caption element="p" size="sm" text={map.rest.label} />
         <Component {...propsFor(map, [], content)} aria-label={`${name}: ${map.rest.label}, ${content.key}`} />
       </div>
-      <ScrollArea id={`state-matrix-${name}-${content.key}`} ariaLabel={`${name} state map, ${content.label}`}>
+      <ScrollArea id={`state-matrix-${name.replace(/\s+/g, "-")}-${content.key}`} ariaLabel={`${name} state map, ${content.label}`}>
         <table>
           <thead>
             <tr>
@@ -102,11 +102,12 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
     gap: var(--size-md);
   }
 
-  /* the rest: one cell, the content with no state, a cell's width */
+  /* the rest: one cell, the content with no state, at least a cell's width */
   & .rest {
     display: grid;
+    justify-items: start;
     gap: var(--size-sm);
-    inline-size: 13rem;
+    min-inline-size: 13rem;
   }
 
   & th,
@@ -115,8 +116,10 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
     vertical-align: top;
   }
 
+  /* air around each instance, so a focus ring or a shadow never touches the cell edge */
   & td {
     min-inline-size: 13rem;
+    padding: var(--size-md);
   }
 
   /* Cells that cannot hold an instance and need no word — the mirror above the diagonal,
@@ -139,12 +142,15 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
     background-image: none;
   }
 
-  /* The row labels and a pair that cannot meet and says why share one quiet fill, so the
-     reason reads as something to read rather than something struck out. */
-  & tbody th[scope="row"],
+  /* The row labels are a head, filled as the column heads are; a pair that cannot meet and
+     says why takes the quiet inset fill, so the reason reads as something to read rather
+     than something struck out. Both are roles, so both follow the theme. */
+  & tbody th[scope="row"] {
+    background-color: var(--color-surface-chrome);
+  }
+
   & td[data-reach="no"]:has(.note) {
-    /* TODO(token): trial on the raw ramp — no semantic role sits at SUMI-05 but disabled */
-    background-color: var(--COLOR-SUMI-05);
+    background-color: var(--color-surface-inset);
   }
 
   & .mark,

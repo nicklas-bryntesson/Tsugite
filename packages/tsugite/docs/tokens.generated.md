@@ -35,7 +35,7 @@ Voices and their volumes (`data-prominence`, primary | subtle): `neutral` (prima
 The layer a component's slot resolves to when no theme channel applies, and the
 only layer allowed to reference RAW.
 
-### Colour — `--color-*` (43, four-mode)
+### Colour — `--color-*` (44, four-mode)
 
 Each name switches light · dark · light-contrast · dark-contrast by itself; the
 component never mentions appearance (ADR-0004 §2).
@@ -55,6 +55,7 @@ component never mentions appearance (ADR-0004 §2).
 | `--color-interactive-secondary-hoverSurface` | Secondary action surface on hover. |
 | `--color-interactive-hoverRing` | Ring drawn around an interactive element on hover. |
 | `--color-focus-ring` | Keyboard focus ring. |
+| `--color-focus-pressedRing` | Keyboard focus ring while pressed (a held Space): one step more contrast than the focus ring. |
 | `--color-interactive-glow` | Decorative promo glow (CtaButton) — calm/off in the contrast modes. |
 | `--color-scrim-media` | Scrim over hero media — heavier where legibility is law. |
 | `--color-disabled-text` | Ink of a disabled control. |
