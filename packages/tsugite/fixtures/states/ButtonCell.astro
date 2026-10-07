@@ -1,36 +1,49 @@
 ---
 // ButtonCell — one state-matrix cell for a button: the cell's props drawn at every size,
-// side by side, so the size scale reads in every state without tripling the tables. The
-// label arrives as a prop because StateMatrix renders its component without children.
+// side by side, so the size scale reads in every state without tripling the tables; with
+// `withPill`, a second row draws the same sizes as pills, since the shape changes no state.
+// The label arrives as a prop because StateMatrix renders its component without children.
 import ActionButton from "../../components/primitives/buttons/Button/ActionButton.astro";
 import LinkButton from "../../components/primitives/buttons/Button/LinkButton.astro";
 
 const SIZES = ["sm", "md", "lg"] as const;
-const { element, label, "aria-label": name, ...props } = Astro.props;
+const { element, label, withPill = false, "aria-label": name, ...props } = Astro.props;
+const shapes = withPill ? [false, true] : [false];
+const nameOf = (size: string, pill: boolean) => (label ? undefined : `${name}, ${size}${pill ? ", pill" : ""}`);
 ---
 
 <div class="ButtonCell">
-  {SIZES.map((size) =>
-    element === "a" ? (
-      <LinkButton href="#" {...props} size={size} aria-label={label ? undefined : `${name}, ${size}`}>{label}</LinkButton>
-    ) : (
-      <ActionButton {...props} size={size} aria-label={label ? undefined : `${name}, ${size}`}>{label}</ActionButton>
-    ),
-  )}
+  {shapes.map((pill) => (
+    <div class="row">
+      {SIZES.map((size) =>
+        element === "a" ? (
+          <LinkButton href="#" {...props} size={size} pill={pill} aria-label={nameOf(size, pill)}>{label}</LinkButton>
+        ) : (
+          <ActionButton {...props} size={size} pill={pill} aria-label={nameOf(size, pill)}>{label}</ActionButton>
+        ),
+      )}
+    </div>
+  ))}
 </div>
 
 <style is:global>
 /* A bench instrument: arrangement only. */
 .ButtonCell {
-  /* one row: the size scale reads left to right; the matrix scrolls rather than wrap it */
-  display: flex;
-  align-items: center;
+  display: grid;
+  justify-items: start;
   gap: var(--size-sm);
-  /* the row claims its full width, so the table cell grows to hold it */
-  min-inline-size: max-content;
+
+  /* one row per shape: the size scale reads left to right; the matrix scrolls rather than
+     wrap it, so the row claims its full width and the table cell grows to hold it */
+  & .row {
+    display: flex;
+    align-items: center;
+    gap: var(--size-sm);
+    min-inline-size: max-content;
+  }
 
   /* a button keeps its own width; the table grows and scrolls instead of squeezing it */
-  & > * {
+  & .row > * {
     flex: none;
   }
 }
