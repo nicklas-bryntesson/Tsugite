@@ -35,7 +35,7 @@ const MARK = { yes: "", no: "unreachable", aria: "aria only", unknown: "? unmeas
         <Caption element="p" size="sm" text={map.rest.label} />
         <Component {...propsFor(map, [], content)} aria-label={`${name}: ${map.rest.label}, ${content.key}`} />
       </div>
-      <ScrollArea id={`state-matrix-${name}-${content.key}`} ariaLabel={`${name} state map, ${content.label}`}>
+      <ScrollArea id={`state-matrix-${name.replace(/\s+/g, "-")}-${content.key}`} ariaLabel={`${name} state map, ${content.label}`}>
         <table>
           <thead>
             <tr>
