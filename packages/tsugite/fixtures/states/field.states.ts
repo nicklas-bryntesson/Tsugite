@@ -4,15 +4,29 @@
 import type { StateMap } from "./types";
 
 export const fieldStates: StateMap = {
-  base: { value: "A value" },
+  base: {},
+  contents: [
+    {
+      key: "empty",
+      label: "Empty: no value, no placeholder",
+      props: { value: null, placeholder: null },
+      excludes: { autofill: "an autofilled field has a value" },
+    },
+    {
+      key: "placeholder",
+      label: "Placeholder: no value, a placeholder",
+      props: { value: null, placeholder: "A placeholder" },
+      excludes: { autofill: "an autofilled field has a value" },
+    },
+    { key: "value", label: "Value", props: { value: "A value" } },
+  ],
   states: [
     { key: "hover", label: "hover", props: { "data-test-state": "hover" } },
-    { key: "autofill", label: "autofill", props: { "data-test-state": "autofill", value: "you@example.com" } },
+    { key: "autofill", label: "autofill", props: { "data-test-state": "autofill" } },
     { key: "focus", label: "focus", props: { "data-test-state": "focus" } },
-    { key: "invalid", label: "invalid", props: { "aria-invalid": "true", value: "not an address" } },
+    { key: "invalid", label: "invalid", props: { "aria-invalid": "true" } },
     { key: "readonly", label: "read-only", props: { readonly: true } },
     { key: "disabled", label: "disabled", props: { disabled: true } },
-    { key: "empty", label: "empty", props: { value: null, placeholder: "A placeholder" } },
   ],
   pairs: {
     "hover+autofill": { reach: "yes" },
@@ -20,22 +34,16 @@ export const fieldStates: StateMap = {
     "hover+invalid": { reach: "yes" },
     "hover+readonly": { reach: "yes" },
     "hover+disabled": { reach: "yes", note: ":hover matches a disabled input in all three engines" },
-    "hover+empty": { reach: "yes" },
     "autofill+focus": { reach: "yes" },
     "autofill+invalid": { reach: "yes", note: "a filled value can fail the field's rules" },
     "autofill+readonly": { reach: "unknown", note: "does an engine fill a read-only field? read by hand" },
     "autofill+disabled": { reach: "unknown", note: "does :autofill survive a script disabling the field? read by hand" },
-    "autofill+empty": { reach: "no", note: "an autofilled field has a value" },
     "focus+invalid": { reach: "yes" },
     "focus+readonly": { reach: "yes" },
     "focus+disabled": { reach: "no", note: "a disabled field takes no focus" },
-    "focus+empty": { reach: "yes" },
     "invalid+readonly": { reach: "aria", note: "barred from validation: :invalid never matches" },
     "invalid+disabled": { reach: "aria", note: "barred from validation: :invalid never matches" },
-    "invalid+empty": { reach: "yes", note: "a required field left empty" },
     "readonly+disabled": { reach: "yes", note: "both attributes; disabled answers" },
-    "readonly+empty": { reach: "yes" },
-    "disabled+empty": { reach: "yes" },
   },
   triples: [
     { keys: ["hover", "focus", "invalid"], note: "pointing at the field being corrected" },

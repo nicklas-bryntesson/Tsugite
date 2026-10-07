@@ -14,6 +14,10 @@ describe("state maps answer every pair", () => {
       for (let i = 0; i < order.length; i++) for (let j = i + 1; j < order.length; j++) expected.add(pairKey(order[i], order[j], order));
       expect(new Set(Object.keys(map.pairs))).toEqual(expected);
     });
+    it(`${name}: has contents, and every exclusion names a known state`, () => {
+      expect(map.contents.length, `${name}: no contents`).toBeGreaterThan(0);
+      for (const c of map.contents) for (const k of Object.keys(c.excludes ?? {})) expect(order, `${name}/${c.key} excludes "${k}"`).toContain(k);
+    });
     it(`${name}: every triple names known states and no unreachable pair`, () => {
       for (const t of map.triples) {
         for (const k of t.keys) expect(order, `${name}: triple names "${k}"`).toContain(k);
