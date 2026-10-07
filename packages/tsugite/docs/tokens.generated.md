@@ -35,7 +35,7 @@ Voices and their volumes (`data-prominence`, primary | subtle): `neutral` (prima
 The layer a component's slot resolves to when no theme channel applies, and the
 only layer allowed to reference RAW.
 
-### Colour — `--color-*` (34, four-mode)
+### Colour — `--color-*` (43, four-mode)
 
 Each name switches light · dark · light-contrast · dark-contrast by itself; the
 component never mentions appearance (ADR-0004 §2).
@@ -70,6 +70,15 @@ component never mentions appearance (ADR-0004 §2).
 | `--color-shadow-popup` | Popup/elevation ink — a shadow reads as depth on light ground; on dark the same ink is invisible, so the dark rows are darker and more opaque (inherited from the reference seam's light-dark() pairs, now explicit mode rows — light-dark() leaves the generated output entirely). |
 | `--color-border-default` | Default hairline between surfaces. |
 | `--color-border-subtle` | Quieter hairline for inner divisions. |
+| `--color-field-surface` | Ground of a field. |
+| `--color-field-surface-hover` | Ground of a hovered field. |
+| `--color-field-surface-autofill` | Ground of a field the browser filled: the owned autofill state. |
+| `--color-field-text` | Ink of a field's value. |
+| `--color-field-placeholder` | Ink of a field's placeholder. |
+| `--color-field-affix` | Ink of a field's prefix and suffix. |
+| `--color-field-border` | Outline of a field at rest. |
+| `--color-field-border-hover` | Outline of a hovered field. |
+| `--color-field-border-invalid` | Outline of a field marked aria-invalid. |
 | `--color-cta-gradient-1` | Gradient stop 1. |
 | `--color-cta-gradient-2` | Gradient stop 2. |
 | `--color-cta-gradient-3` | Gradient stop 3. |
