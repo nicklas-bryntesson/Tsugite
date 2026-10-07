@@ -1,0 +1,134 @@
+---
+// /lab/field-states — the probe for the fields job's state map (tasks/plan-fields.md).
+// One bare native input per configuration, unstyled on purpose: the question is which
+// states an engine lets coexist, not how they look. Each row's readout lists the
+// pseudo-classes the input matches, live, so the page is read by hand too — autofill
+// cannot be driven by Playwright and is a manual reading here. The @engines test reads
+// window.fieldStateProbe() in Chromium, Firefox and WebKit. Deleted when the job decides.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import Text from "tsugite/Text/Text.astro";
+
+type Row = { id: string; label: string; attrs: Record<string, string | boolean>; manual?: boolean };
+const rows: Row[] = [
+  { id: "empty", label: "empty, placeholder", attrs: { placeholder: "placeholder" } },
+  { id: "filled", label: "filled", attrs: { value: "a value" } },
+  { id: "required-empty", label: "required, empty", attrs: { required: true, placeholder: "required" } },
+  { id: "required-filled", label: "required, filled", attrs: { required: true, value: "a value" } },
+  { id: "pattern-mismatch", label: "pattern mismatch", attrs: { pattern: "[0-9]+", value: "letters" } },
+  { id: "aria-invalid", label: "aria-invalid", attrs: { "aria-invalid": "true", value: "a value" } },
+  { id: "disabled-empty", label: "disabled, empty", attrs: { disabled: true, placeholder: "disabled" } },
+  { id: "disabled-filled", label: "disabled, filled", attrs: { disabled: true, value: "a value" } },
+  { id: "disabled-required", label: "disabled, required, empty", attrs: { disabled: true, required: true, placeholder: "disabled" } },
+  { id: "disabled-aria-invalid", label: "disabled, aria-invalid", attrs: { disabled: true, "aria-invalid": "true", value: "a value" } },
+  { id: "readonly-filled", label: "read-only, filled", attrs: { readonly: true, value: "a value" } },
+  { id: "readonly-required", label: "read-only, required, empty", attrs: { readonly: true, required: true, placeholder: "read-only" } },
+  { id: "readonly-aria-invalid", label: "read-only, aria-invalid", attrs: { readonly: true, "aria-invalid": "true", value: "a value" } },
+  { id: "disabled-readonly", label: "disabled and read-only", attrs: { disabled: true, readonly: true, value: "a value" } },
+  { id: "autofill-email", label: "autofill: email (manual)", attrs: { name: "email", type: "email", autocomplete: "email", placeholder: "email" }, manual: true },
+  { id: "autofill-email-readonly", label: "autofill: email, read-only (manual)", attrs: { name: "email2", type: "email", autocomplete: "email", readonly: true }, manual: true },
+  { id: "autofill-email-disabled", label: "autofill: email, disabled (manual)", attrs: { name: "email3", type: "email", autocomplete: "email", disabled: true }, manual: true },
+];
+---
+
+<Layout title="Field states probe">
+  <main class="Main FieldStatesProbe grid-container">
+    <div class="content">
+      <Heading element="h1" size="2" text="Field states probe" />
+      <Text text="Which states can coexist on a native input, per engine. Hover and focus a field and its readout shows what it matches. For autofill, let the browser fill the email rows from a saved address and read them by hand." />
+      <form class="rows" autocomplete="on" onsubmit="return false">
+        {rows.map((r) => (
+          <div class="row" data-row={r.id} data-manual={r.manual ? "true" : "false"}>
+            <label for={`probe-${r.id}`}><Text inline size="sm" text={r.label} /></label>
+            <input id={`probe-${r.id}`} {...r.attrs} />
+            <output data-readout={r.id}></output>
+          </div>
+        ))}
+      </form>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // The selectors the state map asks about. A selector an engine does not know is
+  // reported as "unsupported", not as false.
+  const SELECTORS = [
+    ":hover",
+    ":focus",
+    ":focus-visible",
+    ":invalid",
+    ":user-invalid",
+    ":disabled",
+    ":read-only",
+    ":autofill",
+    ":-webkit-autofill",
+    ":placeholder-shown",
+    "[aria-invalid='true']",
+  ];
+
+  const read = (input: HTMLInputElement) =>
+    Object.fromEntries(
+      SELECTORS.map((s) => {
+        try {
+          return [s, input.matches(s)];
+        } catch {
+          return [s, "unsupported"];
+        }
+      }),
+    );
+
+  const inputs = () => [...document.querySelectorAll<HTMLInputElement>(".FieldStatesProbe input")];
+
+  const paint = () => {
+    for (const input of inputs()) {
+      const id = input.id.replace("probe-", "");
+      const out = document.querySelector<HTMLOutputElement>(`[data-readout="${id}"]`)!;
+      const states = read(input);
+      out.textContent = Object.entries(states)
+        .filter(([, v]) => v === true)
+        .map(([k]) => k)
+        .join("  ");
+    }
+  };
+
+  // The test's entry: every row's matches, now.
+  (window as unknown as { fieldStateProbe: () => Record<string, Record<string, unknown>> }).fieldStateProbe = () =>
+    Object.fromEntries(inputs().map((i) => [i.id.replace("probe-", ""), read(i)]));
+
+  for (const type of ["pointerover", "pointerout", "focusin", "focusout", "input", "change", "animationstart"]) {
+    document.addEventListener(type, () => requestAnimationFrame(paint), true);
+  }
+  paint();
+  setInterval(paint, 500);
+</script>
+
+<style is:global>
+/* A lab instrument: arrangement only, the inputs bare on purpose. */
+.FieldStatesProbe {
+  padding-block: 3rem 4rem;
+
+  & .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-md);
+  }
+
+  & .rows {
+    display: grid;
+    gap: var(--size-sm);
+  }
+
+  & .row {
+    display: grid;
+    grid-template-columns: 16rem 14rem 1fr;
+    align-items: center;
+    gap: var(--size-md);
+  }
+
+  & output {
+    font-family: var(--fontFamily-code);
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+  }
+}
+</style>

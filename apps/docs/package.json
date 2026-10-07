@@ -11,7 +11,8 @@
     "predev": "pnpm run tokens",
     "prebuild": "pnpm run tokens",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test --project=chromium",
+    "test:engines": "playwright test --grep @engines"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.5",
