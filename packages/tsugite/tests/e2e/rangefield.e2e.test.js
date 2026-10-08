@@ -284,9 +284,9 @@ test('grabbing the thumb grows it without reflowing the page', async ({ page }) 
   })
 
   const idle = await measure()
-  await input.evaluate((el) => el.setAttribute('data-test-state', 'active'))
+  await input.evaluate((el) => el.setAttribute('data-test-state-active', 'true'))
   const active = await measure()
-  await input.evaluate((el) => el.removeAttribute('data-test-state'))
+  await input.evaluate((el) => el.removeAttribute('data-test-state-active'))
 
   expect(Number(active.scale)).toBeGreaterThan(Number(idle.scale))  // it does grow …
   expect(active.thumb).toBe(idle.thumb)                            // … but not in size
