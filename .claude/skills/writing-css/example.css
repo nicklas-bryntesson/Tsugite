@@ -139,19 +139,19 @@
   }
 
   /* States.
-     Real pseudo-class and its data-test-state twin, always as a pair, so the test
-     bench can render the state without a pointer. The twin reads a token with ~=, so
-     data-test-state="hover focus" renders a combination. */
+     Real pseudo-class and its test twin, always as a pair, so the test bench can render
+     the state without a pointer. One boolean attribute per state (ADR-0025): the twin of
+     :hover is data-test-state-hover="true", and a combination is two attributes. */
   /* TODO(investigate): the states combine (hover + active, focus-visible + active) and
      a combination renders by source order today; the order and its form are an open
      question — see Button.css. */
   &:hover,
-  &[data-test-state~="hover"] {
+  &[data-test-state-hover="true"] {
     --_co-backgroundColor: var(--color-interactive-secondary-hoverSurface);
   }
 
   &:focus-visible,
-  &[data-test-state~="focus"] {
+  &[data-test-state-focus="true"] {
     outline: 2px solid var(--color-focus-ring);
     outline-offset: 3px;
   }

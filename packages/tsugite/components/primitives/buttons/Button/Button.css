@@ -64,15 +64,14 @@
      Which cells are reachable, per engine and per element (a vs button), is unmeasured.
      Today a combination renders by source order — the later block wins at equal
      specificity — so hover + focus shows focus and anything + disabled shows disabled,
-     and nothing says so. data-test-state carries several states at once — space-separated
-     tokens read with ~= ("hover active"), one gate per state, as the fields do — so the
+     and nothing says so. The twins are one boolean attribute per state (ADR-0025), so the
      button state map can render every combination. Measure first (a probe page driven by
      Playwright in three engines), then decide the order and its form (a ladder in the
      selectors, or source order with a test). Whatever exclusion the real selectors get,
      the test form needs the same, so the two are shaped together. Applies to every
      component with states, so the decision is an ADR. */
   &:hover,
-  &[data-test-state~="hover"] {
+  &[data-test-state-hover="true"] {
     color:                var(--_bt-color-hover);
     background-color:     var(--_bt-backgroundColor-hover);
     border-color:         var(--_bt-borderColor-hover);
@@ -80,7 +79,7 @@
   }
 
   &:active,
-  &[data-test-state~="active"] {
+  &[data-test-state-active="true"] {
     color:                var(--_bt-color-active);
     background-color:     var(--_bt-backgroundColor-active);
     border-color:         var(--_bt-borderColor-active);
@@ -94,7 +93,7 @@
 
   /* Keyboard interaction */
   &:focus-visible,
-  &[data-test-state~="focus"] {
+  &[data-test-state-focus="true"] {
     color:                var(--_bt-color-focus);
     background-color:     var(--_bt-backgroundColor-focus);
     border-color:         var(--_bt-borderColor-focus);
@@ -109,12 +108,12 @@
   /* Focus-visible and active at once — a held Space. A combination is gated by both
      states, so it wins by specificity, not by its place in the file. */
   &:focus-visible:active,
-  &[data-test-state~="focus"][data-test-state~="active"] {
+  &[data-test-state-focus="true"][data-test-state-active="true"] {
     outline-color:        var(--_bt-outlineColor-pressed);
   }
 
   &:disabled,
-  &[data-test-state~="disabled"] {
+  &[data-test-state-disabled="true"] {
     color:                var(--_bt-color-disabled);
     background-color:     var(--_bt-backgroundColor-disabled);
     border-color:         var(--_bt-borderColor-disabled);
@@ -155,7 +154,7 @@
     --_bt-borderColor:                 var(--theme-button-borderColor-primary, var(--color-interactive-primary));
 
     &:hover,
-    &[data-test-state~="hover"] {
+    &[data-test-state-hover="true"] {
       --_bt-color-hover:               var(--theme-button-color-primary, var(--color-interactive-onPrimary));
       --_bt-backgroundColor-hover:     var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
       --_bt-borderColor-hover:         var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
@@ -163,7 +162,7 @@
     }
 
     &:active,
-    &[data-test-state~="active"] {
+    &[data-test-state-active="true"] {
       --_bt-color-active:              var(--theme-button-color-primary, var(--color-interactive-onPrimary));
       --_bt-backgroundColor-active:    var(--theme-button-backgroundColor-primary, var(--color-interactive-primary));
       --_bt-borderColor-active:        var(--theme-button-borderColor-primary, var(--color-interactive-primary));
@@ -171,7 +170,7 @@
     }
 
     &:focus-visible,
-    &[data-test-state~="focus"] {
+    &[data-test-state-focus="true"] {
       /* TODO(decide): focus takes the hover colours; whether focus belongs to the emphasis axis at all is open. */
       --_bt-color-focus:               var(--theme-button-color-primary, var(--color-interactive-onPrimary));
       --_bt-backgroundColor-focus:     var(--theme-button-backgroundColor-primary-hover, var(--color-interactive-primary-hover));
@@ -180,7 +179,7 @@
     }
 
     &:disabled,
-    &[data-test-state~="disabled"] {
+    &[data-test-state-disabled="true"] {
       --_bt-color-disabled:            var(--color-disabled-text);
       --_bt-backgroundColor-disabled:  var(--color-disabled-surface);
       --_bt-borderColor-disabled:      var(--color-disabled-border);
@@ -202,7 +201,7 @@
     --_bt-borderColor:                 var(--theme-button-borderColor-secondary, var(--color-interactive-secondary-border));
 
     &:hover,
-    &[data-test-state~="hover"] {
+    &[data-test-state-hover="true"] {
       --_bt-color-hover:               var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
       --_bt-backgroundColor-hover:     var(--theme-button-backgroundColor-secondary-hover, var(--color-interactive-secondary-hoverSurface));
       --_bt-borderColor-hover:         var(--theme-button-borderColor-secondary-hover, var(--color-interactive-secondary-text));
@@ -210,7 +209,7 @@
     }
 
     &:active,
-    &[data-test-state~="active"] {
+    &[data-test-state-active="true"] {
       --_bt-color-active:              var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
       --_bt-backgroundColor-active:    transparent;
       --_bt-borderColor-active:        var(--theme-button-borderColor-secondary, var(--color-interactive-secondary-border));
@@ -218,7 +217,7 @@
     }
 
     &:focus-visible,
-    &[data-test-state~="focus"] {
+    &[data-test-state-focus="true"] {
       /* TODO(decide): focus takes the hover colours; whether focus belongs to the emphasis axis at all is open. */
       --_bt-color-focus:               var(--theme-button-color-secondary, var(--color-interactive-secondary-text));
       --_bt-backgroundColor-focus:     var(--theme-button-backgroundColor-secondary-hover, var(--color-interactive-secondary-hoverSurface));
@@ -227,7 +226,7 @@
     }
 
     &:disabled,
-    &[data-test-state~="disabled"] {
+    &[data-test-state-disabled="true"] {
       --_bt-color-disabled:            var(--color-disabled-text);
       --_bt-backgroundColor-disabled:  var(--color-disabled-surface);
       --_bt-borderColor-disabled:      var(--color-disabled-border);
@@ -265,19 +264,19 @@
     --_bt-borderColor:                 var(--color-feedback-error);
 
     &:hover,
-    &[data-test-state~="hover"] {
+    &[data-test-state-hover="true"] {
       --_bt-color-hover:               var(--color-feedback-onError);
       --_bt-backgroundColor-hover:     var(--color-feedback-error);
       --_bt-borderColor-hover:         var(--color-feedback-error);
     }
     &:active,
-    &[data-test-state~="active"] {
+    &[data-test-state-active="true"] {
       --_bt-color-active:              var(--color-feedback-onError);
       --_bt-backgroundColor-active:    var(--color-feedback-error);
       --_bt-borderColor-active:        var(--color-feedback-error);
     }
     &:focus-visible,
-    &[data-test-state~="focus"] {
+    &[data-test-state-focus="true"] {
       --_bt-color-focus:               var(--color-feedback-onError);
       --_bt-backgroundColor-focus:     var(--color-feedback-error);
       --_bt-borderColor-focus:         var(--color-feedback-error);
@@ -290,19 +289,19 @@
     --_bt-borderColor:                 var(--color-feedback-success);
 
     &:hover,
-    &[data-test-state~="hover"] {
+    &[data-test-state-hover="true"] {
       --_bt-color-hover:               var(--color-feedback-onSuccess);
       --_bt-backgroundColor-hover:     var(--color-feedback-success);
       --_bt-borderColor-hover:         var(--color-feedback-success);
     }
     &:active,
-    &[data-test-state~="active"] {
+    &[data-test-state-active="true"] {
       --_bt-color-active:              var(--color-feedback-onSuccess);
       --_bt-backgroundColor-active:    var(--color-feedback-success);
       --_bt-borderColor-active:        var(--color-feedback-success);
     }
     &:focus-visible,
-    &[data-test-state~="focus"] {
+    &[data-test-state-focus="true"] {
       --_bt-color-focus:               var(--color-feedback-onSuccess);
       --_bt-backgroundColor-focus:     var(--color-feedback-success);
       --_bt-borderColor-focus:         var(--color-feedback-success);
@@ -317,17 +316,17 @@
     --_bt-borderColor:                 var(--color-feedback-error);
 
     &:hover,
-    &[data-test-state~="hover"] {
+    &[data-test-state-hover="true"] {
       --_bt-color-hover:               var(--color-feedback-error);
       --_bt-borderColor-hover:         var(--color-feedback-error);
     }
     &:active,
-    &[data-test-state~="active"] {
+    &[data-test-state-active="true"] {
       --_bt-color-active:              var(--color-feedback-error);
       --_bt-borderColor-active:        var(--color-feedback-error);
     }
     &:focus-visible,
-    &[data-test-state~="focus"] {
+    &[data-test-state-focus="true"] {
       --_bt-color-focus:               var(--color-feedback-error);
       --_bt-borderColor-focus:         var(--color-feedback-error);
     }
@@ -339,17 +338,17 @@
     --_bt-borderColor:                 var(--color-feedback-success);
 
     &:hover,
-    &[data-test-state~="hover"] {
+    &[data-test-state-hover="true"] {
       --_bt-color-hover:               var(--color-feedback-success);
       --_bt-borderColor-hover:         var(--color-feedback-success);
     }
     &:active,
-    &[data-test-state~="active"] {
+    &[data-test-state-active="true"] {
       --_bt-color-active:              var(--color-feedback-success);
       --_bt-borderColor-active:        var(--color-feedback-success);
     }
     &:focus-visible,
-    &[data-test-state~="focus"] {
+    &[data-test-state-focus="true"] {
       --_bt-color-focus:               var(--color-feedback-success);
       --_bt-borderColor-focus:         var(--color-feedback-success);
     }
@@ -448,7 +447,7 @@
 
 /* Developer debug styles: measuring overlays on the kernel's debug palette (kernel/css/debug.css).
    The padding bands repeat the base's padding formula: an overlay cannot read a padding. */
-:where(.Button[data-test-state~="debug"]) {
+:where(.Button[data-test-debug="true"]) {
   &::before {
     content: "";
     position: absolute;

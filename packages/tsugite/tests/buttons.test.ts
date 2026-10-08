@@ -63,9 +63,10 @@ describe("LinkButton", () => {
     expect(html.trim()).toBe("");
   });
 
-  it("passes through data-test-state", async () => {
-    const html = await renderLink({ href: "#", "data-test-state": "hover" }, { default: "x" });
-    expect(html).toContain('data-test-state="hover"');
+  it("passes through the test twins, one attribute per state (ADR-0025)", async () => {
+    const html = await renderLink({ href: "#", "data-test-state-hover": "true", "data-test-state-active": "true" }, { default: "x" });
+    expect(html).toContain('data-test-state-hover="true"');
+    expect(html).toContain('data-test-state-active="true"');
   });
 
   it("renders pill=true as data-pill=\"true\"", async () => {

@@ -2,7 +2,7 @@
    and overlays control room draws over real components to measure them. They belong to
    the instrument, not to the system, so they live here and never in the package (the
    package's debug palette, kernel/css/debug.css, is for its own diagnostics: DevError
-   and data-test-state="debug"). Raw oklch on purpose: a measurement must look the same
+   and data-test-debug="true"). Raw oklch on purpose: a measurement must look the same
    on every brand, in every voice, in every mode. Imported by the benches that use it. */
 :root {
   /* every dashed line an instrument draws — a guide across neighbours, an outline around

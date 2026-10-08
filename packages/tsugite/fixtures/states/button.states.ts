@@ -14,9 +14,9 @@ export const actionStates: StateMap = {
   contents,
   rest: { key: "idle", label: "idle" },
   states: [
-    { key: "hover", label: "hover", props: { "data-test-state": "hover" } },
-    { key: "active", label: "active", props: { "data-test-state": "active" } },
-    { key: "focus", label: "focus-visible", props: { "data-test-state": "focus" } },
+    { key: "hover", label: "hover", props: { "data-test-state-hover": "true" } },
+    { key: "active", label: "active", props: { "data-test-state-active": "true" } },
+    { key: "focus", label: "focus-visible", props: { "data-test-state-focus": "true" } },
     { key: "disabled", label: "disabled", props: { disabled: true } },
   ],
   pairs: {
@@ -35,9 +35,9 @@ export const linkStates: StateMap = {
   contents,
   rest: { key: "idle", label: "idle" },
   states: [
-    { key: "hover", label: "hover", props: { "data-test-state": "hover" } },
-    { key: "active", label: "active", props: { "data-test-state": "active" } },
-    { key: "focus", label: "focus-visible", props: { "data-test-state": "focus" } },
+    { key: "hover", label: "hover", props: { "data-test-state-hover": "true" } },
+    { key: "active", label: "active", props: { "data-test-state-active": "true" } },
+    { key: "focus", label: "focus-visible", props: { "data-test-state-focus": "true" } },
   ],
   pairs: {
     "hover+active": { reach: "yes", note: "a pointer press" },
