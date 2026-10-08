@@ -11,7 +11,8 @@
  *   data-expanded       the disclosure is open. A button only; aria-expanded is written
  *                       on a button always, never on a link.
  *   data-icon-position  left | right, only with an icon.
- *   data-test-state     hover | active | focus, the state hooks the probes and suites use.
+ *   data-test-state-*   hover | active | focus, one boolean attribute each (ADR-0025):
+ *                       the state hooks the probes and suites use.
  */
 .NavItem {
   /* invariants — the nav voice's bundle */
@@ -60,12 +61,12 @@
 
   /* ── States ── */
   &:hover,
-  &[data-test-state="hover"] {
+  &[data-test-state-hover="true"] {
     --_ni-indicatorColor: var(--color-interactive-hoverRing);
   }
 
   &:active,
-  &[data-test-state="active"] {
+  &[data-test-state-active="true"] {
     --_ni-indicatorColor: var(--color-interactive-primary);
   }
 
@@ -74,7 +75,7 @@
   }
 
   &:focus-visible,
-  &[data-test-state="focus"] {
+  &[data-test-state-focus="true"] {
     outline-style: solid;
     outline-width: var(--_ni-outlineWidth);
     outline-color: var(--_ni-outlineColor);
