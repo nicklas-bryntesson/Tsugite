@@ -206,21 +206,21 @@ const inputAttrs = { type: "text", ...input };
     display: none;
   }
 
-  /* ── Interaction states (real pseudo-class + data-test-state pairs) ──────── */
+  /* ── Interaction states (real pseudo-class + test-twin pairs, ADR-0025) ──────── */
   & .input:hover,
-  &[data-test-state="hover"] .input {
+  &[data-test-state-hover="true"] .input {
     border-color: var(--_af-border-color-hover);
     background-color: var(--_af-bg-hover);
   }
 
   & .input:focus-visible,
-  &[data-test-state="focus"] .input {
+  &[data-test-state-focus="true"] .input {
     outline: 2px solid;
     outline-offset: 1px;
   }
 
   & .input:active,
-  &[data-test-state="active"] .input {
+  &[data-test-state-active="true"] .input {
     border-color: var(--_af-border-color-hover);
     background-color: var(--_af-bg-active);
   }

@@ -207,14 +207,14 @@ const {
     visibility: hidden;
   }
 
-  /* ── Interaction states (real pseudo-class + data-test-state pairs) ────── */
+  /* ── Interaction states (real pseudo-class + test-twin pairs, ADR-0025) ────── */
   & .option input:not(:checked):hover + label,
-  &[data-test-state="hover"] .option input:not(:checked) + label {
+  &[data-test-state-hover="true"] .option input:not(:checked) + label {
     border-color: var(--_pl-chip-border-color-hover);
     background-color: var(--_pl-chip-bg-hover);
   }
   & .option input:checked:hover + label,
-  &[data-test-state="hover"] .option input:checked + label {
+  &[data-test-state-hover="true"] .option input:checked + label {
     border-color: var(--_pl-chip-border-color-hover);
   }
 
@@ -230,18 +230,18 @@ const {
      a white one. This also works unchanged in forced-colors, where the pair
      becomes HighlightText on Highlight. */
   & .option input:focus-visible + label,
-  &[data-test-state="focus"] .option input + label {
+  &[data-test-state-focus="true"] .option input + label {
     outline: 2px solid;
     outline-offset: -3px;
   }
 
   & .option input:not(:checked):active + label,
-  &[data-test-state="active"] .option input:not(:checked) + label {
+  &[data-test-state-active="true"] .option input:not(:checked) + label {
     border-color: var(--_pl-chip-border-color-hover);
     background-color: var(--_pl-chip-bg-hover);
   }
   & .option input:checked:active + label,
-  &[data-test-state="active"] .option input:checked + label {
+  &[data-test-state-active="true"] .option input:checked + label {
     border-color: var(--_pl-chip-border-color-hover);
   }
 

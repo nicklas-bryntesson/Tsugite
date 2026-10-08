@@ -28,16 +28,16 @@ const decimal = { inputmode: "decimal" };
       <tr>
         <th scope="row">empty</th>
         <td><AffixField id="af-empty-default" label="Amount" input={decimal} {...money} /></td>
-        <td><AffixField id="af-empty-hover" label="Amount" root={{ "data-test-state": "hover" }} input={decimal} {...money} /></td>
-        <td><AffixField id="af-empty-focus" label="Amount" root={{ "data-test-state": "focus" }} input={decimal} {...money} /></td>
-        <td><AffixField id="af-empty-active" label="Amount" root={{ "data-test-state": "active" }} input={decimal} {...money} /></td>
+        <td><AffixField id="af-empty-hover" label="Amount" root={{ "data-test-state-hover": "true" }} input={decimal} {...money} /></td>
+        <td><AffixField id="af-empty-focus" label="Amount" root={{ "data-test-state-focus": "true" }} input={decimal} {...money} /></td>
+        <td><AffixField id="af-empty-active" label="Amount" root={{ "data-test-state-active": "true" }} input={decimal} {...money} /></td>
       </tr>
       <tr>
         <th scope="row">filled</th>
         <td><AffixField id="af-filled-default" label="Amount" input={{ ...decimal, value: "100" }} {...money} /></td>
-        <td><AffixField id="af-filled-hover" label="Amount" root={{ "data-test-state": "hover" }} input={{ ...decimal, value: "100" }} {...money} /></td>
-        <td><AffixField id="af-filled-focus" label="Amount" root={{ "data-test-state": "focus" }} input={{ ...decimal, value: "100" }} {...money} /></td>
-        <td><AffixField id="af-filled-active" label="Amount" root={{ "data-test-state": "active" }} input={{ ...decimal, value: "100" }} {...money} /></td>
+        <td><AffixField id="af-filled-hover" label="Amount" root={{ "data-test-state-hover": "true" }} input={{ ...decimal, value: "100" }} {...money} /></td>
+        <td><AffixField id="af-filled-focus" label="Amount" root={{ "data-test-state-focus": "true" }} input={{ ...decimal, value: "100" }} {...money} /></td>
+        <td><AffixField id="af-filled-active" label="Amount" root={{ "data-test-state-active": "true" }} input={{ ...decimal, value: "100" }} {...money} /></td>
       </tr>
     </tbody>
   </table>

@@ -6,13 +6,15 @@ import Text from "../components/primitives/typography/Text/Text.astro";
 import ChoiceField from "../components/primitives/fields/ChoiceField/ChoiceField.astro";
 
 const STATES = ["hover", "focus", "active"] as const;
+/** a state's test twin, one boolean attribute (ADR-0025); idle writes none */
+const twin = (s?: string) => (s && s !== "default" ? { [`data-test-state-${s}`]: "true" } : {});
 ---
 
 <section class="KitchenSink-section" id="ChoiceField">
   <Heading text="ChoiceField" element="h2" size="2" />
 
   {/* Interaction states — one skeleton, both types. hover/focus/active are
-      simulated via data-test-state on the root. */}
+      simulated via the test twins on the root (ADR-0025). */}
   <Text text="Interaction states" element="h3" size="lg" />
   <table class="state-table">
     <thead>
@@ -29,28 +31,28 @@ const STATES = ["hover", "focus", "active"] as const;
         <th scope="row">checkbox · empty</th>
         <td><ChoiceField type="checkbox" id="cf-cb-def-e" name="cf-cb-def-e" label="Label" /></td>
         {STATES.map((s) => (
-          <td><ChoiceField type="checkbox" id={`cf-cb-${s.slice(0, 3)}-e`} name={`cf-cb-${s.slice(0, 3)}-e`} label="Label" data-test-state={s} /></td>
+          <td><ChoiceField type="checkbox" id={`cf-cb-${s.slice(0, 3)}-e`} name={`cf-cb-${s.slice(0, 3)}-e`} label="Label" {...twin(s)} /></td>
         ))}
       </tr>
       <tr>
         <th scope="row">checkbox · checked</th>
         <td><ChoiceField type="checkbox" id="cf-cb-def-f" name="cf-cb-def-f" label="Label" checked={true} /></td>
         {STATES.map((s) => (
-          <td><ChoiceField type="checkbox" id={`cf-cb-${s.slice(0, 3)}-f`} name={`cf-cb-${s.slice(0, 3)}-f`} label="Label" checked={true} data-test-state={s} /></td>
+          <td><ChoiceField type="checkbox" id={`cf-cb-${s.slice(0, 3)}-f`} name={`cf-cb-${s.slice(0, 3)}-f`} label="Label" checked={true} {...twin(s)} /></td>
         ))}
       </tr>
       <tr>
         <th scope="row">radio · unselected</th>
         <td><ChoiceField type="radio" id="cf-rd-def-e" name="cf-rd-def-e" label="Label" /></td>
         {STATES.map((s) => (
-          <td><ChoiceField type="radio" id={`cf-rd-${s.slice(0, 3)}-e`} name={`cf-rd-${s.slice(0, 3)}-e`} label="Label" data-test-state={s} /></td>
+          <td><ChoiceField type="radio" id={`cf-rd-${s.slice(0, 3)}-e`} name={`cf-rd-${s.slice(0, 3)}-e`} label="Label" {...twin(s)} /></td>
         ))}
       </tr>
       <tr>
         <th scope="row">radio · selected</th>
         <td><ChoiceField type="radio" id="cf-rd-def-f" name="cf-rd-def-f" label="Label" checked={true} /></td>
         {STATES.map((s) => (
-          <td><ChoiceField type="radio" id={`cf-rd-${s.slice(0, 3)}-f`} name={`cf-rd-${s.slice(0, 3)}-f`} label="Label" checked={true} data-test-state={s} /></td>
+          <td><ChoiceField type="radio" id={`cf-rd-${s.slice(0, 3)}-f`} name={`cf-rd-${s.slice(0, 3)}-f`} label="Label" checked={true} {...twin(s)} /></td>
         ))}
       </tr>
     </tbody>

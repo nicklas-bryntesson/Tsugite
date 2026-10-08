@@ -153,19 +153,19 @@ const cssClass = className && String(className).trim() ? `ChoiceField ${classNam
     border-color: var(--_cf-selected);
   }
 
-  /* ── Interaction states (real pseudo-class + data-test-state pairs) ──── */
+  /* ── Interaction states (real pseudo-class + test-twin pairs, ADR-0025) ──── */
   & input:hover,
-  &[data-test-state="hover"] input {
+  &[data-test-state-hover="true"] input {
     border-color: var(--_cf-border-color-hover);
   }
   & input:not(:checked):hover,
-  &[data-test-state="hover"] input:not(:checked) {
+  &[data-test-state-hover="true"] input:not(:checked) {
     background-color: var(--_cf-bg-hover);
   }
 
   /* focus — matches the family: 2px solid currentColor, offset 1px */
   & input:focus-visible,
-  &[data-test-state="focus"] input {
+  &[data-test-state-focus="true"] input {
     outline: 2px solid; outline-offset: 1px;
   }
   & input:focus:not(:focus-visible) {
@@ -173,11 +173,11 @@ const cssClass = className && String(className).trim() ? `ChoiceField ${classNam
   }
 
   & input:active,
-  &[data-test-state="active"] input {
+  &[data-test-state-active="true"] input {
     border-color: var(--_cf-border-color-hover);
   }
   & input:not(:checked):active,
-  &[data-test-state="active"] input:not(:checked) {
+  &[data-test-state-active="true"] input:not(:checked) {
     background-color: var(--_cf-bg-hover);
   }
 

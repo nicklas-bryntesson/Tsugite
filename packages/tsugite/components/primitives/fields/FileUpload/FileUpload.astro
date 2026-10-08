@@ -200,12 +200,12 @@ const {
   }
 
   & .item-remove:hover,
-  &[data-test-state="hover"] .item-remove {
+  &[data-test-state-hover="true"] .item-remove {
     background: var(--_fu-trigger-bg-hover);
   }
 
   & .item-remove:focus-visible,
-  &[data-test-state="focus"] .item-remove {
+  &[data-test-state-focus="true"] .item-remove {
     outline: 2px solid currentColor;
     outline-offset: 1px;
   }
@@ -225,18 +225,18 @@ const {
   }
 
   & .trigger:hover,
-  &[data-test-state="hover"] .trigger {
+  &[data-test-state-hover="true"] .trigger {
     background: var(--_fu-trigger-bg-hover);
   }
 
   & .trigger:focus-visible,
-  &[data-test-state="focus"] .trigger {
+  &[data-test-state-focus="true"] .trigger {
     outline: 2px solid currentColor;
     outline-offset: 1px;
   }
 
   & .trigger:active,
-  &[data-test-state="active"] .trigger {
+  &[data-test-state-active="true"] .trigger {
     background: var(--_fu-trigger-bg-active);
   }
 

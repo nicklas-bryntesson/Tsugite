@@ -9,6 +9,8 @@ import ChoiceField from "../components/primitives/fields/ChoiceField/ChoiceField
 import Notice from "../components/primitives/Notice/Notice.astro";
 
 const STATES = ["default", "hover", "focus", "active"] as const;
+/** a state's test twin, one boolean attribute (ADR-0025); idle writes none */
+const twin = (s?: string) => (s && s !== "default" ? { [`data-test-state-${s}`]: "true" } : {});
 ---
 
 <section class="KitchenSink-section" id="Picklist">
@@ -27,7 +29,7 @@ const STATES = ["default", "hover", "focus", "active"] as const;
             id={`state-${state}`}
             legend={`Interaction state: ${state}`}
             legendPlacement="hidden"
-            data-test-state={state === "default" ? undefined : state}
+            {...twin(state)}
           >
             <PicklistOption type="checkbox" id={`${p}-1`} name={`${p}-1`} label="Unselected" />
             <PicklistOption type="checkbox" id={`${p}-2`} name={`${p}-2`} label="Selected" checked={true} />
@@ -47,7 +49,7 @@ const STATES = ["default", "hover", "focus", "active"] as const;
           legend={`Segmented state: ${state}`}
           legendPlacement="hidden"
           segmented={true}
-          data-test-state={state === "default" ? undefined : state}
+          {...twin(state)}
         >
           <PicklistOption type="radio" id={`${p}-1`} name={p} label="Selected" checked={true} />
           <PicklistOption type="radio" id={`${p}-2`} name={p} label="Unselected" />
