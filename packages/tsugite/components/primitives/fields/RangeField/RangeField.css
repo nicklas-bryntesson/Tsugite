@@ -152,18 +152,19 @@
   }
 
   /* Simulated states for the kitchensink, written in pairs with the real
-     pseudo-classes: data-test-state sits on the root and CSS projects it down. */
+     pseudo-classes: one twin attribute per state (ADR-0025) sits on the root and CSS
+     projects it down. */
   &:hover,
-  &[data-test-state="hover"] {
+  &[data-test-state-hover="true"] {
     --_rf-thumb-color: color-mix(in oklab, currentColor 80%, Canvas);
   }
 
-  &[data-test-state="focus"] {
+  &[data-test-state-focus="true"] {
     --_rf-thumb-outline: var(--_rf-ring-width) solid currentColor;
   }
 
   &:active,
-  &[data-test-state="active"] {
+  &[data-test-state-active="true"] {
     --_rf-thumb-scale: 1.1;
   }
 

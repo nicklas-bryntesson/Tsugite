@@ -242,13 +242,13 @@ const {
   }
 
   & .segments:hover,
-  &[data-test-state="hover"] .segments {
+  &[data-test-state-hover="true"] .segments {
     border-color: var(--_df-segments-border-color-hover);
     background-color: var(--_df-segments-bg-hover);
   }
 
   & .segments:focus-within,
-  &[data-test-state="focus"] .segments {
+  &[data-test-state-focus="true"] .segments {
     outline: 2px solid;
     outline-offset: 1px;
   }
@@ -272,11 +272,11 @@ const {
     display: block;
   }
   & .trigger:hover,
-  &[data-test-state="hover"] .trigger {
+  &[data-test-state-hover="true"] .trigger {
     background-color: var(--_df-trigger-bg-hover);
   }
   & .trigger:active,
-  &[data-test-state="active"] .trigger {
+  &[data-test-state-active="true"] .trigger {
     background-color: var(--_df-trigger-bg-active);
   }
   & .trigger:focus-visible {

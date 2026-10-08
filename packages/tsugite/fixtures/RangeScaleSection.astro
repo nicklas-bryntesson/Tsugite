@@ -35,16 +35,16 @@ const quarters: [number, string][] = [
       <tr>
         <th scope="row">at minimum</th>
         <td><RangeScale id="rs-min-default" label="Volume" input={min} output={pct0} /></td>
-        <td><RangeScale id="rs-min-hover" label="Volume" input={{ ...min, "data-test-state": "hover" }} output={pct0} /></td>
-        <td><RangeScale id="rs-min-focus" label="Volume" input={{ ...min, "data-test-state": "focus" }} output={pct0} /></td>
-        <td><RangeScale id="rs-min-active" label="Volume" input={{ ...min, "data-test-state": "active" }} output={pct0} /></td>
+        <td><RangeScale id="rs-min-hover" label="Volume" input={{ ...min, "data-test-state-hover": "true" }} output={pct0} /></td>
+        <td><RangeScale id="rs-min-focus" label="Volume" input={{ ...min, "data-test-state-focus": "true" }} output={pct0} /></td>
+        <td><RangeScale id="rs-min-active" label="Volume" input={{ ...min, "data-test-state-active": "true" }} output={pct0} /></td>
       </tr>
       <tr>
         <th scope="row">partially filled</th>
         <td><RangeScale id="rs-mid-default" label="Volume" input={mid} output={pct} /></td>
-        <td><RangeScale id="rs-mid-hover" label="Volume" input={{ ...mid, "data-test-state": "hover" }} output={pct} /></td>
-        <td><RangeScale id="rs-mid-focus" label="Volume" input={{ ...mid, "data-test-state": "focus" }} output={pct} /></td>
-        <td><RangeScale id="rs-mid-active" label="Volume" input={{ ...mid, "data-test-state": "active" }} output={pct} /></td>
+        <td><RangeScale id="rs-mid-hover" label="Volume" input={{ ...mid, "data-test-state-hover": "true" }} output={pct} /></td>
+        <td><RangeScale id="rs-mid-focus" label="Volume" input={{ ...mid, "data-test-state-focus": "true" }} output={pct} /></td>
+        <td><RangeScale id="rs-mid-active" label="Volume" input={{ ...mid, "data-test-state-active": "true" }} output={pct} /></td>
       </tr>
     </tbody>
   </table>

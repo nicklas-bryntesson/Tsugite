@@ -191,9 +191,9 @@ test('grabbing the thumb does not reflow the page', async ({ page }) => {
   })
 
   const idle = await measure()
-  await page.locator(FIELD).evaluate((el) => el.setAttribute('data-test-state', 'active'))
+  await page.locator(FIELD).evaluate((el) => el.setAttribute('data-test-state-active', 'true'))
   const active = await measure()
-  await page.locator(FIELD).evaluate((el) => el.removeAttribute('data-test-state'))
+  await page.locator(FIELD).evaluate((el) => el.removeAttribute('data-test-state-active'))
 
   // The thumb grows by transform, which does not participate in layout.
   expect(active.h).toBe(idle.h)

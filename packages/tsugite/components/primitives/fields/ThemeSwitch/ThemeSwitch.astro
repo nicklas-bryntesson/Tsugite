@@ -288,9 +288,9 @@ const [systemId, lightId, darkId] = inputIds;
     }
   }
 
-  /* ── Interaction states (real pseudo-class + data-test-state pairs) ────── */
+  /* ── Interaction states (real pseudo-class + test-twin pairs, ADR-0025) ────── */
   & .options input:not(:checked):hover + label,
-  &[data-test-state="hover"] .options input:not(:checked) + label {
+  &[data-test-state-hover="true"] .options input:not(:checked) + label {
     background-color: var(--_ts-bg-hover);
   }
 
@@ -299,13 +299,13 @@ const [systemId, lightId, darkId] = inputIds;
      drawn on the page behind the control, where it can vanish. Inset, the ring
      always lands on the surface directly beneath it. */
   & .options input:focus-visible + label,
-  &[data-test-state="focus"] .options input + label {
+  &[data-test-state-focus="true"] .options input + label {
     outline: 2px solid;
     outline-offset: -3px;
   }
 
   & .options input:not(:checked):active + label,
-  &[data-test-state="active"] .options input:not(:checked) + label {
+  &[data-test-state-active="true"] .options input:not(:checked) + label {
     background-color: var(--_ts-bg-hover);
   }
 

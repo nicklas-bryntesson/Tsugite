@@ -66,9 +66,6 @@ before anyone typed. `:user-invalid` fixes that but needs Chrome 119; the floor 
 invalid state is likely driven by `aria-invalid` (server or script), not a pseudo-class — a
 decision for after the probe.
 
-**The rig.** `data-test-state` must carry several states at once (space-separated, read with
-`~=`), the same change Button.css's `TODO(investigate)` asks for.
-
 ## The probe's first reading (2026-10-07, Playwright's current Chromium, Firefox, WebKit)
 
 Identical in all three engines:

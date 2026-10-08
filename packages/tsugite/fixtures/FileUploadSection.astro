@@ -75,16 +75,16 @@ const seedServer = '[{"name":"contract.pdf","size":200000,"type":"application/pd
       <tr>
         <th scope="row">empty</th>
         <td><FileUpload id="fu-empty" label="File" /></td>
-        <td><FileUpload id="fu-empty-hover" label="File" root={{ "data-test-state": "hover" }} /></td>
-        <td><FileUpload id="fu-empty-focus" label="File" root={{ "data-test-state": "focus" }} /></td>
-        <td><FileUpload id="fu-empty-active" label="File" root={{ "data-test-state": "active" }} /></td>
+        <td><FileUpload id="fu-empty-hover" label="File" root={{ "data-test-state-hover": "true" }} /></td>
+        <td><FileUpload id="fu-empty-focus" label="File" root={{ "data-test-state-focus": "true" }} /></td>
+        <td><FileUpload id="fu-empty-active" label="File" root={{ "data-test-state-active": "true" }} /></td>
       </tr>
       <tr>
         <th scope="row">with files</th>
         <td><FileUpload id="fu-with-files" label="File" root={{ "data-has-files": "true" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
-        <td><FileUpload id="fu-with-files-hover" label="File" root={{ "data-has-files": "true", "data-test-state": "hover" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
-        <td><FileUpload id="fu-with-files-focus" label="File" root={{ "data-has-files": "true", "data-test-state": "focus" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
-        <td><FileUpload id="fu-with-files-active" label="File" root={{ "data-has-files": "true", "data-test-state": "active" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
+        <td><FileUpload id="fu-with-files-hover" label="File" root={{ "data-has-files": "true", "data-test-state-hover": "true" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
+        <td><FileUpload id="fu-with-files-focus" label="File" root={{ "data-has-files": "true", "data-test-state-focus": "true" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
+        <td><FileUpload id="fu-with-files-active" label="File" root={{ "data-has-files": "true", "data-test-state-active": "true" }} itemsHtml={validSingleFile("report.pdf", "200 KB")} initialFiles={seedReport} /></td>
       </tr>
     </tbody>
   </table>

@@ -8,6 +8,8 @@ import NavButton from "../components/primitives/NavItem/NavButton.astro";
 
 const sizes = ["sm", "md", "lg"];
 const states = [undefined, "hover", "active", "focus"];
+/** a state's test twin, one boolean attribute (ADR-0025); idle writes none */
+const twin = (s?: string) => (s ? { [`data-test-state-${s}`]: "true" } : {});
 ---
 
 <section class="KitchenSink-section" id="NavItem">
@@ -42,7 +44,7 @@ const states = [undefined, "hover", "active", "focus"];
               <th scope="row">NavLink</th>
               {states.map((s) => (
                 <td>
-                  <NavLink href="#" size={size} data-test-state={s}>Products</NavLink>
+                  <NavLink href="#" size={size} {...twin(s)}>Products</NavLink>
                 </td>
               ))}
               <td>
@@ -53,7 +55,7 @@ const states = [undefined, "hover", "active", "focus"];
               <th scope="row">NavButton</th>
               {states.map((s) => (
                 <td>
-                  <NavButton size={size} icon="icon-panel-left-open" data-test-state={s} aria-controls="bench-menu">More</NavButton>
+                  <NavButton size={size} icon="icon-panel-left-open" {...twin(s)} aria-controls="bench-menu">More</NavButton>
                 </td>
               ))}
               <td>

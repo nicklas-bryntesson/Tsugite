@@ -16,7 +16,8 @@
  *                       blurred, under the button. false keeps the geometry, hides it.
  *   data-reflection     the sheen along the top edge.
  *   data-icon-position  left | right, only with an icon.
- *   data-test-state     hover | active | focus | disabled — the hooks the suites use.
+ *   data-test-state-*   hover | active | focus | disabled, one boolean attribute each
+ *                       (ADR-0025) — the hooks the suites use.
  *
  * Motion: the gradient sweeps and the button lifts on hover; both stop under
  * prefers-reduced-motion. Forced colours: the border drawn, no effects.
@@ -86,7 +87,7 @@
   }
 
   &:hover > .hit,
-  &[data-test-state="hover"] > .hit {
+  &[data-test-state-hover="true"] > .hit {
     block-size: var(--_cta-lift);
   }
 
@@ -115,12 +116,12 @@
 
   /* ── States shared by every variant ── */
   &:hover,
-  &[data-test-state="hover"] {
+  &[data-test-state-hover="true"] {
     transform: translateY(calc(var(--_cta-lift) * -1));
   }
 
   &:active,
-  &[data-test-state="active"] {
+  &[data-test-state-active="true"] {
     transform: translateY(0);
   }
 
@@ -129,7 +130,7 @@
   }
 
   &:focus-visible,
-  &[data-test-state="focus"] {
+  &[data-test-state-focus="true"] {
     outline-style: solid;
     outline-width: var(--_cta-outlineWidth);
     outline-color: var(--_cta-outlineColor);
@@ -137,7 +138,7 @@
   }
 
   &:disabled,
-  &[data-test-state="disabled"] {
+  &[data-test-state-disabled="true"] {
     --_cta-ink: var(--color-disabled-text);
     --_cta-surface: var(--color-disabled-surface);
     --_cta-shadowOpacity: 0;
@@ -259,15 +260,15 @@
 
     /* the lift takes the shadow with it, a little further */
     &:hover::after,
-    &[data-test-state="hover"]::after {
+    &[data-test-state-hover="true"]::after {
       inset-block-start: calc(75% + var(--_cta-lift) * 2);
     }
 
     /* pressed and hovered: the sweep hurries */
     &:hover,
     &:active,
-    &[data-test-state="hover"],
-    &[data-test-state="active"] {
+    &[data-test-state-hover="true"],
+    &[data-test-state-active="true"] {
       --_cta-sweep: 6s;
     }
   }
@@ -288,7 +289,7 @@
 
     &:hover,
     &[data-variant]:hover,
-    &[data-test-state="hover"] {
+    &[data-test-state-hover="true"] {
       transform: none;
     }
   }

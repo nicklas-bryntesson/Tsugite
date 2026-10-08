@@ -17,7 +17,8 @@ export type Reach =
 export interface State {
   key: string;
   label: string;
-  /** the props that put the component in this state; data-test-state values are joined */
+  /** the props that put the component in this state: its test twin (ADR-0025) or a real
+   *  attribute; a combination is the union of its states' props */
   props: Record<string, unknown>;
 }
 
@@ -47,21 +48,18 @@ export interface StateMap {
 export const pairKey = (a: string, b: string, order: string[]) =>
   order.indexOf(a) < order.indexOf(b) ? `${a}+${b}` : `${b}+${a}`;
 
-/** One cell's props: the base, each state's props in order, then the content's;
- *  data-test-state values join (the rig reads them with ~=), a null removes a prop. */
+/** One cell's props: the base, each state's props in order, then the content's; a null
+ *  removes a prop. Each state writes its own attribute (ADR-0025), so a merge is a union. */
 export function propsFor(map: StateMap, keys: string[], content: Content): Record<string, unknown> {
   const out: Record<string, unknown> = { ...map.base };
-  const testStates: string[] = [];
   const apply = (props: Record<string, unknown>) => {
     for (const [name, value] of Object.entries(props)) {
-      if (name === "data-test-state") testStates.push(String(value));
-      else if (value === null) delete out[name];
+      if (value === null) delete out[name];
       else out[name] = value;
     }
   };
   for (const key of keys) apply(map.states.find((s) => s.key === key)!.props);
   apply(content.props);
-  if (testStates.length) out["data-test-state"] = testStates.join(" ");
   return out;
 }
 
