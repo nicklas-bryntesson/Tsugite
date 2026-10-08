@@ -7,6 +7,8 @@ import CtaLinkButton from "../components/primitives/buttons/CtaButton/CtaLinkBut
 import CtaActionButton from "../components/primitives/buttons/CtaButton/CtaActionButton.astro";
 
 const STATES = [undefined, "hover", "active", "focus", "disabled"];
+/** a state's test twin, one boolean attribute (ADR-0025); idle writes none */
+const twin = (s?: string) => (s ? { [`data-test-state-${s}`]: "true" } : {});
 const SIZES = ["sm", "md", "lg"];
 ---
 
@@ -41,7 +43,7 @@ const SIZES = ["sm", "md", "lg"];
               <th scope="row">CtaLinkButton</th>
               {STATES.map((s) => (
                 <td style="padding-block: 2.5em;">
-                  <CtaLinkButton href="#" size={size} data-test-state={s}>Get started</CtaLinkButton>
+                  <CtaLinkButton href="#" size={size} {...twin(s)}>Get started</CtaLinkButton>
                 </td>
               ))}
             </tr>
@@ -49,7 +51,7 @@ const SIZES = ["sm", "md", "lg"];
               <th scope="row">CtaActionButton</th>
               {STATES.map((s) => (
                 <td style="padding-block: 2.5em;">
-                  <CtaActionButton size={size} icon="icon-panel-left-open" disabled={s === "disabled"} data-test-state={s === "disabled" ? undefined : s}>Start free trial</CtaActionButton>
+                  <CtaActionButton size={size} icon="icon-panel-left-open" disabled={s === "disabled"} {...(s === "disabled" ? {} : twin(s))}>Start free trial</CtaActionButton>
                 </td>
               ))}
             </tr>
