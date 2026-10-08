@@ -22,9 +22,9 @@ export const fieldStates: StateMap = {
   ],
   rest: { key: "idle", label: "idle" },
   states: [
-    { key: "hover", label: "hover", props: { "data-test-state": "hover" } },
-    { key: "autofill", label: "autofill", props: { "data-test-state": "autofill" } },
-    { key: "focus", label: "focus", props: { "data-test-state": "focus" } },
+    { key: "hover", label: "hover", props: { "data-test-state-hover": "true" } },
+    { key: "autofill", label: "autofill", props: { "data-test-state-autofill": "true" } },
+    { key: "focus", label: "focus", props: { "data-test-state-focus": "true" } },
     { key: "invalid", label: "invalid", props: { "aria-invalid": "true" } },
     { key: "readonly", label: "read-only", props: { readonly: true } },
     { key: "disabled", label: "disabled", props: { disabled: true } },

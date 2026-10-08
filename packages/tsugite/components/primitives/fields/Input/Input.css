@@ -6,8 +6,9 @@
  *   data-voice          field, always: the text-box engine's cell gives the leading.
  *   aria-invalid        "true" marks the field invalid; set by kernel/js/field-validity.ts
  *                       on leave and submit, or by a server. :invalid is never read.
- *   data-test-state     hover | autofill | focus | readonly, space-separated, any number:
- *                       the twins the benches use to render a state without a pointer.
+ *   data-test-state-*   hover | autofill | focus | readonly, one boolean attribute each,
+ *                       any number at once (ADR-0025): the twins the benches use to render
+ *                       a state without a pointer.
  */
 .Input {
   /* knobs: the face, the geometry and the rest-state colours; a state reads its own */
@@ -71,7 +72,7 @@
      rest → hover → autofill → focus → invalid → read-only → disabled. Focus sets only the
      outline, so it stands beside every other state. */
   &:hover,
-  &[data-test-state~="hover"] {
+  &[data-test-state-hover="true"] {
     border-color: var(--_in-borderColor-hover);
     background-color: var(--_in-backgroundColor-hover);
   }
@@ -92,7 +93,7 @@
     -webkit-text-fill-color: var(--_in-color);
   }
 
-  &[data-test-state~="autofill"] {
+  &[data-test-state-autofill="true"] {
     background-color: var(--_in-backgroundColor-autofill);
   }
 
@@ -102,7 +103,7 @@
   }
 
   &:focus-visible,
-  &[data-test-state~="focus"] {
+  &[data-test-state-focus="true"] {
     outline-style: solid;
     outline-width: var(--_in-outlineWidth);
     outline-color: var(--_in-outlineColor);
@@ -117,7 +118,7 @@
   /* read-only: selectable, not editable; it keeps the rest ground under the pointer.
      :read-only also matches a disabled field, which is excluded here. */
   &:read-only:not(:disabled),
-  &[data-test-state~="readonly"] {
+  &[data-test-state-readonly="true"] {
     border-style: dashed;
     border-color: var(--_in-borderColor);
     background-color: var(--_in-backgroundColor);
