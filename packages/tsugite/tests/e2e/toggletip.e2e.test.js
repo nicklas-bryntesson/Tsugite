@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
-import { checkA11y, injectAxe } from 'axe-playwright'
-import { targetPath, targetId } from './helpers/target.js'
+import { injectAxe } from 'axe-playwright'
+import { scopedCheckA11y, targetPath, targetId } from './helpers/target.js'
 
 // Tsugite adaptation (INTAKE §3, mechanical): the root is `.ToggleTip[data-component]`,
 // not the `toggle-tip` custom element — the DOM end-state is authored in
@@ -8,7 +8,7 @@ import { targetPath, targetId } from './helpers/target.js'
 const tipRoot = (id) => `${targetId('ToggleTip')}[data-id="${id}"]`
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/toggle-tip'))
 })
 
 // ── Open / close ───────────────────────────────────────────────────────────
@@ -92,9 +92,11 @@ test('bubble is positioned above trigger by default', async ({ page }) => {
   // more room above than below. The bubble's default "above" placement is only
   // chosen when space allows — detectDirection compares available space and a
   // near-centred trigger is an ambiguous tie, so the test must set the scene.
+  // On the bench the page is too short to scroll the tip down, so the viewport ends
+  // just below it instead: the same scene, the room all above (ADR-0026).
   const absTop = await tip.evaluate(el => window.scrollY + el.getBoundingClientRect().top)
-  await page.setViewportSize({ width: 1280, height: 720 })
-  await page.evaluate(top => window.scrollTo(0, top - 600), absTop)
+  await page.setViewportSize({ width: 1280, height: Math.round(absTop) + 80 })
+  await page.evaluate(() => window.scrollTo(0, 0))
 
   await tip.locator('button').click()
   await expect(tip).toHaveAttribute('data-direction', 'top')
@@ -157,18 +159,21 @@ test('no axe violations on closed state', async ({ page }) => {
   const tip = page.locator(tipRoot('center'))
   await tip.scrollIntoViewIfNeeded()
   await injectAxe(page)
-  await checkA11y(page, tipRoot('center'))
+  await scopedCheckA11y(page, tipRoot('center'))
 })
 
 test('no axe violations on open state', async ({ page }) => {
   const tip = page.locator(tipRoot('center'))
   await tip.scrollIntoViewIfNeeded()
   await tip.locator('button').click()
+  // The bubble fades in (@starting-style, 0.15 s): sampled mid-fade its text measures
+  // far below AA, so axe reads the settled frame (see waitForStable in the helper).
+  await expect(tip.locator('.popup')).toHaveCSS('opacity', '1')
   await injectAxe(page)
   // `color-contrast` used to be disabled here, with a measured reason: axe could
   // not resolve CSS custom properties on custom elements and reported #888888
   // instead of the computed rgb(0,0,0). Re-measured — it passes with the rule
   // enabled, so the axe limitation is gone and the suppression was only still
   // standing down a rule that now works.
-  await checkA11y(page, tipRoot('center'))
+  await scopedCheckA11y(page, tipRoot('center'))
 })
