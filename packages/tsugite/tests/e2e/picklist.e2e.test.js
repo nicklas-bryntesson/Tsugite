@@ -11,7 +11,7 @@ import { targetPath } from './helpers/target.js'
 // and `.options` are page-global words shared across components.
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/picklist'))
 })
 
 // ── The legend is the group's accessible name ─────────────────────────────────

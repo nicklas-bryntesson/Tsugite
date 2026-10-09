@@ -9,7 +9,7 @@ import { targetPath, targetId, expectEveryPopupButtonReachable } from './helpers
 const ROOT = targetId('DateTimeField')
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/date-time-field'))
   await page.locator(ROOT).scrollIntoViewIfNeeded()
   await page.locator(`${ROOT}[data-initialized="true"]`).waitFor()
   await injectAxe(page)
@@ -418,7 +418,7 @@ async function serveAs(page, locale) {
     const body = (await r.text()).replace(/data-locale="[^"]*"/g, `data-locale="${locale}"`)
     await route.fulfill({ response: r, body })
   })
-  await page.goto(targetPath())
+  await page.goto(targetPath('/date-time-field'))
 }
 
 test('de-DE renders German weekday names, not English ones', async ({ page }) => {
@@ -474,7 +474,7 @@ test('a day outside the allowed range is marked disabled and rendered muted', as
       /data-component="DateTimeField"/g, `data-component="DateTimeField" data-min="${min}"`)
     await route.fulfill({ response: r, body })
   })
-  await page.goto(targetPath())
+  await page.goto(targetPath('/date-time-field'))
   await page.locator(`${ROOT} .trigger`).click()
 
   const colours = await page.locator(ROOT).evaluate((el) => {

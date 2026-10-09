@@ -8,7 +8,7 @@ import { targetPath } from './helpers/target.js'
 const __dir = path.dirname(fileURLToPath(import.meta.url))
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/file-upload'))
   await page.locator('[data-component="FileUpload"][data-initialized="true"]').first().scrollIntoViewIfNeeded()
   await injectAxe(page)
 })

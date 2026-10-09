@@ -21,7 +21,7 @@ const DESCRIBEDBY = anchor('affixfield-describedby')
 const SIZED = anchor('affixfield-sized')
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/affix-field'))
   await page.locator(AF).scrollIntoViewIfNeeded()
   await page.locator(`${AF}[data-initialized="true"]`).waitFor()
   await injectAxe(page)

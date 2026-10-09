@@ -9,7 +9,7 @@ import { targetPath, targetId, scopedCheckA11y, expectEveryPopupButtonReachable 
 const TF = targetId('TimeField')
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/time-field'))
   await page.locator(TF).scrollIntoViewIfNeeded()
   await page.locator(`${TF}[data-initialized="true"]`).waitFor()
   await injectAxe(page)

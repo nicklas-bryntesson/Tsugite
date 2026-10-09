@@ -6,7 +6,7 @@ import { targetPath, targetId, scopedCheckA11y, expectEveryPopupButtonReachable 
 const WF = targetId('WeekField')
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/week-field'))
   await page.locator(WF).scrollIntoViewIfNeeded()
   await page.locator(`${WF}[data-initialized="true"]`).waitFor()
   await injectAxe(page)
@@ -351,7 +351,7 @@ async function serveAs(page, locale) {
     const body = (await r.text()).replace(/data-locale="[^"]*"/g, `data-locale="${locale}"`)
     await route.fulfill({ response: r, body })
   })
-  await page.goto(targetPath())
+  await page.goto(targetPath('/week-field'))
 }
 
 test('de-DE renders German weekday names, not English ones', async ({ page }) => {
