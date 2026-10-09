@@ -1,0 +1,24 @@
+---
+// The page every bench renders into: the package's CSS and nothing of the site's.
+import "./bench.css";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · bench</title>
+  </head>
+  <body>
+    <main class="Bench" data-bench={title}>
+      <slot />
+    </main>
+  </body>
+</html>

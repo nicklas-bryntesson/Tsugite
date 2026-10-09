@@ -1,0 +1,9 @@
+---
+// The list of benches, for looking. No suite loads this page.
+import BenchLayout from "../BenchLayout.astro";
+import { benches } from "../benches";
+---
+
+<BenchLayout title="Benches">
+  {benches.map(({ slug, title }) => <a href={`/${slug}`}>{title}</a>)}
+</BenchLayout>
