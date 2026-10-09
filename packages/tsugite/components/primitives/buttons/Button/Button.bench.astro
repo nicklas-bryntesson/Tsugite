@@ -8,6 +8,14 @@ import LinkButton from "./LinkButton.astro";
 import { actionStates, linkStates } from "../../../../fixtures/states/button.states";
 import { excludedBy, propsFor, type StateMap } from "../../../../fixtures/states/types";
 
+interface Props {
+  /** The icons the cases draw. On by default, as the bench app has none; a page that
+   *  already carries them (the docs app's sprite) turns it off, or the ids repeat. */
+  sprite?: boolean;
+}
+
+const { sprite = true } = Astro.props;
+
 const cellsOf = (map: StateMap) => [
   [],
   ...map.states.map((s) => [s.key]),
@@ -33,10 +41,13 @@ const cases = [
 );
 ---
 
-{/* The icons the bench's buttons draw; a page that mounts Button provides its own. */}
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-  <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></symbol>
-</svg>
+{
+  sprite && (
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></symbol>
+    </svg>
+  )
+}
 
 {
   cases.map(({ name, Door, label, props }) => (
