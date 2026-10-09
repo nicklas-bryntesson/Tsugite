@@ -27,18 +27,11 @@ const DECLARATION =
   /(font-size|font-weight|font-family|line-height|letter-spacing|text-transform)\s*:\s*([^;{}"']*)/g;
 
 /** The class-A allowlist: file → normalized declaration → expected count.
-    Categories: @font-face infrastructure · mechanical trims (icon/glyph
+    Categories: mechanical trims (icon/glyph
     alignment) · Prose's relative inline-code mechanism (0.875em/1em) ·
     deliberate test stimuli · bench instruments (1cap, lowercase) · the ja
     fallback stack (G6) · tracked-caps manner pending the Eyebrow primitive. */
 const ALLOWLIST: Record<string, Record<string, number>> = {
-  "apps/docs/src/styles/base/font.css": {
-    // quoted family names are clipped by the scanner; the property is the marker
-    "font-family:": 8,
-    "font-weight: 600": 2,
-    "font-weight: 400": 4,
-    "font-weight: 700": 2,
-  },
   "apps/docs/src/styles/global.css": {
     "font-family:": 1, // the ja stack: value spans lines; the property is the marker (G6)
   },

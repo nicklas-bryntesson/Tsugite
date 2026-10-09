@@ -6,7 +6,7 @@
 // theme DEFINES can never drift apart.
 import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
-import { validateTypography, generateTypographyStylesheet } from "../engine/collector.js";
+import { validateTypography, generateTypographyStylesheet, generateFontFaceStylesheet } from "../engine/collector.js";
 import { TIERS, typeVoices, typeSizes, sizeTokenName } from "../theme-default/typography.tokens.js";
 import { FAMILY, VOICE_SIZES } from "../lib/typographyFamily.ts";
 
@@ -25,7 +25,7 @@ describe("the typography tables", () => {
 
   it("a tier-mapped metric emits per tier (and in the bench overrides), never in :root", () => {
     const tables = {
-      families: { "--SYNTH": { stack: "'Synth', sans-serif", metrics: { ascent: 0.9, capHeight: 0.7, descent: 0.2 } } },
+      families: { "--SYNTH": { stack: "'Synth', sans-serif", metrics: { ascent: 0.9, capHeight: 0.7, descent: 0.2 }, system: true } },
       weights: { "--SYNTH-400": "400" },
       sizes: { probe: { floor: "1rem", mobile: "1rem", desktop: "1rem", wide: "1rem" } },
       lineLengths: { probe: "60ch" },
@@ -53,7 +53,7 @@ describe("the typography tables", () => {
 
   it("a partial tier map is refused (the refusal rule)", () => {
     const tables = {
-      families: { "--SYNTH": { stack: "x", metrics: { ascent: 0.9, capHeight: 0.7, descent: 0.2 } } },
+      families: { "--SYNTH": { stack: "x", metrics: { ascent: 0.9, capHeight: 0.7, descent: 0.2 }, system: true } },
       weights: { "--SYNTH-400": "400" },
       sizes: {},
       voices: {
@@ -72,7 +72,7 @@ describe("the typography tables", () => {
 
   it("the unit laws: line-height unitless, baseline offset a length", () => {
     const base = {
-      families: { "--SYNTH": { stack: "x", metrics: { ascent: 0.9, capHeight: 0.7, descent: 0.2 } } },
+      families: { "--SYNTH": { stack: "x", metrics: { ascent: 0.9, capHeight: 0.7, descent: 0.2 }, system: true } },
       weights: { "--SYNTH-400": "400" },
       sizes: {},
     };
@@ -115,5 +115,72 @@ describe("the typography tables", () => {
         }
       }
     }
+  });
+});
+
+// ADR-0027: a family delivers the faces its metrics were measured from, or is the system's.
+describe("the theme's typefaces", () => {
+  const fira = (faces: unknown[], extra: Record<string, unknown> = {}) => ({
+    families: {
+      "--FIRA": { stack: "'Fira Sans', sans-serif", metrics: { ascent: 0.93, capHeight: 0.692, descent: 0.26 }, faces, ...extra },
+    },
+    weights: { "--FIRA-600": "600" },
+    sizes: {},
+    voices: {
+      probe: {
+        family: "--FIRA",
+        weights: { default: "--FIRA-600" },
+        lineHeight: "1.4",
+        letterSpacing: "normal",
+        featureSettings: "normal",
+        baselineOffset: "0",
+      },
+    },
+  });
+  const face = (files = ["FiraSans/FiraSans-Heading-Core.woff2", "FiraSans/FiraSans-Heading-Core.woff"], weight = "600") => ({
+    weight,
+    style: "normal",
+    files,
+  });
+
+  it("the committed artifact matches the factory (freshness)", () => {
+    const artifact = readFileSync(new URL("../styles/tokens/typography/fonts.generated.css", import.meta.url), "utf8");
+    expect(artifact).toBe(generateFontFaceStylesheet());
+  });
+
+  it("every face is written woff2 first, with font-display: swap", () => {
+    const css = generateFontFaceStylesheet();
+    const rules = css.split("@font-face {").slice(1);
+    expect(rules.length).toBeGreaterThan(0);
+    for (const rule of rules) {
+      expect(rule).toMatch(/format\("woff2"\),\s*url\([^)]*\) format\("woff"\);/);
+      expect(rule).toContain("font-display: swap;");
+    }
+  });
+
+  it("a delivered family passes", () => {
+    expect(() => validateTypography(fira([face()]))).not.toThrow();
+  });
+
+  it("a family with neither faces nor the system mark is refused", () => {
+    expect(() => validateTypography(fira([]))).toThrow(/must either list its faces or be marked system/);
+  });
+
+  it("a family with both faces and the system mark is refused", () => {
+    expect(() => validateTypography(fira([face()], { system: true }))).toThrow(/must either list its faces or be marked system/);
+  });
+
+  it("a weight a voice asks for without a face is refused", () => {
+    expect(() => validateTypography(fira([face(undefined, "400")]))).toThrow(/has no face at weight 600/);
+  });
+
+  it("woff before woff2 is refused", () => {
+    expect(() =>
+      validateTypography(fira([face(["FiraSans/FiraSans-Heading-Core.woff", "FiraSans/FiraSans-Heading-Core.woff2"])])),
+    ).toThrow(/files must name woff2 before woff/);
+  });
+
+  it("a file that is not in the theme is refused", () => {
+    expect(() => validateTypography(fira([face(["FiraSans/Missing.woff2"])]))).toThrow(/is not in theme-default\/fonts/);
   });
 });

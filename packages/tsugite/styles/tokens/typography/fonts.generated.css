@@ -1,0 +1,87 @@
+/* GENERATED — do not edit. Source: theme-default/typography.tokens.js
+   The theme's typefaces: one @font-face per delivered face, the files the
+   family metrics were measured from (ADR-0027), woff2 first.
+   Regenerate: npm run tokens   (freshness guarded by tests) */
+
+@font-face {
+  font-family: "Fira Sans";
+  src:
+    url("../../../theme-default/fonts/FiraSans/FiraSans-Heading-Core.woff2") format("woff2"),
+    url("../../../theme-default/fonts/FiraSans/FiraSans-Heading-Core.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007E;
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  src:
+    url("../../../theme-default/fonts/FiraSans/FiraSans-Heading-Extended.woff2") format("woff2"),
+    url("../../../theme-default/fonts/FiraSans/FiraSans-Heading-Extended.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+00A0-00FF, U+2013, U+2014, U+2018, U+2019, U+201C, U+201D, U+2026, U+20AC;
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  src:
+    url("../../../theme-default/fonts/NotoSerif/NotoSerif-Body-Regular-subset.woff2") format("woff2"),
+    url("../../../theme-default/fonts/NotoSerif/NotoSerif-Body-Regular-subset.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  src:
+    url("../../../theme-default/fonts/NotoSerif/NotoSerif-Body-Italic-subset.woff2") format("woff2"),
+    url("../../../theme-default/fonts/NotoSerif/NotoSerif-Body-Italic-subset.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  src:
+    url("../../../theme-default/fonts/NotoSerif/NotoSerif-Body-Bold-subset.woff2") format("woff2"),
+    url("../../../theme-default/fonts/NotoSerif/NotoSerif-Body-Bold-subset.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  src:
+    url("../../../theme-default/fonts/NotoSerif/NotoSerif-Body-Bold-Italic-subset.woff2") format("woff2"),
+    url("../../../theme-default/fonts/NotoSerif/NotoSerif-Body-Bold-Italic-subset.woff") format("woff");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Abril Fatface";
+  src:
+    url("../../../theme-default/fonts/AbrilFatface/AbrilDisplay-subset.woff2") format("woff2"),
+    url("../../../theme-default/fonts/AbrilFatface/AbrilDisplay-subset.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src:
+    url("../../../theme-default/fonts/Inter/InterUI-Regular-subset.woff2") format("woff2"),
+    url("../../../theme-default/fonts/Inter/InterUI-Regular-subset.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+

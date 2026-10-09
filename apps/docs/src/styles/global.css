@@ -4,7 +4,6 @@
    DateField, DateTimeField, TimeField, CoverComposition, CTABlock, CircleDiagram. */
 
 @import "tsugite/styles/base/reset.css";
-@import "./base/font.css";
 
 /* Base tables — GENERATED from theme-default/size|site|grid.tokens.js
    (ADR-0011): spacing scale, site offset and grids. RAW constants plus
@@ -27,6 +26,10 @@
    (ADR-0003 extended to type): RAW families/weights/stops, voice
    bundles, tier ramps, test-viewport overrides. */
 @import "tsugite/styles/tokens/typography/typography.generated.css";
+
+/* The theme's typefaces — GENERATED from the same file (ADR-0027): the faces
+   the family metrics were measured from, delivered by the package. */
+@import "tsugite/styles/tokens/typography/fonts.generated.css";
 
 @import "tsugite/styles/utils/index.css";
 
