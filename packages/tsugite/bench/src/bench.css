@@ -12,6 +12,15 @@
 @import "../../styles/tokens/typography/fonts.generated.css";
 @import "../../styles/utils/index.css";
 
+/* The page a host paints: its surface, its ink and the body voice's face, from the
+   tokens. Without it a cell that lets the page show through is measured against the
+   browser's canvas, which no consumer ships. */
+body {
+  background-color: var(--color-surface-page);
+  color: var(--color-text-primary);
+  font-family: var(--fontFamily-body);
+}
+
 /* A bench instrument: arrangement only. Every case on its own line, left-aligned, at
    its own width. */
 .Bench {
