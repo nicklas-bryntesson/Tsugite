@@ -1,0 +1,47 @@
+---
+// ChoiceGroup's bench (ADR-0026): each legend placement, each orientation, a hint and a
+// group error, one group per line, named data-bench-case="<shape>". The legends are the
+// groups' accessible names, so each says what its case shows. A bench mounts its own
+// dependencies: the fields inside and the Notice the error is.
+import ChoiceGroup from "./ChoiceGroup.astro";
+import ChoiceField from "../ChoiceField/ChoiceField.astro";
+import Notice from "../../Notice/Notice.astro";
+---
+
+<ChoiceGroup legend="Legend above, radios" data-bench-case="above">
+  <ChoiceField type="radio" id="cg-above-1" name="cg-above" label="One" checked={true} />
+  <ChoiceField type="radio" id="cg-above-2" name="cg-above" label="Two" />
+  <ChoiceField type="radio" id="cg-above-3" name="cg-above" label="Three" />
+</ChoiceGroup>
+
+<ChoiceGroup legend="Legend beside, checkboxes" legendPlacement="beside" data-bench-case="beside">
+  <ChoiceField type="checkbox" id="cg-beside-1" name="cg-beside-1" label="One" checked={true} />
+  <ChoiceField type="checkbox" id="cg-beside-2" name="cg-beside-2" label="Two" />
+  <ChoiceField type="checkbox" id="cg-beside-3" name="cg-beside-3" label="Three" />
+</ChoiceGroup>
+
+<ChoiceGroup legend="Legend hidden" legendPlacement="hidden" data-bench-case="hidden">
+  <ChoiceField type="radio" id="cg-hidden-1" name="cg-hidden" label="One" checked={true} />
+  <ChoiceField type="radio" id="cg-hidden-2" name="cg-hidden" label="Two" />
+</ChoiceGroup>
+
+<ChoiceGroup legend="Horizontal" orientation="horizontal" data-bench-case="horizontal">
+  <ChoiceField type="checkbox" id="cg-horizontal-1" name="cg-horizontal-1" label="One" />
+  <ChoiceField type="checkbox" id="cg-horizontal-2" name="cg-horizontal-2" label="Two" checked={true} />
+  <ChoiceField type="checkbox" id="cg-horizontal-3" name="cg-horizontal-3" label="Three" />
+  <ChoiceField type="checkbox" id="cg-horizontal-4" name="cg-horizontal-4" label="Four" />
+</ChoiceGroup>
+
+<ChoiceGroup legend="With hint" hint="A hint, read after the legend." hintId="cg-hint-text" describedby="cg-hint-text" data-bench-case="hint">
+  <ChoiceField type="radio" id="cg-hint-1" name="cg-hint" label="One" checked={true} />
+  <ChoiceField type="radio" id="cg-hint-2" name="cg-hint" label="Two" />
+</ChoiceGroup>
+
+<ChoiceGroup legend="Invalid" invalid={true} describedby="cg-error-text" data-bench-case="invalid">
+  <ChoiceField type="checkbox" id="cg-error-1" name="cg-error-1" label="One" required={true} invalid={true} />
+  <div slot="error" class="notice-region" role="alert" aria-live="assertive">
+    <Notice variant="error">
+      <p id="cg-error-text">The group error, read as the description.</p>
+    </Notice>
+  </div>
+</ChoiceGroup>
