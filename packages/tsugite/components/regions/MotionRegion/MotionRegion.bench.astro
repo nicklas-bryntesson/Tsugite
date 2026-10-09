@@ -1,0 +1,48 @@
+---
+// MotionRegion's bench (ADR-0026): the region under each autoplay value, one per line,
+// named data-bench-case="autoplay/<value>". The backend is authored content that obeys
+// data-motion; the bench brings a CSS one, the whole integration for that backend.
+import MotionRegion from "./MotionRegion.astro";
+
+const texts = {
+  playText: "Play background animation",
+  pauseText: "Pause background animation",
+  playingText: "Background animation playing",
+  pausedText: "Background animation paused",
+};
+---
+
+<MotionRegion id="motion-region-live" autoplay="policy" {...texts} data-bench-case="autoplay/policy">
+  <div class="demo-animation" role="presentation"></div>
+</MotionRegion>
+
+<MotionRegion id="motion-region-off" autoplay="off" {...texts} data-bench-case="autoplay/off">
+  <div class="demo-animation" role="presentation"></div>
+</MotionRegion>
+
+<style is:global>
+  /* A background-only region has no content width, and the bench line is as wide as
+     its case: sizing is the host's job, not the component's. */
+  .MotionRegion[data-bench-case] {
+    inline-size: min(48rem, 100%);
+  }
+
+  /* The backend: a CSS animation gated by the region's data-motion. The colours are
+     authored content, not system tokens. */
+  .demo-animation {
+    block-size: 12rem;
+    background: linear-gradient(120deg, #6a5acd, #ff6b6b, #4ecdc4, #6a5acd);
+    background-size: 300% 300%;
+    animation: demo-animation 6s ease infinite;
+  }
+
+  .MotionRegion[data-motion="paused"] .demo-animation {
+    animation-play-state: paused;
+  }
+
+  @keyframes demo-animation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>

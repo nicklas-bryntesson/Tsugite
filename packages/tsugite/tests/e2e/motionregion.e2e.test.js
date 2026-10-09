@@ -11,8 +11,7 @@ import { targetPath, targetId, scopedCheckA11y } from './helpers/target.js'
 const MR = targetId('MotionRegion')
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
-  await page.locator(MR).scrollIntoViewIfNeeded()
+  await page.goto(targetPath('/motion-region'))
   await page.locator(`${MR}[data-initialized="true"]`).waitFor()
   await injectAxe(page)
 })
@@ -62,7 +61,6 @@ test('does not autostart under reduced motion; the CSS animation stays paused', 
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.reload()
   const region = page.locator(MR)
-  await region.scrollIntoViewIfNeeded()
   await page.locator(`${MR}[data-initialized="true"]`).waitFor()
   await expect(region).toHaveAttribute('data-motion', 'paused')
   await expect(region.locator('.demo-animation')).toHaveCSS('animation-play-state', 'paused')

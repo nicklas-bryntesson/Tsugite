@@ -14,8 +14,7 @@ const region = (page) => page.locator(`${SA} [data-scroll-viewport]`)
 test.beforeEach(async ({ page }) => {
   // Narrow enough that the wide table overflows and the region is enabled.
   await page.setViewportSize({ width: 480, height: 800 })
-  await page.goto(targetPath())
-  await page.locator(SA).scrollIntoViewIfNeeded()
+  await page.goto(targetPath('/scroll-area'))
   await page.locator(`${SA}[data-scrollbar="true"]`).waitFor()
   await injectAxe(page)
 })
