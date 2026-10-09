@@ -1,0 +1,36 @@
+---
+// ChoiceField's bench (ADR-0026): both types, unchecked and checked, in every state —
+// idle, the three test twins (ADR-0025), invalid and disabled — one field per line,
+// named data-bench-case="<type>/<checked>/<state>". Then a radio group sharing one
+// name, "group/<n>", for the selection the native input owns.
+import ChoiceField from "./ChoiceField.astro";
+
+const twin = (s: string) => ({ [`data-test-state-${s}`]: "true" });
+
+const states = [
+  { key: "idle", props: {} },
+  { key: "hover", props: twin("hover") },
+  { key: "focus", props: twin("focus") },
+  { key: "active", props: twin("active") },
+  { key: "invalid", props: { invalid: true } },
+  { key: "disabled", props: { disabled: true } },
+];
+
+const cases = (["checkbox", "radio"] as const).flatMap((type) =>
+  [false, true].flatMap((checked) =>
+    states.map(({ key, props }) => {
+      const name = `${type}/${checked ? "checked" : "unchecked"}/${key}`;
+      const id = `cf-${name.replaceAll("/", "-")}`;
+      return { name, field: { type, id, name: id, checked, ...props } };
+    }),
+  ),
+);
+---
+
+{cases.map(({ name, field }) => <ChoiceField {...field} label="Label" data-bench-case={name} />)}
+
+{
+  [1, 2, 3].map((n) => (
+    <ChoiceField type="radio" id={`cf-group-${n}`} name="cf-group" label={`Option ${n}`} checked={n === 1} data-bench-case={`group/${n}`} />
+  ))
+}

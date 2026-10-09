@@ -1,48 +1,52 @@
 import { test, expect } from '@playwright/test'
-import { checkA11y, injectAxe } from 'axe-playwright'
-import { targetPath } from './helpers/target.js'
+import { injectAxe } from 'axe-playwright'
+import { scopedCheckA11y, targetPath } from './helpers/target.js'
+
+// ChoiceGroup on its bench (ADR-0026): one group per shape, named data-bench-case.
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/choice-group'))
+})
+
+const caseOf = (page, name) => page.locator(`[data-bench-case="${name}"]`)
+
+test('every case renders a ChoiceGroup, none a DevError', async ({ page }) => {
+  await expect(page.locator('.DevError')).toHaveCount(0)
+  for (const el of await page.locator('[data-bench-case]').all()) await expect(el).toHaveClass(/\bChoiceGroup\b/)
 })
 
 // ── The legend is the group's accessible name ─────────────────────────────────
 
 test('legend names the group (role=group)', async ({ page }) => {
-  const group = page.getByRole('group', { name: 'Shipping speed' })
-  await expect(group).toBeVisible()
+  await expect(page.getByRole('group', { name: 'Legend above, radios' })).toBeVisible()
 })
 
 test('a hidden legend still provides the group name', async ({ page }) => {
   // data-legend="hidden" removes the legend visually but not from the a11y tree
-  const group = page.getByRole('group', { name: 'Payment method' })
-  await expect(group).toHaveCount(1)
-  const legend = page.locator('.ChoiceGroup[data-id="hidden"] legend')
+  await expect(page.getByRole('group', { name: 'Legend hidden' })).toHaveCount(1)
   // visually removed (clipped to 1px) but present
-  const box = await legend.boundingBox()
+  const box = await caseOf(page, 'hidden').locator('legend').boundingBox()
   expect(box.width).toBeLessThanOrEqual(2)
 })
 
 // ── Hint / error are wired as the group's accessible description ───────────────
 
 test('hint is exposed as the group accessible description', async ({ page }) => {
-  const group = page.getByRole('group', { name: 'Account type' })
-  await expect(group).toHaveAccessibleDescription(/plan that fits your team/i)
+  await expect(page.getByRole('group', { name: 'With hint' })).toHaveAccessibleDescription(/read after the legend/i)
 })
 
 test('group error is announced (role=alert) and described', async ({ page }) => {
-  const group = page.getByRole('group', { name: 'Terms' })
-  await expect(group).toHaveAccessibleDescription(/must accept the terms/i)
+  await expect(page.getByRole('group', { name: 'Invalid' })).toHaveAccessibleDescription(/group error/i)
   // the error is a Notice inside a persistent live region (the announcer)
-  await expect(page.locator('.ChoiceGroup[data-id="invalid"] .notice-region')).toHaveAttribute('role', 'alert')
-  await expect(page.locator('.ChoiceGroup[data-id="invalid"] .notice-region .Notice')).toHaveAttribute('data-variant', 'error')
+  const region = caseOf(page, 'invalid').locator('.notice-region')
+  await expect(region).toHaveAttribute('role', 'alert')
+  await expect(region.locator('.Notice')).toHaveAttribute('data-variant', 'error')
 })
 
 // ── Layout: orientation ───────────────────────────────────────────────────────
 
 test('horizontal orientation lays fields in a row', async ({ page }) => {
-  const opts = page.locator('.ChoiceGroup[data-id="horizontal"] .ChoiceField')
-  await opts.first().scrollIntoViewIfNeeded()
+  const opts = caseOf(page, 'horizontal').locator('.ChoiceField')
   const first = await opts.nth(0).boundingBox()
   const second = await opts.nth(1).boundingBox()
   // same row → tops roughly aligned, second is to the right of the first
@@ -51,8 +55,7 @@ test('horizontal orientation lays fields in a row', async ({ page }) => {
 })
 
 test('vertical orientation stacks fields', async ({ page }) => {
-  const opts = page.locator('.ChoiceGroup[data-id="above"] .ChoiceField')
-  await opts.first().scrollIntoViewIfNeeded()
+  const opts = caseOf(page, 'above').locator('.ChoiceField')
   const first = await opts.nth(0).boundingBox()
   const second = await opts.nth(1).boundingBox()
   expect(second.y).toBeGreaterThan(first.y)
@@ -61,19 +64,17 @@ test('vertical orientation stacks fields', async ({ page }) => {
 // ── Selection semantics survive grouping ──────────────────────────────────────
 
 test('single-selection holds within a group', async ({ page }) => {
-  const first = page.locator('#cg-live-1')
-  const second = page.locator('#cg-live-2')
-  await first.scrollIntoViewIfNeeded()
+  const first = page.locator('#cg-above-1')
+  const second = page.locator('#cg-above-2')
   await expect(first).toBeChecked()
-  await page.locator('label[for="cg-live-2"]').click()
+  await page.locator('label[for="cg-above-2"]').click()
   await expect(second).toBeChecked()
   await expect(first).not.toBeChecked()
 })
 
 // ── Accessibility ─────────────────────────────────────────────────────────────
 
-test('no axe violations across ChoiceGroup variants', async ({ page }) => {
-  await page.locator('.ChoiceGroup').first().scrollIntoViewIfNeeded()
+test('no axe violations across the bench', async ({ page }) => {
   await injectAxe(page)
-  await checkA11y(page, '#ChoiceGroup')
+  await scopedCheckA11y(page, '.Bench')
 })
