@@ -1,0 +1,69 @@
+---
+// ToggleTip's bench (ADR-0026): a popup, so it opts in to the placement layout — each
+// tip on a full-width line at the place its case measures: the top of the page (flip
+// below), beside text, the start and end edges (clamp), and the centre (above, with a
+// heading and the question icon). Each tip is named data-bench-case="<place>"; its
+// data-id carries the same name for the suite's tipRoot seam. A tip is flow content
+// beside its text, never inside a <p>.
+import ToggleTip from "./ToggleTip.astro";
+---
+
+<div class="bench-place">
+  <ToggleTip id="tt-near-top" data-id="near-top" data-bench-case="near-top">
+    <p>Opened at the top, the bubble has no room above and flips below.</p>
+  </ToggleTip>
+  <span>Top of the page</span>
+</div>
+
+<div class="bench-place">
+  <span>Beside text</span>
+  <ToggleTip id="tt-inline" data-id="inline" data-bench-case="inline">
+    <p>A first paragraph.</p>
+    <p>A second, with <a href="#tt-inline">a link</a> and <strong>emphasis</strong>.</p>
+  </ToggleTip>
+  <span>and text after.</span>
+</div>
+
+<div class="bench-place">
+  <ToggleTip id="tt-left-edge" data-id="left-edge" data-bench-case="left-edge">
+    <p>At the start edge, the bubble clamps to the viewport and the arrow follows the trigger.</p>
+  </ToggleTip>
+  <span>Start edge</span>
+</div>
+
+<div class="bench-place" data-align="end">
+  <span>End edge</span>
+  <ToggleTip id="tt-right-edge" data-id="right-edge" data-bench-case="right-edge">
+    <p>At the end edge, the bubble clamps to the viewport and the arrow follows the trigger.</p>
+  </ToggleTip>
+</div>
+
+<div class="bench-place" data-align="center">
+  <ToggleTip id="tt-center" data-id="center" data-bench-case="center" icon="question" heading="A heading">
+    <p>Content under a heading.</p>
+    <ul>
+      <li>A list item.</li>
+      <li>Another.</li>
+    </ul>
+  </ToggleTip>
+  <span>Centre, question icon, heading</span>
+</div>
+
+<style is:global>
+  /* The placement layout: a full-width line per place, the tip seated at its start,
+     end or centre. Arrangement only. */
+  .bench-place {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    gap: var(--size-sm);
+
+    &[data-align="end"] {
+      justify-content: flex-end;
+    }
+
+    &[data-align="center"] {
+      justify-content: center;
+    }
+  }
+</style>
