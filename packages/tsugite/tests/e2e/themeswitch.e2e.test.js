@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
-import { checkA11y, injectAxe } from 'axe-playwright'
-import { targetPath } from './helpers/target.js'
+import { injectAxe } from 'axe-playwright'
+import { scopedCheckA11y, targetPath } from './helpers/target.js'
 
 // ThemeSwitch is the first component that mutates GLOBAL page state, so every
 // test starts from a known root: no stored preference, no attribute. Playwright
@@ -12,8 +12,8 @@ import { targetPath } from './helpers/target.js'
 // reaches system colours, that `system` projects nothing, and that an explicit
 // choice survives both a reload and a contradicting OS.
 
-// ADAPTATION (logged in reference-components' porting log): scoped to the kitchen-sink demo
-// instance by data-id. The reference selector assumed exactly one live instance
+// ADAPTATION (logged in reference-components' porting log): scoped to the bench's live
+// instance by data-id (ADR-0026). The reference selector assumed exactly one live instance
 // per page; this site also mounts one in the header, and an unqualified locator
 // would trip Playwright's strict mode. Site-level behaviour (header instance,
 // multi-instance sync) is covered by header.e2e.test.js.
@@ -74,7 +74,7 @@ const freezeTransitions = (page) => page.addStyleTag({
 // cleared with addInitScript, which would also run on the reload inside the
 // persistence test and wipe the very value under test.
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/theme-switch'))
   await freezeTransitions(page)
   await page.locator(TS).scrollIntoViewIfNeeded()
 })
@@ -126,11 +126,11 @@ test('a stored choice is restored before first paint, without the component', as
   // (`/main.js?v=…`), which `**/main.js` silently fails to match — so the module
   // still loaded and the test proved nothing.
   // PORT ADAPTATION: the reference test hardcodes '/' (its kitchensink) and its
-  // Vite entry '/main.js'. Our demo page comes from targetPath(), and Astro
+  // Vite entry '/main.js'. Our demo page comes from targetPath('/theme-switch'), and Astro
   // serves the component script as its own module (…/ThemeSwitch.astro?…&type=script).
   await page.route((url) => url.pathname === '/main.js' || url.pathname.includes('ThemeSwitch'), (route) => route.abort())
   await page.addInitScript(() => window.localStorage.setItem('appearance-preference', 'dark'))
-  await page.goto(targetPath(), { waitUntil: 'domcontentloaded' })
+  await page.goto(targetPath('/theme-switch'), { waitUntil: 'domcontentloaded' })
 
   expect(await appearanceAttr(page), 'the head script must have done this').toBe('dark')
   expect(
@@ -147,7 +147,7 @@ test('a stored choice is reflected in the radios before the component runs', asy
   // nothing for the module to move later.
   await page.route((url) => url.pathname === '/main.js' || url.pathname.includes('ThemeSwitch'), (route) => route.abort())
   await page.addInitScript(() => window.localStorage.setItem('appearance-preference', 'dark'))
-  await page.goto(targetPath(), { waitUntil: 'domcontentloaded' })
+  await page.goto(targetPath('/theme-switch'), { waitUntil: 'domcontentloaded' })
 
   expect(await page.locator(TS).getAttribute('data-initialized')).toBeNull()
   await expect(page.locator(`${TS} input[value="dark"]`)).toBeChecked()
@@ -159,7 +159,7 @@ test('on reload the indicator is on the stored segment at once — it does not s
   // freezing. If the module had to move the indicator after first paint, the
   // computed translate right after DOMContentLoaded would be mid-slide.
   await page.addInitScript(() => window.localStorage.setItem('appearance-preference', 'dark'))
-  await page.goto(targetPath(), { waitUntil: 'domcontentloaded' })
+  await page.goto(targetPath('/theme-switch'), { waitUntil: 'domcontentloaded' })
 
   expect(await page.locator(`${TS} .indicator`).evaluate((el) => getComputedStyle(el).translate)).toBe('200%')
   await expect(page.locator(TS)).toHaveAttribute('data-initialized', 'true')
@@ -282,7 +282,7 @@ test('the state rows never project — only the live demo is attached', async ({
 test('axe is clean in light and in dark', async ({ page }) => {
   await injectAxe(page)
   await page.locator(`${TS} label[for="ts-light"]`).click()
-  await checkA11y(page, '#ThemeSwitch')
+  await scopedCheckA11y(page, '.Bench')
   await page.locator(`${TS} label[for="ts-dark"]`).click()
-  await checkA11y(page, '#ThemeSwitch')
+  await scopedCheckA11y(page, '.Bench')
 })
