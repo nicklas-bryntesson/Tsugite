@@ -21,27 +21,87 @@ export const TIERS = ["floor", "mobile", "desktop", "wide"];
     Values below were probed via canvas TextMetrics (Chromium's reading
     of the font tables); the step-2 plan is to read them exactly from
     the woff2 files at build. A family without metrics refuses to
-    build. */
+    build.
+
+    faces are the files those metrics describe (ADR-0027): one entry per
+    weight × style (× unicode-range subset), files relative to
+    theme-default/fonts/, woff2 first. The face's name is the first name
+    in the stack. The factory GENERATES
+    styles/tokens/typography/fonts.generated.css from them. A family
+    either delivers its faces or is marked `system` (the platform's own
+    face, nothing to deliver), one of the two; and every weight a voice
+    asks of a delivered family has a face — or the build refuses. */
 export const typeFamilies = {
   "--FIRA-SANS": {
     stack: "'Fira Sans', system-ui, sans-serif",
     metrics: { ascent: 0.93, capHeight: 0.692, descent: 0.26 },
+    faces: [
+      {
+        weight: "600",
+        style: "normal",
+        unicodeRange: "U+0020-007E",
+        files: ["FiraSans/FiraSans-Heading-Core.woff2", "FiraSans/FiraSans-Heading-Core.woff"],
+      },
+      {
+        weight: "600",
+        style: "normal",
+        unicodeRange: "U+00A0-00FF, U+2013, U+2014, U+2018, U+2019, U+201C, U+201D, U+2026, U+20AC",
+        files: ["FiraSans/FiraSans-Heading-Extended.woff2", "FiraSans/FiraSans-Heading-Extended.woff"],
+      },
+    ],
   },
   "--NOTO-SERIF": {
     stack: "'Noto Serif', georgia, serif",
     metrics: { ascent: 1.07, capHeight: 0.714, descent: 0.29 },
+    faces: [
+      {
+        weight: "400",
+        style: "normal",
+        files: ["NotoSerif/NotoSerif-Body-Regular-subset.woff2", "NotoSerif/NotoSerif-Body-Regular-subset.woff"],
+      },
+      {
+        weight: "400",
+        style: "italic",
+        files: ["NotoSerif/NotoSerif-Body-Italic-subset.woff2", "NotoSerif/NotoSerif-Body-Italic-subset.woff"],
+      },
+      {
+        weight: "700",
+        style: "normal",
+        files: ["NotoSerif/NotoSerif-Body-Bold-subset.woff2", "NotoSerif/NotoSerif-Body-Bold-subset.woff"],
+      },
+      {
+        weight: "700",
+        style: "italic",
+        files: ["NotoSerif/NotoSerif-Body-Bold-Italic-subset.woff2", "NotoSerif/NotoSerif-Body-Bold-Italic-subset.woff"],
+      },
+    ],
   },
   "--ABRIL-FATFACE": {
     stack: "'Abril Fatface', georgia, serif",
     metrics: { ascent: 1.06, capHeight: 0.7, descent: 0.29 },
+    faces: [
+      {
+        weight: "400",
+        style: "normal",
+        files: ["AbrilFatface/AbrilDisplay-subset.woff2", "AbrilFatface/AbrilDisplay-subset.woff"],
+      },
+    ],
   },
   "--INTER": {
     stack: "'Inter', system-ui, sans-serif",
     metrics: { ascent: 0.97, capHeight: 0.728, descent: 0.24 },
+    faces: [
+      {
+        weight: "400",
+        style: "normal",
+        files: ["Inter/InterUI-Regular-subset.woff2", "Inter/InterUI-Regular-subset.woff"],
+      },
+    ],
   },
   "--MONOSPACE": {
     stack: "monospace",
     metrics: { ascent: 0.8, capHeight: 0.7, descent: 0.2 },
+    system: true,
   },
 };
 

@@ -14,11 +14,14 @@
 //   4. base.generated.css             — spacing, site scaffolding and grids
 //      (ADR-0011): RAW constants + tier-gated semantic ramps, from
 //      size/site/grid.tokens.js. Retired the Sass token tables.
+//   5. fonts.generated.css            — the @font-face rules for every delivered
+//      family's faces (ADR-0027), urls relative to the artifact.
 //
 // Recipes (mixes) are precomputed by the color engine; in-gamut results emit a
 // single literal so no color-mix/light-dark construct ever ships. The only
 // modern dependency left in output is the oklch literal — one @supports gate.
 
+import { existsSync } from "node:fs";
 import { oklch } from "culori";
 import { rawColorTokens, rawRefName, assertRawReferences } from "../theme-default/raw.color.tokens.js";
 import { semanticColorTokens } from "../theme-default/semantic.color.tokens.js";
@@ -333,6 +336,16 @@ const TYPE_TABLES = {
 
 const BLOCK_METRICS = ["lineHeight", "letterSpacing", "featureSettings", "baselineOffset"];
 
+/** The font formats a face may ship, in the order a src list must name them: a browser
+    takes the first it supports, so the smaller file comes first (ADR-0027). */
+const FONT_FORMATS = ["woff2", "woff"];
+const FONT_STYLES = ["normal", "italic"];
+const FONTS_DIR = new URL("../theme-default/fonts/", import.meta.url);
+
+/** A delivered family's face name: the first name in its stack, quoted. */
+const faceName = (stack) => /^\s*(['"])(.+?)\1/.exec(stack ?? "")?.[2];
+const formatOf = (file) => /\.([a-z0-9]+)$/.exec(file)?.[1];
+
 export const METRIC_TOKEN = {
   lineHeight: (voice) => `--lineHeight-${voice}`,
   letterSpacing: (voice) => `--letterSpacing-${voice}`,
@@ -405,12 +418,38 @@ export function validateTypography(tables = TYPE_TABLES) {
       if (v === undefined) problems.push(`family ${name} is missing metrics.${m}`);
       else if (!/^\d*\.?\d+$/.test(String(v))) problems.push(`family ${name}: metrics.${m} "${v}" must be a unitless em fraction`);
     }
+
+    // The faces the metrics were measured from (ADR-0027): delivered, or the system's.
+    const delivered = Array.isArray(fam?.faces) && fam.faces.length > 0;
+    if (delivered === Boolean(fam?.system)) {
+      problems.push(`family ${name} must either list its faces or be marked system (ADR-0027)`);
+    }
+    if (!delivered) continue;
+    if (!faceName(fam.stack)) problems.push(`family ${name}: a delivered family's stack starts with its quoted face name`);
+    fam.faces.forEach((face, i) => {
+      const owner = `family ${name}/faces[${i}]`;
+      if (!/^[1-9]00$/.test(String(face.weight))) problems.push(`${owner}: weight "${face.weight}" must be a numeric weight (100–900)`);
+      if (!FONT_STYLES.includes(face.style)) problems.push(`${owner}: style "${face.style}" must be one of ${FONT_STYLES.join(", ")}`);
+      const files = face.files ?? [];
+      if (files.length === 0) problems.push(`${owner} lists no files`);
+      const order = files.map((f) => FONT_FORMATS.indexOf(formatOf(f)));
+      files.forEach((f, j) => {
+        if (order[j] === -1) problems.push(`${owner}: ${f} is not one of ${FONT_FORMATS.join(", ")}`);
+        else if (!existsSync(new URL(f, FONTS_DIR))) problems.push(`${owner}: ${f} is not in theme-default/fonts/`);
+      });
+      if (order.some((o, j) => j > 0 && o < order[j - 1])) problems.push(`${owner}: files must name ${FONT_FORMATS.join(" before ")}`);
+    });
   }
 
   for (const [voice, def] of Object.entries(voices)) {
     if (!families[def.family]) problems.push(`${voice}: unknown family ${def.family}`);
     for (const [stop, w] of Object.entries(def.weights ?? {})) {
       if (!weights[w]) problems.push(`${voice}/weights.${stop}: unknown weight ${w}`);
+      // A weight the family has no face for would be faked by the browser (ADR-0027).
+      const faces = families[def.family]?.faces;
+      if (weights[w] && faces?.length && !faces.some((f) => String(f.weight) === String(weights[w]))) {
+        problems.push(`${voice}/weights.${stop}: ${def.family} has no face at weight ${weights[w]}`);
+      }
     }
     if (!def.weights?.default) problems.push(`${voice} is missing weights.default`);
     if (!def.inline) {
@@ -441,6 +480,41 @@ export function validateTypography(tables = TYPE_TABLES) {
   }
 
   if (problems.length) throw new Error(`The typography table is incomplete:\n${problems.join("\n")}`);
+}
+
+/** The @font-face rules for every delivered family (ADR-0027). Each url is written
+    relative to the artifact, so a consumer's bundler resolves the files out of the
+    package: no copy, no alias. */
+export function generateFontFaceStylesheet(tables = TYPE_TABLES) {
+  validateTypography(tables);
+  const rules = Object.values(tables.families)
+    .filter((fam) => fam.faces?.length)
+    .flatMap((fam) =>
+      fam.faces.map((face) =>
+        [
+          "@font-face {",
+          `  font-family: "${faceName(fam.stack)}";`,
+          "  src:",
+          face.files
+            .map((f) => `    url("../../../theme-default/fonts/${f}") format("${formatOf(f)}")`)
+            .join(",\n") + ";",
+          `  font-weight: ${face.weight};`,
+          `  font-style: ${face.style};`,
+          "  font-display: swap;",
+          ...(face.unicodeRange ? [`  unicode-range: ${face.unicodeRange};`] : []),
+          "}",
+        ].join("\n"),
+      ),
+    );
+
+  return [
+    `/* GENERATED — do not edit. Source: theme-default/typography.tokens.js
+   The theme's typefaces: one @font-face per delivered face, the files the
+   family metrics were measured from (ADR-0027), woff2 first.
+   Regenerate: npm run tokens   (freshness guarded by tests) */`,
+    ...rules,
+    "",
+  ].join("\n\n");
 }
 
 export function generateTypographyStylesheet(tables = TYPE_TABLES) {

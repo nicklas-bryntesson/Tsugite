@@ -1,6 +1,6 @@
 // Emits the token artifacts from the factories (ADR-0003, T7; ADR-0011 adds the base
 // tables; ADR-0014 adds the token registry; ADR-0016 the Surface adjacency rules;
-// ADR-0024 the text-box engine).
+// ADR-0024 the text-box engine; ADR-0027 the theme's typefaces).
 // Run via `npm run tokens` — hooked into predev/prebuild, guarded by
 // tests/tokens.test.ts so a stale artifact fails the suite.
 import { writeFileSync, mkdirSync } from "node:fs";
@@ -11,6 +11,7 @@ import {
   generateStylesheet,
   generateThemesStylesheet,
   generateTypographyStylesheet,
+  generateFontFaceStylesheet,
   generateSeamStylesheet,
   generateBaseStylesheet,
   gamutReport,
@@ -24,6 +25,7 @@ const rawOut = resolve(here, "../styles/tokens/color/color.raw.generated.css");
 const out = resolve(here, "../styles/tokens/color/color.appearance.generated.css");
 const themesOut = resolve(here, "../styles/tokens/color/color.themes.generated.css");
 const typeOut = resolve(here, "../styles/tokens/typography/typography.generated.css");
+const fontsOut = resolve(here, "../styles/tokens/typography/fonts.generated.css");
 const seamOut = resolve(here, "../styles/ui-tokens.css");
 const baseOut = resolve(here, "../styles/tokens/base/base.generated.css");
 const registryOut = resolve(here, "../docs/tokens.generated.md");
@@ -36,6 +38,7 @@ writeFileSync(rawOut, generateRawStylesheet());
 writeFileSync(out, generateStylesheet());
 writeFileSync(themesOut, generateThemesStylesheet());
 writeFileSync(typeOut, generateTypographyStylesheet());
+writeFileSync(fontsOut, generateFontFaceStylesheet());
 writeFileSync(seamOut, generateSeamStylesheet());
 mkdirSync(dirname(baseOut), { recursive: true });
 writeFileSync(baseOut, generateBaseStylesheet());
@@ -46,6 +49,7 @@ console.log(`raw    → ${rawOut}`);
 console.log(`tokens → ${out}`);
 console.log(`themes → ${themesOut}`);
 console.log(`type   → ${typeOut}`);
+console.log(`fonts  → ${fontsOut}`);
 console.log(`seam   → ${seamOut}`);
 console.log(`base   → ${baseOut}`);
 console.log(`registry → ${registryOut}`);
