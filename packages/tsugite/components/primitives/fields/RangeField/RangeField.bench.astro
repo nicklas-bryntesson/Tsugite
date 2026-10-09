@@ -1,0 +1,47 @@
+---
+// RangeField's bench (ADR-0026): the kitchen-sink section's instances moved as they were —
+// each state, disabled, invalid and the variants, one per line, ids unchanged as the
+// suite's anchors. A mechanical move: the field family's rebuild redraws this bench. Last, the browser's
+// own range with the same datalist: the suite compares the marks against it.
+import RangeField from "./RangeField.astro";
+---
+
+<RangeField id="rf-min-default" label="Volume" value="0" />
+<RangeField id="rf-min-hover" label="Volume" value="0" data-test-state-hover="true" />
+<RangeField id="rf-min-focus" label="Volume" value="0" data-test-state-focus="true" />
+<RangeField id="rf-min-active" label="Volume" value="0" data-test-state-active="true" />
+<RangeField id="rf-mid-default" label="Volume" value="50" />
+<RangeField id="rf-mid-hover" label="Volume" value="50" data-test-state-hover="true" />
+<RangeField id="rf-mid-focus" label="Volume" value="50" data-test-state-focus="true" />
+<RangeField id="rf-mid-active" label="Volume" value="50" data-test-state-active="true" />
+<RangeField id="rf-disabled-min" label="Volume" value="0" disabled={true} />
+<RangeField id="rf-disabled-mid" label="Volume" value="50" disabled={true} />
+<RangeField
+  id="rf-invalid-min"
+  label="Volume"
+  value="0"
+  invalid={true}
+  describedby="rf-invalid-min-hint"
+  hint="Pick at least 10 %."
+  hintId="rf-invalid-min-hint"
+/>
+<RangeField id="rf-invalid-mid" label="Volume" value="50" invalid={true} />
+<RangeField id="rf-variant-stepped" rootId="rangefield-stepped" label="Volume (steps of 25)" step="25" value="75" />
+<RangeField id="rf-variant-resized" rootId="rangefield-resized" label="Volume (larger thumb)" value="50" style="--_rf-thumb: 2em; --_rf-track: 0.75em" />
+<RangeField id="rf-variant-text-scaled" rootId="rangefield-text-scaled" label="Volume (font-size: 1.5rem)" value="50" style="font-size: 1.5rem" />
+<RangeField id="rf-variant-vertical" rootId="rangefield-vertical" label="Volume (vertical)" value="50" orientation="vertical" />
+<RangeField id="rf-variant-vertical-top" rootId="rangefield-vertical-top" label="Depth (min at top)" value="50" orientation="vertical" minAnchor="top" />
+<RangeField id="rf-variant-datalist" rootId="rangefield-datalist" label="Volume (datalist, no marks drawn)" step="25" value="50" list="rf-variant-datalist-ticks" />
+<datalist id="rf-variant-datalist-ticks">
+  <option value="0"></option><option value="25"></option><option value="50"></option>
+  <option value="75"></option><option value="100"></option>
+</datalist>
+<RangeField id="rf-live" rootId="rangefield-live" label="Volume" value="50" />
+<div>
+  <label for="rf-native">Volume (native reference)</label>
+  <input type="range" id="rf-native" name="rf-native" min="0" max="100" step="25" value="50" list="rf-native-ticks" />
+  <datalist id="rf-native-ticks">
+    <option value="0"></option><option value="25"></option><option value="50"></option>
+    <option value="75"></option><option value="100"></option>
+  </datalist>
+</div>

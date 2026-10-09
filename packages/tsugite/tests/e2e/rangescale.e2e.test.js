@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test'
-import { checkA11y, injectAxe } from 'axe-playwright'
-import { targetPath } from './helpers/target.js'
+import { injectAxe } from 'axe-playwright'
+import { scopedCheckA11y, targetPath } from './helpers/target.js'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/range-scale'))
 })
 
 const LANE = '[data-id="rangescale-live"]'
@@ -206,7 +206,7 @@ test('grabbing the thumb does not reflow the page', async ({ page }) => {
 test('no axe violations across RangeScale states', async ({ page }) => {
   await page.locator('.RangeScale').first().scrollIntoViewIfNeeded()
   await injectAxe(page)
-  await checkA11y(page, '#RangeScale')
+  await scopedCheckA11y(page, '.Bench')
 })
 
 // ── Ticks ─────────────────────────────────────────────────────────────────────

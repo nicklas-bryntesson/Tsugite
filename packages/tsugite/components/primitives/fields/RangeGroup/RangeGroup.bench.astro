@@ -1,0 +1,46 @@
+---
+// RangeGroup's bench (ADR-0026): the kitchen-sink section's instances moved as they were —
+// each state, disabled, invalid and the variants, one per line, ids unchanged as the
+// suite's anchors. A mechanical move: the field family's rebuild redraws this bench.
+import RangeGroup from "./RangeGroup.astro";
+
+const price = {
+  legend: "Price",
+  lowerLabel: "Lowest",
+  upperLabel: "Highest",
+  suffix: "tkr",
+  min: 0,
+  max: 1000,
+  step: 10,
+  lower: 200,
+  upper: 700,
+};
+---
+
+<RangeGroup id="rg-default" {...price} />
+<RangeGroup id="rg-hover" {...price} field={{ "data-test-state-hover": "true" }} />
+<RangeGroup id="rg-focus" {...price} field={{ "data-test-state-focus": "true" }} />
+<RangeGroup id="rg-active" {...price} field={{ "data-test-state-active": "true" }} />
+<RangeGroup id="rg-disabled" {...price} group={{ disabled: "disabled" }} />
+<RangeGroup
+  id="rg-invalid"
+  {...price}
+  scale={{ "data-invalid": "true" }}
+  field={{ "data-invalid": "true", "aria-invalid": "true" }}
+/>
+<RangeGroup id="rg-collided" rootId="rangegroup-collided" {...price} lower={500} upper={500} />
+<RangeGroup id="rg-at-min" {...price} lower={0} upper={0} />
+<RangeGroup id="rg-at-max" {...price} lower={1000} upper={1000} />
+<RangeGroup id="rg-lane-flush" rootId="rangegroup-flush" {...price} scale={{ "data-lane": "flush" }} />
+<RangeGroup id="rg-with-ticks" rootId="rangegroup-ticks" {...price} scale={{ "data-ticks": "labels", "data-lane": "flush" }} />
+<div dir="rtl">
+<RangeGroup
+  id="rg-rtl"
+  rootId="rangegroup-rtl"
+  {...price}
+  legend="السعر"
+  lowerLabel="الأدنى"
+  upperLabel="الأعلى"
+/>
+</div>
+<RangeGroup id="rg-live" rootId="rangegroup-live" {...price} />
