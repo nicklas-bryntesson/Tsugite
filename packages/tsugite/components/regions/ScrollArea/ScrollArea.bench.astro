@@ -1,0 +1,35 @@
+---
+// ScrollArea's bench (ADR-0026): content that overflows and content that fits, one per
+// line, named data-bench-case="<fit>". The suite narrows the viewport so "overflow"
+// overflows; "fits" stays a plain region with no bar and no tab stop.
+import ScrollArea from "./ScrollArea.astro";
+
+const columns = ["Name", "Member ID", "Joined", "Renewed", "Plan", "Region", "Status", "Balance"];
+const rows = [
+  ["Margaret Nguyen", "427311", "June 3, 2010", "June 3, 2024", "Professional", "Nordics", "Active", "0.00"],
+  ["Edvard Galinski", "533175", "January 13, 2011", "January 13, 2024", "Student", "Central Europe", "Active", "37.00"],
+  ["Hoshi Nakamura", "601942", "July 23, 2012", "July 23, 2023", "Professional", "Asia Pacific", "Lapsed", "15.00"],
+];
+---
+
+<ScrollArea id="scrollarea-live" ariaLabel="Members table" style="max-inline-size: 100%;" data-bench-case="overflow">
+  <table style="white-space: nowrap;">
+    <thead>
+      <tr>{columns.map((c) => <th scope="col">{c}</th>)}</tr>
+    </thead>
+    <tbody>
+      {
+        rows.map(([name, ...cells]) => (
+          <tr>
+            <th scope="row">{name}</th>
+            {cells.map((c) => <td>{c}</td>)}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</ScrollArea>
+
+<ScrollArea id="scrollarea-fits" ariaLabel="Short content" style="max-inline-size: 100%;" data-bench-case="fits">
+  <p>Content that fits.</p>
+</ScrollArea>
