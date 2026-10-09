@@ -1,56 +1,59 @@
 import { test, expect } from '@playwright/test'
-import { checkA11y, injectAxe } from 'axe-playwright'
-import { targetPath } from './helpers/target.js'
+import { injectAxe } from 'axe-playwright'
+import { scopedCheckA11y, targetPath } from './helpers/target.js'
+
+// Notice on its bench (ADR-0026): every severity per decoration, named
+// data-bench-case="<severity>/<decoration>", plus the part shapes by name.
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/notice'))
+})
+
+const caseOf = (page, name) => page.locator(`[data-bench-case="${name}"]`)
+
+test('every case renders a Notice, none a DevError', async ({ page }) => {
+  await expect(page.locator('.DevError')).toHaveCount(0)
+  for (const el of await page.locator('[data-bench-case]:not([data-bench-case="region"])').all()) {
+    await expect(el).toHaveClass(/\bNotice\b/)
+  }
 })
 
 // ── Separation of concerns (ADR-0016) ─────────────────────────────────────────
 
 test('Notice carries no live role; the region does', async ({ page }) => {
-  const notice = page.locator('#Notice .Notice').first()
-  await notice.scrollIntoViewIfNeeded()
-  expect(await notice.getAttribute('role')).toBeNull()
-
-  const region = page.locator('#Notice .notice-region[data-id="region"]')
+  const region = caseOf(page, 'region')
   await expect(region).toHaveAttribute('role', 'alert')
   await expect(region).toHaveAttribute('aria-live', 'assertive')
+  expect(await region.locator('.Notice').getAttribute('role')).toBeNull()
+  for (const el of await page.locator('.Notice').all()) expect(await el.getAttribute('role')).toBeNull()
 })
 
 // ── Variants + emphasis ───────────────────────────────────────────────────────
 
 test('variants tint the icon with distinct accents', async ({ page }) => {
   const iconColor = (variant) =>
-    page.locator(`#Notice .Notice[data-variant="${variant}"] .icon`).first()
-      .evaluate((el) => getComputedStyle(el).color)
+    caseOf(page, `${variant}/rest`).locator('.icon').evaluate((el) => getComputedStyle(el).color)
 
   const [error, success, info] = await Promise.all([iconColor('error'), iconColor('success'), iconColor('info')])
   expect(new Set([error, success, info]).size).toBe(3) // all different
 })
 
 test('base default has no border; data-border adds a full accent border', async ({ page }) => {
-  const base = page.locator('#Notice .Notice[data-variant="error"][data-border="false"][data-emphasis="false"]').first()
-  const bordered = page.locator('#Notice .Notice[data-border="true"]').first()
-  await base.scrollIntoViewIfNeeded()
   const w = (loc) => loc.evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth))
-  expect(await w(base)).toBe(0)
-  expect(await w(bordered)).toBeGreaterThan(0)
+  expect(await w(caseOf(page, 'error/rest'))).toBe(0)
+  expect(await w(caseOf(page, 'error/border'))).toBeGreaterThan(0)
 })
 
 test('data-emphasis adds a leading accent bar the base lacks', async ({ page }) => {
-  const base = page.locator('#Notice .Notice[data-variant="error"][data-emphasis="false"]').first()
-  const emph = page.locator('#Notice .Notice[data-emphasis="true"]').first()
-  await base.scrollIntoViewIfNeeded()
   const lead = (loc) => loc.evaluate((el) => parseFloat(getComputedStyle(el).borderInlineStartWidth))
-  expect(await lead(emph)).toBeGreaterThan(await lead(base))
+  expect(await lead(caseOf(page, 'error/emphasis'))).toBeGreaterThan(await lead(caseOf(page, 'error/rest')))
 })
 
 // ── Optional icon ─────────────────────────────────────────────────────────────
 
 test('data-icon="false" renders no icon and collapses to one column', async ({ page }) => {
-  const notice = page.locator('#Notice .Notice[data-icon="false"]')
-  await notice.scrollIntoViewIfNeeded()
+  const notice = caseOf(page, 'info/no-icon')
+  await expect(notice).toHaveAttribute('data-icon', 'false')
   await expect(notice.locator('svg')).toHaveCount(0)
   const cols = await notice.evaluate((el) => getComputedStyle(el).gridTemplateColumns)
   // single track (no "auto 1fr" two-column split)
@@ -58,7 +61,7 @@ test('data-icon="false" renders no icon and collapses to one column', async ({ p
 })
 
 test('icons are decorative (aria-hidden)', async ({ page }) => {
-  const icons = page.locator('#Notice .Notice .icon svg')
+  const icons = page.locator('.Notice .icon svg')
   const n = await icons.count()
   expect(n).toBeGreaterThan(0)
   for (let i = 0; i < n; i++) {
@@ -68,8 +71,7 @@ test('icons are decorative (aria-hidden)', async ({ page }) => {
 
 // ── Accessibility ─────────────────────────────────────────────────────────────
 
-test('no axe violations across Notice variants', async ({ page }) => {
-  await page.locator('#Notice').scrollIntoViewIfNeeded()
+test('no axe violations across the bench', async ({ page }) => {
   await injectAxe(page)
-  await checkA11y(page, '#Notice')
+  await scopedCheckA11y(page, '.Bench')
 })

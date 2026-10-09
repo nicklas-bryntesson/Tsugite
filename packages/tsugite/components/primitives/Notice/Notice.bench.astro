@@ -1,0 +1,55 @@
+---
+// Notice's bench (ADR-0026): every severity in each decoration — rest, border, emphasis,
+// both — and without its icon, then the shapes the parts make: no title, long content,
+// actions, dismiss, and a host's live region with a Notice inside. Each case is named on
+// its root by data-bench-case="<severity>/<decoration>" or "<shape>" for the suite.
+import Notice from "./Notice.astro";
+import { notice } from "../../../recipes/notice.recipe";
+
+const decorations = [
+  { key: "rest", props: {} },
+  { key: "border", props: { border: true } },
+  { key: "emphasis", props: { emphasis: true } },
+  { key: "border+emphasis", props: { border: true, emphasis: true } },
+  { key: "no-icon", props: { icon: false } },
+];
+
+const cases = notice.axes.variant.values.flatMap((variant) =>
+  decorations.map(({ key, props }) => ({ name: `${variant}/${key}`, props: { variant, ...props } })),
+);
+---
+
+{
+  cases.map(({ name, props }) => (
+    <Notice {...props} title="Title" data-bench-case={name}>
+      <p>One line of body text.</p>
+    </Notice>
+  ))
+}
+
+<Notice variant="success" data-bench-case="no-title">
+  <p>One line of body text, no title.</p>
+</Notice>
+
+<Notice variant="warning" title="Title" data-bench-case="long">
+  <p>
+    A body long enough to wrap inside the content column, so the icon's alignment against
+    several lines and the reading ceiling on the inline size both show on one case.
+  </p>
+</Notice>
+
+<Notice variant="info" title="Title" data-bench-case="actions">
+  <p>One line of body text.</p>
+  <button slot="actions" type="button">Action</button>
+</Notice>
+
+<Notice variant="neutral" title="Title" data-bench-case="dismiss">
+  <p>One line of body text.</p>
+  <button slot="dismiss" type="button" aria-label="Dismiss">×</button>
+</Notice>
+
+<div role="alert" aria-live="assertive" data-bench-case="region">
+  <Notice variant="error" title="Title">
+    <p>The host's region announces; the Notice inside carries no role.</p>
+  </Notice>
+</div>
