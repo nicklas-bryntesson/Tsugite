@@ -1,7 +1,7 @@
 // Manifest guards: the map and /docs render from the manifest, so it must
 // be internally consistent — and every pointer must resolve to a file on
 // disk (a deleted section should fail here, not as a 404 in production).
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { describe, it, expect } from "vitest";
 import { manifest, foundations, pillarLabels } from "../src/lib/manifest.ts";
 
@@ -32,16 +32,6 @@ describe("the docs manifest", () => {
   it("suite pointers resolve to files on disk", () => {
     for (const e of manifest.filter((e) => e.suite)) {
       expect(existsSync(new URL(`../../../packages/tsugite/${e.suite}`, import.meta.url)), `${e.slug} → ${e.suite}`).toBe(true);
-    }
-  });
-
-  it("adr pointers resolve to existing ADRs", () => {
-    for (const e of manifest) {
-      for (const n of e.adrs ?? []) {
-        const dir = new URL("../../../packages/tsugite/docs/adr/", import.meta.url);
-        const hit = readdirSync(dir).some((f) => f.startsWith(`${n}-`));
-        expect(hit, `${e.slug} → ADR-${n}`).toBe(true);
-      }
     }
   });
 

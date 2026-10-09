@@ -29,8 +29,6 @@ export interface ManifestEntry {
   demoHref?: string;
   /** Conformance suite file, repo-relative. */
   suite?: string;
-  /** ADR numbers governing the component. */
-  adrs?: string[];
   published: boolean;
 }
 
@@ -38,18 +36,18 @@ export const manifest: ManifestEntry[] = [
   // ── Primitives ──────────────────────────────────────────────────────────────
   { slug: "heading", title: "Heading", pillar: "primitive", family: "typography", origin: "aipoc", section: "Typography", published: true },
   { slug: "text", title: "Text", pillar: "primitive", family: "typography", origin: "own", section: "TextSection", published: true },
-  { slug: "caption", title: "Caption", pillar: "primitive", family: "typography", origin: "own", section: "CaptionSection", adrs: ["0018"], published: true },
-  { slug: "nav-item", title: "NavItem", pillar: "primitive", origin: "own", section: "NavItemSection", adrs: ["0018", "0019"], published: true },
+  { slug: "caption", title: "Caption", pillar: "primitive", family: "typography", origin: "own", section: "CaptionSection", published: true },
+  { slug: "nav-item", title: "NavItem", pillar: "primitive", origin: "own", section: "NavItemSection", published: true },
   { slug: "text-block", title: "TextBlock", pillar: "primitive", family: "typography", origin: "own", section: "TextBlockSection", published: true },
   { slug: "prose", title: "Prose", pillar: "primitive", origin: "aipoc", section: "ProseSection", published: true },
-  { slug: "button", title: "Button", pillar: "primitive", family: "buttons", origin: "aipoc", section: "Buttons", adrs: ["0005", "0006"], published: true },
-  { slug: "cta-button", title: "CtaButton", pillar: "primitive", family: "buttons", origin: "own", section: "CtaButtonSection", adrs: ["0018", "0019"], published: true },
+  { slug: "button", title: "Button", pillar: "primitive", family: "buttons", origin: "aipoc", section: "Buttons", published: true },
+  { slug: "cta-button", title: "CtaButton", pillar: "primitive", family: "buttons", origin: "own", section: "CtaButtonSection", published: true },
   { slug: "card", title: "Card", pillar: "primitive", origin: "aipoc", section: "CardSection", published: true },
   { slug: "picture", title: "Picture", pillar: "primitive", origin: "aipoc", section: "MediaSection", published: true },
   { slug: "notice", title: "Notice", pillar: "primitive", origin: "ref-comps", section: "NoticeSection", suite: "tests/e2e/notice.e2e.test.js", published: true },
   { slug: "screen-reader-text", title: "ScreenReaderText", pillar: "primitive", origin: "own", section: "ScreenReaderTextSection", published: true },
   { slug: "toggletip", title: "ToggleTip", pillar: "primitive", origin: "ref-comps", section: "ToggleTipSection", suite: "tests/e2e/toggletip.e2e.test.js", published: true },
-  { slug: "theme-switch", title: "ThemeSwitch", pillar: "primitive", family: "fields", origin: "ref-comps", section: "ThemeSwitchSection", suite: "tests/e2e/themeswitch.e2e.test.js", adrs: ["0003"], published: true },
+  { slug: "theme-switch", title: "ThemeSwitch", pillar: "primitive", family: "fields", origin: "ref-comps", section: "ThemeSwitchSection", suite: "tests/e2e/themeswitch.e2e.test.js", published: true },
 
   // ── Primitives · the fields family ──────────────────────────────────────────
   { slug: "choice-field", title: "ChoiceField", pillar: "primitive", family: "fields", origin: "ref-comps", section: "ChoiceFieldSection", suite: "tests/e2e/choicefield.e2e.test.js", published: true },
@@ -69,12 +67,12 @@ export const manifest: ManifestEntry[] = [
 
   // ── Compositions ────────────────────────────────────────────────────────────
   { slug: "teaser", title: "Teaser", pillar: "composition", origin: "aipoc", section: "TeaserSection", published: true },
-  { slug: "quote", title: "Quote", pillar: "composition", origin: "own", section: "QuoteSection", adrs: ["0015", "0017"], published: true },
-  { slug: "cover-composition", title: "CoverComposition", pillar: "composition", origin: "own", demoHref: "/", suite: "tests/e2e/themes.e2e.test.js", adrs: ["0005", "0006"], published: true },
+  { slug: "quote", title: "Quote", pillar: "composition", origin: "own", section: "QuoteSection", published: true },
+  { slug: "cover-composition", title: "CoverComposition", pillar: "composition", origin: "own", demoHref: "/", suite: "tests/e2e/themes.e2e.test.js", published: true },
 
   // ── Regions ─────────────────────────────────────────────────────────────────
   { slug: "motion-region", title: "MotionRegion", pillar: "region", origin: "ref-comps", section: "MotionRegionSection", suite: "tests/e2e/motionregion.e2e.test.js", published: true },
-  { slug: "surface", title: "Surface", pillar: "region", origin: "own", section: "SurfaceSection", adrs: ["0006", "0016"], published: true },
+  { slug: "surface", title: "Surface", pillar: "region", origin: "own", section: "SurfaceSection", published: true },
   { slug: "scroll-area", title: "ScrollArea", pillar: "region", origin: "ref-comps", section: "ScrollAreaSection", suite: "tests/e2e/scrollarea.e2e.test.js", published: true },
 
 ];
