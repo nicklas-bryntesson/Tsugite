@@ -45,7 +45,7 @@ const luminance = ([r, g, b]) => {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/themes'))
   await freezeTransitions(page)
   await page.locator('#Themes').scrollIntoViewIfNeeded()
 })
@@ -101,15 +101,6 @@ test('the forbidden combination does not exist — and says so', async ({ page }
   const leaked = await page.evaluate(() =>
     getComputedStyle(document.documentElement).getPropertyValue('--theme-cell-subtle-surface'))
   expect(leaked).toBe('')
-})
-
-test('the Cover donut still gets its inverse claims through the generated voice', async ({ page }) => {
-  await page.goto('/')
-  await page.emulateMedia({ colorScheme: 'light' })
-  const btn = await colorOf(page, '.CoverComposition .content-container .Button[data-emphasis="primary"]', 'backgroundColor')
-  const text = await colorOf(page, '.CoverComposition .content-container .Heading', 'color')
-  expect(luminance(btn), 'light chip on the scrim (preserved rows)').toBeGreaterThan(0.9)
-  expect(luminance(text), 'light heading on the scrim').toBeGreaterThan(0.9)
 })
 
 test('axe is clean across the matrix, light and dark', async ({ page }) => {

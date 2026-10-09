@@ -1,6 +1,10 @@
 // Every <Name>.bench.astro in the package, keyed by the docs slug of its component
-// (CtaButton → cta-button), so a suite and the docs map name a bench the same way.
-const files = import.meta.glob<{ default: unknown }>("../../components/**/*.bench.astro", { eager: true });
+// (CtaButton → cta-button), so a suite and the docs map name a bench the same way. The
+// theme's own bench sits beside its tables in theme-default.
+const files = import.meta.glob<{ default: unknown }>(
+  ["../../components/**/*.bench.astro", "../../theme-default/*.bench.astro"],
+  { eager: true },
+);
 
 const slugOf = (path: string) =>
   path

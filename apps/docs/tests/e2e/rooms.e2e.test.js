@@ -3,9 +3,10 @@ import { checkA11y } from 'axe-playwright'
 import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 
-// The rooms: /map renders from the manifest, /docs/[slug] mounts the test
-// bench's sections, /control-room carries the drift checks. The bench
-// itself (/kitchen-sink) is untouched — these are the rooms' own contracts.
+// The rooms: /map renders from the manifest, /docs/[slug] mounts the fixture
+// sections, /control-room carries the drift checks. The components' own
+// contracts run on their benches in the package (ADR-0026); these are the
+// rooms' own.
 
 const axeSource = readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8')
 

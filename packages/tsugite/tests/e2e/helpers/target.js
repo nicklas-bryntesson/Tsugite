@@ -12,9 +12,8 @@
 // page's unrelated markup can never fail a component's accessibility check.
 import { checkA11y } from 'axe-playwright'
 
-// A suite on its bench passes the bench's path; a suite not yet moved falls back to the
-// kitchen sink until it is (ADR-0026).
-export function targetPath(bench = '/kitchen-sink') {
+// Each suite passes its bench's path (ADR-0026).
+export function targetPath(bench) {
   return process.env.TARGET_PATH ?? bench
 }
 
