@@ -15,6 +15,17 @@ const { title } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title} · bench</title>
+    <script is:inline>
+      // The host's FOUC guard, as every page that mounts ThemeSwitch carries it (the docs
+      // app's Layout has the same): restore an explicit appearance before first paint.
+      // Inline and synchronous — a module runs after parsing, which is too late.
+      try {
+        var a = localStorage.getItem("appearance-preference");
+        if (a === "light" || a === "dark") document.documentElement.setAttribute("data-appearance", a);
+      } catch (e) {
+        /* storage blocked — follow the OS */
+      }
+    </script>
   </head>
   <body>
     <main class="Bench" data-bench={title}>

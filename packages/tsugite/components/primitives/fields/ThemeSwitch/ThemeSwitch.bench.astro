@@ -1,0 +1,30 @@
+---
+// ThemeSwitch's bench (ADR-0026): the one live instance, which re-themes the page, then
+// inert copies in each state — idle, the three test twins (ADR-0025), disabled — that
+// never project. Named data-bench-case="live" and "inert/<state>"; the data-ids stay
+// the suite's anchors. The host's FOUC guard is in the bench layout's head.
+import ThemeSwitch from "./ThemeSwitch.astro";
+
+const inert = [
+  { key: "idle", id: "state-default", short: "sd", props: {} },
+  { key: "hover", id: "state-hover", short: "sh", props: { "data-test-state-hover": "true" } },
+  { key: "focus", id: "state-focus", short: "sf", props: { "data-test-state-focus": "true" } },
+  { key: "active", id: "state-active", short: "sa", props: { "data-test-state-active": "true" } },
+  { key: "disabled", id: "disabled", short: "dis", props: { disabled: true } },
+];
+---
+
+<ThemeSwitch id="live" live={true} legend="Colour theme" name="ts-appearance" inputIds={["ts-system", "ts-light", "ts-dark"]} data-bench-case="live" />
+
+{
+  inert.map(({ key, id, short, props }) => (
+    <ThemeSwitch
+      id={id}
+      legend={`Inert copy: ${key}`}
+      name={`ts-${short}`}
+      inputIds={[`ts-${short}-1`, `ts-${short}-2`, `ts-${short}-3`]}
+      {...props}
+      data-bench-case={`inert/${key}`}
+    />
+  ))
+}
