@@ -4,7 +4,7 @@
 // their own demo page and (where a suite routes through a single root selector)
 // their own component instance, via env vars — no need to edit test source:
 //
-//   TARGET_PATH  — page the suite navigates to            (default: '/')
+//   TARGET_PATH  — page the suite navigates to            (default: the suite's bench, ADR-0026)
 //   TARGET_ID    — component root selector override        (per-component default below)
 //   AXE_SETTLE   — wait for opacity to settle before axe   (default: off — see waitForStable)
 //
@@ -12,8 +12,10 @@
 // page's unrelated markup can never fail a component's accessibility check.
 import { checkA11y } from 'axe-playwright'
 
-export function targetPath() {
-  return process.env.TARGET_PATH ?? '/kitchen-sink'
+// A suite on its bench passes the bench's path; a suite not yet moved falls back to the
+// kitchen sink until it is (ADR-0026).
+export function targetPath(bench = '/kitchen-sink') {
+  return process.env.TARGET_PATH ?? bench
 }
 
 const DEFAULT_TARGET = {
