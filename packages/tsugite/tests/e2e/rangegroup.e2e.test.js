@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test'
-import { checkA11y, injectAxe } from 'axe-playwright'
-import { targetPath } from './helpers/target.js'
+import { injectAxe } from 'axe-playwright'
+import { scopedCheckA11y, targetPath } from './helpers/target.js'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/range-group'))
 })
 
 const GROUP = '[data-id="rangegroup-live"]'
@@ -251,7 +251,7 @@ test('sync() is public, for the same reason the lane needs one', async ({ page }
 test('no axe violations across RangeGroup states', async ({ page }) => {
   await page.locator('.RangeGroup').first().scrollIntoViewIfNeeded()
   await injectAxe(page)
-  await checkA11y(page, '#RangeGroup')
+  await scopedCheckA11y(page, '.Bench')
 })
 
 // ── The component's width must not follow its content ─────────────────────────

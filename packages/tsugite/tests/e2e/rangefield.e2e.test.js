@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test'
-import { checkA11y, injectAxe } from 'axe-playwright'
-import { targetPath } from './helpers/target.js'
+import { injectAxe } from 'axe-playwright'
+import { scopedCheckA11y, targetPath } from './helpers/target.js'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(targetPath())
+  await page.goto(targetPath('/range-field'))
 })
 
 const LIVE = '#rf-live'
@@ -91,7 +91,7 @@ test('the input itself has no outline — the ring sits on the thumb', async ({ 
 // ── Target size (WCAG 2.5.8) ──────────────────────────────────────────────────
 
 test('every field clears the 24px minimum target size', async ({ page }) => {
-  const boxes = await page.locator('#RangeField .RangeField').evaluateAll((els) =>
+  const boxes = await page.locator('.Bench .RangeField').evaluateAll((els) =>
     els.map((el) => {
       const r = el.getBoundingClientRect()
       return { id: el.id, w: r.width, h: r.height, vertical: el.dataset.orientation === 'vertical' }
@@ -219,7 +219,7 @@ test('dragging changes only the value — nothing is authored to fall out of syn
 test('no axe violations across RangeField states', async ({ page }) => {
   await page.locator('.RangeField').first().scrollIntoViewIfNeeded()
   await injectAxe(page)
-  await checkA11y(page, '#RangeField')
+  await scopedCheckA11y(page, '.Bench')
 })
 
 // ── Relative units — the control follows the reader's text size ───────────────

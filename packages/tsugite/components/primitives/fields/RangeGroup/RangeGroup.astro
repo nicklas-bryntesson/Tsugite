@@ -96,7 +96,11 @@ const fieldAttrs = { min: String(min), max: String(max), step: String(step), ...
 </fieldset>
 
 <script>
+  // The lane is a RangeScale, so its engine comes with it, as its CSS does above: the
+  // group must not depend on a RangeScale elsewhere on the page to load the script.
+  import RangeScale from "../RangeScale/RangeScale";
   import RangeGroup from "./RangeGroup";
+  RangeScale.attach();
   RangeGroup.attach();
 </script>
 

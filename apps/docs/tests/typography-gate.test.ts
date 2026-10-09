@@ -76,6 +76,8 @@ const ALLOWLIST: Record<string, Record<string, number>> = {
   // label text naming the stimulus
   "packages/tsugite/fixtures/RangeFieldSection.astro": { "font-size: 1.5rem": 1, "font-size: 1.5rem)": 1 },
   "packages/tsugite/fixtures/RangeScaleSection.astro": { "font-size: 1.5rem": 1, "font-size: 1.5rem)": 1 },
+  "packages/tsugite/components/primitives/fields/RangeField/RangeField.bench.astro": { "font-size: 1.5rem": 1, "font-size: 1.5rem)": 1 },
+  "packages/tsugite/components/primitives/fields/RangeScale/RangeScale.bench.astro": { "font-size: 1.5rem": 1, "font-size: 1.5rem)": 1 },
 };
 
 function* walk(dir: string): Generator<string> {

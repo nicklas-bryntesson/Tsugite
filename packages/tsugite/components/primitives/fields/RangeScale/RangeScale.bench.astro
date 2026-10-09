@@ -1,0 +1,130 @@
+---
+// RangeScale's bench (ADR-0026): the kitchen-sink section's instances moved as they were —
+// each state, disabled, invalid and the variants, one per line, ids unchanged as the
+// suite's anchors. A mechanical move: the field family's rebuild redraws this bench.
+import RangeScale from "./RangeScale.astro";
+
+const min = { min: "0", max: "100", step: "1", value: "0" };
+const mid = { min: "0", max: "100", step: "1", value: "50" };
+const stepped25 = { min: "0", max: "100", step: "25", value: "50" };
+const pct = { suffix: "%", initial: "50 %" };
+const pct0 = { suffix: "%", initial: "0 %" };
+
+const quarters: [number, string][] = [
+  [0, "0"], [0.25, "25"], [0.5, "50"], [0.75, "75"], [1, "100"],
+];
+---
+
+<RangeScale id="rs-min-default" label="Volume" input={min} output={pct0} />
+<RangeScale id="rs-min-hover" label="Volume" input={{ ...min, "data-test-state-hover": "true" }} output={pct0} />
+<RangeScale id="rs-min-focus" label="Volume" input={{ ...min, "data-test-state-focus": "true" }} output={pct0} />
+<RangeScale id="rs-min-active" label="Volume" input={{ ...min, "data-test-state-active": "true" }} output={pct0} />
+<RangeScale id="rs-mid-default" label="Volume" input={mid} output={pct} />
+<RangeScale id="rs-mid-hover" label="Volume" input={{ ...mid, "data-test-state-hover": "true" }} output={pct} />
+<RangeScale id="rs-mid-focus" label="Volume" input={{ ...mid, "data-test-state-focus": "true" }} output={pct} />
+<RangeScale id="rs-mid-active" label="Volume" input={{ ...mid, "data-test-state-active": "true" }} output={pct} />
+<RangeScale id="rs-disabled" label="Volume" input={{ ...mid, disabled: "" }} output={pct} />
+<RangeScale
+  id="rs-invalid"
+  label="Volume"
+  scale={{ "data-invalid": "true" }}
+  input={{ ...mid, "data-invalid": "true", "aria-invalid": "true" }}
+  output={pct}
+/>
+<RangeScale id="rs-lane-inset" rootId="rangescale-inset" label="Volume (lane: inset)" scale={{ "data-lane": "inset" }} input={mid} output={pct} />
+<RangeScale id="rs-lane-flush" rootId="rangescale-flush" label="Volume (lane: flush)" scale={{ "data-lane": "flush" }} input={mid} output={pct} />
+<RangeScale id="rs-lane-flush-min" label="At minimum" scale={{ "data-lane": "flush" }} input={min} output={pct0} />
+<RangeScale id="rs-lane-flush-max" label="At maximum" scale={{ "data-lane": "flush" }} input={{ ...mid, value: "100" }} output={{ suffix: "%", initial: "100 %" }} />
+<RangeScale id="rs-lane-partial" rootId="rangescale-partial" label="Volume (partial overhang)" scale={{ style: "--_rs-inset: 0.25em" }} input={mid} output={pct} />
+<RangeScale id="rs-ticks-marks" rootId="rangescale-ticks-marks" label="Volume (ticks: marks)" scale={{ "data-ticks": "marks" }} input={stepped25} output={pct} ticks={quarters} />
+<RangeScale id="rs-ticks-labels" rootId="rangescale-ticks-labels" label="Volume (ticks: labels)" scale={{ "data-ticks": "labels" }} input={stepped25} output={pct} ticks={quarters} />
+<RangeScale id="rs-ticks-flush" rootId="rangescale-ticks-flush" label="Volume (labels, flush lane)" scale={{ "data-ticks": "labels", "data-lane": "flush" }} input={stepped25} output={pct} ticks={quarters} />
+<RangeScale
+  id="rs-ticks-uneven"
+  rootId="rangescale-ticks-uneven"
+  label="Pressure (uneven stops)"
+  scale={{ "data-ticks": "labels" }}
+  input={{ min: "0", max: "100", step: "10", value: "40" }}
+  output={{ suffix: "bar", initial: "40 bar" }}
+  ticks={[[0, "0"], [0.1, "10"], [0.3, "30"], [0.7, "70"], [1, "100"]]}
+/>
+<RangeScale id="rs-no-output" rootId="rangescale-no-output" label="Volume (no readout)" scale={{ "data-suffix": "%" }} input={mid} output={null} />
+<RangeScale id="rs-text-scaled" rootId="rangescale-text-scaled" label="Volume (font-size: 1.5rem)" scale={{ style: "font-size: 1.5rem" }} input={mid} output={pct} />
+<div dir="rtl">
+<RangeScale id="rs-rtl" rootId="rangescale-rtl" label="الحجم" input={mid} output={pct} />
+</div>
+<RangeScale id="rs-vertical" rootId="rangescale-vertical" label="Volume (vertical)" scale={{ "data-orientation": "vertical" }} input={{ ...mid, "data-orientation": "vertical" }} output={null} />
+<RangeScale id="rs-vertical-top" rootId="rangescale-vertical-top" label="Depth (min at top)" scale={{ "data-orientation": "vertical", "data-min": "top" }} input={{ ...mid, "data-orientation": "vertical", "data-min": "top" }} output={null} />
+<RangeScale id="rs-vertical-flush" rootId="rangescale-vertical-flush" label="Volume (vertical, flush)" scale={{ "data-orientation": "vertical", "data-lane": "flush" }} input={{ ...mid, "data-orientation": "vertical" }} output={null} />
+<RangeScale
+  id="rs-ref-region"
+  rootId="rangescale-ref-region"
+  label="Data allowance"
+  scale={{ "data-reference": "region" }}
+  input={{ min: "0", max: "100", step: "1", value: "50" }}
+  output={{ suffix: "GB", initial: "50 GB" }}
+  reference={{ to: 0.2 }}
+  hint="Already used: 20 GB. Setting the limit below that stops all traffic."
+/>
+<RangeScale
+  id="rs-ref-region-nofill"
+  rootId="rangescale-ref-region-nofill"
+  label="Data allowance (no fill)"
+  scale={{ "data-reference": "region", "data-fill": "none" }}
+  input={{ min: "0", max: "100", step: "1", value: "50" }}
+  output={null}
+  reference={{ to: 0.2 }}
+  hint="Already used: 20 GB."
+/>
+<RangeScale
+  id="rs-ref-band"
+  rootId="rangescale-ref-band"
+  label="Loan amount"
+  scale={{ "data-reference": "band" }}
+  input={{ min: "0", max: "1000", step: "10", value: "400" }}
+  output={{ suffix: "tkr", initial: "400 tkr" }}
+  reference={{ from: 0.3, to: 0.5 }}
+  hint="Recommended level: 300–500 tkr."
+/>
+<RangeScale
+  id="rs-ref-band-variant"
+  rootId="rangescale-ref-band-variant"
+  label="Loan amount (colour-coded)"
+  scale={{ "data-reference": "band", "data-reference-variant": "warning" }}
+  input={{ min: "0", max: "1000", step: "10", value: "400" }}
+  output={{ suffix: "tkr", initial: "400 tkr" }}
+  reference={{ from: 0.3, to: 0.5 }}
+  hint="Above 500 tkr the interest rate increases."
+/>
+<RangeScale
+  id="rs-ref-band-under"
+  rootId="rangescale-ref-band-under"
+  label="Band, forced under the fill"
+  scale={{ "data-reference": "band", "data-reference-layer": "under", "data-reference-variant": "info" }}
+  input={{ min: "0", max: "100", step: "5", value: "60" }}
+  output={null}
+  reference={{ from: 0.3, to: 0.5 }}
+  hint="Least legible exactly when the value covers it — which is why it is not the default."
+/>
+<RangeScale
+  id="rs-ref-marker"
+  rootId="rangescale-ref-marker"
+  label="Your bid"
+  scale={{ "data-reference": "marker", "data-reference-variant": "success" }}
+  input={{ min: "0", max: "100", step: "1", value: "35" }}
+  output={{ suffix: "%", initial: "35 %" }}
+  reference={{ from: 0.62, to: 0.62 }}
+  hint="Median bid in this area: 62 %."
+/>
+<RangeScale
+  id="rs-ref-with-ticks"
+  rootId="rangescale-ref-with-ticks"
+  label="Pressure (band + ticks)"
+  scale={{ "data-reference": "band", "data-ticks": "labels", "data-reference-variant": "success", "data-lane": "flush" }}
+  input={{ min: "0", max: "100", step: "25", value: "50" }}
+  output={{ suffix: "bar", initial: "50 bar" }}
+  ticks={quarters}
+  reference={{ from: 0.25, to: 0.75 }}
+  hint="Safe operating band: 25–75 bar."
+/>
+<RangeScale id="rs-live" rootId="rangescale-live" label="Volume" input={mid} output={pct} />
