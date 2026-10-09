@@ -1,0 +1,21 @@
+/* The system as a consumer receives it: reset, the generated token tables and the
+   utilities, in the docs app's order (apps/docs/src/styles/global.css). The site's own
+   choices — its fonts, page layout, tables — stay out: a bench shows the package alone. */
+@import "../../styles/base/reset.css";
+@import "../../styles/tokens/base/base.generated.css";
+@import "../../styles/ui-tokens.css";
+@import "../../styles/tokens/color/color.raw.generated.css";
+@import "../../styles/tokens/color/color.appearance.generated.css";
+@import "../../styles/tokens/color/color.themes.generated.css";
+@import "../../styles/tokens/typography/typography.generated.css";
+@import "../../styles/utils/index.css";
+
+/* A bench instrument: arrangement only. Every case on its own line, left-aligned, at
+   its own width. */
+.Bench {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--size-sm);
+  padding: var(--size-md);
+}

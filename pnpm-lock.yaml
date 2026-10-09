@@ -91,9 +91,15 @@ importers:
       axe-playwright:
         specifier: ^2.2.2
         version: 2.2.2(playwright@1.62.1)
+      browserslist:
+        specifier: ^4.28.8
+        version: 4.28.8
       jsdom:
         specifier: ^29.1.1
         version: 29.1.1
+      lightningcss:
+        specifier: ^1.33.0
+        version: 1.33.0
       react:
         specifier: ^19.3.0
         version: 19.3.0

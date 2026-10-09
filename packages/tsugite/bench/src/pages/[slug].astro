@@ -1,0 +1,14 @@
+---
+import BenchLayout from "../BenchLayout.astro";
+import { benches } from "../benches";
+
+export function getStaticPaths() {
+  return benches.map(({ slug, title, Bench }) => ({ params: { slug }, props: { title, Bench } }));
+}
+
+const { title, Bench } = Astro.props as { title: string; Bench: any };
+---
+
+<BenchLayout title={title}>
+  <Bench />
+</BenchLayout>
