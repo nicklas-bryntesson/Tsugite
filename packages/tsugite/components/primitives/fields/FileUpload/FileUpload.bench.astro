@@ -1,0 +1,9 @@
+---
+// FileUpload's bench (ADR-0026), a holding form: it mounts the kitchen-sink section as it is,
+// so the suite runs on its own page while the field family waits for its rebuild. The
+// rebuild replaces this with a plain bench; until then the section's headings and
+// tables stay, against the bench shape.
+import Section from "../../../../fixtures/FileUploadSection.astro";
+---
+
+<Section />

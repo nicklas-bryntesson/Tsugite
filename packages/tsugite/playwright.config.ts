@@ -7,7 +7,7 @@ import { defineConfig, devices } from "@playwright/test";
 // Suites not yet moved still run against the docs app's kitchen sink; each move adds the
 // file to ON_BENCH, and the last one takes the kitchen-sink project and its server with it.
 // BENCH_URL / BASE_URL point at an already-running server; otherwise one is started.
-const ON_BENCH = ["button.e2e.test.js", "notice.e2e.test.js", "choicefield.e2e.test.js", "choicegroup.e2e.test.js", "motionregion.e2e.test.js", "scrollarea.e2e.test.js", "toggletip.e2e.test.js", "themeswitch.e2e.test.js", "rangefield.e2e.test.js", "rangescale.e2e.test.js", "rangegroup.e2e.test.js"];
+const ON_BENCH = ["button.e2e.test.js", "notice.e2e.test.js", "choicefield.e2e.test.js", "choicegroup.e2e.test.js", "motionregion.e2e.test.js", "scrollarea.e2e.test.js", "toggletip.e2e.test.js", "themeswitch.e2e.test.js", "rangefield.e2e.test.js", "rangescale.e2e.test.js", "rangegroup.e2e.test.js", "affixfield.e2e.test.js", "picklist.e2e.test.js", "fileupload.e2e.test.js", "datefield.e2e.test.js", "datetimefield.e2e.test.js", "timefield.e2e.test.js", "monthfield.e2e.test.js", "weekfield.e2e.test.js"];
 
 const benchBase = process.env.BENCH_URL ?? "http://localhost:4340";
 const docsBase = process.env.BASE_URL ?? "http://localhost:4321";
