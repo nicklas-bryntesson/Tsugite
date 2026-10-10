@@ -44,8 +44,8 @@ export default class ThemeSwitch {
 
     // Multi-instance sync (site addition, logged in reference-components' porting log):
     // the reference site had exactly one live instance per page, so the
-    // library never states a multi-instance contract. With a switch in the
-    // site header AND the kitchen-sink demo, two live instances share the
+    // library never states a multi-instance contract. When a host mounts two
+    // live instances (a header and a settings panel), they share the
     // document — each keeps its radios honest by listening for the
     // `theme-change` event the other already dispatches. Reflect only:
     // the originating instance has projected and persisted, so echoing
