@@ -14,10 +14,10 @@ import { scopedCheckA11y, targetPath } from './helpers/target.js'
 
 // ADAPTATION (logged in reference-components' porting log): scoped to the bench's live
 // instance by data-id (ADR-0026). The reference selector assumed exactly one live instance
-// per page; this site also mounts one in the header, and an unqualified locator
-// would trip Playwright's strict mode. Site-level behaviour (header instance,
-// multi-instance sync) is covered by header.e2e.test.js.
+// per page; the bench mounts two, to prove they stay in sync, and an unqualified locator
+// would trip Playwright's strict mode.
 const TS = '.ThemeSwitch[data-component="ThemeSwitch"][data-id="live"]'
+const SECOND = '.ThemeSwitch[data-component="ThemeSwitch"][data-id="live-second"]'
 const STORAGE_KEY = 'appearance-preference'
 
 /** Resolve a computed colour to numeric [r,g,b] — immune to colour syntax. */
@@ -203,6 +203,34 @@ test('theme-change carries the resolved detail', async ({ page }) => {
   }))
   await page.locator(`${TS} label[for="ts-dark"]`).click()
   expect(await detail).toEqual({ preference: 'dark', appearance: 'dark' })
+})
+
+// ── More than one live instance ──────────────────────────────────────────────
+//
+// The multi-instance contract the reference library never had to state: its page had
+// exactly one live copy. A host may mount two (a header and a settings panel); each
+// reflects the other's theme-change, and neither echoes it.
+
+test('two live instances on one page stay in sync, both directions', async ({ page }) => {
+  await page.locator(`${TS} label[for="ts-dark"]`).click()
+  await expect(page.locator(`${SECOND} input[value="dark"]`)).toBeChecked()
+  expect(await appearanceAttr(page)).toBe('dark')
+
+  // back to system from the other side: the attribute must come off, not read "system"
+  await page.locator(`${SECOND} label[for="ts-second-system"]`).click()
+  await expect(page.locator(`${TS} input[value="system"]`)).toBeChecked()
+  expect(await appearanceAttr(page)).toBeNull()
+})
+
+test('a choice is written once, however many instances listen', async ({ page }) => {
+  await page.evaluate(() => {
+    window.__writes = 0
+    const set = Storage.prototype.setItem
+    Storage.prototype.setItem = function (...args) { window.__writes++; return set.apply(this, args) }
+  })
+  await page.locator(`${TS} label[for="ts-light"]`).click()
+  await expect(page.locator(`${SECOND} input[value="light"]`)).toBeChecked()
+  expect(await page.evaluate(() => window.__writes)).toBe(1)
 })
 
 // ── The sliding indicator ─────────────────────────────────────────────────────
