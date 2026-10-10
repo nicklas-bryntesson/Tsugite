@@ -443,10 +443,27 @@ and did not decide. Each is a separate call.
   decides both.
 - **A `surface-hint` role?** The tiers page's live column needs a ground between page and
   chrome; it uses runtime `color-mix` with a `TODO(token)` today (see the Chrome 109 row).
-- **The e2e shards are uneven.** CI run 2026-10-07: tsugite e2e shard 3/3 took 12m14s, 1/3 and
-  2/3 about 8m; the wall clock (~13–14 min) is shard 3's. Even shards would land near 9–10 min.
-  Playwright shards by file, so one or two heavy suites sit together; split them, or move to
-  more shards.
 - **Button's unknown state cells.** The button state maps (`fixtures/states/button.states.ts`)
   mark the pairs no one has measured: hover and active on a disabled button, Enter and
   `:active` on a link. A probe page in three engines turns them into readings.
+
+## From the bench migration (2026-10-10)
+
+- **Stale references to revised decisions.** ADRs get amended and superseded, but the
+  comments, docs pages and tests that cite them are not swept with them, so an agent reading
+  the code meets rules that no longer hold. Found: eight appearance comments citing
+  "ADR-0021" meant reference-components' ADR-0021, not this ledger's (fixed in #122). Two
+  layers: a gate over every `ADR-NNNN` reference (exists, not superseded, external ledgers
+  qualified, e.g. `ref-lib`), and a sweep that replaces paraphrased rules with plain
+  references. Candidate shape: a ratchet, as in an outside docs-ledger experiment: it admits
+  no new drift and does not fail on what exists today, so the backlog shrinks without
+  blocking work.
+- **A hook that enforces the writing-css template.** Loose thought, not designed: check every
+  stylesheet against `.claude/skills/writing-css/example.css` mechanically instead of by the
+  skill's eye-comparison. The order header → root → parts → gates, the header's gate lines matching
+  the recipe, one root with a registered prefix, off-value first. Shape sketched so far: the logic in Node
+  (PostCSS is the only parser that reads `.astro` `<style>` blocks), a thin Python hook beside
+  the two existing ones calling it, PostToolUse rather than PreToolUse (only after the edit is
+  the whole file visible; exit 2 hands the hits back to the agent on the same turn), CI as the
+  hard stop through the same ratchet as the row above. Evidence and the rule-by-rule
+  checkability table: `packages/tsugite/docs/drift-map/05-conformance-gates.md` (PR #124).
