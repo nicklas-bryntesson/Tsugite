@@ -78,7 +78,7 @@
   const root = document.documentElement;
 
   // A data-appearance attribute is a pinned user override (ThemeSwitch,
-  // ADR-0021); absence means the OS decides.
+  // ref-lib ADR-0021); absence means the OS decides.
   const darkQuery = matchMedia("(prefers-color-scheme: dark)");
   const readAppearance = () => {
     const pinned = root.getAttribute("data-appearance");

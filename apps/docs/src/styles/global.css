@@ -11,7 +11,7 @@
 @import "tsugite/styles/tokens/base/base.generated.css";
 
 /* --ui-* — the reference-components theming seam (ADR-0018) + the color-scheme
-   platform line (ADR-0021). Copied verbatim; mapped onto our own color system
+   platform line (ref-lib ADR-0021). Copied verbatim; mapped onto our own color system
    in a later pass. */
 @import "tsugite/styles/ui-tokens.css";
 

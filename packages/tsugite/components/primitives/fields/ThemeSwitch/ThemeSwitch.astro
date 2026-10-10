@@ -3,7 +3,7 @@ import ScreenReaderText from "../../ScreenReaderText/ScreenReaderText.astro";
 import ThemeSwitch from "./ThemeSwitch";
 // Port of reference-components ThemeSwitch — resolves a colour-scheme
 // preference against the OS signal and reflects it on <html> as
-// data-appearance (ADR-0021). "System" projects no attribute at all.
+// data-appearance (ref-lib ADR-0021). "System" projects no attribute at all.
 // Only instances with `live` get data-component and attach; inert copies
 // (state rows) never project.
 
@@ -136,7 +136,7 @@ const storageKey = ThemeSwitch.STORAGE_KEY;
 /*
  * ThemeSwitch — a three-segment control (System · Light · Dark) that resolves the
  * user's colour-scheme preference against the OS signal and projects the result
- * onto <html> as data-appearance (ADR-0021).
+ * onto <html> as data-appearance (ref-lib ADR-0021).
  *
  * It composes Picklist's chip mechanism — an sr-clipped radio whose adjacent
  * label is the visible surface, so selection and focus are plain sibling
