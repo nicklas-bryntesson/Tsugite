@@ -1,5 +1,5 @@
 // Which colour appearance applies *right now*, given what the user chose and what
-// the OS reports — the pure heart of the ThemeSwitch component (ADR-0021), shared
+// the OS reports — the pure heart of the ThemeSwitch component (ref-lib ADR-0021), shared
 // so it is specified once and unit-tested exhaustively rather than re-derived.
 //
 // That re-derivation is not hypothetical. The production implementation this is

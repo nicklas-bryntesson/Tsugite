@@ -1,8 +1,9 @@
 ---
 import ScreenReaderText from "../../ScreenReaderText/ScreenReaderText.astro";
+import ThemeSwitch from "./ThemeSwitch";
 // Port of reference-components ThemeSwitch — resolves a colour-scheme
 // preference against the OS signal and reflects it on <html> as
-// data-appearance (ADR-0021). "System" projects no attribute at all.
+// data-appearance (ref-lib ADR-0021). "System" projects no attribute at all.
 // Only instances with `live` get data-component and attach; inert copies
 // (state rows) never project.
 
@@ -22,6 +23,7 @@ interface Props {
 
 const { id, legend, name, inputIds, live = false, disabled = false, ...rest } = Astro.props;
 const [systemId, lightId, darkId] = inputIds;
+const storageKey = ThemeSwitch.STORAGE_KEY;
 ---
 
 <fieldset
@@ -101,17 +103,17 @@ const [systemId, lightId, darkId] = inputIds;
 </fieldset>
 {
   live && (
-    <script is:inline>
+    <script is:inline define:vars={{ storageKey }}>
       // Reflect the stored preference into the radios BEFORE first paint. The
       // server renders "system" checked; the module that corrects it runs after
       // parsing, and by then the indicator has painted on segment one — so the
       // correction slid it into place on every reload. Inline and synchronous by
-      // design, like the head script that restores data-appearance: this is the
-      // radios' half of the same FOUC guard. Only light/dark are stored states;
+      // design, like AppearanceGuard in the head: this is the radios' half of
+      // the same FOUC guard. Only light/dark are stored states;
       // "system" is absence and needs nothing.
       (function (script) {
         try {
-          var stored = localStorage.getItem("appearance-preference");
+          var stored = localStorage.getItem(storageKey);
           if (stored !== "light" && stored !== "dark") return;
           var root = script.previousElementSibling;
           var input = root && root.querySelector('input[value="' + stored + '"]');
@@ -134,7 +136,7 @@ const [systemId, lightId, darkId] = inputIds;
 /*
  * ThemeSwitch — a three-segment control (System · Light · Dark) that resolves the
  * user's colour-scheme preference against the OS signal and projects the result
- * onto <html> as data-appearance (ADR-0021).
+ * onto <html> as data-appearance (ref-lib ADR-0021).
  *
  * It composes Picklist's chip mechanism — an sr-clipped radio whose adjacent
  * label is the visible surface, so selection and focus are plain sibling

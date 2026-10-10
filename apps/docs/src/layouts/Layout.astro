@@ -4,6 +4,7 @@ import "../styles/global.css";
 import Header from "../components/Header/Header.astro";
 import Footer from "../components/Footer/Footer.astro";
 import SvgSprite from "../components/SvgSprite/SvgSprite.astro";
+import AppearanceGuard from "tsugite/ThemeSwitch/AppearanceGuard.astro";
 interface Props {
   title?: string;
   /** Mirrors Umbraco's Model.ContentType.Alias on #App */
@@ -16,7 +17,7 @@ const { title = "Tsugite", template, preloadImage } = Astro.props;
 ---
 
 <!doctype html>
-{/* No data-appearance here: absence means "follow the OS" (ADR-0021), and
+{/* No data-appearance here: absence means "follow the OS" (ref-lib ADR-0021), and
     ThemeSwitch owns the user override at runtime. The legacy primitives are
     still light-only — resolved by the upcoming color-system pass. */}
 <html lang="en">
@@ -24,18 +25,7 @@ const { title = "Tsugite", template, preloadImage } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <script is:inline>
-      // FOUC guard (reference-components PORTING.md): restore an explicit
-      // appearance override before first paint. Inline and synchronous by
-      // design — a module runs after parsing, which is too late. `system`
-      // needs no restore: color-scheme already follows the OS.
-      try {
-        var a = localStorage.getItem("appearance-preference");
-        if (a === "light" || a === "dark") document.documentElement.setAttribute("data-appearance", a);
-      } catch (e) {
-        /* storage blocked — fall back to following the OS */
-      }
-    </script>
+    <AppearanceGuard />
     {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
   </head>
   <body>

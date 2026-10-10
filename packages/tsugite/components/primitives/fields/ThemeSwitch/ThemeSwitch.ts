@@ -6,7 +6,7 @@ import {
 } from '../../../../kernel/js/theme-preference'
 
 /**
- * ThemeSwitch — System · Light · Dark (ADR-0021).
+ * ThemeSwitch — System · Light · Dark (ref-lib ADR-0021).
  *
  * The component owns only the *plumbing*: read the stored preference, read the
  * live OS signal, hand both to the kernel, and reflect the answer on the document
