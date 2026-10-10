@@ -458,3 +458,12 @@ and did not decide. Each is a separate call.
   references. Candidate shape: a ratchet, as in an outside docs-ledger experiment: it admits
   no new drift and does not fail on what exists today, so the backlog shrinks without
   blocking work.
+- **A hook that enforces the writing-css template.** Loose thought, not designed: check every
+  stylesheet against `.claude/skills/writing-css/example.css` mechanically instead of by the
+  skill's eye-comparison. The order header → root → parts → gates, the header's gate lines matching
+  the recipe, one root with a registered prefix, off-value first. Shape sketched so far: the logic in Node
+  (PostCSS is the only parser that reads `.astro` `<style>` blocks), a thin Python hook beside
+  the two existing ones calling it, PostToolUse rather than PreToolUse (only after the edit is
+  the whole file visible; exit 2 hands the hits back to the agent on the same turn), CI as the
+  hard stop through the same ratchet as the row above. Evidence and the rule-by-rule
+  checkability table: `packages/tsugite/docs/drift-map/05-conformance-gates.md` (PR #124).
