@@ -1,0 +1,20 @@
+---
+// ThemeSwitch's head half: restore an explicit appearance before first
+// paint. Inline and synchronous by design — the component's module runs after
+// parsing, which is too late, and by then the page has painted in the OS's
+// appearance. `system` needs no restore: absence already follows the OS.
+// Every host that mounts a live ThemeSwitch mounts this once, in <head>; the
+// storage key is the component's own, so the two halves cannot drift apart.
+import ThemeSwitch from "./ThemeSwitch";
+
+const storageKey = ThemeSwitch.STORAGE_KEY;
+---
+
+<script is:inline define:vars={{ storageKey }}>
+  try {
+    var a = localStorage.getItem(storageKey);
+    if (a === "light" || a === "dark") document.documentElement.setAttribute("data-appearance", a);
+  } catch (e) {
+    /* storage blocked — follow the OS */
+  }
+</script>
