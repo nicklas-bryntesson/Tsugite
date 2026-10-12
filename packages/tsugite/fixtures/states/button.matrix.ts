@@ -109,10 +109,10 @@ const toCase = (family: Family, row: Row): ButtonCase => {
   };
 };
 
-// A label too long for one line at any bench width, with and without an icon: the only
+// A label too long for one line of the bench column, with and without an icon: the only
 // cases where the text's own alignment shows, since a one-line label is as wide as its
 // column. Geometry only, at the default size — size moves the glyphs, not the alignment.
-const long = "A label long enough to wrap onto a second line at any width the bench is drawn at, so that the alignment of the lines inside the label is measured and not only the label's place in the button; written out once more to be safe: a label long enough to wrap onto a second line at any width the bench is drawn at.";
+const long = "A label long enough to wrap onto a second line, so the alignment of its lines can be measured.";
 const wrapping: Content[] = [
   { key: "long", label: "A long label", props: { label: long } },
   { key: "long-icon", label: "A long label and an icon", props: { label: long, icon: "icon-search" } },
