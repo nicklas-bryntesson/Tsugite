@@ -1,12 +1,11 @@
 ---
-// Button's bench (ADR-0026): every cell of both state maps — rest, each state, each pair
-// that can meet, each triple — for every content, one button per line. A link has no
-// disabled, so the two front doors draw their own maps. Each case is named on the
-// element by data-bench-case="<door>/<content>/<states>" for the suite to address.
+// Button's bench (ADR-0026), in three families (fixtures/states/button.matrix.ts): every
+// colour — emphasis × intent × state cell × content × door — at the default geometry;
+// every geometry at rest; and a pairwise cover of the full product, which the suite holds
+// to the other two. One button per line, named by data-bench-case.
 import ActionButton from "./ActionButton.astro";
 import LinkButton from "./LinkButton.astro";
-import { actionStates, linkStates } from "../../../../fixtures/states/button.states";
-import { excludedBy, propsFor, type StateMap } from "../../../../fixtures/states/types";
+import { buttonCases } from "../../../../fixtures/states/button.matrix";
 
 interface Props {
   /** The icons the cases draw. On by default, as the bench app has none; a page that
@@ -16,29 +15,7 @@ interface Props {
 
 const { sprite = true } = Astro.props;
 
-const cellsOf = (map: StateMap) => [
-  [],
-  ...map.states.map((s) => [s.key]),
-  ...Object.entries(map.pairs)
-    .filter(([, pair]) => pair.reach !== "no")
-    .map(([key]) => key.split("+")),
-  ...map.triples.map((t) => [...t.keys]),
-];
-
-const cases = [
-  { door: "action", map: actionStates, Door: ActionButton },
-  { door: "link", map: linkStates, Door: LinkButton },
-].flatMap(({ door, map, Door }) =>
-  map.contents.flatMap((content) =>
-    cellsOf(map)
-      .filter((keys) => excludedBy(content, keys) === null)
-      .map((keys) => {
-        const name = `${door}/${content.key}/${keys.length ? keys.join("+") : map.rest.key}`;
-        const { element, label, ...props } = propsFor(map, keys, content);
-        return { name, Door, label, props: element === "a" ? { href: "#", ...props } : props };
-      }),
-  ),
-);
+const doors = { action: ActionButton, link: LinkButton };
 ---
 
 {
@@ -50,9 +27,12 @@ const cases = [
 }
 
 {
-  cases.map(({ name, Door, label, props }) => (
-    <Door {...props} data-bench-case={name} aria-label={label ? undefined : name}>
-      {label}
-    </Door>
-  ))
+  buttonCases.map(({ name, door, label, props }) => {
+    const Door = doors[door];
+    return (
+      <Door {...props} data-bench-case={name} aria-label={label ? undefined : name}>
+        {label}
+      </Door>
+    );
+  })
 }
