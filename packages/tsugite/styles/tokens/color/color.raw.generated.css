@@ -277,7 +277,7 @@
 @property --COLOR-KAKI-50 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(58% 0.190 32);
+  initial-value: oklch(56% 0.190 32);
 }
 
 @property --COLOR-KAKI-80 {
@@ -301,7 +301,7 @@
 @property --COLOR-MATCHA-50 {
   syntax: "<color>";
   inherits: false;
-  initial-value: oklch(55% 0.105 148);
+  initial-value: oklch(53% 0.105 148);
 }
 
 @property --COLOR-MATCHA-80 {
@@ -381,11 +381,11 @@
     --COLOR-YU-85: #062c32;
     --COLOR-KAKI-10: #fce1d8;
     --COLOR-KAKI-30: #fea387;
-    --COLOR-KAKI-50: #d33e25;
+    --COLOR-KAKI-50: #cc361e;
     --COLOR-KAKI-80: #881c11;
     --COLOR-MATCHA-10: #daf3dc;
     --COLOR-MATCHA-30: #94cf9f;
-    --COLOR-MATCHA-50: #42824d;
+    --COLOR-MATCHA-50: #3c7c48;
     --COLOR-MATCHA-80: #235430;
     --COLOR-KOHAKU-10: #fef1d0;
     --COLOR-KOHAKU-30: #fad27b;
@@ -441,11 +441,11 @@
     --COLOR-YU-85: oklch(27% 0.042 212);
     --COLOR-KAKI-10: oklch(93% 0.032 40);
     --COLOR-KAKI-30: oklch(80% 0.115 38);
-    --COLOR-KAKI-50: oklch(58% 0.190 32);
+    --COLOR-KAKI-50: oklch(56% 0.190 32);
     --COLOR-KAKI-80: oklch(41% 0.145 30);
     --COLOR-MATCHA-10: oklch(94% 0.040 148);
     --COLOR-MATCHA-30: oklch(80% 0.090 150);
-    --COLOR-MATCHA-50: oklch(55% 0.105 148);
+    --COLOR-MATCHA-50: oklch(53% 0.105 148);
     --COLOR-MATCHA-80: oklch(40% 0.080 150);
     --COLOR-KOHAKU-10: oklch(96% 0.045 88);
     --COLOR-KOHAKU-30: oklch(88% 0.115 85);

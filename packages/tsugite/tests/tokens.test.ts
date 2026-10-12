@@ -23,6 +23,7 @@ import { generateTextBoxStylesheet } from "../engine/text-box.js";
 import { rawColorTokens } from "../theme-default/raw.color.tokens.js";
 import { themeVoices, themeChannels, voiceMatrix, cellName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 import { rawRefName } from "../theme-default/raw.color.tokens.js";
+import { semanticColorTokens } from "../theme-default/semantic.color.tokens.js";
 import { isRecipe, computeMix, toSrgbCss, toSrgbHex, fidelity, mix } from "../engine/color-engine.js";
 
 describe("token factories", () => {
@@ -210,6 +211,35 @@ describe("theme voices (ADR-0006: voice × volume)", () => {
               `${voice}/${vol}/${mode}: ${fg} on ${bg}`,
             ).toBeGreaterThanOrEqual(floor);
           }
+        }
+      }
+    }
+  });
+});
+
+describe("feedback inks", () => {
+  // A secondary action with an intent writes the feedback colour as ink on the secondary
+  // hover surface (Button.css), and Notice and the fields use it on the page. The darkest
+  // ground it meets is the hover surface; in the contrast modes that is transparent, so the
+  // page. Feedback is voice-independent, so these are the only grounds there are.
+  const resolve = (value: string) => {
+    if (value === "transparent") return null;
+    const name = rawRefName(value);
+    return name ? rawColorTokens[name] : null;
+  };
+  const inks = ["--color-feedback-error", "--color-feedback-success"];
+  const grounds = ["--color-surface-page", "--color-interactive-secondary-hoverSurface"];
+
+  it("every feedback ink meets WCAG contrast on the page and the secondary hover surface", () => {
+    for (const mode of APPEARANCES) {
+      const floor = mode.includes("contrast") ? 7 : 4.5;
+      for (const ink of inks) {
+        for (const ground of grounds) {
+          const f = resolve(semanticColorTokens[ink][mode]);
+          const g = resolve(semanticColorTokens[ground][mode]);
+          if (!g) continue;
+          expect(f, `${ink}/${mode}`).toBeTruthy();
+          expect(wcagContrast(f!, g), `${mode}: ${ink} on ${ground}`).toBeGreaterThanOrEqual(floor);
         }
       }
     }
