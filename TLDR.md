@@ -55,62 +55,95 @@ makes it impossible to reason about, for a person and for a model alike.
   contrast and fidelity, with a registry of what exists. If a name is not
   in the registry, it does not exist.
 - **Decisions in a ledger, contracts in the browser.** Every choice is an
-  ADR; every component has a suite that measures rendered DOM. The same
-  DOM from Astro, React and Vue, byte for byte.
+  ADR; every component has a suite that measures rendered DOM.
 
-## The order of work: from the worst case backwards
+## A component is a contract
 
-Most projects start with the simple case — one colour axis, the component
-in its prettiest state — and add the rest later. Every later state then
-becomes an override of the first: dark mode as `.dark .Button`, contrast as
-another layer, the phone as "the mobile version". The pretty case is the
-base and everything else is a deviation from it. That is base-plus-override,
-and it is the four examples above. Drift is not carelessness; it is the
-consequence of the order.
+The insight everything else rests on: a component is not a template that
+happens to accept some props. It is a **contract over what may happen** —
+which elements it may render as, which axes it has, which values each axis
+takes, which combinations may exist at the same time, and what it refuses.
+The contract defines the HTML that is an allowed outcome. Nothing else is.
 
-The same order shows up in component APIs as **prop explosion**. Each
-state that arrives late becomes a prop: `dark`, `compact`, `inverse`,
-`fullWidthOnMobile`, `variant="hero-dark-compact"`. Props that encode a
-combination multiply with every state added, each one a special case with
-its own CSS, until nobody can say which combinations are meant to exist.
-In Tsugite a prop is an axis with an owner, never a combination, and never
-a context: `data-grow-inline="true"` is a permission, the container state
-that decides what the button is given lives in the parent's CSS, and the
-user's dark mode lives in a media gate. The prop count is the number of
-axes, not the number of situations, and a combination that must not exist
-is refused where the axes live.
+Card, whole (`packages/tsugite/recipes/card.recipe.ts`):
 
-Tsugite works the other way round. The full state space is laid out first:
-every colour axis that can exist (voice, volume, four modes, forced colours),
-every layout state (viewport tier, container state), every axis a component
-can carry — and, for each axis, **who decides**: the region owns the voice,
-the child owns its footprint, the composition owns placement. Then the
-hardest state is built first and the simplest last. Light mode is one
-column of four, not the default. The stacked Teaser is one container state
-of two, not the mobile version. The pretty case is just a cell, and there is
-no base left to override.
+```ts
+export const card = {
+  name: "Card",
+  promise: "A visual frame around other components.",
+  refuses: ["content of its own", "meaning — it is not a link, a region or a section"],
+  class: "Card",
+  element: { values: ["div", "article", "section", "li"], default: "div" },
+  axes: {
+    border: { type: "boolean", default: false },
+    padding: { values: ["none", "sm", "md", "lg"], default: "md" },
+    elevation: { values: ["none", "sm", "md", "lg"], default: "none" },
+  },
+  content: { empty: "suppress" },
+} as const satisfies Recipe;
+```
 
-Within that space the building order is still primitives first — inputs,
-buttons, text — out to compositions of primitives, to regions that host
-them, to page layout. That is atomic design's shape with one difference:
-the tiers are sorted by **ownership**, not size. A primitive owns its
-vocabulary and is content; a composition owns arrangement and theme claims
-and no vocabulary; a region governs a capability over what it hosts. So
-when a component lacks a capability you need, that is a contract question
-with three outcomes, none of them CSS: it is a variant of something that
-exists, so a new cell on an existing axis, with its gate; or it is not, so a
-new name, a verb, a list of what it refuses, assembled from the primitives;
-or someone wants to bend the old one, and the old one's refusal is what
-protects it.
+That is a table, not code. One resolver reads it and answers every question
+about a set of props: render this tag with this class and these attributes,
+render nothing (an empty card frames nothing), or refuse (`padding="xl"` is
+not a smaller or larger guess; it is an error, shown where it happened). A
+combination the table does not allow cannot be rendered by accident.
 
-The counterweight, so this does not become thirty cells nobody uses: the
-*shape* of the space is enumerated up front, the *values* of its cells are
-written when a real case needs them (ADR-0005 rule 3), and a cell the
-combination law does not whitelist does not exist (ADR-0006 §6). Every axis
-known and every owner named from day one; not every cell filled.
+Two things follow, and both are the point.
+
+**The CSS mounts on the outcome, not on the framework.** Because the
+contract fixes the HTML, `Card.css` is written against exactly the
+attributes the table can produce — one gate per value, nothing for values
+that cannot occur. It does not know or care how the markup got to the
+browser.
+
+**Adapters become almost nothing.** `Card.astro` is 23 lines, `Card.tsx`
+31, `Card.vue` 26: each hands its props to the resolver and prints what comes
+back, in the host's idiom. The renderer tests hold all three to the same
+fixture file — byte-identical markup for the same props, nothing for an
+empty card, the same message for an invalid one. The fixture is JSON, so a
+renderer in another language is held to the same file. A new framework is a
+small adapter, not a port of the component.
+
+This is also what ends prop explosion (below): the props are the axes the
+table names, and the combinations are what the table allows. A new
+situation does not get a prop; it gets a cell on an axis that exists, or it
+is a new component with its own contract.
+
+## The order of work: worst case first
+
+Most systems build the default case first (light mode, wide screen, the
+component at rest) and add every later state as an override: dark mode as
+`.dark .Button`, the phone as "the mobile version".
+That is the four examples above. Drift is a consequence of the order, not
+of carelessness.
+
+In component APIs the same order gives **prop explosion**: `dark`,
+`compact`, `inverse`, `variant="hero-dark-compact"`. Every late state
+becomes a prop, every combination a special case, until nobody can say
+which combinations are meant to exist.
+
+Tsugite reverses the order:
+
+- **The whole state space first.** Every colour axis (voice, volume, four
+  modes, forced colours), every layout state (viewport tier, container
+  state), every component axis, and who owns each: the region owns the
+  voice, the child its footprint, the composition placement.
+- **The hardest state first.** Light mode is one column of four; the
+  stacked Teaser is one container state of two. The default is a cell,
+  not a base.
+- **A prop is an axis**, never a combination and never a context. The prop
+  count is the number of axes, not the number of situations.
+- **Tiers by ownership, not size.** A primitive owns its vocabulary; a
+  composition owns arrangement and no vocabulary; a region governs a
+  capability over what it hosts. A missing capability is a contract
+  question, never CSS: a new cell on an existing axis, a new component
+  with its own refusals, or a refusal that protects the old one.
+- **Shape up front, values on demand.** Every axis and owner is named from
+  day one; a cell is written when a real case needs it, and a cell the
+  combination law does not allow does not exist.
 
 The result: "where does this come from?" always has a one-line answer.
-That is the whole point.
 
 ---
 

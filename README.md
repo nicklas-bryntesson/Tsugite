@@ -3,6 +3,12 @@
 A reference for deterministic front-end systems, built like joinery:
 pieces meet through contracts that fit exactly — and refuse what doesn't.
 
+A component here is a contract: a table of what may happen — which HTML
+is an allowed outcome, which combinations may exist at once, what is
+refused. The CSS mounts on that outcome whatever the route to the browser,
+so the same component renders identically from Astro, React or Vue through
+adapters of a few dozen lines ([why that matters](TLDR.md#a-component-is-a-contract)).
+
 New here? Start with [TLDR.md](TLDR.md): the problem, in blunt examples,
 and what this system does about it.
 
