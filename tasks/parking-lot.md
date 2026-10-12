@@ -467,3 +467,26 @@ and did not decide. Each is a separate call.
   the whole file visible; exit 2 hands the hits back to the agent on the same turn), CI as the
   hard stop through the same ratchet as the row above. Evidence and the rule-by-rule
   checkability table: `packages/tsugite/docs/drift-map/05-conformance-gates.md` (PR #124).
+
+## From the escape-hatch discussion (2026-10-12)
+
+- **Escape hatches: where reality needs a dial, and who may turn it.** The system refuses
+  micro-management (no per-breakpoint overrides on one heading for one test phone), but some
+  design decisions are real and state-bound: a Card with `lg` padding wide and `sm` below; a
+  Teaser whose title steps up one size in its horizontal container state because the room is
+  there. Cover already does a version of this. Direction sketched, nothing decided:
+  - No per-tier props. `padding="sm wide:lg"` multiplies the table by the tiers.
+  - The context owns the exception: a composition or region claims, in its own state
+    (tier, container), through the chain. The pattern exists for line length:
+    `var(--custom-heading-lineLength, var(--_hd-lineLength))`. A size channel would be the
+    same seam, e.g. `font-size: var(--custom-heading-fontSize, var(--_hd-fontSize))`, set by
+    Teaser in `@container (min-width: 25rem)` on `.HeadingContainer`.
+  - Guards: a claim's value is a token on the scale, never raw (ratchet-checkable); a claim
+    is set on the part that hosts the target, not the root, so it cannot leak to nested
+    instances (TLDR example 3).
+  - Open: a channel on every typography primitive at once, or on Heading until a case needs
+    more; relative ("one step up") or absolute ("step 2"); whether an instance in markup
+    may ever claim, or only a composition/region.
+  - **Spike candidate:** inventory which things will need escape hatches at all (sizes,
+    padding, gaps, line length, voice), measured against real design cases, before any
+    channel is built.
