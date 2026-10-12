@@ -5,7 +5,8 @@
 //
 //   colour    every emphasis × intent × state cell × content × door, at the default geometry:
 //             the family axe reads, since contrast is a colour property
-//   geometry  every size × pill × grow × icon position × content × door, at rest, primary
+//   geometry  every size × pill × grow × icon position × content × door, at rest, primary;
+//             and a label long enough to wrap, the one place the text's alignment shows
 //   pairwise  a pairwise cover of the full product (pairwise.ts): every two axis values
 //             that can meet, meet once. The suite holds each of its buttons to the colour
 //             case with its colour and the geometry case with its geometry — a selector
@@ -91,7 +92,7 @@ const geometryKey = (r: Row) =>
 
 const toCase = (family: Family, row: Row): ButtonCase => {
   const { door, map } = doors.find((d) => d.door === row.door)!;
-  const content = map.contents.find((c) => c.key === row.content)!;
+  const content = [...map.contents, ...wrapping].find((c) => c.key === row.content)!;
   const keys = row.states === map.rest.key ? [] : row.states.split("+");
   const { element, label, ...stateProps } = propsFor(map, keys, content);
   const axisProps: Record<string, unknown> = { emphasis: row.emphasis, size: row.size };
@@ -108,17 +109,35 @@ const toCase = (family: Family, row: Row): ButtonCase => {
   };
 };
 
+// A label too long for one line at any bench width, with and without an icon: the only
+// cases where the text's own alignment shows, since a one-line label is as wide as its
+// column. Geometry only, at the default size — size moves the glyphs, not the alignment.
+const long = "A label long enough to wrap onto a second line at any width the bench is drawn at, so that the alignment of the lines inside the label is measured and not only the label's place in the button; written out once more to be safe: a label long enough to wrap onto a second line at any width the bench is drawn at.";
+const wrapping: Content[] = [
+  { key: "long", label: "A long label", props: { label: long } },
+  { key: "long-icon", label: "A long label and an icon", props: { label: long, icon: "icon-search" } },
+];
+
 const byDoor = doors.flatMap(({ door, map }) => map.contents.map((content) => ({ door, map, content })));
 
 export const colourCases: ButtonCase[] = byDoor.flatMap(({ door, map, content }) =>
   rowsFor(door, map, content, cellsOf(map), colourRows(door), [defaults(content)]).map((r) => toCase("colour", r)),
 );
 
-export const geometryCases: ButtonCase[] = byDoor.flatMap(({ door, map, content }) =>
-  rowsFor(door, map, content, [[]], [{ emphasis: emphases[0], intent: door === "action" ? intents[0] : "-" }], geometryRows(content)).map(
-    (r) => toCase("geometry", r),
+const restColour = (door: string): Row[] => [{ emphasis: emphases[0], intent: door === "action" ? intents[0] : "-" }];
+
+export const geometryCases: ButtonCase[] = [
+  ...byDoor.flatMap(({ door, map, content }) =>
+    rowsFor(door, map, content, [[]], restColour(door), geometryRows(content)).map((r) => toCase("geometry", r)),
   ),
-);
+  ...doors.flatMap(({ door, map }) =>
+    wrapping.flatMap((content) =>
+      rowsFor(door, map, content, [[]], restColour(door), geometryRows(content).filter((g) => g.size === button.axes.size.default)).map(
+        (r) => toCase("geometry", r),
+      ),
+    ),
+  ),
+];
 
 /** The full product, constraints applied: what the pairwise family is picked from. */
 export const fullProduct: Row[] = byDoor.flatMap(({ door, map, content }) =>

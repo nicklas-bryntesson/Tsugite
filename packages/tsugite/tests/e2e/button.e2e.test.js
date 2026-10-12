@@ -79,6 +79,8 @@ const readCases = (page) =>
           iconInline: icon ? icon.left - box.left : null,
           iconBlock: icon ? icon.top - box.top : null,
           textInline: text ? text.left - box.left : null,
+          // one entry per line: a wrapped label's lines show its alignment, their union does not
+          lines: range ? [...range.getClientRects()].map((r) => Math.round(r.left - box.left)) : null,
           textBlock: text ? text.top - box.top : null,
         },
       }
