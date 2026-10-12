@@ -490,3 +490,23 @@ and did not decide. Each is a separate call.
   - **Spike candidate:** inventory which things will need escape hatches at all (sizes,
     padding, gaps, line length, voice), measured against real design cases, before any
     channel is built.
+
+## From the web-components position paper (2026-10-07, distilled 2026-10-12)
+
+The paper (branch `docs/web-components-position`, never merged, discarded) asked whether a
+Lit adapter could take the recipe contract and produce web components. Wrappers break the
+wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` and Quote's
+`& > *`; `display: contents` is a plaster; shadow DOM rejected). What is worth keeping:
+
+- **ADR candidate: the markup is complete without JavaScript.** What works without
+  JavaScript must not require it; JavaScript only adds behaviour on top of markup that
+  already stands. The system follows this in practice (native first, recipes emit plain
+  markup, `<button>` and `<a>` are the real elements) but it is written nowhere.
+- **HTML web components as the only custom-element road.** The server renders the usual
+  wrapperless markup; a component with behaviour may get a thin custom element *around*
+  it that enhances and never renders (`<ts-disclosure>` around a `<details>`). Without
+  JavaScript, the `<details>` still works. Presentational primitives never become
+  custom elements.
+- **A server-side adapter buys more than Lit.** For presentational components lit-html is
+  one more template engine; the contract's value is that any renderer can emit it. A Razor
+  adapter for Umbraco, held to the same JSON fixtures, is the more useful next door.
