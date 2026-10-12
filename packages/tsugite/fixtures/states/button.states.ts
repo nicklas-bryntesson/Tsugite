@@ -1,6 +1,6 @@
 // The button state maps: one per front door, since a link has no disabled. Reasoned, not
 // measured — the probe the states spike asks for (TODO(investigate) in Button.css) turns
-// each "unknown" into a reading. The Button bench draws them through ButtonCell.astro.
+// each "unknown" into a reading. The Button bench draws them through button.matrix.ts.
 import type { Content, StateMap } from "./types";
 
 const contents: Content[] = [

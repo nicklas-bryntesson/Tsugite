@@ -214,8 +214,8 @@ and did not decide. Each is a separate call.
     not a collapsing `auto 1fr auto`. Two icons and no words is an `absent` cell.
   - The Vercel button is then Button (secondary, pill, stack at start, copy sprite at end)
     *if* the copy icon is decoration; a second action makes it two buttons, a composition.
-    The SvD button is Button today plus `quiet`: grow-inline, iconEnd, `<strong>` in the label,
-    and it settles the TODO(decide) on a grown button's inner layout (label start, icon end).
+    The SvD button does not fit a standard button: rich text in the label and alignments of
+    its own make it a component of its own. A grown Button centres its content (#129).
   - POC question that ties it to the run engine: children in an icon slot must stay inside
     the label's line — the label owns the height.
 - **AffixField: onto the table, an align axis, a closed type list, and the affix wiring question.**
@@ -490,6 +490,26 @@ and did not decide. Each is a separate call.
   - **Spike candidate:** inventory which things will need escape hatches at all (sizes,
     padding, gaps, line length, voice), measured against real design cases, before any
     channel is built.
+
+## From the web-components position paper (2026-10-07, distilled 2026-10-12)
+
+The paper (branch `docs/web-components-position`, never merged, discarded) asked whether a
+Lit adapter could take the recipe contract and produce web components. Wrappers break the
+wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` and Quote's
+`& > *`; `display: contents` is a plaster; shadow DOM rejected). What is worth keeping:
+
+- **ADR candidate: the markup is complete without JavaScript.** What works without
+  JavaScript must not require it; JavaScript only adds behaviour on top of markup that
+  already stands. The system follows this in practice (native first, recipes emit plain
+  markup, `<button>` and `<a>` are the real elements) but it is written nowhere.
+- **HTML web components as the only custom-element road.** The server renders the usual
+  wrapperless markup; a component with behaviour may get a thin custom element *around*
+  it that enhances and never renders (`<ts-disclosure>` around a `<details>`). Without
+  JavaScript, the `<details>` still works. Presentational primitives never become
+  custom elements.
+- **A server-side adapter buys more than Lit.** For presentational components lit-html is
+  one more template engine; the contract's value is that any renderer can emit it. A Razor
+  adapter for Umbraco, held to the same JSON fixtures, is the more useful next door.
 
 ## From the Button bench (2026-10-12)
 

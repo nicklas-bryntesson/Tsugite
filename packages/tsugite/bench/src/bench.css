@@ -22,8 +22,9 @@ body {
 }
 
 /* A bench instrument: arrangement only. Every case on its own line, left-aligned, at
-   its own width. */
+   its own width, in a column narrow enough that a label of a sentence or two wraps. */
 .Bench {
+  max-inline-size: 40rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
