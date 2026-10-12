@@ -510,3 +510,25 @@ wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` a
 - **A server-side adapter buys more than Lit.** For presentational components lit-html is
   one more template engine; the contract's value is that any renderer can emit it. A Razor
   adapter for Umbraco, held to the same JSON fixtures, is the more useful next door.
+
+## From the Button bench (2026-10-12)
+
+- **Bench widths and breakpoints: one source, read by every bench.** The bench column is a
+  raw 40rem in `bench/src/bench.css`; the thresholds the benches will need are raw literals
+  scattered through the CSS — Teaser `@container` 25rem, Quote 30rem, CoverComposition
+  21.25rem plus a viewport ladder at 40/48/80/95rem. `var()` is not allowed in `@media` or
+  `@container`, so the truth cannot be a token; it has to be data in JS. Direction, nothing
+  decided:
+  - Container thresholds declared by the component (in its recipe, say); the bench draws it
+    in frames just below and at each threshold, on one page; a test holds the CSS literal to
+    the declared value.
+  - Viewport tiers cannot be faked by a box: the suite sets the window to widths read from
+    the theme's tier ladder (`--MOBILE-BREAKPOINT`/`--DESKTOP-BREAKPOINT` above are unused and
+    disagree with the ladder — the same question). Today a viewport is set per test by hand
+    (`setViewportSize` in Picklist, ScrollArea, ToggleTip); the package runs Desktop Chrome
+    only.
+  - The bench column becomes a named width in the same module, not a number in a stylesheet.
+  - Decisions owed: where thresholds are declared, whether the ladder and container
+    thresholds share one scale, how a suite names a width, whether viewport widths run as
+    Playwright projects or per test.
+  - First candidate: Teaser — one container threshold, no bench yet.
