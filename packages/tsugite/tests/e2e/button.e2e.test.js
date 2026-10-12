@@ -58,13 +58,18 @@ const GEOMETRY = [
   'border-top-left-radius', 'border-top-right-radius', 'border-bottom-right-radius', 'border-bottom-left-radius',
 ]
 
-test('a pairwise button has its colour case\'s colour and its geometry case\'s geometry', async ({ page }) => {
-  const read = await page.evaluate(([colour, geometry]) => {
+const readCases = (page) =>
+  page.evaluate(([colour, geometry]) => {
     const out = {}
     for (const el of document.querySelectorAll('[data-bench-case]')) {
       const cs = getComputedStyle(el)
       const box = el.getBoundingClientRect()
       const icon = el.querySelector('svg')?.getBoundingClientRect()
+      // The glyphs, not the label's box: a stretched box hides where its text sits in it.
+      const label = el.querySelector('.text')
+      const range = label && document.createRange()
+      range?.selectNodeContents(label)
+      const text = range?.getBoundingClientRect()
       out[el.dataset.benchCase] = {
         colour: Object.fromEntries(colour.map((p) => [p, cs.getPropertyValue(p)])),
         geometry: {
@@ -73,11 +78,16 @@ test('a pairwise button has its colour case\'s colour and its geometry case\'s g
           height: box.height,
           iconInline: icon ? icon.left - box.left : null,
           iconBlock: icon ? icon.top - box.top : null,
+          textInline: text ? text.left - box.left : null,
+          textBlock: text ? text.top - box.top : null,
         },
       }
     }
     return out
   }, [COLOUR, GEOMETRY])
+
+test('a pairwise button has its colour case\'s colour and its geometry case\'s geometry', async ({ page }) => {
+  const read = await readCases(page)
 
   const pairwise = Object.keys(read).filter((name) => name.startsWith('pairwise/'))
   expect(pairwise.length).toBeGreaterThan(0)
@@ -91,6 +101,22 @@ test('a pairwise button has its colour case\'s colour and its geometry case\'s g
     expect(geometryRef, `${name}: no geometry case`).toBeDefined()
     expect(read[name].colour, `${name} against ${colourRef}`).toEqual(read[colourRef].colour)
     expect(read[name].geometry, `${name} against ${geometryRef}`).toEqual(read[geometryRef].geometry)
+  }
+})
+
+// The two front doors render one table: a link and an action with the same content and
+// geometry are the same box, label and icon in the same places. A <button> brings UA
+// styles an <a> does not (it centres its text), so this is where they would show.
+test('a link and an action with the same geometry are laid out alike', async ({ page }) => {
+  const read = await readCases(page)
+  const links = Object.keys(read).filter((name) => name.startsWith('geometry/link/'))
+  expect(links.length).toBeGreaterThan(0)
+  for (const link of links) {
+    const [, , content, states, , geometry] = link.split('/')
+    const action = Object.keys(read).find((n) =>
+      n.startsWith(`geometry/action/${content}/${states}/`) && n.endsWith(`/${geometry}`))
+    expect(action, `${link}: no action case`).toBeDefined()
+    expect(read[link].geometry, `${link} against ${action}`).toEqual(read[action].geometry)
   }
 })
 

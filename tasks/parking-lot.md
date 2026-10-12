@@ -214,8 +214,8 @@ and did not decide. Each is a separate call.
     not a collapsing `auto 1fr auto`. Two icons and no words is an `absent` cell.
   - The Vercel button is then Button (secondary, pill, stack at start, copy sprite at end)
     *if* the copy icon is decoration; a second action makes it two buttons, a composition.
-    The SvD button is Button today plus `quiet`: grow-inline, iconEnd, `<strong>` in the label,
-    and it settles the TODO(decide) on a grown button's inner layout (label start, icon end).
+    The SvD button does not fit a standard button: rich text in the label and alignments of
+    its own make it a component of its own. A grown Button centres its content (#129).
   - POC question that ties it to the run engine: children in an icon slot must stay inside
     the label's line — the label owns the height.
 - **AffixField: onto the table, an align axis, a closed type list, and the affix wiring question.**
