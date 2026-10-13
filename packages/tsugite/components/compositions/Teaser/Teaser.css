@@ -31,8 +31,11 @@
   flex: 1;
   padding: var(--size-md);
 
+  /* The layout takes the card's full inline size: sized to its content, the media
+     track (1fr) would grow with the length of the copy, not the width of the card. */
   & .LayoutContainer {
     flex: 1;
+    align-self: stretch;
   }
 
   & .Picture {
