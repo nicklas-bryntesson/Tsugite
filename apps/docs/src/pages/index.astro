@@ -88,6 +88,23 @@ const principles = [
         </Card>
       ))}
     </div>
+
+    <section class="HomeDoctrine">
+      <Heading element="h2" size="2" text="One rule at a time" />
+      <Prose variant="default">
+        <p>
+          In ordinary CSS, why a button is blue is usually a sum — cascade order, specificity,
+          breakpoints and inheritance at once. Tsugite aims for one active rule per property,
+          and one you can point at.
+        </p>
+        <ul>
+          <li><strong>Gates, not overrides.</strong> A property is declared only where it applies. At 1100px there is one padding rule, not three stacked on each other.</li>
+          <li><strong>One hop per layer.</strong> A component reads the theme, the theme reads a semantic token, the token reads a raw value. “Why blue?” is a chain you can follow in the inspector.</li>
+          <li><strong>Attributes are the API.</strong> Every value of every axis has its own gate, the off value included, so no rule guesses at what is missing.</li>
+          <li><strong>Nobody styles someone else’s class.</strong> A composition places its own parts; the button inside a Teaser does not know it is there.</li>
+        </ul>
+      </Prose>
+    </section>
   </main>
 </Layout>
 
@@ -107,6 +124,15 @@ const principles = [
   /* the kanji mark is quieter than the words around it: the muted channel, inherited */
   & .kanji-mark {
     color: var(--color-text-secondary);
+  }
+
+  /* the doctrine reads at the intro's measure, below the cards */
+  & .HomeDoctrine {
+    padding-block: 0 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-lg);
+    max-inline-size: 46rem;
   }
 
   & .HomePrinciples {
