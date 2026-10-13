@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
-import { injectAxe, checkA11y } from 'axe-playwright'
-import { targetPath } from './helpers/target.js'
+import { injectAxe } from 'axe-playwright'
+import { scopedCheckA11y, targetPath } from './helpers/target.js'
 
 // Button on its bench (ADR-0026), in three families (fixtures/states/button.matrix.ts),
 // each case named data-bench-case="<family>/<door>/<content>/<states>/<colour>/<geometry>".
@@ -124,22 +124,7 @@ test('a link and an action with the same geometry are laid out alike', async ({ 
 
 // ── Accessibility ─────────────────────────────────────────────────────────────
 
-// TODO(fix): secondary with an intent drops below 4.5:1 wherever the state paints the
-// hover surface — #d33e25 and #42824d on #f8f4f0, 4.27 and 4.23. Excluded from the bench
-// audit and held by the expected failure below, which turns red once the inks are fixed.
-const KNOWN_CONTRAST = ['destructive', 'success'].flatMap((intent) =>
-  ['hover', 'focus', 'hover+focus', 'active+focus', 'hover+active+focus'].map(
-    (states) => `[data-bench-case*="/${states}/secondary.${intent}/"]`,
-  ))
-
 test('the bench passes axe', async ({ page }) => {
-  await expect(page.locator(KNOWN_CONTRAST.join(', ')).first()).toBeAttached()
   await injectAxe(page)
-  await checkA11y(page, { include: [['.Bench']], exclude: KNOWN_CONTRAST.map((s) => [s]) })
-})
-
-test('secondary intents clear 4.5:1 in their hover and focus states', async ({ page }) => {
-  test.fail(true, 'known: TODO(fix) above KNOWN_CONTRAST')
-  await injectAxe(page)
-  await checkA11y(page, KNOWN_CONTRAST.join(', '), { axeOptions: { runOnly: ['color-contrast'] } })
+  await scopedCheckA11y(page, '.Bench')
 })

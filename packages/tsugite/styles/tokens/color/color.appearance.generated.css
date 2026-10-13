@@ -127,7 +127,7 @@
 @property --color-feedback-error {
   syntax: "<color>";
   inherits: true;
-  initial-value: rgb(211, 62, 37);
+  initial-value: rgb(204, 54, 30);
 }
 
 @property --color-feedback-onError {
@@ -139,7 +139,7 @@
 @property --color-feedback-success {
   syntax: "<color>";
   inherits: true;
-  initial-value: rgb(66, 130, 77);
+  initial-value: rgb(60, 124, 72);
 }
 
 @property --color-feedback-warning {
@@ -229,7 +229,7 @@
 @property --color-field-border-invalid {
   syntax: "<color>";
   inherits: true;
-  initial-value: rgb(211, 62, 37);
+  initial-value: rgb(204, 54, 30);
 }
 
 @property --color-cta-gradient-1 {

@@ -84,22 +84,22 @@ export const palette = {
   kaki: {
     label: "KAKI",
     glyph: "柿",
-    note: "Persimmon: feedback-error. Four steps, one per mode row, so the feedback tokens are pointers instead of mix() recipes.",
+    note: "Persimmon: feedback-error. Four steps, one per mode row, so the feedback tokens are pointers instead of mix() recipes. KAKI-50 sits at L 56% so it holds 4.5:1 as ink on the secondary hover surface (SUMI-10), not only on the page.",
     steps: [
       ["10", "oklch(93% 0.032 40)"],
       ["30", "oklch(80% 0.115 38)"],
-      ["50", "oklch(58% 0.190 32)"],
+      ["50", "oklch(56% 0.190 32)"],
       ["80", "oklch(41% 0.145 30)"],
     ],
   },
   matcha: {
     label: "MATCHA",
     glyph: "抹茶",
-    note: "Matcha: feedback-success. Four steps, one per mode row.",
+    note: "Matcha: feedback-success. Four steps, one per mode row. MATCHA-50 sits at L 53% so it holds 4.5:1 as ink on the secondary hover surface (SUMI-10), not only on the page.",
     steps: [
       ["10", "oklch(94% 0.040 148)"],
       ["30", "oklch(80% 0.090 150)"],
-      ["50", "oklch(55% 0.105 148)"],
+      ["50", "oklch(53% 0.105 148)"],
       ["80", "oklch(40% 0.080 150)"],
     ],
   },
