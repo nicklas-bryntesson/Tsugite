@@ -27,22 +27,22 @@ const cta = [
 const principles = [
   {
     voice: "brand",
-    title: "Two attributes, not twenty props",
-    body: "A section says whose palette speaks and how loud — data-theme × data-prominence. Components never know which voice surrounds them: they read one ownership chain and fall back to sensible defaults. No prop explosion, ever.",
+    title: "Colour by context, not by prop",
+    body: "A component shouldn't need a prop for every place it can appear. A section sets whose palette speaks and how loud — two attributes — and everything inside reads it through one chain.",
     href: "/docs/color",
     link: "See the color system",
   },
   {
     voice: "neutral",
-    title: "Public-sector ready by construction",
-    body: "Light, dark and both contrast modes are generated tables, not afterthoughts — with WCAG contrast asserted at build time. Everything works without JavaScript, including the contrast modes.",
+    title: "Contrast that is checked, not hoped for",
+    body: "Light, dark and both contrast modes are generated from one source, and their contrast is tested at build. A colour change that breaks WCAG should fail a test, not a reader.",
     href: "/docs/button/test",
     link: "See a test bench",
   },
   {
     voice: "accent",
-    title: "Defensive by default",
-    body: "The baseline works for everyone; every enhancement stands behind a closed support gate. Colors are authored once in oklch — the sRGB fallback is the same color, computed at build.",
+    title: "A baseline that always works",
+    body: "The page should work in every browser, with or without JavaScript. Enhancements sit behind support gates, and each colour is authored once in oklch, with its sRGB fallback computed from it.",
     href: "/control-room",
     link: "Watch it resolve",
   },
@@ -67,13 +67,10 @@ const principles = [
       <Heading element="h2" size="2" text="Joints, not glue" />
       <Prose variant="basic">
         <p>
-          <strong>Tsugite</strong> (継手) are the joints of traditional Japanese carpentry:
-          two pieces meeting through geometry so precise that no nails are needed — and
-          a wrong assembly physically refuses to fit. This site documents a design system
-          built on the same idea. Small prepared pieces (<em>kigumi</em>) are arranged
-          into patterns (<em>kumiko</em>) on a shared ground sill (<em>dodai</em>), while
-          bracket clusters (<em>masugumi</em>) absorb motion and state. Every interface
-          is a contract; everything a contract doesn't allow simply doesn't exist.
+          <strong>Tsugite</strong> (継手) are the joints of Japanese carpentry: pieces cut
+          to meet so precisely that no nails are needed, and a wrong assembly will not fit.
+          Tsugite brings that idea to the front end. Every interface is a contract, and
+          what a contract does not allow does not exist.
         </p>
       </Prose>
     </section>
