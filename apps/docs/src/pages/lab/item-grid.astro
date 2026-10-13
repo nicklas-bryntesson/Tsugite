@@ -1,0 +1,281 @@
+---
+// ItemGrid lab — a prototype of the region that owns the remainder of an uneven grid
+// (parking lot, "ItemGrid"). Not a component yet: the CSS lives here until the benchmark
+// says which variants exist. Teaser is the press test: it decides upright or lying from
+// the width it is given; the grid only allocates spans.
+import Layout from "../../layouts/Layout.astro";
+import Teaser from "tsugite/Teaser/Teaser.astro";
+import img1 from "../../assets/media/amal-s.jpg";
+import img2 from "../../assets/media/david-becker.jpg";
+import img3 from "../../assets/media/jean-philippe.jpg";
+
+const images = [img1, img2, img3];
+const headings = [
+  "Joinery without nails",
+  "One truth at a time",
+  "The odd one out",
+  "Grain and direction",
+  "A seam you can see",
+  "Cut once",
+  "The last row",
+];
+const excerpts = [
+  "Short excerpt giving a taste of the content.",
+  "A longer excerpt, so the row has to decide what equal height means when the copy is not equal.",
+  "Two lines of excerpt, give or take.",
+];
+
+const grids: { count: number; element: string; swapImages?: [number, number] }[] = [
+  { count: 3, element: "ul" },
+  { count: 4, element: "ul" },
+  { count: 5, element: "ul" },
+  { count: 7, element: "ul" },
+  // the last two items trade pictures: is the grown picture the image or the copy?
+  { count: 5, element: "div", swapImages: [3, 4] },
+];
+// the teaser button is a server prop on a static page: every case renders twice, with and
+// without, and the toggle shows one
+const buttonStates = [false, true];
+const remainders = ["balance", "split", "fill", "inset", "center", "start"];
+---
+
+<Layout title="ItemGrid lab">
+  <main class="ItemGridLab" data-button="false">
+   <div class="grid-container">
+    <div class="grid-layout">
+    <form class="controls" aria-label="ItemGrid lab controls">
+      <fieldset>
+        <legend>remainder</legend>
+        {remainders.map((r, i) => (
+          <label><input type="radio" name="remainder" value={r} checked={i === 0} /> {r}</label>
+        ))}
+      </fieldset>
+      <label><input type="checkbox" name="teaserButton" /> teaser button</label>
+    </form>
+
+    {buttonStates.flatMap((withButton) => grids.map(({ count, element, swapImages }) => {
+      const Root = element as "ul";
+      const Item = (element === "ul" ? "li" : "div") as "li";
+      const imageAt = (i: number) => {
+        const [a, b] = swapImages ?? [-1, -1];
+        const j = i === a ? b : i === b ? a : i;
+        return images[j % images.length];
+      };
+      return (
+        <section class="case" data-button={String(withButton)}>
+          <p class="readout"><span>{count} · {element}</span> <output data-readout></output></p>
+          <Root class="ItemGrid" data-remainder="balance">
+            {Array.from({ length: count }, (_, i) => (
+              <Item>
+                <Teaser
+                  image={imageAt(i)}
+                  alt=""
+                  heading={headings[i % headings.length]}
+                  href="#"
+                  excerpt={excerpts[i % excerpts.length]}
+                  button={withButton}
+                />
+              </Item>
+            ))}
+          </Root>
+        </section>
+      );
+    }))}
+    </div>
+   </div>
+  </main>
+</Layout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>(".ItemGridLab .controls")!;
+  const grids = [...document.querySelectorAll<HTMLElement>(".ItemGridLab .ItemGrid")];
+
+  form.addEventListener("change", (event) => {
+    const target = event.target as HTMLInputElement;
+    if (target.name === "teaserButton") {
+      form.closest<HTMLElement>(".ItemGridLab")!.dataset.button = String(target.checked);
+      return;
+    }
+    const remainder = new FormData(form).get("remainder") as string;
+    for (const grid of grids) grid.dataset.remainder = remainder;
+  });
+
+  // live readout: the grid's own inline size and the column state it resolves to
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const observer = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const grid = entry.target as HTMLElement;
+      const width = entry.contentBoxSize[0].inlineSize / rem;
+      const first = grid.firstElementChild;
+      const cols = first ? getComputedStyle(first).getPropertyValue("--_ig-state").trim() : "";
+      const out = grid.closest(".case")!.querySelector("[data-readout]")!;
+      out.textContent = `${width.toFixed(1)}rem · ${cols ? cols + " col" : "fallback"}`;
+    }
+  });
+  for (const grid of grids) observer.observe(grid);
+</script>
+
+<style is:global>
+  /*
+   * ItemGrid — prototype. Equal items, as many columns as the inline space allows, and a
+   * last row that is decided, not left over.
+   *
+   * Twelve tracks on the site gap: three columns = span 4, two = span 6, one = span 12, and
+   * a remainder can be inset by a column or centred by half an item. The grid fills the
+   * main column, so its tracks are the site's twelve at desktop.
+   *
+   * The root is its own container, so the items query the root's width; the track count
+   * never changes, only the spans. Thresholds are literals — @container cannot read var().
+   *
+   * Gates:
+   *   data-remainder   balance a lone leftover borrows one from the row above: the last
+ *                            four share two rows (3 / 2 / 2, never 3 / 3 / 1).
+ *                    split   the leftovers bookend the grid: a lone one borrows from the
+ *                            row above, one pair opens and one closes (2 / 3 / 2); two
+ *                            leftovers open it (2 / 3).
+ *                    fill    the leftovers share the whole row.
+   *                    inset   as fill, one column of air at each side.
+   *                    center  the leftovers keep their size, centred.
+   *                    start   the leftovers keep their size, at the start.
+   */
+
+  .ItemGrid {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--grid-layout-gap);
+
+    & > * {
+      display: grid;
+    }
+
+    /* No container query support: plain auto-fit, the leftovers hang where they fall. */
+    @supports not (container-type: inline-size) {
+      grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    }
+
+    @supports (container-type: inline-size) {
+      container: item-grid / inline-size;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+
+      & > * {
+        grid-column: 1 / -1;
+      }
+
+      /* TODO(token): 36rem and 60rem are raw container thresholds. */
+      @container item-grid (max-width: 35.999rem) {
+        & > * { --_ig-state: 1; }
+      }
+
+      /* Two columns: a lone last item is the remainder. */
+      @container item-grid (min-width: 36rem) and (max-width: 59.999rem) {
+        & > * {
+          --_ig-state: 2;
+          grid-column: span 6;
+        }
+
+        &:is([data-remainder="balance"], [data-remainder="fill"]) > :nth-child(2n + 1):last-child { grid-column: 1 / -1; }
+        &[data-remainder="split"]:has(> :nth-child(2n + 1):last-child) > :first-child { grid-column: 1 / -1; }
+        &[data-remainder="inset"] > :nth-child(2n + 1):last-child { grid-column: 2 / -2; }
+        &[data-remainder="center"] > :nth-child(2n + 1):last-child { grid-column: 4 / span 6; }
+      }
+
+      /* Three columns: one or two leftovers. */
+      @container item-grid (min-width: 60rem) {
+        & > * {
+          --_ig-state: 3;
+          grid-column: span 4;
+        }
+
+        &[data-remainder="balance"] {
+          & > :only-child { grid-column: 1 / -1; }
+          &:has(> :nth-child(3n + 4):last-child) > :nth-last-child(-n + 4),
+          & > :nth-child(3n + 1):nth-last-child(2),
+          & > :nth-child(3n + 2):last-child { grid-column: span 6; }
+        }
+
+        &[data-remainder="split"] {
+          & > :only-child { grid-column: 1 / -1; }
+          &:has(> :nth-child(3n + 4):last-child) > :is(:nth-child(-n + 2), :nth-last-child(-n + 2)),
+          &:has(> :nth-child(3n + 2):last-child) > :nth-child(-n + 2) { grid-column: span 6; }
+        }
+
+        &[data-remainder="fill"] {
+          & > :nth-child(3n + 1):last-child { grid-column: 1 / -1; }
+          & > :nth-child(3n + 1):nth-last-child(2),
+          & > :nth-child(3n + 2):last-child { grid-column: span 6; }
+        }
+
+        &[data-remainder="inset"] {
+          & > :nth-child(3n + 1):last-child { grid-column: 2 / -2; }
+          & > :nth-child(3n + 1):nth-last-child(2) { grid-column: 2 / span 5; }
+          & > :nth-child(3n + 2):last-child { grid-column: span 5; }
+        }
+
+        &[data-remainder="center"] {
+          & > :nth-child(3n + 1):last-child { grid-column: 5 / span 4; }
+          & > :nth-child(3n + 1):nth-last-child(2) { grid-column: 3 / span 4; }
+        }
+      }
+    }
+  }
+
+  /* — lab scaffolding — */
+
+  .ItemGridLab {
+    inline-size: 100%;
+    padding-block: var(--size-2xl);
+
+    /* everything spans the layout grid, so the LAB overlay reads the ItemGrid's tracks */
+    & .grid-layout {
+      row-gap: calc(2 * var(--size-3xl));
+
+      & > * {
+        grid-column: 1 / -1;
+      }
+    }
+
+    & .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-md);
+      align-items: center;
+
+      & fieldset {
+        display: flex;
+        gap: var(--size-md);
+        margin: 0;
+        border: 0;
+        padding: 0;
+      }
+
+      & legend {
+        float: inline-start;
+        margin-inline-end: var(--size-sm);
+      }
+
+      /* not part of the remainder set: pushed to the end of the row */
+      & > label {
+        margin-inline-start: auto;
+      }
+    }
+
+    &[data-button="false"] .case[data-button="true"],
+    &[data-button="true"] .case[data-button="false"] {
+      display: none;
+    }
+
+    & .case {
+      display: grid;
+      gap: var(--size-sm);
+    }
+
+    & .readout {
+      margin: 0;
+      display: flex;
+      gap: var(--size-md);
+      font-family: var(--font-family-mono, monospace);
+    }
+  }
+</style>
