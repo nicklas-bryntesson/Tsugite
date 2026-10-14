@@ -571,3 +571,10 @@ wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` a
   grid-lanes`) is still thin in support; where the spec stands is being checked. Open: the
   visual order jumps between columns, which runs against ItemGrid's "the DOM order is the
   reading order" — does a masonry region accept that, or refuse it? Bento goes first.
+  Sketch, not decided: support for `grid-lanes` is very low, so a masonry region needs JS.
+  The state sits on the region (one `data-*` once the layout is set), not a boolean per
+  item, and nothing is hidden while it computes. Three layers: a plain column grid as the
+  floor, visible without JS; native `grid-lanes` behind `@supports`, with no JS; JS only
+  where native is missing, laying the floor out again. Open: is the jump from floor to
+  masonry acceptable, or does the region refuse and stay on the floor? POC first, in
+  HTML/CSS/JS outside the system.
