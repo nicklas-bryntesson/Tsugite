@@ -1,0 +1,27 @@
+---
+import ItemGrid from "tsugite/ItemGrid/ItemGrid.astro";
+import ItemGridItem from "tsugite/ItemGrid/ItemGridItem.astro";
+import Teaser from "tsugite/Teaser/Teaser.astro";
+import img1 from "../../assets/media/amal-s.jpg";
+import img2 from "../../assets/media/david-becker.jpg";
+import img3 from "../../assets/media/jean-philippe.jpg";
+
+const images = [img1, img2, img3];
+const items = [
+  "Joinery without nails",
+  "One truth at a time",
+  "The odd one out",
+  "Grain and direction",
+  "A seam you can see",
+  "Cut once",
+  "The last row",
+].slice(0, 4);
+---
+{/* fill: the leftover takes the whole row. */}
+<ItemGrid remainder="fill">
+  {items.map((heading, i) => (
+    <ItemGridItem>
+      <Teaser image={images[i % 3]} alt="" heading={heading} href="#" excerpt="Short excerpt giving a taste of the content." />
+    </ItemGridItem>
+  ))}
+</ItemGrid>

@@ -30,9 +30,11 @@ interface Props {
   block?: boolean;
   /** Lay the items out in a wrapping row (inline components). */
   row?: boolean;
+  /** Frame the figure in a card (default); off for an example on the site's grid lines. */
+  frame?: boolean;
   id?: string;
 }
-const { source, title, lead, caption, lang = "astro", frontmatter = true, block = false, row = false, id } = Astro.props;
+const { source, title, lead, caption, lang = "astro", frontmatter = true, block = false, row = false, frame = true, id } = Astro.props;
 
 const shown = frontmatter ? source : source.replace(/^---[\s\S]*?---\s*/, "");
 ---
@@ -40,7 +42,7 @@ const shown = frontmatter ? source : source.replace(/^---[\s\S]*?---\s*/, "");
 <section class="Example" id={id}>
   {title && <Text text={title} element="h3" size="lg" />}
   {lead && <div class="Example-lead"><Text text={lead} /></div>}
-  <Figure caption={caption} block={block} row={row}>
+  <Figure caption={caption} block={block} row={row} frame={frame}>
     <slot />
   </Figure>
   <Code code={shown} lang={lang} />
