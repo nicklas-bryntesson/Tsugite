@@ -541,3 +541,40 @@ wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` a
   `repeat(auto-fit, minmax(18rem, 1fr))` with a 1.25rem gap; move them onto ItemGrid.
   Open from the ADR: a featured item that opts out of equality, and a threshold set per
   minimum item width (generated beside the grid tokens) — both wait for a real case.
+- **The item cell: open questions (2026-10-14).** ItemGridItem may be a leap: ADR-0028 §5
+  says a renderer cannot wrap another component's children, so the cell is a component.
+  But the cell does two jobs. It is the `li` a `ul` needs, which HTML already asks for, and
+  it gives `display: grid` for equal height, which only exists because the wrapper exists:
+  a direct grid child already stretches. Under `div` it does nothing, and "the author keeps
+  them in step" is a coupling nothing holds. Nothing decided:
+  - Strike ItemGridItem: ItemGrid places `> *` (`grid-column` only) and gives `> li`
+    `display: grid`. Is styling `> li` styling an item, or is the `li` the list's own mark?
+  - A generic `ListItem` for every list-shaped parent (ItemGrid, a Bento grid, a todo list,
+    …): always `li`, no class, no CSS, no axes, like ScreenReaderText. Each parent styles
+    `> li` itself.
+  - The `div` case: a ListItem cannot see its parent, so it cannot follow it to `div`.
+    Rule candidate: a list takes ListItem, a `div` parent takes its items directly. Does
+    ItemGrid need `div` at all, or is a grid of equal items always a list (`ul|ol`)?
+  - Props on ListItem: only the shared footprint words (ADR-0015 `data-grow-inline` /
+    `data-cap-inline`), written as attributes and answered by each parent. Words that mean
+    something in one parent only (a Bento span, `featured`) stay with that parent. ItemGrid
+    refuses unequal items, so `grow` there would be a DevError.
+  - The line for a part: it becomes its own component only when it has axes of its own
+    (a `BentoItem` with a span); semantics alone never earn one. Is a Bento span footprint
+    (a shared word) or Bento's placement?
+  - Test: build a Bento grid and see whether the line holds.
+- **Masonry: parked beside Bento (2026-10-14).** Bento and masonry are two layouts, not one.
+  Bento is one grid in both axes: items span rows and columns, every edge lands on a shared
+  line, the bottom edge is straight, and the height is the grid's. Masonry is a grid in one
+  axis only: items keep their natural height and pack into the shortest column, the bottom
+  edge is ragged, and the height is the item's. The platform's native form (`display:
+  grid-lanes`) is still thin in support; where the spec stands is being checked. Open: the
+  visual order jumps between columns, which runs against ItemGrid's "the DOM order is the
+  reading order" — does a masonry region accept that, or refuse it? Bento goes first.
+  Sketch, not decided: support for `grid-lanes` is very low, so a masonry region needs JS.
+  The state sits on the region (one `data-*` once the layout is set), not a boolean per
+  item, and nothing is hidden while it computes. Three layers: a plain column grid as the
+  floor, visible without JS; native `grid-lanes` behind `@supports`, with no JS; JS only
+  where native is missing, laying the floor out again. Open: is the jump from floor to
+  masonry acceptable, or does the region refuse and stay on the floor? POC first, in
+  HTML/CSS/JS outside the system.
