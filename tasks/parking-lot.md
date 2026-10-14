@@ -535,39 +535,9 @@ wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` a
 
 ## From the docs grid pass (2026-10-13)
 
-- **ItemGrid: a region that owns the remainder.** Paused for benchmarking (variants of
-  ItemGrid may be needed); nothing built, no ADR yet. Found on the docs site: the home
-  principles, the map's pillars and the foundations/kernel strip each build their own
-  `repeat(auto-fit, minmax(18rem, 1fr))` with a 1.25rem gap, so their edges meet the site
-  grid (12/8/4/1 columns, gaps 2/1/0.5/0rem) only by chance.
-  - *The problem is the remainder, not the number three.* Equal children, as many columns
-    as the inline space allows; the unsolved part is the last, short row — the odd one out.
-    The recipe's promise: "A list of equal items whose last row is decided, not left over."
-  - *Settled in discussion:* pillar = **region** (governs a capability — distribution — for
-    any children, as ScrollArea governs overflow; it cuts across cards, teasers, pillars,
-    chips). Name **ItemGrid**. Axis **`remainder: start | center | fill`** (`fill`: a lone
-    last item spans the row and can lie down; `center`: the leftover items centred).
-  - *Mechanism sketched:* column count by container query on the grid's own width (lean on
-    cq; a plain one-column baseline that works everywhere, `@supports` pair as in Teaser);
-    doubled tracks with each child spanning two, so a remainder can shift half a column or
-    span all; the leftover items found by quantity queries (`:nth-child(3n+1):nth-last-child(1)`
-    …), one set per column state. No JavaScript, no counting props.
-  - *Alignment comes free:* three columns with the site gap equal span 4 of 12
-    ((12c + 11g − 2g) / 3 = 4c + 3g), two columns equal span 4 of 8 — no span tokens, no
-    subgrid, as long as the grid fills the main column and uses `--grid-layout-gap`.
-  - *The constraint that shapes it:* `@container` cannot read `var()`, so the thresholds
-    are literals derived from a minimum child width and the gap. The child width cannot be
-    a free knob: a fixed value, or a closed axis whose threshold sets are generated in JS.
-    Proposed start (one width, max three columns) judged too narrow — open.
-  - *The ownership split:* a cq child such as Teaser solves one axis (how the card looks in
-    the width it is given); the grid owns the other (allocation per context: who spans two
-    where, how wide it is in which context), as in ADR-0015's permission/allocation.
-  - *Reference sequences from real projects* (widest to narrowest): 3 cards upright → 1 card
-    lying with 1–2 columns of air each side → 1 card lying, no air → 1 card upright; a
-    sidebar that disappears at some point usually adds a case. Variant: `1 2 / 3 3`, the odd
-    last card lying across both columns — best with media in the card (media left, text
-    right).
-  - Open: which variants of ItemGrid exist (benchmark first); the child-width axis and its
-    values; the column cap; what a lone item does in the three-column state; whether the
-    remainder rule differs per column state. Ties to the bench-widths row above.
-  - Then: rebuild the docs home principles, map pillars and the foundations/kernel strip on it.
+- **ItemGrid: rebuild the docs grids on it.** ItemGrid landed (ADR-0028,
+  `components/regions/ItemGrid`, six remainder values, bench + suite). The home
+  principles, the map's pillars and the foundations/kernel strip still build their own
+  `repeat(auto-fit, minmax(18rem, 1fr))` with a 1.25rem gap; move them onto ItemGrid.
+  Open from the ADR: a featured item that opts out of equality, and a threshold set per
+  minimum item width (generated beside the grid tokens) — both wait for a real case.
