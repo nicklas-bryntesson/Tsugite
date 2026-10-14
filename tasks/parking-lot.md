@@ -541,3 +541,25 @@ wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` a
   `repeat(auto-fit, minmax(18rem, 1fr))` with a 1.25rem gap; move them onto ItemGrid.
   Open from the ADR: a featured item that opts out of equality, and a threshold set per
   minimum item width (generated beside the grid tokens) — both wait for a real case.
+- **The item cell: open questions (2026-10-14).** ItemGridItem may be a leap: ADR-0028 §5
+  says a renderer cannot wrap another component's children, so the cell is a component.
+  But the cell does two jobs. It is the `li` a `ul` needs, which HTML already asks for, and
+  it gives `display: grid` for equal height, which only exists because the wrapper exists:
+  a direct grid child already stretches. Under `div` it does nothing, and "the author keeps
+  them in step" is a coupling nothing holds. Nothing decided:
+  - Strike ItemGridItem: ItemGrid places `> *` (`grid-column` only) and gives `> li`
+    `display: grid`. Is styling `> li` styling an item, or is the `li` the list's own mark?
+  - A generic `ListItem` for every list-shaped parent (ItemGrid, a Bento grid, a todo list,
+    …): always `li`, no class, no CSS, no axes, like ScreenReaderText. Each parent styles
+    `> li` itself.
+  - The `div` case: a ListItem cannot see its parent, so it cannot follow it to `div`.
+    Rule candidate: a list takes ListItem, a `div` parent takes its items directly. Does
+    ItemGrid need `div` at all, or is a grid of equal items always a list (`ul|ol`)?
+  - Props on ListItem: only the shared footprint words (ADR-0015 `data-grow-inline` /
+    `data-cap-inline`), written as attributes and answered by each parent. Words that mean
+    something in one parent only (a Bento span, `featured`) stay with that parent. ItemGrid
+    refuses unequal items, so `grow` there would be a DevError.
+  - The line for a part: it becomes its own component only when it has axes of its own
+    (a `BentoItem` with a span); semantics alone never earn one. Is a Bento span footprint
+    (a shared word) or Bento's placement?
+  - Test: build a Bento grid and see whether the line holds.
