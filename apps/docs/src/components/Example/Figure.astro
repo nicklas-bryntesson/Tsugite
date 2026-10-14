@@ -15,17 +15,26 @@ interface Props {
   block?: boolean;
   /** Lay the example's items out in a wrapping row (inline components: buttons, chips). */
   row?: boolean;
+  /** Frame the example in a card (default). Off for an example that must stand on the
+   *  site's grid lines — a layout region measured against the main column. */
+  frame?: boolean;
   class?: string;
 }
-const { caption, block = false, row = false, class: className } = Astro.props;
+const { caption, block = false, row = false, frame = true, class: className } = Astro.props;
 ---
 
 <figure class:list={["Figure", className]} data-block={block ? "true" : undefined} data-row={row ? "true" : undefined}>
-  <Card border={true} padding="lg">
+  {frame ? (
+    <Card border={true} padding="lg">
+      <div class="Figure-stage">
+        <slot />
+      </div>
+    </Card>
+  ) : (
     <div class="Figure-stage">
       <slot />
     </div>
-  </Card>
+  )}
   {caption && <figcaption class="Figure-caption"><Caption element="p" size="sm" text={caption} /></figcaption>}
 </figure>
 

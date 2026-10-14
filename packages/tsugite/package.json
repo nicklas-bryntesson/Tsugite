@@ -18,6 +18,7 @@
     "./FileUpload/*": "./components/primitives/fields/FileUpload/*",
     "./Heading/*": "./components/primitives/typography/Heading/*",
     "./Input/*": "./components/primitives/fields/Input/*",
+    "./ItemGrid/*": "./components/regions/ItemGrid/*",
     "./MonthField/*": "./components/primitives/fields/MonthField/*",
     "./MotionRegion/*": "./components/regions/MotionRegion/*",
     "./NavItem/*": "./components/primitives/NavItem/*",

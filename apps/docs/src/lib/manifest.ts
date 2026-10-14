@@ -74,6 +74,7 @@ export const manifest: ManifestEntry[] = [
   { slug: "motion-region", title: "MotionRegion", pillar: "region", origin: "ref-comps", section: "MotionRegionSection", suite: "tests/e2e/motionregion.e2e.test.js", published: true },
   { slug: "surface", title: "Surface", pillar: "region", origin: "own", section: "SurfaceSection", published: true },
   { slug: "scroll-area", title: "ScrollArea", pillar: "region", origin: "ref-comps", section: "ScrollAreaSection", suite: "tests/e2e/scrollarea.e2e.test.js", published: true },
+  { slug: "item-grid", title: "ItemGrid", pillar: "region", origin: "own", demoHref: "/docs/item-grid/test", suite: "tests/e2e/itemgrid.e2e.test.js", published: true },
 
 ];
 

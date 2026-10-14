@@ -1,0 +1,47 @@
+---
+// /docs/item-grid/test — ItemGrid's bench (ADR-0026), mounted for looking. The bench is
+// the package's file, the one the suite runs against; this page only shows it inside the
+// site, at the page's full width, so the column state follows the window.
+import Layout from "../../../layouts/Layout.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import ItemGridBench from "tsugite/ItemGrid/ItemGrid.bench.astro";
+---
+
+<Layout title="ItemGrid — test bench">
+  <main class="Main BenchPage grid-container">
+    <div class="content">
+      <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> <a href="/docs/item-grid">ItemGrid</a> <span aria-hidden="true">/</span> Test bench</nav>
+      <Heading element="h1" size="1" text="ItemGrid — test bench" />
+      <div class="bench">
+        <ItemGridBench />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+/* The page's arrangement only. Unlike the other benches the column is not capped: the
+   grid's own width decides its column state. */
+.BenchPage {
+  padding-block: var(--size-xl) var(--size-2xl);
+  background-color: var(--color-surface-page);
+
+  & .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-lg);
+  }
+
+  & .doc-breadcrumb {
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+    & a { color: var(--color-interactive-secondary-text); }
+  }
+
+  & .bench {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-lg);
+  }
+}
+</style>

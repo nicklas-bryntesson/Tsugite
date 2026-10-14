@@ -1,0 +1,71 @@
+---
+// /docs/item-grid — the ItemGrid page, explicit. Each example is one file under
+// src/examples/item-grid/, mounted twice (Figure + Code). Every example is pressed with
+// Teaser, which decides upright or lying from the width the grid gives it. The bench the
+// suite runs against is mounted at /docs/item-grid/test.
+import Text from "tsugite/Text/Text.astro";
+import Layout from "../../layouts/Layout.astro";
+import Example from "../../components/Example/Example.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+import Problem from "../../examples/item-grid/Problem.astro";
+import problemSrc from "../../examples/item-grid/Problem.astro?raw";
+import Balance from "../../examples/item-grid/Balance.astro";
+import balanceSrc from "../../examples/item-grid/Balance.astro?raw";
+import Split from "../../examples/item-grid/Split.astro";
+import splitSrc from "../../examples/item-grid/Split.astro?raw";
+import Fill from "../../examples/item-grid/Fill.astro";
+import fillSrc from "../../examples/item-grid/Fill.astro?raw";
+import Inset from "../../examples/item-grid/Inset.astro";
+import insetSrc from "../../examples/item-grid/Inset.astro?raw";
+import Center from "../../examples/item-grid/Center.astro";
+import centerSrc from "../../examples/item-grid/Center.astro?raw";
+import Start from "../../examples/item-grid/Start.astro";
+import startSrc from "../../examples/item-grid/Start.astro?raw";
+import Element from "../../examples/item-grid/Element.astro";
+import elementSrc from "../../examples/item-grid/Element.astro?raw";
+
+const entry = entryFor("item-grid");
+---
+
+<Layout title={entry.title}>
+  <DocPage
+    entry={entry}
+    lead="A list of equal items whose last row is decided, not left over. Twelve tracks on the site gap: three columns from 60rem, two from 36rem, one below — measured on the grid's own width, so it works in a main column, a sidebar or a card. Only the spans change; the order you write is the order it reads."
+  >
+    <Example id="problem" title="The last row, left over" lead="A list of equal items is usually laid out with auto-fit: the full rows fill and the last one is left to chance. Seven items end as 4 / 3 at one width and 3 / 3 / 1 at the next, and the edges meet the site grid only by coincidence. Resize the window and watch the last row." source={problemSrc} block frame={false}>
+      <Problem />
+    </Example>
+
+    <Example id="balance" title="Balance — the default" lead="A lone leftover borrows one item from the row above, so the last four share two rows: 3 / 2 / 2, never 3 / 3 / 1. Two leftovers share their row." source={balanceSrc} block frame={false}>
+      <Balance />
+    </Example>
+
+    <Example id="split" title="Split" lead="The leftovers bookend the grid: one pair opens and one closes, 2 / 3 / 2. Two leftovers open it, 2 / 3." source={splitSrc} block frame={false}>
+      <Split />
+    </Example>
+
+    <Example id="fill" title="Fill" lead="The leftovers share the whole row. A Teaser given that width lies down by its own container query; the grid only allocates the width." source={fillSrc} block frame={false}>
+      <Fill />
+    </Example>
+
+    <Example id="inset" title="Inset" lead="As fill, with one column of air at each side." source={insetSrc} block frame={false}>
+      <Inset />
+    </Example>
+
+    <Example id="center" title="Center" lead="The leftovers keep the size of the full rows' items, centred." source={centerSrc} block frame={false}>
+      <Center />
+    </Example>
+
+    <Example id="start" title="Start" lead="The leftovers keep their size and stand at the start — the plain grid, chosen rather than left over." source={startSrc} block frame={false}>
+      <Start />
+    </Example>
+
+    <Example id="element" title="Element" lead="A ul by default, or an ol or a div; each item stands in an ItemGridItem, an li or a div to match. A list keeps its list role (role=&quot;list&quot;), which WebKit drops once the markers are off; a div has none." source={elementSrc} block frame={false}>
+      <Element />
+    </Example>
+
+    <div class="doc-note"><Text>Every value on every count and column state is on <a href="/docs/item-grid/test">the test bench</a>.</Text></div>
+  </DocPage>
+</Layout>

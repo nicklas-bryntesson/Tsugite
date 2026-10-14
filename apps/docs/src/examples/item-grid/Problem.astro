@@ -1,0 +1,25 @@
+---
+import Teaser from "tsugite/Teaser/Teaser.astro";
+import img1 from "../../assets/media/amal-s.jpg";
+import img2 from "../../assets/media/david-becker.jpg";
+import img3 from "../../assets/media/jean-philippe.jpg";
+
+const images = [img1, img2, img3];
+const items = [
+  "Joinery without nails",
+  "One truth at a time",
+  "The odd one out",
+  "Grain and direction",
+  "A seam you can see",
+  "Cut once",
+  "The last row",
+];
+---
+{/* The usual grid: auto-fit fills the full rows and leaves the last one to chance. */}
+<ul style="list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit, minmax(18rem, 1fr)); gap:var(--grid-layout-gap);">
+  {items.map((heading, i) => (
+    <li style="display:grid;">
+      <Teaser image={images[i % 3]} alt="" heading={heading} href="#" excerpt="Short excerpt giving a taste of the content." />
+    </li>
+  ))}
+</ul>

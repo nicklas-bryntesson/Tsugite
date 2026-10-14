@@ -58,6 +58,7 @@ separated by hyphens. A slot is the last link of the same chain
    | `tx` | Text | | `tbx` | text-box engine (kernel, ADR-0024) |
    | `hd` | Heading | | `cp` | Caption |
    | `tb` | TextBlock | | `in` | Input |
+   | `ig` | ItemGrid (ADR-0028) | | | |
 
    A new component claims its prefix by adding a row here.
 3. **Two kinds of slot, both on the root's terms.**
