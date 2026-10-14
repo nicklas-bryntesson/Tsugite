@@ -563,3 +563,11 @@ wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` a
     (a `BentoItem` with a span); semantics alone never earn one. Is a Bento span footprint
     (a shared word) or Bento's placement?
   - Test: build a Bento grid and see whether the line holds.
+- **Masonry: parked beside Bento (2026-10-14).** Bento and masonry are two layouts, not one.
+  Bento is one grid in both axes: items span rows and columns, every edge lands on a shared
+  line, the bottom edge is straight, and the height is the grid's. Masonry is a grid in one
+  axis only: items keep their natural height and pack into the shortest column, the bottom
+  edge is ragged, and the height is the item's. The platform's native form (`display:
+  grid-lanes`) is still thin in support; where the spec stands is being checked. Open: the
+  visual order jumps between columns, which runs against ItemGrid's "the DOM order is the
+  reading order" — does a masonry region accept that, or refuse it? Bento goes first.
