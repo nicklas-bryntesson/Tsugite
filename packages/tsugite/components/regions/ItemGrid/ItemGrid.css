@@ -1,0 +1,155 @@
+/*
+ * ItemGrid — equal items over as many columns as the grid's own width allows, and a
+ * last row that is decided, not left over (ADR-0028).
+ *
+ * Gates:
+ *   data-remainder   balance  a lone leftover borrows one from the row above: the last
+ *                             four share two rows (3 / 2 / 2); two leftovers share a row.
+ *                    split    the leftovers bookend the grid: a lone one borrows, one pair
+ *                             opens and one closes (2 / 3 / 2); two leftovers open (2 / 3).
+ *                    fill     the leftovers share the whole row.
+ *                    inset    as fill, with one column of air at each side.
+ *                    center   the leftovers keep their size, centred.
+ *                    start    the leftovers keep their size, at the start.
+ *
+ * Twelve tracks on the layout gap: three columns span 4, two span 6, one spans all, so in
+ * the main column the grid's tracks are the site's. Only the spans change with the
+ * width; the track count and the DOM order never do. ItemGrid places its items
+ * (ItemGridItem, the .item part) and never styles what stands in them (ADR-0015).
+ */
+
+.ItemGrid {
+  --_ig-gap: var(--grid-layout-gap);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--_ig-gap);
+
+  /* The cell hands its item the whole area, so equal items in a row are equally tall. */
+  & > .item {
+    display: grid;
+  }
+
+  /* No container query support: plain auto-fit, the leftovers hang where they fall. */
+  /* TODO(token): 18rem is a raw minimum item width. */
+  @supports not (container-type: inline-size) {
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  }
+
+  @supports (container-type: inline-size) {
+    container-type: inline-size;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+
+    & > .item {
+      grid-column: var(--_ig-column);
+    }
+
+    /* The column state writes the span of a full row's item; a remainder gate rewrites
+       it on the leftovers only. The leftovers are found by position (quantity queries),
+       the way a state is found by a pseudo-class, so the second write is the gate's
+       answer for those items, not a base unwound. `start` has no rule of its own: its
+       leftovers keep the full row's span. */
+    /* TODO(token): 36rem and 60rem are raw container thresholds; @container cannot read
+       var(). Generated from the layout tokens once a second project needs other values
+       (ADR-0028). */
+    @container (max-width: 35.999rem) {
+      & > .item {
+        --_ig-column: 1 / -1;
+      }
+    }
+
+    /* Two columns: an odd count leaves one item. */
+    @container (min-width: 36rem) and (max-width: 59.999rem) {
+      & > .item {
+        --_ig-column: span 6;
+      }
+
+      &[data-remainder="balance"] > .item:nth-child(2n + 1):last-child {
+        --_ig-column: 1 / -1;
+      }
+
+      &[data-remainder="split"]:has(> .item:nth-child(2n + 1):last-child) > .item:first-child {
+        --_ig-column: 1 / -1;
+      }
+
+      &[data-remainder="fill"] > .item:nth-child(2n + 1):last-child {
+        --_ig-column: 1 / -1;
+      }
+
+      &[data-remainder="inset"] > .item:nth-child(2n + 1):last-child {
+        --_ig-column: 2 / -2;
+      }
+
+      &[data-remainder="center"] > .item:nth-child(2n + 1):last-child {
+        --_ig-column: 4 / span 6;
+      }
+    }
+
+    /* Three columns: a count leaves one item or two. */
+    @container (min-width: 60rem) {
+      & > .item {
+        --_ig-column: span 4;
+      }
+
+      &[data-remainder="balance"] {
+        & > .item:only-child {
+          --_ig-column: 1 / -1;
+        }
+
+        &:has(> .item:nth-child(3n + 4):last-child) > .item:nth-last-child(-n + 4),
+        & > .item:nth-child(3n + 1):nth-last-child(2),
+        & > .item:nth-child(3n + 2):last-child {
+          --_ig-column: span 6;
+        }
+      }
+
+      &[data-remainder="split"] {
+        & > .item:only-child {
+          --_ig-column: 1 / -1;
+        }
+
+        &:has(> .item:nth-child(3n + 4):last-child) > .item:is(:nth-child(-n + 2), :nth-last-child(-n + 2)),
+        &:has(> .item:nth-child(3n + 2):last-child) > .item:nth-child(-n + 2) {
+          --_ig-column: span 6;
+        }
+      }
+
+      &[data-remainder="fill"] {
+        & > .item:nth-child(3n + 1):last-child {
+          --_ig-column: 1 / -1;
+        }
+
+        & > .item:nth-child(3n + 1):nth-last-child(2),
+        & > .item:nth-child(3n + 2):last-child {
+          --_ig-column: span 6;
+        }
+      }
+
+      &[data-remainder="inset"] {
+        & > .item:nth-child(3n + 1):last-child {
+          --_ig-column: 2 / -2;
+        }
+
+        & > .item:nth-child(3n + 1):nth-last-child(2) {
+          --_ig-column: 2 / span 5;
+        }
+
+        & > .item:nth-child(3n + 2):last-child {
+          --_ig-column: span 5;
+        }
+      }
+
+      &[data-remainder="center"] {
+        & > .item:nth-child(3n + 1):last-child {
+          --_ig-column: 5 / span 4;
+        }
+
+        & > .item:nth-child(3n + 1):nth-last-child(2) {
+          --_ig-column: 3 / span 4;
+        }
+      }
+    }
+  }
+}

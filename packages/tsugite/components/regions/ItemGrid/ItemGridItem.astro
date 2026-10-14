@@ -1,0 +1,22 @@
+---
+// ItemGridItem — the cell one item of an ItemGrid stands in: li under ul or ol, div under
+// div. The table is itemGridItem in recipes/itemgrid.recipe.ts; ItemGrid.css styles it as
+// ItemGrid's .item part, so it carries no stylesheet of its own.
+import DevError from "../../DevError/DevError.astro";
+import { itemGridItem } from "../../../recipes/itemgrid.recipe";
+import { resolve, type InputOf } from "../../../lib/recipe";
+
+type Props = InputOf<typeof itemGridItem> & { [key: string]: unknown };
+
+const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const r = resolve(itemGridItem, Astro.props, { hasContent: childHtml.trim().length > 0 });
+const Tag = r.tag as "li";
+---
+
+{
+  r.mode === "render" ? (
+    <Tag class={r.className} {...r.attrs} {...r.rest} set:html={childHtml} />
+  ) : r.mode === "error" ? (
+    <DevError name={itemGridItem.name} message={r.errorMessage} />
+  ) : null
+}

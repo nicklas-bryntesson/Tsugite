@@ -1,0 +1,71 @@
+{
+  "$comment": "ItemGrid and its cell ItemGridItem — the contract as data. Language-neutral: any renderer in any language reads this file, runs each case, and compares. hasContent is what a renderer detects, given here as input so the recipe is testable alone. Attribute order is part of the contract; role is written for a list and absent on a div.",
+  "component": "ItemGrid",
+  "cases": [
+    {
+      "name": "defaults: a ul that balances, with its list role",
+      "input": { "hasContent": true },
+      "expect": { "mode": "render", "tag": "ul", "className": "ItemGrid", "attrs": { "data-remainder": "balance", "role": "list" } }
+    },
+    {
+      "name": "an ol keeps its list role",
+      "input": { "element": "ol", "remainder": "split", "hasContent": true },
+      "expect": { "mode": "render", "tag": "ol", "className": "ItemGrid", "attrs": { "data-remainder": "split", "role": "list" } }
+    },
+    {
+      "name": "a div has no role to keep",
+      "input": { "element": "div", "remainder": "center", "hasContent": true },
+      "expect": { "mode": "render", "tag": "div", "className": "ItemGrid", "attrs": { "data-remainder": "center" } }
+    },
+    {
+      "name": "every remainder value is written",
+      "input": { "remainder": "inset", "hasContent": true },
+      "expect": { "mode": "render", "tag": "ul", "className": "ItemGrid", "attrs": { "data-remainder": "inset", "role": "list" } }
+    },
+    {
+      "name": "an invalid element falls back to ul",
+      "input": { "element": "section", "hasContent": true },
+      "expect": { "mode": "render", "tag": "ul", "className": "ItemGrid", "attrs": { "data-remainder": "balance", "role": "list" } }
+    },
+    {
+      "name": "extra class is appended",
+      "input": { "class": "extra", "remainder": "start", "hasContent": true },
+      "expect": { "mode": "render", "tag": "ul", "className": "ItemGrid extra", "attrs": { "data-remainder": "start", "role": "list" } }
+    },
+    {
+      "name": "an invalid remainder is an error",
+      "input": { "remainder": "spread", "hasContent": true },
+      "expect": { "mode": "error", "errorMessage": "invalid remainder \"spread\" — expected balance | split | fill | inset | center | start" }
+    },
+    {
+      "name": "an empty grid renders nothing",
+      "input": { "hasContent": false },
+      "expect": { "mode": "suppress" }
+    }
+  ],
+  "item": {
+    "component": "ItemGridItem",
+    "cases": [
+      {
+        "name": "defaults: an li",
+        "input": { "hasContent": true },
+        "expect": { "mode": "render", "tag": "li", "className": "item", "attrs": {} }
+      },
+      {
+        "name": "a div under a div grid",
+        "input": { "element": "div", "hasContent": true },
+        "expect": { "mode": "render", "tag": "div", "className": "item", "attrs": {} }
+      },
+      {
+        "name": "an invalid element falls back to li",
+        "input": { "element": "article", "hasContent": true },
+        "expect": { "mode": "render", "tag": "li", "className": "item", "attrs": {} }
+      },
+      {
+        "name": "an empty cell renders nothing",
+        "input": { "hasContent": false },
+        "expect": { "mode": "suppress" }
+      }
+    ]
+  }
+}

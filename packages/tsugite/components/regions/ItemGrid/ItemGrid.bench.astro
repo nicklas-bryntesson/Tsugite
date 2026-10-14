@@ -1,0 +1,46 @@
+---
+// ItemGrid's bench (ADR-0026): every remainder value over the counts that leave nothing,
+// one and two in three columns and nothing or one in two — 1, 2, 3, 4, 5 and 7 items —
+// named data-bench-case="<remainder>/<count>". The suite sets each grid's width to reach
+// a column state; the items are plain numbered boxes, the content the bench brings.
+import ItemGrid from "./ItemGrid.astro";
+import ItemGridItem from "./ItemGridItem.astro";
+import { itemGrid } from "../../../recipes/itemgrid.recipe";
+
+const counts = [1, 2, 3, 4, 5, 7];
+const cases = itemGrid.axes.remainder.values.flatMap((remainder) =>
+  counts.map((count) => ({ name: `${remainder}/${count}`, remainder, count })),
+);
+---
+
+{
+  cases.map(({ name, remainder, count }) => (
+    <ItemGrid remainder={remainder} data-bench-case={name}>
+      {Array.from({ length: count }, (_, i) => (
+        <ItemGridItem>
+          <div class="bench-box">{i + 1}</div>
+        </ItemGridItem>
+      ))}
+    </ItemGrid>
+  ))
+}
+
+<ItemGrid element="div" data-bench-case="div/5">
+  {Array.from({ length: 5 }, (_, i) => (
+    <ItemGridItem element="div">
+      <div class="bench-box">{i + 1}</div>
+    </ItemGridItem>
+  ))}
+</ItemGrid>
+
+<style is:global>
+  /* The grid is as wide as its host makes it; the bench line is the host. */
+  .ItemGrid[data-bench-case] {
+    inline-size: 100%;
+  }
+
+  .bench-box {
+    padding: var(--size-sm);
+    border: 1px solid currentColor;
+  }
+</style>
