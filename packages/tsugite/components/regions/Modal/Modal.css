@@ -52,17 +52,22 @@
     background-color: var(--_mo-backdropColor);
   }
 
-  /* Author display beats the engine's dialog:not([open]) { display: none }, so the
-     layout is gated on the open state rather than declared in the base. One row, never
-     shorter than its content and stretched to the layer's height when the content is
-     shorter — so a child is centred while it fits and starts at the top, scrolling, when
-     it does not. A plain auto row is not enough: a child that clips (a Card, overflow:
-     hidden) contributes no minimum, and the row would stop at the layer's height. A child
-     may align itself to an edge instead (align-self, justify-self): a drawer, a banner. */
+  /* One row, never shorter than its content and stretched to the layer's height when the
+     content is shorter — so a child is centred while it fits and starts at the top,
+     scrolling, when it does not. A plain auto row is not enough: a child that clips (a
+     Card, overflow: hidden) contributes no minimum, and the row would stop at the layer's
+     height. A child may align itself to an edge instead (align-self, justify-self): a
+     drawer, a banner. The row and the centring are in the base, true in every state: on a
+     closed dialog they do nothing, and while it leaves they must still hold. */
+  grid-template-rows: minmax(max-content, auto);
+  align-items: center;
+
+  /* Author display beats the engine's dialog:not([open]) { display: none }, so display
+     alone is gated on the open state. While the exit runs, the dialog is no longer [open]
+     but still displayed (overlay, allow-discrete): anything else gated here would let go a
+     frame early — the centred child stretched to the layer's height as it faded. */
   &[open] {
     display: grid;
-    grid-template-rows: minmax(max-content, auto);
-    align-items: center;
   }
 
   /* Motion. Each state carries its own end values and its own duration: a transition

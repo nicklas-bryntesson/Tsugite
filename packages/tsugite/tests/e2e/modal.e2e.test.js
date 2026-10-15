@@ -249,6 +249,20 @@ test.describe('backdrop and motion', () => {
     expect(await isOpen(page, 'any')).toBe(true)
   })
 
+  test('a centred child keeps its size while the layer leaves', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await page.setViewportSize({ width: 1280, height: 800 })
+    await page.goto(targetPath('/modal'))
+    await open(page, 'signup')
+    const card = page.locator('[data-bench-signup-card]')
+    const before = await card.evaluate((el) => el.getBoundingClientRect().height)
+    await page.locator('#modal-signup [data-channel="close"]').first().click()
+    // a frame into the exit: no longer [open], still displayed
+    const during = await card.evaluate((el) => new Promise((done) => requestAnimationFrame(() => done(el.getBoundingClientRect().height))))
+    expect(await animations(page, 'modal-signup')).toBeGreaterThan(0)
+    expect(during).toBe(before)
+  })
+
   test('under reduced motion nothing moves', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.goto(targetPath('/modal'))
