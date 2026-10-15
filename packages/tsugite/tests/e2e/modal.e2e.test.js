@@ -85,6 +85,8 @@ for (const platform of ['native', 'fallback']) {
       await page.locator('[data-bench-close="inner"]').click()
       expect(await isOpen(page, 'nested')).toBe(true)
       await expect(page.locator('[data-bench-inner-region]')).toHaveAttribute('data-closed-with', 'inner')
+      await expect(page.locator('[data-bench-inner-region]')).toBeHidden()
+      await expect(page.locator('[data-bench-inner-status]')).toContainText('closed itself')
     })
   })
 }

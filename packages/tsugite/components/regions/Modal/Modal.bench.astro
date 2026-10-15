@@ -73,9 +73,11 @@ const paragraphs = Array.from({ length: 24 }, (_, i) => i + 1);
         </div>
         <div class="bench-card" data-region data-bench-inner-region>
           <Heading element="h3" text="Inner region" data-channel="title" data-bench-inner-title />
+          <Text text="A region of its own inside the modal: its close reaches it, not the modal." />
           <ActionButton emphasis="secondary" data-channel="close" value="inner" data-bench-close="inner">Close inner region</ActionButton>
         </div>
       </div>
+      <p class="bench-status" role="status" data-bench-inner-status></p>
     </Card>
   </Modal>
 </div>
@@ -187,10 +189,19 @@ const paragraphs = Array.from({ length: 24 }, (_, i) => i + 1);
 <div class="bench-tall" aria-hidden="true">Page content below, to show the page does not scroll behind an open modal.</div>
 
 <script>
-  // The inner region is a div: it has no close() and hears region:close instead.
-  document.querySelector("[data-bench-inner-region]")?.addEventListener("region:close", (event) => {
-    const region = event.currentTarget as HTMLElement;
-    region.dataset.closedWith = (event as CustomEvent<{ returnValue: string }>).detail.returnValue;
+  // The inner region is a div: it has no close() and hears region:close instead, closing
+  // itself its own way — it hides, says so, and comes back when the modal opens again.
+  const inner = document.querySelector<HTMLElement>("[data-bench-inner-region]");
+  const status = document.querySelector<HTMLElement>("[data-bench-inner-status]");
+  inner?.addEventListener("region:close", (event) => {
+    const { returnValue } = (event as CustomEvent<{ returnValue: string }>).detail;
+    inner.dataset.closedWith = returnValue;
+    inner.hidden = true;
+    if (status) status.textContent = `The inner region closed itself (returnValue "${returnValue}"). The modal is still open.`;
+  });
+  document.getElementById("modal-nested")?.addEventListener("close", () => {
+    if (inner) inner.hidden = false;
+    if (status) status.textContent = "";
   });
 
   // The alert's gate belongs to its content, not to the region (ADR-0029 §8).
