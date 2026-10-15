@@ -158,7 +158,8 @@ test.describe('the layer holds real shapes', () => {
     // as wide as the page's content: where scrollbars take space (Linux CI) the locked
     // page keeps its gutter and the layer sits inside it, with no gutter of its own — so a
     // grid inside lines up with the page's
-    const widths = await page.locator('#modal-request').evaluate((d) => ({ page: document.documentElement.clientWidth, inner: d.clientWidth }))
+    // (the root's box, not its clientWidth: a locked root reports the full viewport there)
+    const widths = await page.locator('#modal-request').evaluate((d) => ({ page: document.documentElement.getBoundingClientRect().width, inner: d.clientWidth }))
     expect(layer.width).toBe(widths.page)
     expect(widths.inner).toBe(widths.page)
     const ground = await page.locator('#modal-request').evaluate((d) => getComputedStyle(d).backgroundColor)
