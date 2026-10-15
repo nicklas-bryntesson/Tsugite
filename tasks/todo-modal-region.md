@@ -27,7 +27,7 @@ mega-menu sketch, and a popover inside a dialog.
 
 ## Phase 2 — Contract
 
-### Task 3: ADR-0029 — a region hears its children through channels
+### Task 3: ADR-0029 — a region hears its children through channels — DONE 2026-10-15
 **Description:** The settled decisions plus the spike outcomes: the region contract, the three
 channels, nearest-region ownership, zero strings, DOM over props, exit motion scope.
 **Acceptance:**
@@ -81,7 +81,7 @@ discussion first), inner scroll, page lock via `:root:has(dialog:modal)`.
 **Dependencies:** 4 · **Scope:** S
 
 ### Task 8: Backdrop and motion slots
-**Description:** `--_md-` slots for backdrop and the enter/exit/backdrop timelines;
+**Description:** `--_mo-` slots for backdrop and the enter/exit/backdrop timelines;
 `@starting-style` enter; exit gated on `overlay`; reduced motion turns both off.
 **Acceptance:**
 - [ ] Enter motion where `@starting-style` exists; exit only in Chromium; none under reduced motion

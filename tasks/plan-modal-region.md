@@ -48,8 +48,8 @@ Live plan. Deleted when the job's last PR merges; the decisions move to an ADR (
 - **A region carries a marker of its own** (alternative (b) below). The native-only rule
   `closest('dialog, [popover]')` failed: every popup region in the package is a
   `div role="dialog"`, and a mega menu is neither. The kernel resolves a channel to
-  `closest('<marker>')`. Open: the marker's name, and how a non-native region (no `close()`)
-  hears `close`.
+  `closest('[data-region]')`; a region that is not a `<dialog>` hears `close` as a
+  `region:close` event. The component is named `Modal`. All recorded in ADR-0029.
 
 ## Spike results (2026-10-15)
 
