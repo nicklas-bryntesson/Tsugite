@@ -87,10 +87,24 @@ describe it. Three constraints shape how:
      for `none` and closes on a backdrop click for `any`.
    - `role = dialog | alertdialog` (default `dialog`), independent of
      `dismiss`: a consent banner cannot be dismissed and is not an alert.
-   - It owns placement, scroll (content scrolls inside; the page is
-     locked by `:root:has(dialog:modal)`), the box's cap against the
-     viewport, the backdrop, and the enter, exit and backdrop timelines.
+   - It is a transparent layer over the whole viewport with one slot in
+     the middle. It owns no box, no air and no placement: the content
+     draws its own surface and places itself — centred by default, at an
+     edge (a drawer, a banner), or on the site's grid. It owns the scroll
+     (the layer scrolls when the content is taller than the viewport; the
+     page is locked by `:root:has(dialog:modal)` in
+     `kernel/css/region.css`), the backdrop, and the enter, exit and
+     backdrop timelines.
    - It owns no grid. One slot takes any nested tree.
+   - Under `dismiss="any"`, a press and release on the layer itself — not
+     on the content — closes it. The platform's light dismiss needs a
+     click outside the dialog's box, and a layer over the whole viewport
+     has no outside, so the kernel does it in every engine.
+   *Amended 2026-10-15, while building:* the first text gave the modal
+   placement and a box capped by the viewport. Placing a form on the
+   middle four of the site's twelve columns showed that the box belongs to
+   the content; a drawer and a banner are children at an edge, not
+   placements.
    - Enter motion uses `@starting-style`. Exit motion needs `overlay` and
      is Chromium-only; elsewhere the modal closes without exit motion. No
      JavaScript timeline.
