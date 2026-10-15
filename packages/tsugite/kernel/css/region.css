@@ -1,8 +1,9 @@
 /* Kernel — what a modal region asks of the document (ADR-0029 §7). While a modal dialog
    is open the page behind it does not scroll: only the region's own content does. The
-   page keeps its scrollbar gutter, so nothing behind the backdrop shifts sideways and a
-   grid inside the region lines up with the page's. A rule on the document root, not on a
-   component, so it lives here and not in a component file. Imported by Modal.astro.
+   page keeps its scrollbar gutter, so nothing behind the backdrop shifts sideways; a
+   region on the top layer sits inside that gutter, so its width is the page's. A rule on
+   the document root, not on a component, so it lives here and not in a component file.
+   Imported by Modal.astro.
    Without :has() (below Chrome 105) the page stays scrollable behind the modal. */
 :root:has(dialog:modal) {
   overflow: hidden;

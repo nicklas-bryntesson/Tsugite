@@ -154,7 +154,13 @@ test.describe('the layer holds real shapes', () => {
   test('the modal is a layer over the whole viewport, with no surface of its own', async ({ page }) => {
     await open(page, 'request')
     const layer = await box(page.locator('#modal-request'))
-    expect(layer).toMatchObject({ left: 0, top: 0, width: 1280, height: 800 })
+    expect(layer).toMatchObject({ left: 0, top: 0, height: 800 })
+    // as wide as the page's content: where scrollbars take space (Linux CI) the locked
+    // page keeps its gutter and the layer sits inside it, with no gutter of its own — so a
+    // grid inside lines up with the page's
+    const widths = await page.locator('#modal-request').evaluate((d) => ({ page: document.documentElement.clientWidth, inner: d.clientWidth }))
+    expect(layer.width).toBe(widths.page)
+    expect(widths.inner).toBe(widths.page)
     const ground = await page.locator('#modal-request').evaluate((d) => getComputedStyle(d).backgroundColor)
     expect(ground).toBe('rgba(0, 0, 0, 0)')
   })

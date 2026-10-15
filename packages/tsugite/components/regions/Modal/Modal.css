@@ -41,9 +41,12 @@
   color: inherit;
   overflow-y: auto;
   overscroll-behavior: contain;
-  /* The layer and the locked page reserve the same gutter, so a grid inside lines up
-     with the grid behind it. */
-  scrollbar-gutter: stable;
+  /* No gutter of its own: the layer already sits inside the gutter the locked page keeps
+     (kernel/css/region.css), so its width is the page's and a grid inside lines up with
+     the grid behind it. A second gutter put it a scrollbar's width off where scrollbars
+     take space (Linux, Windows). */
+  /* TODO(investigate): when the content scrolls, the layer's own scrollbar takes that
+     width again where scrollbars take space, and the grid inside shifts by it. */
 
   &::backdrop {
     background-color: var(--_mo-backdropColor);
