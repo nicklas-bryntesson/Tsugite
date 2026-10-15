@@ -1,0 +1,49 @@
+---
+import Modal from "tsugite/Modal/Modal.astro";
+import ActionButton from "tsugite/Button/ActionButton.astro";
+import Card from "tsugite/Card/Card.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import Text from "tsugite/Text/Text.astro";
+
+const PHRASE = "I know what I am doing";
+---
+{/* role="alertdialog" and dismiss="none": announced as an alert, closed only by an answer.
+    The gate is the child's: Delete stays disabled until the phrase is typed. autofocus puts
+    focus on the field when it opens. */}
+<ActionButton intent="destructive" command="show-modal" commandfor="example-alert">Delete everything</ActionButton>
+
+<Modal id="example-alert" role="alertdialog" dismiss="none">
+  <Card elevation="md" class="example-alert">
+    <Heading element="h2" text="Delete everything?" data-channel="title" />
+    <Text text={`Type “${PHRASE}” to unlock the button.`} data-channel="description" />
+    <input type="text" aria-label="Confirmation phrase" autofocus data-example-gate data-phrase={PHRASE} />
+    <div class="example-alert-actions">
+      <ActionButton intent="destructive" data-channel="close" value="confirmed" disabled data-example-confirm>Delete</ActionButton>
+      <ActionButton emphasis="secondary" data-channel="close" value="cancelled">Cancel</ActionButton>
+    </div>
+  </Card>
+</Modal>
+
+<script>
+  const gate = document.querySelector<HTMLInputElement>("[data-example-gate]");
+  const confirm = document.querySelector<HTMLButtonElement>("[data-example-confirm]");
+  gate?.addEventListener("input", () => {
+    if (confirm) confirm.disabled = gate.value !== gate.dataset.phrase;
+  });
+</script>
+
+<style is:global>
+  .example-alert {
+    display: grid;
+    gap: var(--size-md);
+    justify-self: center;
+    inline-size: min(28rem, 100% - 2 * var(--size-md));
+    padding: var(--size-lg);
+    background-color: var(--color-surface-page);
+  }
+
+  .example-alert-actions {
+    display: flex;
+    gap: var(--size-sm);
+  }
+</style>

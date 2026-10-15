@@ -1,0 +1,40 @@
+---
+import Modal from "tsugite/Modal/Modal.astro";
+import ActionButton from "tsugite/Button/ActionButton.astro";
+import Card from "tsugite/Card/Card.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import Text from "tsugite/Text/Text.astro";
+---
+{/* A drawer is not a placement of the modal: it is a child that aligns itself to the
+    inline end and stretches to the layer's full height. */}
+<ActionButton emphasis="secondary" command="show-modal" commandfor="example-drawer">Filters</ActionButton>
+
+<Modal id="example-drawer" dismiss="any">
+  <Card elevation="lg" class="example-drawer">
+    <div class="example-drawer-head">
+      <Heading element="h2" text="Filters" data-channel="title" />
+      <ActionButton emphasis="secondary" data-channel="close" value="dismissed" aria-label="Close">×</ActionButton>
+    </div>
+    <Text text="The sheet places itself: justify-self end, align-self stretch. The modal has no opinion." />
+  </Card>
+</Modal>
+
+<style is:global>
+  .example-drawer {
+    display: grid;
+    align-content: start;
+    gap: var(--size-md);
+    justify-self: end;
+    align-self: stretch;
+    inline-size: min(24rem, 100%);
+    padding: var(--size-lg);
+    background-color: var(--color-surface-page);
+  }
+
+  .example-drawer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--size-sm);
+  }
+</style>

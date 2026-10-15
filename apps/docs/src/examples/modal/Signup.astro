@@ -1,0 +1,61 @@
+---
+import Modal from "tsugite/Modal/Modal.astro";
+import ActionButton from "tsugite/Button/ActionButton.astro";
+import Card from "tsugite/Card/Card.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import Text from "tsugite/Text/Text.astro";
+---
+{/* The modal is a transparent layer; the site's grids stand inside it and the form takes
+    the middle four of twelve columns from the desktop tier. The title and description
+    channels name and describe the modal; both close buttons are close channels. */}
+<ActionButton command="show-modal" commandfor="example-signup">Sign up</ActionButton>
+
+<Modal id="example-signup">
+  <div class="grid-container">
+    <div class="grid-layout">
+      <Card elevation="md" class="example-signup">
+        <form>
+          <div class="example-signup-head">
+            <Heading element="h2" text="Create an account" data-channel="title" />
+            <ActionButton emphasis="secondary" data-channel="close" value="dismissed" aria-label="Close">×</ActionButton>
+          </div>
+          <Text text="One address, one password. Nothing else." data-channel="description" />
+          <label class="example-signup-field">Email <input type="email" name="email" autocomplete="email" /></label>
+          <label class="example-signup-field">Password <input type="password" name="password" autocomplete="new-password" /></label>
+          <ActionButton data-channel="close" value="submitted">Create account</ActionButton>
+        </form>
+      </Card>
+    </div>
+  </div>
+</Modal>
+
+<style is:global>
+  .example-signup {
+    grid-column: 1 / -1;
+    padding: var(--size-lg);
+    background-color: var(--color-surface-page);
+
+    & form {
+      display: grid;
+      gap: var(--size-md);
+    }
+  }
+
+  @media (min-width: 48.75rem) {
+    .example-signup {
+      grid-column: 5 / span 4;
+    }
+  }
+
+  .example-signup-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--size-sm);
+  }
+
+  .example-signup-field {
+    display: grid;
+    gap: var(--size-xs);
+  }
+</style>

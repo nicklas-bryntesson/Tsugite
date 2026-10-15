@@ -1,0 +1,38 @@
+---
+import Modal from "tsugite/Modal/Modal.astro";
+import ActionButton from "tsugite/Button/ActionButton.astro";
+import Card from "tsugite/Card/Card.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import Text from "tsugite/Text/Text.astro";
+---
+{/* dismiss="none": neither Esc nor the layer closes it, only a choice. The banner sits at
+    the block end by aligning itself. Opening it on a first visit is the caller's decision —
+    a kernel job of its own, like the theme preference — so here a button opens it. */}
+<ActionButton emphasis="secondary" command="show-modal" commandfor="example-banner">Show the consent banner</ActionButton>
+
+<Modal id="example-banner" dismiss="none">
+  <Card elevation="lg" class="example-banner">
+    <Heading element="h2" text="Cookies" data-channel="title" />
+    <Text text="We use cookies to remember your choices. Only a choice closes this banner." data-channel="description" />
+    <div class="example-banner-actions">
+      <ActionButton data-channel="close" value="accepted">Accept</ActionButton>
+      <ActionButton emphasis="secondary" data-channel="close" value="rejected">Reject</ActionButton>
+    </div>
+  </Card>
+</Modal>
+
+<style is:global>
+  .example-banner {
+    display: grid;
+    gap: var(--size-sm);
+    align-self: end;
+    margin: var(--size-md);
+    padding: var(--size-lg);
+    background-color: var(--color-surface-page);
+  }
+
+  .example-banner-actions {
+    display: flex;
+    gap: var(--size-sm);
+  }
+</style>

@@ -1,0 +1,46 @@
+---
+// /docs/modal/test — Modal's bench (ADR-0026), mounted for looking. The bench is
+// the package's file, the one the suite runs against; this page only shows it inside the
+// site. The modals themselves cover the viewport, whatever column their openers stand in.
+import Layout from "../../../layouts/Layout.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import ModalBench from "tsugite/Modal/Modal.bench.astro";
+---
+
+<Layout title="Modal — test bench">
+  <main class="Main BenchPage grid-container">
+    <div class="content">
+      <nav class="doc-breadcrumb" aria-label="Map"><a href="/map">Map</a> <span aria-hidden="true">/</span> <a href="/docs/modal">Modal</a> <span aria-hidden="true">/</span> Test bench</nav>
+      <Heading element="h1" size="1" text="Modal — test bench" />
+      <div class="bench">
+        <ModalBench />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+/* The page's arrangement only. */
+.BenchPage {
+  padding-block: var(--size-xl) var(--size-2xl);
+  background-color: var(--color-surface-page);
+
+  & .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-lg);
+  }
+
+  & .doc-breadcrumb {
+    font-size: var(--fontSize-label-small);
+    color: var(--color-text-secondary);
+    & a { color: var(--color-interactive-secondary-text); }
+  }
+
+  & .bench {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-lg);
+  }
+}
+</style>

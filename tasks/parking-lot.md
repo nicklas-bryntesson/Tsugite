@@ -589,3 +589,18 @@ wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` a
   `close-all` channel value would amend ADR-0029 — wait for a real case. Unknown, to
   probe first: whether closing the outer dialog takes a still-open inner modal out of
   the top layer, or leaves it rendered.
+- **What the modal job left (ADR-0029, PRs #138–#140).** The plan is retired; these remain.
+  - *Consent banner* — a composition on Modal in the ThemeSwitch pattern: a pure kernel
+    decision (`consent-preference.ts`), a `<head>` guard, a component holding the storage
+    key. The docs example opens it with a button for now.
+  - *React and Vue renderers* for Modal; they join `modal-renderers.test.ts`. Decide then
+    whether `title`/`description` need re-wiring for children mounted after opening.
+  - *ToggleTip and the pickers onto channels* — they are `div role="dialog"` regions: give
+    them `data-region` and let them hear `region:close`.
+  - *Tokens* — no backdrop role and no duration/easing tokens; `--_mo-backdropColor` and
+    the three timelines are raw with `TODO(token)` (Modal.css).
+  - *A scrolling layer's own scrollbar* takes width where scrollbars take space (Linux,
+    Windows) and shifts a grid inside it (`TODO(investigate)` in Modal.css); a page too
+    short to scroll gains a gutter while a modal is open (`kernel/css/region.css`).
+  - *The name check reads server-rendered markup* — a title added only by a client-only
+    component is not seen, and the modal is refused (DevError).

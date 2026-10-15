@@ -1,0 +1,60 @@
+---
+// /docs/modal — the Modal page, explicit. Each example is one file under
+// src/examples/modal/, mounted twice (Figure + Code). The modal is a transparent layer that
+// never opens itself; every example opens it with a Button and lets its content name,
+// describe, close and place itself through channels (ADR-0029). The bench the suite runs
+// against is mounted at /docs/modal/test.
+import Text from "tsugite/Text/Text.astro";
+import Layout from "../../layouts/Layout.astro";
+import Example from "../../components/Example/Example.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+import Signup from "../../examples/modal/Signup.astro";
+import signupSrc from "../../examples/modal/Signup.astro?raw";
+import Alert from "../../examples/modal/Alert.astro";
+import alertSrc from "../../examples/modal/Alert.astro?raw";
+import Terms from "../../examples/modal/Terms.astro";
+import termsSrc from "../../examples/modal/Terms.astro?raw";
+import Drawer from "../../examples/modal/Drawer.astro";
+import drawerSrc from "../../examples/modal/Drawer.astro?raw";
+import Banner from "../../examples/modal/Banner.astro";
+import bannerSrc from "../../examples/modal/Banner.astro?raw";
+import Lang from "../../examples/modal/Lang.astro";
+import langSrc from "../../examples/modal/Lang.astro?raw";
+
+const entry = entryFor("modal");
+---
+
+<Layout title={entry.title}>
+  <DocPage
+    entry={entry}
+    lead={'A transparent layer over the whole viewport with one slot in the middle, on a native dialog. It never opens itself: a button with command="show-modal", a script calling showModal() or a decision in the kernel opens it. It owns the backdrop, the motion and the scroll, and nothing else — no box, no air, no placement, no words. Its content speaks to it through three channels: data-channel="title" names it, "description" describes it, "close" closes the nearest region with its value. The channels travel through the DOM, so a child needs no id and works the same from any framework.'}
+  >
+    <Example id="signup" title="On the site's grid" lead="The site's container and twelve-column layout grid stand inside the layer; the form takes the middle four columns from the desktop tier. The layer keeps the page's width, so the grids line up. Esc closes it (dismiss request, the default)." source={signupSrc} block frame={false}>
+      <Signup />
+    </Example>
+
+    <Example id="alert" title="An alert that waits for an answer" lead="role alertdialog announces it as an alert; dismiss none refuses Esc and the layer. The gate belongs to the content: Delete stays disabled until the phrase is typed. The child's autofocus decides where focus goes when it opens." source={alertSrc} block frame={false}>
+      <Alert />
+    </Example>
+
+    <Example id="terms" title="Taller than the window" lead="The layer scrolls; the page behind it is locked. With nothing autofocused in the content, the modal takes focus itself, so it opens at its top and is announced by its name. dismiss any: a press on the layer around the sheet closes it — a text selection dragged out of the sheet does not." source={termsSrc} block frame={false}>
+      <Terms />
+    </Example>
+
+    <Example id="drawer" title="A drawer is a child, not a placement" lead="The sheet aligns itself to the inline end and stretches to the layer's height. Nothing in the modal knows it is a drawer." source={drawerSrc} block frame={false}>
+      <Drawer />
+    </Example>
+
+    <Example id="banner" title="A banner only a choice closes" lead="dismiss none, a sheet at the block end. Opening it on a first visit is the caller's decision, kept in the kernel like the theme preference; here a button opens it." source={bannerSrc} block frame={false}>
+      <Banner />
+    </Example>
+
+    <Example id="lang" title="Its name keeps the content's language" lead="The modal owns no strings. Its name and description are the child's own markup, so they keep the child's lang. The label prop, for content with no visible title, is the one string the caller passes — in the page's language, since aria-label carries no lang of its own." source={langSrc} block frame={false}>
+      <Lang />
+    </Example>
+
+    <div class="doc-note"><Text>Every dismiss value, a close three layers down, a region inside the modal and the same use cases with their measurements are on <a href="/docs/modal/test">the test bench</a>. The decisions are ADR-0029.</Text></div>
+  </DocPage>
+</Layout>
