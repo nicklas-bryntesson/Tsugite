@@ -14,6 +14,9 @@ export interface EnumAxis {
    *  default needs a formula (a heading's size follows its element) */
   readonly default: string | { readonly hole: true };
   readonly when?: When;
+  /** the CSS never reads the value itself; a derived value carries what it decides (Modal's
+   *  dismiss writes the platform's closedby), so no data attribute is written — one truth */
+  readonly unwritten?: true;
   /** a composition's axis whose values are another recipe's INPUT (Teaser's frame is Card
    *  input). The CSS never reads it, so no attribute is written; the renderer hands
    *  `resolution.maps[name]` to the part's component (ADR-0017 decision 6). */
@@ -291,7 +294,7 @@ export function resolve<R extends Recipe>(recipe: R, props: Record<string, unkno
     }
     axes[name] = value;
     if (axis.maps) maps[name] = values.includes(value) ? (axis.maps.values[value] ?? null) : null;
-    else attrs[attr] = value;
+    else if (!axis.unwritten) attrs[attr] = value;
   }
 
   // ── derived flags: named in the table, computed by the hole ────────────────

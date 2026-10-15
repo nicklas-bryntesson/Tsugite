@@ -26,10 +26,12 @@ export const modal = {
     label: { kind: "name", attr: "aria-label" },
   },
   axes: {
-    /** what may close it besides its content: Esc and light dismiss, Esc only, or nothing */
-    dismiss: { values: ["any", "request", "none"], default: "request" },
-    /** how a screen reader presents it; an alert demands an answer. Independent of dismiss. */
-    role: { values: ["dialog", "alertdialog"], default: "dialog" },
+    /** what may close it besides its content: Esc and light dismiss, Esc only, or nothing.
+     *  Unwritten: the platform's closedby is its one written truth. */
+    dismiss: { values: ["any", "request", "none"], default: "request", unwritten: true },
+    /** how a screen reader presents it; an alert demands an answer. Independent of dismiss.
+     *  Unwritten: role is its one written truth, and only an alert writes it. */
+    role: { values: ["dialog", "alertdialog"], default: "dialog", unwritten: true },
   },
   derived: {
     /** the native attribute dismiss stands for; the kernel reads it where it is unsupported */

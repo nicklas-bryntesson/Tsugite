@@ -1,5 +1,5 @@
 {
-  "$comment": "Modal — the contract as data. `children` is the default slot's presence, reported by the renderer. Always a dialog; dismiss is written as data-dismiss and as the platform's closedby; role as data-role, and as role only for an alert; data-region marks it a region (ADR-0029); label is written as aria-label. An id is required; empty renders nothing. The name check (a title channel or a label) needs the child markup and lives in modal-renderers.test.ts.",
+  "$comment": "Modal — the contract as data. `children` is the default slot's presence, reported by the renderer. Always a dialog; dismiss and role are unwritten axes — dismiss is written only as the platform's closedby, role only as role and only for an alert; data-region marks it a region (ADR-0029); label is written as aria-label. An id is required; empty renders nothing. The name check (a title channel or a label) needs the child markup and lives in modal-renderers.test.ts.",
   "component": "Modal",
   "cases": [
     {
@@ -14,8 +14,6 @@
         "className": "Modal",
         "attrs": {
           "id": "m",
-          "data-dismiss": "request",
-          "data-role": "dialog",
           "closedby": "closerequest",
           "data-region": ""
         }
@@ -34,8 +32,6 @@
         "className": "Modal",
         "attrs": {
           "id": "m",
-          "data-dismiss": "any",
-          "data-role": "dialog",
           "closedby": "any",
           "data-region": ""
         }
@@ -54,8 +50,6 @@
         "className": "Modal",
         "attrs": {
           "id": "m",
-          "data-dismiss": "none",
-          "data-role": "dialog",
           "closedby": "none",
           "data-region": ""
         }
@@ -75,8 +69,6 @@
         "className": "Modal",
         "attrs": {
           "id": "m",
-          "data-dismiss": "none",
-          "data-role": "alertdialog",
           "closedby": "none",
           "role": "alertdialog",
           "data-region": ""
@@ -97,8 +89,6 @@
         "attrs": {
           "id": "m",
           "aria-label": "Video",
-          "data-dismiss": "request",
-          "data-role": "dialog",
           "closedby": "closerequest",
           "data-region": ""
         }
@@ -129,8 +119,6 @@
         "className": "Modal",
         "attrs": {
           "id": "m",
-          "data-dismiss": "request",
-          "data-role": "dialog",
           "closedby": "closerequest",
           "data-region": ""
         }

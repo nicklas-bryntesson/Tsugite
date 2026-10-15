@@ -12,9 +12,8 @@
  *   overlay support          the exit moves only where the dialog can stay in the top
  *                            layer while it leaves (Chromium); elsewhere it closes at once.
  *
- * The recipe's two axes have no gates here, on purpose: data-dismiss is read by the
- * platform and the kernel through closedby, data-role by the accessibility tree. Neither
- * draws anything.
+ * The recipe's two axes are unwritten and have no gates: dismiss is the platform's
+ * closedby, role the accessibility tree's. Neither draws anything.
  */
 
 .Modal {
