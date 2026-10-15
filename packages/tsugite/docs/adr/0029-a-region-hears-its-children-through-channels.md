@@ -1,8 +1,8 @@
 # ADR-0029: A region hears its children through channels
 
 **Status:** Accepted · 2026-10-15 — agreed in discussion 2026-10-14/15, after
-the platform probe and the region-recognition stress test recorded in
-`tasks/plan-modal-region.md` (PR #138).
+the platform probe and the region-recognition stress test recorded in the
+modal plan (PR #138; the plan was retired when the job's last PR merged).
 
 ## Context
 
