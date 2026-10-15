@@ -58,12 +58,17 @@ describe it. Three constraints shape how:
      element has none).
    - `description` → the region's `aria-describedby`.
    - `close` → closes the nearest region; the element's `value` is the
-     `returnValue`. On a `<dialog>` the kernel writes `type="button"`,
-     `command="close"` and `commandfor`, so the platform does the work
-     where invoker commands exist; a feature-detected document-level
-     listener does it elsewhere and calls `preventDefault`. A region that
-     is not a `<dialog>` receives a `region:close` event (detail:
-     `{ returnValue }`) and closes itself its own way.
+     `returnValue`. One document-level listener hears it in every engine
+     and calls `preventDefault`, so a button in a form closes instead of
+     submitting. A `<dialog>` region is closed with `close(value)`; a
+     region that is not a `<dialog>` receives a `region:close` event
+     (detail: `{ returnValue }`) and closes itself its own way.
+     *Amended 2026-10-15, while building:* the first text had the kernel
+     write `command="close"` and `commandfor` onto the element so the
+     platform did the work. That needs a moment to write them — the
+     region's opening — which engines below the floor do not signal, and
+     a non-dialog region needs the listener anyway. One listener for every
+     region and every engine is the simpler truth.
    `title` and `description` are wired when the region opens. `close` is
    delegated, so a child mounted after opening is heard.
 
