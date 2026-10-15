@@ -1,15 +1,23 @@
-// The recipe is a table read by lib/recipe.ts (ADR-0018). tests/fixtures/modal.json lists
-// inputs and the exact resolution each must produce. This file holds the recipe to it, then
-// the Astro renderer to the recipe, and to the one rule the table cannot carry: something
-// must name the modal. Modal is Astro only for now; the React and Vue renderers
-// join this file when they are built (ADR-0029, consequences).
+// The renderers are adapters; the recipe is the contract (ADR-0017), and the recipe is a
+// table read by lib/recipe.ts (ADR-0018). tests/fixtures/modal.json lists inputs and the
+// exact resolution each must produce. This file holds the recipe to it, then Astro, React and
+// Vue to the recipe — the same dialog for the same props, nothing for an empty one, the same
+// message for an invalid one — and Astro to the one rule the table cannot carry: something
+// must name the modal. That check reads rendered child markup, which only Astro has before
+// it renders.
 import { readFileSync } from "node:fs";
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
+import { renderToStaticMarkup } from "react-dom/server";
+import { createElement } from "react";
 import { describe, it, expect } from "vitest";
+import { createSSRApp, h } from "vue";
+import { renderToString as renderVue } from "vue/server-renderer";
 import { resolve } from "../lib/recipe";
 import { modal } from "../recipes/modal.recipe";
 import { modalDerive, unnamed } from "../lib/modal";
 import Astro from "../components/regions/Modal/Modal.astro";
+import React from "../components/regions/Modal/Modal.tsx";
+import Vue from "../components/regions/Modal/Modal.vue";
 
 interface Fixture {
   component: string;
@@ -23,14 +31,36 @@ interface Fixture {
 const fixture: Fixture = JSON.parse(readFileSync(new URL("./fixtures/modal.json", import.meta.url), "utf8"));
 const container = await AstroContainer.create();
 const CHILD = '<h2 data-channel="title">Title</h2><p>Body</p>';
+// Astro adds the kernel's script; Vue SSR leaves comments; an empty attribute value and a
+// bare attribute are the same DOM (data-region), written differently per host.
 const normalise = (html: string) =>
-  html.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<!--.*?-->/g, "").replace(/>\s+</g, "><").replace(/&quot;/g, '"').trim();
+  html
+    .replace(/<script[\s\S]*?<\/script>/g, "")
+    .replace(/<!--.*?-->/g, "")
+    .replace(/>\s+</g, "><")
+    .replace(/&quot;/g, '"')
+    .replace(/=""/g, "")
+    .trim();
 const propsOf = (input: Record<string, unknown>) => {
   const { children, ...props } = input;
   return props;
 };
 const viaAstro = async (props: Record<string, unknown>, children: boolean, child = CHILD) =>
   normalise(await container.renderToString(Astro, { props, slots: children ? { default: child } : undefined }));
+const childNodes = () => [createElement("h2", { key: "t", "data-channel": "title" }, "Title"), createElement("p", { key: "b" }, "Body")];
+const viaReact = (props: Record<string, unknown>, children: boolean) => {
+  const { class: className, ...rest } = props;
+  const reactProps = className === undefined ? rest : { ...rest, className };
+  return normalise(renderToStaticMarkup(createElement(React, reactProps, children ? childNodes() : undefined)));
+};
+const viaVue = async (props: Record<string, unknown>, children: boolean) =>
+  normalise(
+    await renderVue(
+      createSSRApp({
+        render: () => h(Vue, props, children ? { default: () => [h("h2", { "data-channel": "title" }, "Title"), h("p", null, "Body")] } : undefined),
+      }),
+    ),
+  );
 
 describe(`${fixture.component}: the recipe resolves every fixture case`, () => {
   for (const { name, input, expect: want } of fixture.cases) {
@@ -47,18 +77,26 @@ describe(`${fixture.component}: the recipe resolves every fixture case`, () => {
   }
 });
 
-describe(`${fixture.component}: Astro renders every fixture case`, () => {
+describe(`${fixture.component}: Astro, React and Vue render every fixture case identically`, () => {
   for (const { name, input, expect: want } of fixture.cases) {
     it(name, async () => {
-      const html = await viaAstro(propsOf(input), input.children);
+      const props = propsOf(input);
+      const astro = await viaAstro(props, input.children);
+      const react = viaReact(props, input.children);
+      const vue = await viaVue(props, input.children);
       if (want.mode === "render") {
-        // Astro writes an empty value as a bare attribute (data-region).
         const attrs = Object.entries(want.attrs!).map(([k, v]) => (v === "" ? ` ${k}` : ` ${k}="${v}"`)).join("");
-        expect(html).toBe(`<dialog class="${want.className}"${attrs}>${CHILD}</dialog>`);
+        expect(astro).toBe(`<dialog class="${want.className}"${attrs}>${CHILD}</dialog>`);
+        expect(react, "react").toBe(astro);
+        expect(vue, "vue").toBe(astro);
       } else if (want.mode === "suppress") {
-        expect(html).toBe("");
+        expect(astro).toBe("");
+        expect(react, "react").toBe("");
+        expect(vue, "vue").toBe("");
       } else {
-        expect(html).toContain(want.errorMessage!);
+        expect(astro).toContain(want.errorMessage!);
+        expect(react, "react").toContain(want.errorMessage!);
+        expect(vue, "vue").toContain(want.errorMessage!);
       }
     });
   }
