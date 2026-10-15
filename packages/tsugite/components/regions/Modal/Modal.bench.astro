@@ -1,0 +1,28 @@
+---
+// Modal's bench (ADR-0026): one modal per dismiss value, named data-bench-case="<dismiss>",
+// each with an opener before it and a close button inside it. Both buttons speak the
+// platform's invoker commands; the kernel fills them in where the engine lacks them. The
+// close button sits in a <form>, where a button is a submit button unless it says otherwise.
+import Modal from "./Modal.astro";
+import { modal } from "../../../recipes/modal.recipe";
+
+const cases = modal.axes.dismiss.values;
+---
+
+{
+  cases.map((dismiss) => (
+    <div class="bench-line">
+      <button type="button" command="show-modal" commandfor={`modal-${dismiss}`} data-bench-opener={dismiss}>
+        Open {dismiss}
+      </button>
+      <Modal id={`modal-${dismiss}`} dismiss={dismiss} data-bench-case={dismiss}>
+        <form>
+          <p>Dismiss: {dismiss}</p>
+          <button type="button" command="close" commandfor={`modal-${dismiss}`} value={`closed-${dismiss}`}>
+            Close
+          </button>
+        </form>
+      </Modal>
+    </div>
+  ))
+}

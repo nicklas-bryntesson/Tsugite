@@ -38,7 +38,7 @@ channels, nearest-region ownership, zero strings, DOM over props, exit motion sc
 
 ## Phase 3 — The region, one vertical slice at a time
 
-### Task 4: Modal opens and closes
+### Task 4: Modal opens and closes — DONE 2026-10-15
 **Description:** `components/regions/Modal/` (Astro + CSS + attach script) and
 `kernel/js/region-channels.ts` with the feature-detected `command` fallback. `dismiss` prop with
 `request` default and the `closedby` fallback.

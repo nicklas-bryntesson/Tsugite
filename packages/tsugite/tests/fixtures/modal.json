@@ -1,0 +1,41 @@
+{
+  "$comment": "Modal — the contract as data. `children` is the default slot's presence, reported by the renderer. Always a dialog; dismiss is written as data-dismiss and as the platform's closedby; data-region marks it a region (ADR-0029). An id is required; empty renders nothing.",
+  "component": "Modal",
+  "cases": [
+    {
+      "name": "the default: Esc closes",
+      "input": { "id": "m", "children": true },
+      "expect": { "mode": "render", "tag": "dialog", "className": "Modal", "attrs": { "id": "m", "data-dismiss": "request", "closedby": "closerequest", "data-region": "" } }
+    },
+    {
+      "name": "light dismiss",
+      "input": { "id": "m", "dismiss": "any", "children": true },
+      "expect": { "mode": "render", "tag": "dialog", "className": "Modal", "attrs": { "id": "m", "data-dismiss": "any", "closedby": "any", "data-region": "" } }
+    },
+    {
+      "name": "only its content closes it",
+      "input": { "id": "m", "dismiss": "none", "children": true },
+      "expect": { "mode": "render", "tag": "dialog", "className": "Modal", "attrs": { "id": "m", "data-dismiss": "none", "closedby": "none", "data-region": "" } }
+    },
+    {
+      "name": "the element is always a dialog",
+      "input": { "id": "m", "element": "div", "children": true },
+      "expect": { "mode": "render", "tag": "dialog", "className": "Modal", "attrs": { "id": "m", "data-dismiss": "request", "closedby": "closerequest", "data-region": "" } }
+    },
+    {
+      "name": "no id: refused",
+      "input": { "children": true },
+      "expect": { "mode": "error", "errorMessage": "id is required — openers point at the modal with commandfor" }
+    },
+    {
+      "name": "a dismiss outside the set: refused",
+      "input": { "id": "m", "dismiss": "never", "children": true },
+      "expect": { "mode": "error", "errorMessage": "invalid dismiss \"never\" — expected any | request | none" }
+    },
+    {
+      "name": "nothing to host: suppressed",
+      "input": { "id": "m", "children": false },
+      "expect": { "mode": "suppress" }
+    }
+  ]
+}
