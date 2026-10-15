@@ -113,7 +113,16 @@ were never about the same thing.
    - `axes` — closed sets the CSS switches on, each with a default. The
      order of the keys is the order of the `data-*` attributes in the DOM
      and is part of the contract. Every axis is written on every render,
-     never omitted.
+     never omitted — unless it is `unwritten`: an axis the CSS never reads
+     itself, whose decision a derived value carries. Then the derived
+     attribute is the one written truth and the axis writes nothing, so two
+     attributes cannot say the same thing and drift apart. Text's boolean
+     `inline` writes `data-text-box` (ADR-0024); Modal's `dismiss` writes
+     the platform's `closedby` and its `role` writes `role` for an alert
+     only (ADR-0029).
+     *Amended 2026-10-15:* the first text had no exception; the boolean
+     case arrived with ADR-0024 without recording it here, and the enum
+     case with Modal.
    - `host` — per element, the open-valued attributes the host element
      carries (`href`, `target` on `a`; `type`, `disabled` on `button`).
      Rules on them (`rel` when `target="_blank"`) have no value set and
