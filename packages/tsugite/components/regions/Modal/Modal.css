@@ -2,11 +2,15 @@
  * Modal — a transparent layer over the whole viewport with one slot in the middle
  * (ADR-0029 §7). It owns no box, no air and no placement: the content draws its own
  * surface and places itself — centred by default, or at an edge, or on the site's grid.
- * The layer scrolls when the content is taller than the viewport; the page behind is
- * locked by the kernel (kernel/css/region.css).
+ * It owns the backdrop and the motion of both: the layer and the backdrop each have a
+ * timeline of their own. The layer scrolls when the content is taller than the viewport;
+ * the page behind is locked by the kernel (kernel/css/region.css).
  *
  * Gates over one base:
- *   [open]   the layer is laid out only while it is open; closed, the engine hides it.
+ *   [open] / :not([open])    open or closed: laid out, and the end states of the motion.
+ *   prefers-reduced-motion   no-preference moves; reduce does not.
+ *   overlay support          the exit moves only where the dialog can stay in the top
+ *                            layer while it leaves (Chromium); elsewhere it closes at once.
  *
  * The recipe's two axes have no gates here, on purpose: data-dismiss is read by the
  * platform and the kernel through closedby, data-role by the accessibility tree. Neither
@@ -14,6 +18,17 @@
  */
 
 .Modal {
+  /* The backdrop and the two timelines are knobs: a project or a theme sets them on the
+     root. The layer enters from a small offset; the backdrop only fades. */
+  /* TODO(token): no backdrop role in the registry; --color-scrim-media is hero media's. */
+  --_mo-backdropColor: oklch(0.2 0 0 / 0.5);
+  /* TODO(token): no duration or easing tokens exist; Button's 250ms is raw too. */
+  --_mo-enterDuration: 200ms;
+  --_mo-exitDuration: 150ms;
+  --_mo-backdropDuration: 200ms;
+  --_mo-easing: ease-out;
+  --_mo-enterOffset: 0 var(--size-md);
+
   box-sizing: border-box;
   inline-size: 100%;
   block-size: 100%;
@@ -30,16 +45,95 @@
      with the grid behind it. */
   scrollbar-gutter: stable;
 
+  &::backdrop {
+    background-color: var(--_mo-backdropColor);
+  }
+
   /* Author display beats the engine's dialog:not([open]) { display: none }, so the
      layout is gated on the open state rather than declared in the base. One row, never
      shorter than its content and stretched to the layer's height when the content is
      shorter — so a child is centred while it fits and starts at the top, scrolling, when
      it does not. A plain auto row is not enough: a child that clips (a Card, overflow:
-     hidden) contributes no minimum, and the row would stop at the layer's height. A child may align itself to an edge instead
-     (align-self, justify-self): a drawer, a banner. */
+     hidden) contributes no minimum, and the row would stop at the layer's height. A child
+     may align itself to an edge instead (align-self, justify-self): a drawer, a banner. */
   &[open] {
     display: grid;
     grid-template-rows: minmax(max-content, auto);
     align-items: center;
+  }
+
+  /* Motion. Each state carries its own end values and its own duration: a transition
+     takes the timing of the state it moves to, so entering runs the enter timeline and
+     leaving the exit one. */
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &::backdrop {
+      transition: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition-timing-function: var(--_mo-easing);
+
+    &::backdrop {
+      transition-duration: var(--_mo-backdropDuration);
+      transition-timing-function: var(--_mo-easing);
+    }
+
+    &[open] {
+      opacity: 1;
+      translate: 0 0;
+      transition-duration: var(--_mo-enterDuration);
+    }
+
+    /* A leaving layer still covers the viewport while it fades: it must not catch the
+       click meant for the page. */
+    &:not([open]) {
+      opacity: 0;
+      translate: var(--_mo-enterOffset);
+      transition-duration: var(--_mo-exitDuration);
+      pointer-events: none;
+    }
+
+    &[open]::backdrop {
+      opacity: 1;
+    }
+
+    &:not([open])::backdrop {
+      opacity: 0;
+    }
+
+    /* Where it enters from: the engine starts here on the first frame of opening. */
+    @starting-style {
+      &[open] {
+        opacity: 0;
+        translate: var(--_mo-enterOffset);
+      }
+
+      &[open]::backdrop {
+        opacity: 0;
+      }
+    }
+
+    /* Leaving needs the dialog kept in the top layer and displayed until the exit ends.
+       Without overlay (Firefox, Safari) it closes at once (ADR-0029 §7). */
+    @supports not (overlay: auto) {
+      transition-property: opacity, translate;
+
+      &::backdrop {
+        transition-property: opacity;
+      }
+    }
+
+    @supports (overlay: auto) {
+      transition-property: opacity, translate, display, overlay;
+      transition-behavior: allow-discrete;
+
+      &::backdrop {
+        transition-property: opacity, display, overlay;
+        transition-behavior: allow-discrete;
+      }
+    }
   }
 }

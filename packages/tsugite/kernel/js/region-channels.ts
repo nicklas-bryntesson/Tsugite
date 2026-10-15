@@ -65,10 +65,31 @@ export function installRegionChannels(doc: Document = document): void {
   const wireAll = () => doc.querySelectorAll('[data-region]').forEach(wireRegion)
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', wireAll, { once: true })
   else wireAll()
+  // Focus on opening (ADR-0029 §7): the child decides with autofocus; without it, the
+  // modal takes focus itself, so it opens at its top and is announced by its name. The
+  // platform cannot say both — autofocus on the dialog would beat the child's — so the
+  // first focus into a freshly opened dialog region is redirected here unless it landed
+  // on [autofocus]. A dialog that closes is fresh again.
+  const settled = new WeakSet<Element>()
   doc.addEventListener('focusin', (event) => {
-    const region = (event.target as Element | null)?.closest?.('[data-region]')
-    if (region) wireRegion(region)
+    const target = event.target as Element | null
+    const region = target?.closest?.('[data-region]')
+    if (!region) return
+    wireRegion(region)
+    if (!(region instanceof win.HTMLDialogElement) || settled.has(region)) return
+    settled.add(region)
+    if (target === region || target?.matches('[autofocus]')) return
+    if (!region.hasAttribute('tabindex')) region.setAttribute('tabindex', '-1')
+    region.focus({ preventScroll: true })
+    region.scrollTop = 0
   })
+  doc.addEventListener(
+    'close',
+    (event) => {
+      if (event.target instanceof win.HTMLDialogElement) settled.delete(event.target)
+    },
+    true,
+  )
 
   // The close channel (ADR-0029 §5): any element marked data-channel="close" closes the
   // region nearest above it, with its value as the returnValue. A button in a form is a

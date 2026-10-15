@@ -18,8 +18,9 @@
 // Use cases — the layer holding real shapes, each placing itself:
 // - signup: the site's container and twelve-column layout grid inside the modal, the form
 //   on the middle four columns from the desktop tier;
-// - long: content taller than the viewport scrolls in the layer, the page stays put; the
-//   title takes focus, so the layer opens at the top and not at the button at the end;
+// - long: content taller than the viewport scrolls in the layer, the page stays put; with
+//   no autofocus in it the modal takes focus itself, so it opens at the top and not at the
+//   button at the end;
 // - drawer: a sheet at the inline end, the full height of the layer;
 // - banner: a consent banner at the block end that only its own choice closes.
 import Modal from "./Modal.astro";
@@ -148,9 +149,8 @@ const paragraphs = Array.from({ length: 24 }, (_, i) => i + 1);
   <ActionButton emphasis="secondary" command="show-modal" commandfor="modal-long" data-bench-opener="long">Read the terms</ActionButton>
   <Modal id="modal-long" dismiss="any" data-bench-case="long">
     <Card elevation="md" class="bench-sheet bench-centre bench-gap">
-      {/* focus goes to the first focusable element on opening — here the button at the end,
-           which would open the layer scrolled to the bottom; the child takes focus to its top */}
-      <Heading element="h2" text="Terms" data-channel="title" tabindex="-1" autofocus data-bench-long-title />
+      {/* no autofocus: the modal takes focus itself and opens at its top, not at the button at the end */}
+      <Heading element="h2" text="Terms" data-channel="title" />
       {paragraphs.map((n) => <Text text={`Paragraph ${n}. Long enough content to be taller than the viewport, so the layer scrolls and the page behind it does not.`} />)}
       <ActionButton data-channel="close" value="read" data-bench-close="long">Done</ActionButton>
     </Card>

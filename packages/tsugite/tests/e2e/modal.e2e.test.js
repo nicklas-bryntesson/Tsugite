@@ -14,10 +14,13 @@ const WITHOUT_PLATFORM = () => {
 
 const isOpen = (page, dismiss) => page.locator(`#modal-${dismiss}`).evaluate((d) => d.open)
 
+// Opens a bench modal from its opener and waits for the entry to finish, so a measurement
+// or an axe audit never samples a frame of the fade (an opacity below 1 fails contrast).
 async function open(page, dismiss) {
   await page.locator(`[data-bench-opener="${dismiss}"]`).focus()
   await page.keyboard.press('Enter')
   await expect.poll(() => isOpen(page, dismiss)).toBe(true)
+  await page.locator(`#modal-${dismiss}`).evaluate((d) => Promise.all(d.getAnimations({ subtree: true }).map((a) => a.finished)))
 }
 
 for (const platform of ['native', 'fallback']) {
@@ -172,8 +175,8 @@ test.describe('the layer holds real shapes', () => {
     await open(page, 'long')
     const layer = page.locator('#modal-long')
     expect(await layer.evaluate((d) => d.scrollHeight > d.clientHeight)).toBe(true)
-    // it opens at the top: the title took focus, not the button at the end
-    await expect(page.locator('[data-bench-long-title]')).toBeFocused()
+    // it opens at the top: with no autofocus in it the modal took focus, not the button at the end
+    await expect(layer).toBeFocused()
     expect(await layer.evaluate((d) => d.scrollTop)).toBe(0)
     await page.mouse.move(640, 400)
     await page.mouse.wheel(0, 600)
@@ -213,6 +216,52 @@ test.describe('the layer holds real shapes', () => {
     await page.getByRole('button', { name: 'Accept' }).click()
     expect(await page.locator('#modal-banner').evaluate((d) => d.returnValue)).toBe('accepted')
   })
+})
+
+test.describe('backdrop and motion', () => {
+  const animations = (page, id) => page.locator(`#${id}`).evaluate((d) => d.getAnimations({ subtree: true }).length)
+
+  test('the backdrop is the modal\'s own, not the engine\'s default', async ({ page }) => {
+    await page.goto(targetPath('/modal'))
+    await open(page, 'request')
+    const backdrop = await page.locator('#modal-request').evaluate((d) => getComputedStyle(d, '::backdrop').backgroundColor)
+    expect(backdrop).not.toBe('rgba(0, 0, 0, 0.1)')
+    expect(backdrop).not.toBe('rgba(0, 0, 0, 0)')
+  })
+
+  test('it moves in and out; the leaving layer does not catch the next click', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await page.goto(targetPath('/modal'))
+    await page.locator('[data-bench-opener="request"]').click()
+    expect(await animations(page, 'modal-request')).toBeGreaterThan(0)
+    await page.waitForTimeout(400)
+    await page.locator('#modal-request [data-channel="close"]').first().click()
+    // Chromium keeps the dialog in the top layer while it leaves (overlay)
+    expect(await animations(page, 'modal-request')).toBeGreaterThan(0)
+    await page.locator('[data-bench-opener="any"]').click()
+    expect(await isOpen(page, 'any')).toBe(true)
+  })
+
+  test('under reduced motion nothing moves', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto(targetPath('/modal'))
+    await open(page, 'request')
+    expect(await animations(page, 'modal-request')).toBe(0)
+    await page.locator('#modal-request [data-channel="close"]').first().click()
+    expect(await animations(page, 'modal-request')).toBe(0)
+  })
+})
+
+test('focus: the child\'s autofocus wins; without one the modal takes focus itself', async ({ page }) => {
+  await page.goto(targetPath('/modal'))
+  await open(page, 'alert')
+  await expect(page.locator('[data-bench-gate]')).toBeFocused()
+  await page.locator('#modal-alert').evaluate((d) => d.close())
+  await open(page, 'request')
+  await expect(page.locator('#modal-request')).toBeFocused()
+  // Tab goes on into the content
+  await page.keyboard.press('Tab')
+  await expect(page.locator('#modal-request [data-channel="close"]').first()).toBeFocused()
 })
 
 for (const name of ['request', 'alert', 'label', 'signup', 'drawer', 'banner']) {

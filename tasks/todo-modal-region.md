@@ -78,7 +78,7 @@ with one slot in the middle; the content places itself. Inner scroll, page lock 
 bench: signup on the middle four of twelve columns, long content, drawer, consent banner.
 **Dependencies:** 4 · **Scope:** S
 
-### Task 8: Backdrop and motion slots
+### Task 8: Backdrop and motion slots — DONE 2026-10-15 (plus the focus rule)
 **Description:** `--_mo-` slots for backdrop and the enter/exit/backdrop timelines;
 `@starting-style` enter; exit gated on `overlay`; reduced motion turns both off.
 **Acceptance:**
