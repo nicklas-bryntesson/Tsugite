@@ -5,13 +5,14 @@
 // where the platform is missing — both features are newer than the support contract
 // (Chrome 109) — so the markup is the same in every engine.
 //
-// Two pure functions, unit-tested without a DOM, and one install that listens on the
-// document. Listening on the document, not on each region, means a region or an opener
-// mounted later by any framework is covered without being found first.
+// Two pure functions, unit-tested without a DOM, one wiring step, and one install that
+// listens on the document. Listening on the document, not on each region, means a region or
+// an opener mounted later by any framework is covered without being found first.
 //
 //   commandOf(command)              → what an invoker command asks a dialog to do
 //   isOutside(box, x, y)            → whether a click on a dialog landed on its backdrop
-//   installRegionChannels(doc)      → the fallbacks, once per document
+//   wireRegion(region)              → title and description channels → aria-labelledby/-describedby
+//   installRegionChannels(doc)      → the channels and the fallbacks, once per document
 
 /** The invoker commands a dialog region answers. `request-close` is left to the platform. */
 export type DialogCommand = 'show-modal' | 'close'
@@ -38,12 +39,50 @@ declare global {
   }
 }
 
+let sequence = 0
+
+/** The elements of one channel that belong to this region — not to a region inside it. */
+function own(region: Element, channel: string): Element[] {
+  return [...region.querySelectorAll(`[data-channel="${channel}"]`)].filter((el) => el.closest('[data-region]') === region)
+}
+
+function idOf(el: Element, region: Element, channel: string): string {
+  if (!el.id) el.id = `${region.id || 'region'}-${channel}-${++sequence}`
+  return el.id
+}
+
+/**
+ * Wire a region's title and description channels (ADR-0029 §5): the first title names it
+ * through aria-labelledby, every description describes it through aria-describedby. The
+ * words stay in the child's markup, so they keep the child's lang. Safe to call again —
+ * the install calls it for every region on the page and whenever focus enters one, which
+ * is the moment a region opens in every engine.
+ */
+export function wireRegion(region: Element): void {
+  const title = own(region, 'title')[0]
+  if (title) region.setAttribute('aria-labelledby', idOf(title, region, 'title'))
+  const descriptions = own(region, 'description')
+  if (descriptions.length) {
+    region.setAttribute('aria-describedby', descriptions.map((el) => idOf(el, region, 'description')).join(' '))
+  }
+}
+
 export function installRegionChannels(doc: Document = document): void {
   if (doc.__regionChannels) return
   doc.__regionChannels = true
 
   const win = doc.defaultView
   if (!win) return
+  // The title and description channels: every region on the page now, and a region again
+  // when focus enters it — content mounted between page load and opening is wired then.
+  const wireAll = () => doc.querySelectorAll('[data-region]').forEach(wireRegion)
+  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', wireAll, { once: true })
+  else wireAll()
+  doc.addEventListener('focusin', (event) => {
+    const region = (event.target as Element | null)?.closest?.('[data-region]')
+    if (region) wireRegion(region)
+  })
+
   // The close channel (ADR-0029 §5): any element marked data-channel="close" closes the
   // region nearest above it, with its value as the returnValue. A button in a form is a
   // submit button; the close replaces the submit. A region that is not a <dialog> has no

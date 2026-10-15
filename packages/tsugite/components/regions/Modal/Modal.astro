@@ -1,25 +1,27 @@
 ---
-// Modal — a dialog on the top layer that its content can close, and that never opens itself
-// (ADR-0029). The table is recipes/modal.recipe.ts, read by lib/recipe.ts (ADR-0018);
-// lib/modal.ts holds the derived closedby and region marker; this file renders it in Astro.
-// kernel/js/region-channels.ts fills in invoker commands and closedby where the engine lacks
-// them, so a <button command="show-modal" commandfor="<id>"> opens it everywhere.
+// Modal — a dialog on the top layer that its content can name, describe and close, and that
+// never opens itself (ADR-0029). The table is recipes/modal.recipe.ts, read by
+// lib/recipe.ts (ADR-0018); lib/modal.ts holds the derived values and the name check; this
+// file renders it in Astro. kernel/js/region-channels.ts fills in invoker commands and
+// closedby where the engine lacks them, wires the title and description channels, and
+// hears the close channel.
 import DevError from "../../DevError/DevError.astro";
 import { modal } from "../../../recipes/modal.recipe";
 import { resolve, type InputOf } from "../../../lib/recipe";
-import { modalDerive } from "../../../lib/modal";
+import { modalDerive, unnamed } from "../../../lib/modal";
 
 type Props = InputOf<typeof modal> & { [key: string]: unknown };
 
 const childHtml = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
 const r = resolve(modal, Astro.props, { hasContent: childHtml.trim().length > 0, derive: modalDerive });
+const nameless = r.mode === "render" ? unnamed(childHtml, Astro.props.label) : null;
 ---
 
 {
-  r.mode === "render" ? (
+  r.mode === "render" && !nameless ? (
     <dialog class={r.className} {...r.attrs} {...r.rest} set:html={childHtml} />
-  ) : r.mode === "error" ? (
-    <DevError name={modal.name} message={r.errorMessage} />
+  ) : r.mode === "error" || nameless ? (
+    <DevError name={modal.name} message={nameless ?? r.errorMessage} />
   ) : null
 }
 

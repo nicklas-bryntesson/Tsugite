@@ -86,9 +86,62 @@ for (const platform of ['native', 'fallback']) {
   })
 }
 
-test('an open modal passes axe', async ({ page }) => {
-  await page.goto(targetPath('/modal'))
-  await open(page, 'request')
-  await injectAxe(page)
-  await scopedCheckA11y(page, '#modal-request')
+test.describe('names and descriptions', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(targetPath('/modal'))
+  })
+
+  test('a title channel names its modal', async ({ page }) => {
+    for (const dismiss of ['any', 'request', 'none']) {
+      await open(page, dismiss)
+      await expect(page.locator(`#modal-${dismiss}`)).toHaveAccessibleName(`Dismiss: ${dismiss}`)
+      await page.locator(`#modal-${dismiss}`).evaluate((d) => d.close())
+    }
+  })
+
+  test('the title of a region inside the modal names that region, not the modal', async ({ page }) => {
+    await open(page, 'nested')
+    await expect(page.locator('#modal-nested')).toHaveAccessibleName('Nested')
+    const inner = page.locator('[data-bench-inner-region]')
+    const titleId = await page.locator('[data-bench-inner-title]').getAttribute('id')
+    await expect(inner).toHaveAttribute('aria-labelledby', titleId)
+  })
+
+  test('an alert is announced as one, described by its content, and gated by it', async ({ page }) => {
+    await open(page, 'alert')
+    const alert = page.getByRole('alertdialog')
+    await expect(alert).toHaveAccessibleName('Delete everything?')
+    await expect(alert).toHaveAccessibleDescription(/to unlock the button/)
+    await expect(page.locator('[data-bench-gate]')).toBeFocused()
+
+    const confirm = page.locator('[data-bench-close="confirm"]')
+    await expect(confirm).toBeDisabled()
+    await page.keyboard.press('Escape')
+    expect(await isOpen(page, 'alert')).toBe(true)
+    await page.locator('[data-bench-gate]').fill('I know what I am doing')
+    await confirm.click()
+    expect(await isOpen(page, 'alert')).toBe(false)
+    expect(await page.locator('#modal-alert').evaluate((d) => d.returnValue)).toBe('confirmed')
+  })
+
+  test('a label names a modal with no visible title', async ({ page }) => {
+    await open(page, 'label')
+    await expect(page.locator('#modal-label')).toHaveAccessibleName('Product video')
+  })
+
+  test('the name keeps the lang of the title it comes from', async ({ page }) => {
+    await open(page, 'lang')
+    await expect(page.locator('#modal-lang')).toHaveAccessibleName('Välkommen tillbaka')
+    const titleId = await page.locator('#modal-lang').getAttribute('aria-labelledby')
+    await expect(page.locator(`[id="${titleId}"]`)).toHaveAttribute('lang', 'sv')
+  })
 })
+
+for (const name of ['request', 'alert', 'label']) {
+  test(`an open modal passes axe: ${name}`, async ({ page }) => {
+    await page.goto(targetPath('/modal'))
+    await open(page, name)
+    await injectAxe(page)
+    await scopedCheckA11y(page, `#modal-${name}`)
+  })
+}

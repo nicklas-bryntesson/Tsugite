@@ -58,7 +58,7 @@ from the kernel; the button's `value` is the `returnValue`.
 **Verification:** e2e cases; unit test for nearest-region resolution
 **Dependencies:** 4 · **Scope:** S
 
-### Task 6: Title, description, label, role
+### Task 6: Title, description, label, role — DONE 2026-10-15
 **Description:** `title` → `aria-labelledby` (id generated if missing), `description` →
 `aria-describedby`, `label` prop → `aria-label`, `role` prop (`dialog` default). DevError when
 neither title nor label is present.

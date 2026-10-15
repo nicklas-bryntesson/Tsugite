@@ -1,15 +1,24 @@
 ---
-// Modal's bench (ADR-0026): one modal per dismiss value, named data-bench-case="<dismiss>",
-// each opened by a Button speaking the platform's invoker command (the kernel fills it in
-// where the engine lacks it) and closed by a Button on the close channel (ADR-0029 §5),
-// which knows no id. The close sits in a <form>, where a button is a submit button unless
-// it says otherwise. The nested case puts the close deep in a tree and a second region
-// inside the modal: each close reaches its nearest region only.
+// Modal's bench (ADR-0026). Every modal is opened by a Button speaking the platform's
+// invoker command (the kernel fills it in where the engine lacks it), named by a Heading on
+// the title channel and closed by a Button on the close channel (ADR-0029 §5), which knows
+// no id — the system's own components on both sides of the seam.
+//
+// - one modal per dismiss value, data-bench-case="<dismiss>"; its close sits in a <form>,
+//   beside a bare <button>, which is a submit button unless it says otherwise;
+// - nested: a close three layers down, and a region inside the modal;
+// - alert: role alertdialog, dismiss none, a description, and the child's own gate — the
+//   close waits until the phrase is typed; the field takes focus with autofocus;
+// - label: no visible title, named by the label prop (a video player);
+// - lang: a Swedish title on an English page — the name keeps the title's lang.
 import Modal from "./Modal.astro";
 import ActionButton from "../../primitives/buttons/Button/ActionButton.astro";
+import Heading from "../../primitives/typography/Heading/Heading.astro";
+import Text from "../../primitives/typography/Text/Text.astro";
 import { modal } from "../../../recipes/modal.recipe";
 
 const cases = modal.axes.dismiss.values;
+const PHRASE = "I know what I am doing";
 ---
 
 {
@@ -20,7 +29,7 @@ const cases = modal.axes.dismiss.values;
       </ActionButton>
       <Modal id={`modal-${dismiss}`} dismiss={dismiss} data-bench-case={dismiss}>
         <form>
-          <p>Dismiss: {dismiss}</p>
+          <Heading element="h2" text={`Dismiss: ${dismiss}`} data-channel="title" />
           <ActionButton data-channel="close" value={`closed-${dismiss}`}>Close</ActionButton>
           {/* a bare button in a form is a submit button: the channel must refuse the submit */}
           <button data-channel="close" value="bare" data-bench-close="bare">Close (bare button)</button>
@@ -35,18 +44,52 @@ const cases = modal.axes.dismiss.values;
     Open nested
   </ActionButton>
   <Modal id="modal-nested" data-bench-case="nested">
+    <Heading element="h2" text="Nested" data-channel="title" />
     <div class="bench-grid">
       <div class="bench-card">
         <form>
-          <p>A close three layers down.</p>
+          <Text text="A close three layers down." />
           <ActionButton data-channel="close" value="deep" data-bench-close="deep">Close modal</ActionButton>
         </form>
       </div>
       <div class="bench-card" data-region data-bench-inner-region>
-        <p>A region inside the modal.</p>
+        <Heading element="h3" text="Inner region" data-channel="title" data-bench-inner-title />
         <ActionButton emphasis="secondary" data-channel="close" value="inner" data-bench-close="inner">Close inner region</ActionButton>
       </div>
     </div>
+  </Modal>
+</div>
+
+<div class="bench-line">
+  <ActionButton emphasis="secondary" intent="destructive" command="show-modal" commandfor="modal-alert" data-bench-opener="alert">
+    Open alert
+  </ActionButton>
+  <Modal id="modal-alert" role="alertdialog" dismiss="none" data-bench-case="alert">
+    <Heading element="h2" text="Delete everything?" data-channel="title" />
+    <Text text={`Type “${PHRASE}” to unlock the button.`} data-channel="description" />
+    <input type="text" aria-label="Confirmation phrase" autofocus data-bench-gate data-phrase={PHRASE} />
+    <ActionButton intent="destructive" data-channel="close" value="confirmed" disabled data-bench-close="confirm">Delete</ActionButton>
+    <ActionButton emphasis="secondary" data-channel="close" value="cancelled" data-bench-close="cancel">Cancel</ActionButton>
+  </Modal>
+</div>
+
+<div class="bench-line">
+  <ActionButton emphasis="secondary" command="show-modal" commandfor="modal-label" data-bench-opener="label">
+    Open label
+  </ActionButton>
+  <Modal id="modal-label" label="Product video" data-bench-case="label">
+    <div class="bench-card">(a video player)</div>
+    <ActionButton emphasis="secondary" data-channel="close" value="closed">Close</ActionButton>
+  </Modal>
+</div>
+
+<div class="bench-line">
+  <ActionButton emphasis="secondary" command="show-modal" commandfor="modal-lang" data-bench-opener="lang">
+    Open lang
+  </ActionButton>
+  <Modal id="modal-lang" data-bench-case="lang">
+    <Heading element="h2" text="Välkommen tillbaka" lang="sv" data-channel="title" />
+    <ActionButton emphasis="secondary" data-channel="close" value="closed">Close</ActionButton>
   </Modal>
 </div>
 
@@ -55,6 +98,13 @@ const cases = modal.axes.dismiss.values;
   document.querySelector("[data-bench-inner-region]")?.addEventListener("region:close", (event) => {
     const region = event.currentTarget as HTMLElement;
     region.dataset.closedWith = (event as CustomEvent<{ returnValue: string }>).detail.returnValue;
+  });
+
+  // The alert's gate belongs to its content, not to the region (ADR-0029 §8).
+  const gate = document.querySelector<HTMLInputElement>("[data-bench-gate]");
+  const confirm = document.querySelector<HTMLButtonElement>('[data-bench-close="confirm"]');
+  gate?.addEventListener("input", () => {
+    if (confirm) confirm.disabled = gate.value !== gate.dataset.phrase;
   });
 </script>
 
