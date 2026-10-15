@@ -1,8 +1,9 @@
 // Regions and the channels their children speak through (ADR-0029). A region carries
-// data-region; the platform opens and closes a <dialog> region through invoker commands
-// (command + commandfor) and closes it by its closedby rule. This file fills in where the
-// platform is missing — both features are newer than the support contract (Chrome 109) —
-// so the markup is the same in every engine.
+// data-region; a child closes the region nearest above it through data-channel="close",
+// without knowing its id. The platform opens and closes a <dialog> region through invoker
+// commands (command + commandfor) and closes it by its closedby rule. This file fills in
+// where the platform is missing — both features are newer than the support contract
+// (Chrome 109) — so the markup is the same in every engine.
 //
 // Two pure functions, unit-tested without a DOM, and one install that listens on the
 // document. Listening on the document, not on each region, means a region or an opener
@@ -43,6 +44,24 @@ export function installRegionChannels(doc: Document = document): void {
 
   const win = doc.defaultView
   if (!win) return
+  // The close channel (ADR-0029 §5): any element marked data-channel="close" closes the
+  // region nearest above it, with its value as the returnValue. A button in a form is a
+  // submit button; the close replaces the submit. A region that is not a <dialog> has no
+  // close() and is told instead, through region:close, and closes itself its own way.
+  doc.addEventListener('click', (event) => {
+    const source = (event.target as Element | null)?.closest?.('[data-channel="close"]')
+    if (!source || source.matches(':disabled')) return
+    const region = source.closest('[data-region]')
+    if (!region) return
+    event.preventDefault()
+    const returnValue = source instanceof win.HTMLButtonElement ? source.value : ''
+    if (region instanceof win.HTMLDialogElement) {
+      if (region.open) region.close(returnValue)
+    } else {
+      region.dispatchEvent(new CustomEvent('region:close', { detail: { returnValue } }))
+    }
+  })
+
   const hasCommand = 'command' in win.HTMLButtonElement.prototype
   const hasClosedBy = 'closedBy' in win.HTMLDialogElement.prototype
 

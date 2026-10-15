@@ -49,7 +49,7 @@ channels, nearest-region ownership, zero strings, DOM over props, exit motion sc
 **Verification:** unit tests for the kernel resolution; `modal.e2e.test.js`; `pnpm test`
 **Dependencies:** 3 · **Scope:** M
 
-### Task 5: The close channel
+### Task 5: The close channel — DONE 2026-10-15
 **Description:** `data-channel="close"` on any descendant gets `command="close"` + `commandfor`
 from the kernel; the button's `value` is the `returnValue`.
 **Acceptance:**
