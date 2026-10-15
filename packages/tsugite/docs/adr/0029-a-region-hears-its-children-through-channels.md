@@ -100,6 +100,13 @@ describe it. Three constraints shape how:
      on the content — closes it. The platform's light dismiss needs a
      click outside the dialog's box, and a layer over the whole viewport
      has no outside, so the kernel does it in every engine.
+   - Focus on opening: the child decides with `autofocus`; without it the
+     modal takes focus itself, so it opens at its top and is announced by
+     its name. The platform cannot say both (`autofocus` on the dialog
+     beats the child's), so the kernel redirects the first focus into a
+     freshly opened region unless it landed on `[autofocus]`. Left to the
+     platform, a long content whose only button is at its end opened
+     scrolled to the bottom.
    *Amended 2026-10-15, while building:* the first text gave the modal
    placement and a box capped by the viewport. Placing a form on the
    middle four of the site's twelve columns showed that the box belongs to
