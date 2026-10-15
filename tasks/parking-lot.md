@@ -578,3 +578,14 @@ wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` a
   where native is missing, laying the floor out again. Open: is the jump from floor to
   masonry acceptable, or does the region refuse and stay on the floor? POC first, in
   HTML/CSS/JS outside the system.
+
+## From the modal build (2026-10-15)
+
+- **Closing more than the nearest region.** A modal inside a modal (avoided by design,
+  but someone will) with an "OK" that should close both. Today `close` reaches the
+  nearest region only (ADR-0029 §3), which is what keeps a picker's close from closing
+  the modal around it. Works now without anything new: the consumer listens for the
+  inner dialog's `close` event and closes the outer on its `returnValue`. A
+  `close-all` channel value would amend ADR-0029 — wait for a real case. Unknown, to
+  probe first: whether closing the outer dialog takes a still-open inner modal out of
+  the top layer, or leaves it rendered.
