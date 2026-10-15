@@ -58,12 +58,17 @@ describe it. Three constraints shape how:
      element has none).
    - `description` → the region's `aria-describedby`.
    - `close` → closes the nearest region; the element's `value` is the
-     `returnValue`. On a `<dialog>` the kernel writes `type="button"`,
-     `command="close"` and `commandfor`, so the platform does the work
-     where invoker commands exist; a feature-detected document-level
-     listener does it elsewhere and calls `preventDefault`. A region that
-     is not a `<dialog>` receives a `region:close` event (detail:
-     `{ returnValue }`) and closes itself its own way.
+     `returnValue`. One document-level listener hears it in every engine
+     and calls `preventDefault`, so a button in a form closes instead of
+     submitting. A `<dialog>` region is closed with `close(value)`; a
+     region that is not a `<dialog>` receives a `region:close` event
+     (detail: `{ returnValue }`) and closes itself its own way.
+     *Amended 2026-10-15, while building:* the first text had the kernel
+     write `command="close"` and `commandfor` onto the element so the
+     platform did the work. That needs a moment to write them — the
+     region's opening — which engines below the floor do not signal, and
+     a non-dialog region needs the listener anyway. One listener for every
+     region and every engine is the simpler truth.
    `title` and `description` are wired when the region opens. `close` is
    delegated, so a child mounted after opening is heard.
 
@@ -82,10 +87,31 @@ describe it. Three constraints shape how:
      for `none` and closes on a backdrop click for `any`.
    - `role = dialog | alertdialog` (default `dialog`), independent of
      `dismiss`: a consent banner cannot be dismissed and is not an alert.
-   - It owns placement, scroll (content scrolls inside; the page is
-     locked by `:root:has(dialog:modal)`), the box's cap against the
-     viewport, the backdrop, and the enter, exit and backdrop timelines.
+   - It is a transparent layer over the whole viewport with one slot in
+     the middle. It owns no box, no air and no placement: the content
+     draws its own surface and places itself — centred by default, at an
+     edge (a drawer, a banner), or on the site's grid. It owns the scroll
+     (the layer scrolls when the content is taller than the viewport; the
+     page is locked by `:root:has(dialog:modal)` in
+     `kernel/css/region.css`), the backdrop, and the enter, exit and
+     backdrop timelines.
    - It owns no grid. One slot takes any nested tree.
+   - Under `dismiss="any"`, a press and release on the layer itself — not
+     on the content — closes it. The platform's light dismiss needs a
+     click outside the dialog's box, and a layer over the whole viewport
+     has no outside, so the kernel does it in every engine.
+   - Focus on opening: the child decides with `autofocus`; without it the
+     modal takes focus itself, so it opens at its top and is announced by
+     its name. The platform cannot say both (`autofocus` on the dialog
+     beats the child's), so the kernel redirects the first focus into a
+     freshly opened region unless it landed on `[autofocus]`. Left to the
+     platform, a long content whose only button is at its end opened
+     scrolled to the bottom.
+   *Amended 2026-10-15, while building:* the first text gave the modal
+   placement and a box capped by the viewport. Placing a form on the
+   middle four of the site's twelve columns showed that the box belongs to
+   the content; a drawer and a banner are children at an edge, not
+   placements.
    - Enter motion uses `@starting-style`. Exit motion needs `overlay` and
      is Chromium-only; elsewhere the modal closes without exit motion. No
      JavaScript timeline.

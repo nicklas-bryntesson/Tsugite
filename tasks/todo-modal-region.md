@@ -38,7 +38,7 @@ channels, nearest-region ownership, zero strings, DOM over props, exit motion sc
 
 ## Phase 3 — The region, one vertical slice at a time
 
-### Task 4: Modal opens and closes
+### Task 4: Modal opens and closes — DONE 2026-10-15
 **Description:** `components/regions/Modal/` (Astro + CSS + attach script) and
 `kernel/js/region-channels.ts` with the feature-detected `command` fallback. `dismiss` prop with
 `request` default and the `closedby` fallback.
@@ -49,7 +49,7 @@ channels, nearest-region ownership, zero strings, DOM over props, exit motion sc
 **Verification:** unit tests for the kernel resolution; `modal.e2e.test.js`; `pnpm test`
 **Dependencies:** 3 · **Scope:** M
 
-### Task 5: The close channel
+### Task 5: The close channel — DONE 2026-10-15
 **Description:** `data-channel="close"` on any descendant gets `command="close"` + `commandfor`
 from the kernel; the button's `value` is the `returnValue`.
 **Acceptance:**
@@ -58,7 +58,7 @@ from the kernel; the button's `value` is the `returnValue`.
 **Verification:** e2e cases; unit test for nearest-region resolution
 **Dependencies:** 4 · **Scope:** S
 
-### Task 6: Title, description, label, role
+### Task 6: Title, description, label, role — DONE 2026-10-15
 **Description:** `title` → `aria-labelledby` (id generated if missing), `description` →
 `aria-describedby`, `label` prop → `aria-label`, `role` prop (`dialog` default). DevError when
 neither title nor label is present.
@@ -71,16 +71,14 @@ neither title nor label is present.
 
 ### Checkpoint B — the region works end to end without styling decisions
 
-### Task 7: Placement, scroll, viewport cap
-**Description:** Placement prop (closed set, e.g. `center | start | end | full`, confirmed in
-discussion first), inner scroll, page lock via `:root:has(dialog:modal)`.
-**Acceptance:**
-- [ ] Long content scrolls inside; the page behind does not move
-- [ ] The box never exceeds the viewport in any placement
-**Verification:** `writing-css` routine against `example.css`; e2e; manual on :4325
+### Task 7: The layer — DONE 2026-10-15 (revised in discussion)
+**Description:** Placement dropped: the modal is a transparent layer over the whole viewport
+with one slot in the middle; the content places itself. Inner scroll, page lock in
+`kernel/css/region.css`, light dismiss as a press on the layer. Use-case examples on the
+bench: signup on the middle four of twelve columns, long content, drawer, consent banner.
 **Dependencies:** 4 · **Scope:** S
 
-### Task 8: Backdrop and motion slots
+### Task 8: Backdrop and motion slots — DONE 2026-10-15 (plus the focus rule)
 **Description:** `--_mo-` slots for backdrop and the enter/exit/backdrop timelines;
 `@starting-style` enter; exit gated on `overlay`; reduced motion turns both off.
 **Acceptance:**

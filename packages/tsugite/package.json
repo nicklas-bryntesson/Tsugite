@@ -19,6 +19,7 @@
     "./Heading/*": "./components/primitives/typography/Heading/*",
     "./Input/*": "./components/primitives/fields/Input/*",
     "./ItemGrid/*": "./components/regions/ItemGrid/*",
+    "./Modal/*": "./components/regions/Modal/*",
     "./MonthField/*": "./components/primitives/fields/MonthField/*",
     "./MotionRegion/*": "./components/regions/MotionRegion/*",
     "./NavItem/*": "./components/primitives/NavItem/*",

@@ -1,0 +1,172 @@
+{
+  "$comment": "Modal — the contract as data. `children` is the default slot's presence, reported by the renderer. Always a dialog; dismiss is written as data-dismiss and as the platform's closedby; role as data-role, and as role only for an alert; data-region marks it a region (ADR-0029); label is written as aria-label. An id is required; empty renders nothing. The name check (a title channel or a label) needs the child markup and lives in modal-renderers.test.ts.",
+  "component": "Modal",
+  "cases": [
+    {
+      "name": "the default: Esc closes",
+      "input": {
+        "id": "m",
+        "children": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "dialog",
+        "className": "Modal",
+        "attrs": {
+          "id": "m",
+          "data-dismiss": "request",
+          "data-role": "dialog",
+          "closedby": "closerequest",
+          "data-region": ""
+        }
+      }
+    },
+    {
+      "name": "light dismiss",
+      "input": {
+        "id": "m",
+        "dismiss": "any",
+        "children": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "dialog",
+        "className": "Modal",
+        "attrs": {
+          "id": "m",
+          "data-dismiss": "any",
+          "data-role": "dialog",
+          "closedby": "any",
+          "data-region": ""
+        }
+      }
+    },
+    {
+      "name": "only its content closes it",
+      "input": {
+        "id": "m",
+        "dismiss": "none",
+        "children": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "dialog",
+        "className": "Modal",
+        "attrs": {
+          "id": "m",
+          "data-dismiss": "none",
+          "data-role": "dialog",
+          "closedby": "none",
+          "data-region": ""
+        }
+      }
+    },
+    {
+      "name": "an alert",
+      "input": {
+        "id": "m",
+        "role": "alertdialog",
+        "dismiss": "none",
+        "children": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "dialog",
+        "className": "Modal",
+        "attrs": {
+          "id": "m",
+          "data-dismiss": "none",
+          "data-role": "alertdialog",
+          "closedby": "none",
+          "role": "alertdialog",
+          "data-region": ""
+        }
+      }
+    },
+    {
+      "name": "a label names it",
+      "input": {
+        "id": "m",
+        "label": "Video",
+        "children": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "dialog",
+        "className": "Modal",
+        "attrs": {
+          "id": "m",
+          "aria-label": "Video",
+          "data-dismiss": "request",
+          "data-role": "dialog",
+          "closedby": "closerequest",
+          "data-region": ""
+        }
+      }
+    },
+    {
+      "name": "a role outside the set: refused",
+      "input": {
+        "id": "m",
+        "role": "menu",
+        "children": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid role \"menu\" — expected dialog | alertdialog"
+      }
+    },
+    {
+      "name": "the element is always a dialog",
+      "input": {
+        "id": "m",
+        "element": "div",
+        "children": true
+      },
+      "expect": {
+        "mode": "render",
+        "tag": "dialog",
+        "className": "Modal",
+        "attrs": {
+          "id": "m",
+          "data-dismiss": "request",
+          "data-role": "dialog",
+          "closedby": "closerequest",
+          "data-region": ""
+        }
+      }
+    },
+    {
+      "name": "no id: refused",
+      "input": {
+        "children": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "id is required — openers point at the modal with commandfor"
+      }
+    },
+    {
+      "name": "a dismiss outside the set: refused",
+      "input": {
+        "id": "m",
+        "dismiss": "never",
+        "children": true
+      },
+      "expect": {
+        "mode": "error",
+        "errorMessage": "invalid dismiss \"never\" — expected any | request | none"
+      }
+    },
+    {
+      "name": "nothing to host: suppressed",
+      "input": {
+        "id": "m",
+        "children": false
+      },
+      "expect": {
+        "mode": "suppress"
+      }
+    }
+  ]
+}
