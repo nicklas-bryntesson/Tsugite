@@ -50,6 +50,46 @@ Live plan. Deleted when the job's last PR merges; the decisions move to an ADR (
   `.browserslistrc` reaches Chrome 109 (see `ToggleTip.astro` header). Test against ToggleTip,
   a mega menu, and a popover inside a dialog. If it fails, the alternative is a region marker.
 
+## Spike results (2026-10-15)
+
+Run with Playwright 1.62.1: Chromium 151, Firefox 153, WebKit 26.5. All three are newer than the
+floor, so the fallback paths were forced on modern engines (attributes left off), not run on
+Chrome 109 or an older Safari.
+
+**Task 1 — platform probe.**
+- Holds in all three: `command="show-modal"` opens, `command="close"` closes with the button's
+  `value` as `returnValue`, Esc closes under `closerequest`, focus returns to the opener
+  (keyboard activation — WebKit does not focus a button on mouse click, as on macOS).
+- `closedby` fallbacks hold in all three: `cancel` + `preventDefault` keeps `none` open on
+  repeated Esc; a click whose target is the dialog and lies outside its box closes `any`.
+- WebKit 26.5 already has `closedby` (caniuse lists Safari as unsupported) — a release is coming.
+- `overlay`: Chromium only, as expected. `@starting-style` everywhere.
+- Scroll lock via `:root:has(dialog:modal) { overflow: hidden }` holds in all three when the
+  pointer is over the page. One WebKit run with the pointer at 0,0 scrolled; not reproduced, to
+  recheck in real Safari.
+- **Finding: a close button inside a `<form>` is a submit button.** Delegated click handling lets
+  the form submit (the page reloads). With `command` on a submit-type button nothing happens at
+  all — no submit, no close — in every engine. With `type="button"` it closes with the right
+  `returnValue`. So the kernel sets `type="button"` on a close channel (or the child must),
+  and the fallback path calls `preventDefault`.
+- **Finding: delegation covers late children.** A close channel mounted after `showModal()`
+  closes through one document-level listener. Close needs no observer; `title`/`description`
+  wiring still happens at open and must be re-checked for late mounts.
+
+**Task 2 — region-recognition stress test. `closest('dialog, [popover]')` FAILS.**
+- Every existing popup region in the package is a `div role="dialog"`: ToggleTip (rail, no
+  Popover API because of the Chrome 109 floor) and the DateField, TimeField, WeekField,
+  MonthField and DateTimeField pickers.
+- A picker inside a modal form is a likely case (a signup with a date). A close channel inside
+  the picker would find the Modal, not the picker, and close the wrong region.
+- A mega menu is usually an in-flow disclosure: neither dialog, popover nor `role="dialog"`.
+- A non-native region (a `div`) has no `close()`; the kernel cannot close it directly, so the
+  channel must reach it some other way (an event the region handles).
+- Alternatives for discussion: (a) widen the selector to native + ARIA
+  (`dialog, [popover], [role=dialog], [role=alertdialog]`) — covers every region in the package
+  today, still misses the mega menu; (b) a region marker of its own on any element that hears
+  channels — explicit, covers all cases, one more attribute in the field dictionary.
+
 ## Platform support (caniuse, 2026-10-15, against `defaults` → Chrome 109)
 
 | Feature | Chrome | Firefox | Safari | Consequence |

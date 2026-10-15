@@ -4,7 +4,7 @@ Task list for `plan-modal-region.md`. One task per PR unless noted. Deleted with
 
 ## Phase 1 — Spikes (fail fast)
 
-### Task 1: Platform probe page
+### Task 1: Platform probe page — DONE 2026-10-15 (results in the plan)
 **Description:** A throwaway HTML probe (not shipped) with a `<dialog>`, invoker commands,
 `closedby`, `@starting-style`, `overlay`, and the `:root:has(dialog:modal)` scroll lock. Run in
 Chromium, Firefox and WebKit via Playwright locally.
@@ -14,7 +14,7 @@ Chromium, Firefox and WebKit via Playwright locally.
 **Verification:** findings written into the plan's Platform/Risks sections
 **Dependencies:** none · **Scope:** S
 
-### Task 2: Region-recognition stress test
+### Task 2: Region-recognition stress test — DONE 2026-10-15: the rule fails, alternatives in the plan
 **Description:** Test `closest('dialog, [popover]')` against ToggleTip (rail, no Popover API), a
 mega-menu sketch, and a popover inside a dialog.
 **Acceptance:**
