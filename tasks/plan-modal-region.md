@@ -43,12 +43,13 @@ Live plan. Deleted when the job's last PR merges; the decisions move to an ADR (
   before first paint, a component that holds the storage key. A signup popup has no decision —
   its button opens it.
 
-## To stress-test before the ADR
+## Region recognition (settled after the stress test, 2026-10-15)
 
-- **A region = `closest('dialog, [popover]')`, no marker of its own.** Already under pressure:
-  ToggleTip is a rail variant *without* the Popover API, because Popover needs Chrome 114 and
-  `.browserslistrc` reaches Chrome 109 (see `ToggleTip.astro` header). Test against ToggleTip,
-  a mega menu, and a popover inside a dialog. If it fails, the alternative is a region marker.
+- **A region carries a marker of its own** (alternative (b) below). The native-only rule
+  `closest('dialog, [popover]')` failed: every popup region in the package is a
+  `div role="dialog"`, and a mega menu is neither. The kernel resolves a channel to
+  `closest('<marker>')`. Open: the marker's name, and how a non-native region (no `close()`)
+  hears `close`.
 
 ## Spike results (2026-10-15)
 
