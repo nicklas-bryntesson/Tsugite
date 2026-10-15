@@ -2,32 +2,18 @@
 import Modal from "tsugite/Modal/Modal.astro";
 import ActionButton from "tsugite/Button/ActionButton.astro";
 import Card from "tsugite/Card/Card.astro";
+import Surface from "tsugite/Surface/Surface.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import Text from "tsugite/Text/Text.astro";
-
-const sections = Array.from({ length: 16 }, (_, i) => i + 1);
 ---
-{/* Taller than the viewport: the layer scrolls, the page behind does not. Light dismiss
-    (dismiss="any"): a press on the layer around the sheet closes it. No autofocus in the
-    content, so the modal takes focus itself and opens at its top. */}
-<ActionButton emphasis="secondary" command="show-modal" commandfor="example-terms">Read the terms</ActionButton>
+<ActionButton emphasis="secondary" command="show-modal" commandfor="terms-of-use">Read the terms</ActionButton>
 
-<Modal id="example-terms" dismiss="any">
-  <Card elevation="md" class="example-terms">
-    <Heading element="h2" text="Terms" data-channel="title" />
-    {sections.map((n) => <Text text={`Section ${n}. Enough words to make the sheet taller than the window, so the layer scrolls and the page behind it stays where it was.`} />)}
-    <ActionButton data-channel="close" value="read">Done</ActionButton>
+<Modal id="terms-of-use" dismiss="any">
+  <Card padding="none" style="justify-self: center">
+    <Surface>
+      <Heading text="Terms" data-channel="title" />
+      {Array.from({ length: 20 }, (_, i) => <Text text={`Section ${i + 1}. Long enough to be taller than the window.`} />)}
+      <ActionButton data-channel="close" value="read">Done</ActionButton>
+    </Surface>
   </Card>
 </Modal>
-
-<style is:global>
-  .example-terms {
-    display: grid;
-    gap: var(--size-sm);
-    justify-self: center;
-    inline-size: min(36rem, 100% - 2 * var(--size-md));
-    margin-block: var(--size-xl);
-    padding: var(--size-lg);
-    background-color: var(--color-surface-page);
-  }
-</style>

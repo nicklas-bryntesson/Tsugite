@@ -604,3 +604,9 @@ wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` a
     short to scroll gains a gutter while a modal is open (`kernel/css/region.css`).
   - *The name check reads server-rendered markup* — a title added only by a client-only
     component is not seen, and the modal is refused (DevError).
+  - *Card and the ground* — Card is a frame on whatever ground lies under it; inside the
+    transparent modal there is none, so the docs examples put a Surface inside a Card
+    (`padding="none"` on the Card). Surface's padding is band-sized (`--size-2xl` block,
+    `--site-offset` inline), too much for a card. Open: Card paints the ground of the voice
+    it stands in (`--theme-surface`), and/or Card takes `theme`/`prominence` like Surface
+    (the same axis, ADR-0006 — no new vocabulary); or Surface gets a padding axis.

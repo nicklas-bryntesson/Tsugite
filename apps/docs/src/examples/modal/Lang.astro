@@ -2,29 +2,16 @@
 import Modal from "tsugite/Modal/Modal.astro";
 import ActionButton from "tsugite/Button/ActionButton.astro";
 import Card from "tsugite/Card/Card.astro";
+import Surface from "tsugite/Surface/Surface.astro";
 import Heading from "tsugite/Heading/Heading.astro";
-import Text from "tsugite/Text/Text.astro";
 ---
-{/* The modal owns no words. Its name is the child's title, so it keeps the title's lang —
-    a Swedish title on an English page is announced in Swedish. The label prop is the one
-    string the caller passes, in the page's language, for content with no visible title. */}
-<ActionButton emphasis="secondary" command="show-modal" commandfor="example-lang">Open in Swedish</ActionButton>
+<ActionButton emphasis="secondary" command="show-modal" commandfor="welcome">Open in Swedish</ActionButton>
 
-<Modal id="example-lang">
-  <Card elevation="md" class="example-lang" lang="sv">
-    <Heading element="h2" text="Välkommen tillbaka" data-channel="title" />
-    <Text text="Rubriken ger modalen dess namn, på rubrikens språk." data-channel="description" />
-    <ActionButton emphasis="secondary" data-channel="close" value="closed">Stäng</ActionButton>
+<Modal id="welcome">
+  <Card padding="none" style="justify-self: center" lang="sv">
+    <Surface>
+      <Heading text="Välkommen tillbaka" data-channel="title" />
+      <ActionButton data-channel="close" value="ok">Stäng</ActionButton>
+    </Surface>
   </Card>
 </Modal>
-
-<style is:global>
-  .example-lang {
-    display: grid;
-    gap: var(--size-md);
-    justify-self: center;
-    inline-size: min(28rem, 100% - 2 * var(--size-md));
-    padding: var(--size-lg);
-    background-color: var(--color-surface-page);
-  }
-</style>
