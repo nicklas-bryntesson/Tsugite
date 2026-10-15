@@ -5,12 +5,11 @@
 // where the platform is missing — both features are newer than the support contract
 // (Chrome 109) — so the markup is the same in every engine.
 //
-// Two pure functions, unit-tested without a DOM, one wiring step, and one install that
+// One pure function, unit-tested without a DOM, one wiring step, and one install that
 // listens on the document. Listening on the document, not on each region, means a region or
 // an opener mounted later by any framework is covered without being found first.
 //
 //   commandOf(command)              → what an invoker command asks a dialog to do
-//   isOutside(box, x, y)            → whether a click on a dialog landed on its backdrop
 //   wireRegion(region)              → title and description channels → aria-labelledby/-describedby
 //   installRegionChannels(doc)      → the channels and the fallbacks, once per document
 
@@ -19,18 +18,6 @@ export type DialogCommand = 'show-modal' | 'close'
 
 export function commandOf(command: string | null): DialogCommand | null {
   return command === 'show-modal' || command === 'close' ? command : null
-}
-
-export interface Box {
-  left: number
-  right: number
-  top: number
-  bottom: number
-}
-
-/** A click whose target is the dialog itself and that lies outside its box hit the backdrop. */
-export function isOutside(box: Box, x: number, y: number): boolean {
-  return x < box.left || x > box.right || y < box.top || y > box.bottom
 }
 
 declare global {
@@ -118,6 +105,23 @@ export function installRegionChannels(doc: Document = document): void {
     })
   }
 
+  // closedby="any": a click on the layer itself — not on the content in it — closes. A modal
+  // region is a transparent layer over the whole viewport (ADR-0029 §7), so the platform's
+  // light dismiss, which needs a click outside the dialog's box, never fires; this does, in
+  // every engine. The press must start on the layer too: a text selection dragged out of
+  // the content ends in a click on the layer and must not close it.
+  let pressedOnLayer: EventTarget | null = null
+  doc.addEventListener('pointerdown', (event) => {
+    pressedOnLayer = event.target instanceof win.HTMLDialogElement ? event.target : null
+  })
+  doc.addEventListener('click', (event) => {
+    const dialog = event.target
+    const pressed = pressedOnLayer
+    pressedOnLayer = null
+    if (!(dialog instanceof win.HTMLDialogElement) || !dialog.open || pressed !== dialog) return
+    if (dialog.getAttribute('closedby') === 'any') dialog.close()
+  })
+
   if (!hasClosedBy) {
     // closedby="none": Esc is a close request the dialog refuses.
     doc.addEventListener(
@@ -128,13 +132,5 @@ export function installRegionChannels(doc: Document = document): void {
       },
       true,
     )
-    // closedby="any": a click on the backdrop closes. The backdrop belongs to the dialog,
-    // so the event's target is the dialog and the point lies outside its box.
-    doc.addEventListener('click', (event) => {
-      const dialog = event.target
-      if (!(dialog instanceof win.HTMLDialogElement) || !dialog.open) return
-      if (dialog.getAttribute('closedby') !== 'any') return
-      if (isOutside(dialog.getBoundingClientRect(), event.clientX, event.clientY)) dialog.close()
-    })
   }
 }

@@ -5,6 +5,8 @@
 // file renders it in Astro. kernel/js/region-channels.ts fills in invoker commands and
 // closedby where the engine lacks them, wires the title and description channels, and
 // hears the close channel.
+import "./Modal.css";
+import "../../../kernel/css/region.css";
 import DevError from "../../DevError/DevError.astro";
 import { modal } from "../../../recipes/modal.recipe";
 import { resolve, type InputOf } from "../../../lib/recipe";

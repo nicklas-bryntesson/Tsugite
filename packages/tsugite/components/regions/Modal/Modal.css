@@ -1,0 +1,45 @@
+/*
+ * Modal — a transparent layer over the whole viewport with one slot in the middle
+ * (ADR-0029 §7). It owns no box, no air and no placement: the content draws its own
+ * surface and places itself — centred by default, or at an edge, or on the site's grid.
+ * The layer scrolls when the content is taller than the viewport; the page behind is
+ * locked by the kernel (kernel/css/region.css).
+ *
+ * Gates over one base:
+ *   [open]   the layer is laid out only while it is open; closed, the engine hides it.
+ *
+ * The recipe's two axes have no gates here, on purpose: data-dismiss is read by the
+ * platform and the kernel through closedby, data-role by the accessibility tree. Neither
+ * draws anything.
+ */
+
+.Modal {
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+  max-block-size: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* The layer and the locked page reserve the same gutter, so a grid inside lines up
+     with the grid behind it. */
+  scrollbar-gutter: stable;
+
+  /* Author display beats the engine's dialog:not([open]) { display: none }, so the
+     layout is gated on the open state rather than declared in the base. One row, never
+     shorter than its content and stretched to the layer's height when the content is
+     shorter — so a child is centred while it fits and starts at the top, scrolling, when
+     it does not. A plain auto row is not enough: a child that clips (a Card, overflow:
+     hidden) contributes no minimum, and the row would stop at the layer's height. A child may align itself to an edge instead
+     (align-self, justify-self): a drawer, a banner. */
+  &[open] {
+    display: grid;
+    grid-template-rows: minmax(max-content, auto);
+    align-items: center;
+  }
+}

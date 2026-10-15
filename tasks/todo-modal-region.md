@@ -71,13 +71,11 @@ neither title nor label is present.
 
 ### Checkpoint B — the region works end to end without styling decisions
 
-### Task 7: Placement, scroll, viewport cap
-**Description:** Placement prop (closed set, e.g. `center | start | end | full`, confirmed in
-discussion first), inner scroll, page lock via `:root:has(dialog:modal)`.
-**Acceptance:**
-- [ ] Long content scrolls inside; the page behind does not move
-- [ ] The box never exceeds the viewport in any placement
-**Verification:** `writing-css` routine against `example.css`; e2e; manual on :4325
+### Task 7: The layer — DONE 2026-10-15 (revised in discussion)
+**Description:** Placement dropped: the modal is a transparent layer over the whole viewport
+with one slot in the middle; the content places itself. Inner scroll, page lock in
+`kernel/css/region.css`, light dismiss as a press on the layer. Use-case examples on the
+bench: signup on the middle four of twelve columns, long content, drawer, consent banner.
 **Dependencies:** 4 · **Scope:** S
 
 ### Task 8: Backdrop and motion slots

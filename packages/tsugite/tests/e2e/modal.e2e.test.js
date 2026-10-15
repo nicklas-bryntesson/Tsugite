@@ -137,7 +137,85 @@ test.describe('names and descriptions', () => {
   })
 })
 
-for (const name of ['request', 'alert', 'label']) {
+test.describe('the layer holds real shapes', () => {
+  const box = (locator) => locator.evaluate((el) => {
+    const r = el.getBoundingClientRect()
+    return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height }
+  })
+
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 })
+    await page.goto(targetPath('/modal'))
+  })
+
+  test('the modal is a layer over the whole viewport, with no surface of its own', async ({ page }) => {
+    await open(page, 'request')
+    const layer = await box(page.locator('#modal-request'))
+    expect(layer).toMatchObject({ left: 0, top: 0, width: 1280, height: 800 })
+    const ground = await page.locator('#modal-request').evaluate((d) => getComputedStyle(d).backgroundColor)
+    expect(ground).toBe('rgba(0, 0, 0, 0)')
+  })
+
+  test('signup: the form stands on the middle four of twelve columns', async ({ page }) => {
+    await open(page, 'signup')
+    const layout = page.locator('#modal-signup .bench-layout')
+    const tracks = await layout.evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(' ').length)
+    expect(tracks).toBe(12)
+    const card = await box(page.locator('[data-bench-signup-card]'))
+    const grid = await box(layout)
+    // the middle four: as far from the grid's start as from its end
+    expect(Math.abs((card.left - grid.left) - (grid.right - card.right))).toBeLessThan(1)
+    expect(card.width).toBeLessThan(grid.width / 2)
+  })
+
+  test('long: the layer scrolls, the page behind it does not', async ({ page }) => {
+    await open(page, 'long')
+    const layer = page.locator('#modal-long')
+    expect(await layer.evaluate((d) => d.scrollHeight > d.clientHeight)).toBe(true)
+    // it opens at the top: the title took focus, not the button at the end
+    await expect(page.locator('[data-bench-long-title]')).toBeFocused()
+    expect(await layer.evaluate((d) => d.scrollTop)).toBe(0)
+    await page.mouse.move(640, 400)
+    await page.mouse.wheel(0, 600)
+    await expect.poll(() => layer.evaluate((d) => d.scrollTop)).toBeGreaterThan(0)
+    expect(await page.evaluate(() => scrollY)).toBe(0)
+    await page.locator('[data-bench-close="long"]').click()
+    expect(await isOpen(page, 'long')).toBe(false)
+  })
+
+  test('long: a text selection dragged out onto the layer does not close it', async ({ page }) => {
+    await open(page, 'long')
+    const text = await box(page.locator('#modal-long .Text').first())
+    await page.mouse.move(text.left + 10, text.top + 5)
+    await page.mouse.down()
+    await page.mouse.move(5, text.top + 5)
+    await page.mouse.up()
+    expect(await isOpen(page, 'long')).toBe(true)
+    await page.mouse.click(5, 5)
+    expect(await isOpen(page, 'long')).toBe(false)
+  })
+
+  test('drawer: a child at the inline end, the full height of the layer', async ({ page }) => {
+    await open(page, 'drawer')
+    const layer = await page.locator('#modal-drawer').evaluate((d) => ({ inner: d.clientWidth, height: d.clientHeight }))
+    const drawer = await box(page.locator('[data-bench-drawer]'))
+    expect(Math.abs(drawer.right - layer.inner)).toBeLessThan(1)
+    expect(Math.abs(drawer.height - layer.height)).toBeLessThan(1)
+  })
+
+  test('banner: at the block end, closed only by its own choice', async ({ page }) => {
+    await open(page, 'banner')
+    const banner = await box(page.locator('[data-bench-banner]'))
+    expect(banner.bottom).toBeGreaterThan(700)
+    await page.keyboard.press('Escape')
+    await page.mouse.click(5, 5)
+    expect(await isOpen(page, 'banner')).toBe(true)
+    await page.getByRole('button', { name: 'Accept' }).click()
+    expect(await page.locator('#modal-banner').evaluate((d) => d.returnValue)).toBe('accepted')
+  })
+})
+
+for (const name of ['request', 'alert', 'label', 'signup', 'drawer', 'banner']) {
   test(`an open modal passes axe: ${name}`, async ({ page }) => {
     await page.goto(targetPath('/modal'))
     await open(page, name)
