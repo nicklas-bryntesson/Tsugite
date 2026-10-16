@@ -63,6 +63,9 @@
     text-underline-offset: 0.12em;
   }
 
+  /* The size stops. --_hd-fontSize reads the instance's public level first (ADR-0005,
+     the custom level): an exception a composition owns, filled in its own range. Empty,
+     the stop answers. */
   &[data-voice="heading"] {
     font-family: var(--fontFamily-heading);
     font-weight: var(--fontWeight-heading);
@@ -70,32 +73,32 @@
     font-feature-settings: var(--fontFeatureSettings-heading);
 
     &[data-size="1"] {
-      --_hd-fontSize: var(--fontSize-h1);
+      --_hd-fontSize: var(--custom-heading-fontSize, var(--fontSize-h1));
       --_hd-lineLength: var(--lineLength-h1);
     }
 
     &[data-size="2"] {
-      --_hd-fontSize: var(--fontSize-h2);
+      --_hd-fontSize: var(--custom-heading-fontSize, var(--fontSize-h2));
       --_hd-lineLength: var(--lineLength-h2);
     }
 
     &[data-size="3"] {
-      --_hd-fontSize: var(--fontSize-h3);
+      --_hd-fontSize: var(--custom-heading-fontSize, var(--fontSize-h3));
       --_hd-lineLength: var(--lineLength-h3);
     }
 
     &[data-size="4"] {
-      --_hd-fontSize: var(--fontSize-h4);
+      --_hd-fontSize: var(--custom-heading-fontSize, var(--fontSize-h4));
       --_hd-lineLength: var(--lineLength-h4);
     }
 
     &[data-size="5"] {
-      --_hd-fontSize: var(--fontSize-h5);
+      --_hd-fontSize: var(--custom-heading-fontSize, var(--fontSize-h5));
       --_hd-lineLength: var(--lineLength-h5);
     }
 
     &[data-size="6"] {
-      --_hd-fontSize: var(--fontSize-h6);
+      --_hd-fontSize: var(--custom-heading-fontSize, var(--fontSize-h6));
       --_hd-lineLength: var(--lineLength-h6);
     }
   }
@@ -107,17 +110,17 @@
     font-feature-settings: var(--fontFeatureSettings-display);
 
     &[data-size="1"] {
-      --_hd-fontSize: var(--fontSize-display-1);
+      --_hd-fontSize: var(--custom-heading-fontSize, var(--fontSize-display-1));
       --_hd-lineLength: var(--lineLength-display-1);
     }
 
     &[data-size="2"] {
-      --_hd-fontSize: var(--fontSize-display-2);
+      --_hd-fontSize: var(--custom-heading-fontSize, var(--fontSize-display-2));
       --_hd-lineLength: var(--lineLength-display-2);
     }
 
     &[data-size="3"] {
-      --_hd-fontSize: var(--fontSize-display-3);
+      --_hd-fontSize: var(--custom-heading-fontSize, var(--fontSize-display-3));
       --_hd-lineLength: var(--lineLength-display-3);
     }
   }

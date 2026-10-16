@@ -126,29 +126,31 @@
   }
 
 
-  /* Sizes */
+  /* Sizes. Each slot reads the instance's public level first (ADR-0005, the custom
+     level): an exception a composition owns, filled in its own range. Empty, the stop
+     answers. */
   &[data-size="sm"] {
-    --_bt-iconSize:                    1.125rem;
-    --_bt-iconMargin:                  0.5rem;
-    --_bt-fontSize:                    var(--fontSize-button-small);
-    --_bt-paddingBlock:                var(--size-sm);
-    --_bt-paddingInline:               1.4em;
+    --_bt-iconSize:                    var(--custom-button-iconSize, 1.125rem);
+    --_bt-iconMargin:                  var(--custom-button-iconMargin, 0.5rem);
+    --_bt-fontSize:                    var(--custom-button-fontSize, var(--fontSize-button-small));
+    --_bt-paddingBlock:                var(--custom-button-paddingBlock, var(--size-sm));
+    --_bt-paddingInline:               var(--custom-button-paddingInline, 1.4em);
   }
 
   &[data-size="md"] {
-    --_bt-iconSize:                    1.5rem;
-    --_bt-iconMargin:                  0.75rem;
-    --_bt-fontSize:                    var(--fontSize-button);
-    --_bt-paddingBlock:                var(--size-sm);
-    --_bt-paddingInline:               1.4em;
+    --_bt-iconSize:                    var(--custom-button-iconSize, 1.5rem);
+    --_bt-iconMargin:                  var(--custom-button-iconMargin, 0.75rem);
+    --_bt-fontSize:                    var(--custom-button-fontSize, var(--fontSize-button));
+    --_bt-paddingBlock:                var(--custom-button-paddingBlock, var(--size-sm));
+    --_bt-paddingInline:               var(--custom-button-paddingInline, 1.4em);
   }
 
   &[data-size="lg"] {
-    --_bt-iconSize:                    1.75rem;
-    --_bt-iconMargin:                  1rem;
-    --_bt-fontSize:                    var(--fontSize-button-large);
-    --_bt-paddingBlock:                0.8em;
-    --_bt-paddingInline:               1.6em;
+    --_bt-iconSize:                    var(--custom-button-iconSize, 1.75rem);
+    --_bt-iconMargin:                  var(--custom-button-iconMargin, 1rem);
+    --_bt-fontSize:                    var(--custom-button-fontSize, var(--fontSize-button-large));
+    --_bt-paddingBlock:                var(--custom-button-paddingBlock, 0.8em);
+    --_bt-paddingInline:               var(--custom-button-paddingInline, 1.6em);
   }
 
   /* Emphasis */
