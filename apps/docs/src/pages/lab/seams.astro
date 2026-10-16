@@ -1,0 +1,191 @@
+---
+// /lab/seams — the seams lab (packages/tsugite/docs/seams.md, Plan §1). Each case renders
+// the system as it is today and shows its cables: what each element reads, and where it
+// was filled. Nothing here changes the system; the cases show the problem before any answer.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import Text from "tsugite/Text/Text.astro";
+import LinkButton from "tsugite/Button/LinkButton.astro";
+import Card from "tsugite/Card/Card.astro";
+import Surface from "tsugite/Surface/Surface.astro";
+
+const voices = ["brand", "neutral", "accent"];
+const rowsOfCase1 = [
+  { elevation: "none", title: "As on Home", lead: "Card padding none, no elevation, a Surface inside carrying the voice at subtle volume." },
+  { elevation: "md", title: "The same cards with elevation md", lead: "The shadow belongs to the Card. The voice lives on the Surface inside it, so the shadow cannot read it." },
+  { elevation: "md", base: { theme: "neutral", prominence: "subtle" }, title: "On a neutral · subtle ground", lead: "A Surface under the cards as well. The Card now inherits the ground's voice, yet its shadow is the same black, and a neutral card on neutral · subtle is the ground's own colour." },
+  { elevation: "md", base: { theme: "brand", prominence: "primary" }, title: "On a brand · primary ground", lead: "Every nesting renders. Nothing decides whether an accent card may stand on brand · primary — there is no nesting rule to break." },
+];
+---
+
+<Layout title="Seams lab">
+  <main class="Main SeamsLab">
+    <header class="lab-head">
+      <Heading element="h1" size="2" text="Seams lab" />
+      <Text text="Each case renders the system as it is today. The panel under each element lists what it reads, measured in the browser." />
+    </header>
+
+    <section class="lab-case" id="case-1">
+      <Heading element="h2" size="3" text="Case 1 — Home's three coloured cards" />
+      <Text text="Card → Surface (voice · subtle) → content. The ground lives inside the card." />
+
+      {rowsOfCase1.map(({ elevation, base, title, lead }) => (
+        <div class="lab-row">
+          <Heading element="h3" size="5" text={title} />
+          <Text text={lead} />
+          {base ? (
+            <Surface theme={base.theme} prominence={base.prominence} capInline={false} data-cable="base">
+              <div class="lab-cards">
+                {voices.map((voice) => (
+                  <div class="lab-specimen">
+                    <Card padding="none" elevation={elevation} data-cable="card">
+                      <Surface theme={voice} prominence="subtle" capInline={false} class="lab-card-ground" data-cable="surface">
+                        <div class="lab-card-body">
+                          <Heading element="h4" size="5" text={`${voice} · subtle on ${base.theme} · ${base.prominence}`} />
+                          <Text text="Two claims: the ground under the card, and the voice inside it." />
+                          <LinkButton href="#case-1" size="md" emphasis="primary">Read on</LinkButton>
+                        </div>
+                      </Surface>
+                    </Card>
+                    <dl class="lab-cables" data-cables></dl>
+                  </div>
+                ))}
+              </div>
+            </Surface>
+          ) : (
+          <div class="lab-cards">
+            {voices.map((voice) => (
+              <div class="lab-specimen">
+                <Card padding="none" elevation={elevation} data-cable="card">
+                  <Surface theme={voice} prominence="subtle" capInline={false} class="lab-card-ground" data-cable="surface">
+                    <div class="lab-card-body">
+                      <Heading element="h4" size="5" text={`${voice} · subtle`} />
+                      <Text text="The voice is claimed here, one level inside the card." />
+                      <LinkButton href="#case-1" size="md" emphasis="primary">Read on</LinkButton>
+                    </div>
+                  </Surface>
+                </Card>
+                <dl class="lab-cables" data-cables></dl>
+              </div>
+            ))}
+          </div>
+          )}
+        </div>
+      ))}
+    </section>
+  </main>
+</Layout>
+
+<script>
+  // The cable panel: for each specimen, read what the Card and its inner Surface resolve.
+  // An unset custom property reads as an empty string and is shown as "unset".
+  const read = (el: Element, prop: string) => {
+    const style = getComputedStyle(el);
+    const value = prop.startsWith("--") ? style.getPropertyValue(prop).trim() : style.getPropertyValue(prop);
+    return value || "unset";
+  };
+
+  const rows = (label: string, el: Element | null, props: string[]) =>
+    el
+      ? props.map((prop) => `<dt>${label} ${prop}</dt><dd>${read(el, prop)}</dd>`).join("")
+      : "";
+
+  const fill = () => {
+    for (const specimen of document.querySelectorAll(".lab-specimen")) {
+      const base = specimen.closest('[data-cable="base"]');
+      const card = specimen.querySelector('[data-cable="card"]');
+      const surface = specimen.querySelector('[data-cable="surface"]');
+      const panel = specimen.querySelector("[data-cables]");
+      if (!panel) continue;
+      panel.innerHTML =
+        rows("Ground", base, ["--theme-surface"]) +
+        rows("Card", card, ["--theme-surface", "background-color", "box-shadow"]) +
+        rows("Surface", surface, ["--theme-surface", "background-color"]);
+    }
+  };
+
+  fill();
+  // The appearance can change under the page (ThemeSwitch, OS); read again when it does.
+  new MutationObserver(fill).observe(document.documentElement, { attributes: true, attributeFilter: ["data-appearance"] });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", fill);
+  matchMedia("(prefers-contrast: more)").addEventListener("change", fill);
+</script>
+
+<style>
+  .SeamsLab {
+    display: grid;
+    gap: var(--size-2xl);
+    padding-block: var(--size-2xl);
+
+    & .lab-head,
+    & .lab-case {
+      display: grid;
+      gap: var(--size-md);
+    }
+
+    & .lab-row {
+      display: grid;
+      gap: var(--size-sm);
+      padding-block-start: var(--size-lg);
+    }
+
+    & .lab-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+      gap: var(--size-lg);
+    }
+
+    & .lab-specimen {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: var(--size-sm);
+    }
+
+    /* The same reach Home makes into Surface: its private padding slots and its .content
+       part. It is reproduced on purpose, because it is one of the cables this case shows. */
+    & .lab-card-ground {
+      --_sf-paddingBlock: var(--size-lg);
+      --_sf-paddingInline: var(--size-lg);
+
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      & > .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    & .lab-card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-md);
+      align-items: flex-start;
+
+      & > .Button {
+        margin-block-start: auto;
+      }
+    }
+
+    & .lab-cables {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: var(--size-xs) var(--size-sm);
+      margin: 0;
+      font-family: ui-monospace, monospace;
+      font-size: var(--fontSize-label-small);
+
+      & dt {
+        color: var(--color-text-secondary);
+      }
+
+      & dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+      }
+    }
+  }
+</style>
