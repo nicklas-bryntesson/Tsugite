@@ -171,7 +171,7 @@ const turnsOfCase4 = [
               <div class="lab-specimen" data-expect-light={expect.light[i]} data-expect-dark={expect.dark[i]}>
                 <div class="lab-range" data-width={width}>
                   <div class={`lab-cover lab-cover-${turn}`} data-theme={turn === "static" ? "inverse" : undefined}>
-                    <Heading element="h4" size="3" text="Tsugite" data-contrast="Heading" />
+                    <Heading element="h4" size="3" text={width === "narrow" ? "Stacked: on the page" : "Overlay: on the media"} data-contrast="Heading" />
                     <Text text="Pieces meet through contracts that fit exactly." data-contrast="Text" />
                     <div class="lab-cover-actions">
                       <LinkButton href="#case-4" size="md" emphasis="primary" data-contrast="Button primary">Explore</LinkButton>
