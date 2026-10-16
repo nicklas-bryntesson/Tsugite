@@ -35,10 +35,10 @@ const framesOfCase3 = [
   { ink: "voice", title: "The voice's own ink: --theme-text at 10%", lead: "Each voice frames with its own text colour. Where the text is light, the frame lifts instead of sinking." },
 ];
 const turnsOfCase4 = [
-  { turn: "none", expect: { light: ["pass", "fail"], dark: ["pass", "pass"] }, title: "No claim", lead: "Default text and default buttons. In the narrow container that is the baseline; in the wide one the content lies on the dark media and nothing turns." },
-  { turn: "static", expect: { light: ["fail", "pass"], dark: ["pass", "pass"] }, title: "A static inverse claim (Cover today)", lead: "data-theme=\"inverse\" in the markup, in every width. Right on the media, wrong on the page: in the narrow container light ink stands on a light ground." },
-  { turn: "claim", expect: { light: ["pass", "fail"], dark: ["pass", "pass"] }, title: "The owner claims inverse from CSS, in its range", lead: "An attribute cannot change in a query, so the owner points the --theme-* channels at the voice cells itself. The cells exist only under [data-theme], so the pointers resolve to nothing and the semantic fallback answers." },
-  { turn: "reach", expect: { light: ["pass", "pass"], dark: ["pass", "pass"] }, title: "The owner reaches into the components (AiPoc's .Hero way)", lead: "In its range the owner sets color on itself and writes Button's private colour slots per emphasis and per state, with RAW values — white regardless of the global theme." },
+  { turn: "none", expect: { light: ["pass", "fail"], dark: ["pass", "pass"] }, title: "No claim", lead: "Default text and default buttons. On the page that is the baseline; on the media nothing turns." },
+  { turn: "static", expect: { light: ["fail", "pass"], dark: ["pass", "pass"] }, title: "A static inverse claim (Cover today)", lead: "data-theme=\"inverse\" in the markup, on every ground. Right on the media, wrong on the page: there light ink stands on a light ground." },
+  { turn: "claim", expect: { light: ["pass", "fail"], dark: ["pass", "pass"] }, title: "The owner claims inverse from CSS, on the media", lead: "An attribute cannot change in a query, so the owner points the --theme-* channels at the voice cells itself. The cells exist only under [data-theme], so the pointers resolve to nothing and the semantic fallback answers." },
+  { turn: "reach", expect: { light: ["pass", "pass"], dark: ["pass", "pass"] }, title: "The owner reaches into the components (AiPoc's .Hero way)", lead: "On the media the owner sets color on itself and writes Button's private colour slots per emphasis and per state, with RAW values — white regardless of the global theme." },
 ];
 ---
 
@@ -160,18 +160,18 @@ const turnsOfCase4 = [
     </section>
     <section class="lab-case" id="case-4">
       <Heading element="h2" size="3" text="Case 4 — a composition turns colour over its point (Cover)" />
-      <Text text="Default text and buttons are the baseline. In the owner's range (30rem ≤ width < 60rem) the content lies on media it creates itself — here a dark ground standing in for media and scrim — and must turn light, in every state. The panels give each text's contrast against what is actually under it." />
+      <Text text="Default text and buttons are the baseline. Where the content lies on media the owner creates itself — here a dark ground standing in for media and scrim — it must turn light, in every state. In Cover the condition is its width; here it is a state the owner holds (--lab-ground: page | media, read by a style query), so both specimens can be the same size: this case is about the voice, not the width. The panels give each text's contrast against what is actually under it." />
 
       {turnsOfCase4.map(({ turn, expect, title, lead }) => (
         <div class="lab-row">
           <Heading element="h3" size="5" text={title} />
           <Text text={lead} />
           <div class="lab-ranges">
-            {["narrow", "wide"].map((width, i) => (
+            {["page", "media"].map((ground, i) => (
               <div class="lab-specimen" data-expect-light={expect.light[i]} data-expect-dark={expect.dark[i]}>
-                <div class="lab-range" data-width={width}>
+                <div class="lab-ground" data-ground={ground}>
                   <div class={`lab-cover lab-cover-${turn}`} data-theme={turn === "static" ? "inverse" : undefined}>
-                    <Heading element="h4" size="3" text={width === "narrow" ? "Stacked: on the page" : "Overlay: on the media"} data-contrast="Heading" />
+                    <Heading element="h4" size="3" text={ground === "page" ? "Stacked: on the page" : "Overlay: on the media"} data-contrast="Heading" />
                     <Text text="Pieces meet through contracts that fit exactly." data-contrast="Text" />
                     <div class="lab-cover-actions">
                       <LinkButton href="#case-4" size="md" emphasis="primary" data-contrast="Button primary">Explore</LinkButton>
@@ -453,7 +453,22 @@ const turnsOfCase4 = [
       gap: var(--size-sm);
     }
 
-    @container (30rem <= width < 60rem) {
+    & .lab-ground {
+      inline-size: 26rem;
+      max-inline-size: 100%;
+      padding: var(--size-md);
+      border: 1px dashed var(--color-border-default);
+
+      &[data-ground="page"] {
+        --lab-ground: page;
+      }
+
+      &[data-ground="media"] {
+        --lab-ground: media;
+      }
+    }
+
+    @container style(--lab-ground: media) {
       & .lab-cover {
         background-color: var(--COLOR-AI-90);
       }
