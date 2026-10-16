@@ -16,10 +16,27 @@ const rowsOfCase1 = [
   { elevation: "md", base: { theme: "neutral", prominence: "subtle" }, title: "On a neutral · subtle ground", lead: "A Surface under the cards as well. The Card now inherits the ground's voice, yet its shadow is the same black, and a neutral card on neutral · subtle is the ground's own colour." },
   { elevation: "md", base: { theme: "brand", prominence: "primary" }, title: "On a brand · primary ground", lead: "Every nesting renders. Nothing decides whether an accent card may stand on brand · primary — there is no nesting rule to break." },
 ];
+
+const turnsOfCase2 = [
+  { turn: "none", title: "No turn", lead: "The baseline: sm and size 4 in every width." },
+  { turn: "inherit", title: "The owner sets the private slots on itself", lead: "The owner writes --_bt-fontSize and --_hd-fontSize in its range. They inherit down — and lose, because each component sets its own slot on itself in its size gate." },
+  { turn: "reach", title: "The owner reaches into the components (AiPoc's .Hero way)", lead: "The owner selects .Button[data-size] and .Heading[data-size] inside itself and writes their private slots there. It works where its selector outranks the component's gate — a contest of specificity over private names." },
+];
+
+const groundsOfCase3 = [
+  { theme: "brand", prominence: "subtle" },
+  { theme: "neutral", prominence: "subtle" },
+  { theme: "accent", prominence: "subtle" },
+  { theme: "brand", prominence: "primary" },
+];
+const framesOfCase3 = [
+  { ink: "global", title: "One global ink: --color-text-primary at 10%", lead: "The same near-black on every ground, whatever voice it lies in." },
+  { ink: "voice", title: "The voice's own ink: --theme-text at 10%", lead: "Each voice frames with its own text colour. Where the text is light, the frame lifts instead of sinking." },
+];
 ---
 
 <Layout title="Seams lab">
-  <main class="Main SeamsLab">
+  <main class="Main SeamsLab grid-container">
     <header class="lab-head">
       <Heading element="h1" size="2" text="Seams lab" />
       <Text text="Each case renders the system as it is today. The panel under each element lists what it reads, measured in the browser." />
@@ -34,12 +51,12 @@ const rowsOfCase1 = [
           <Heading element="h3" size="5" text={title} />
           <Text text={lead} />
           {base ? (
-            <Surface theme={base.theme} prominence={base.prominence} capInline={false} data-cable="base">
+            <Surface theme={base.theme} prominence={base.prominence} capInline={false} data-cable="Ground" data-read="--theme-surface">
               <div class="lab-cards">
                 {voices.map((voice) => (
                   <div class="lab-specimen">
-                    <Card padding="none" elevation={elevation} data-cable="card">
-                      <Surface theme={voice} prominence="subtle" capInline={false} class="lab-card-ground" data-cable="surface">
+                    <Card padding="none" elevation={elevation} data-cable="Card" data-read="--theme-surface,background-color,box-shadow">
+                      <Surface theme={voice} prominence="subtle" capInline={false} class="lab-card-ground" data-cable="Surface" data-read="--theme-surface,background-color">
                         <div class="lab-card-body">
                           <Heading element="h4" size="5" text={`${voice} · subtle on ${base.theme} · ${base.prominence}`} />
                           <Text text="Two claims: the ground under the card, and the voice inside it." />
@@ -56,8 +73,8 @@ const rowsOfCase1 = [
           <div class="lab-cards">
             {voices.map((voice) => (
               <div class="lab-specimen">
-                <Card padding="none" elevation={elevation} data-cable="card">
-                  <Surface theme={voice} prominence="subtle" capInline={false} class="lab-card-ground" data-cable="surface">
+                <Card padding="none" elevation={elevation} data-cable="Card" data-read="--theme-surface,background-color,box-shadow">
+                  <Surface theme={voice} prominence="subtle" capInline={false} class="lab-card-ground" data-cable="Surface" data-read="--theme-surface,background-color">
                     <div class="lab-card-body">
                       <Heading element="h4" size="5" text={`${voice} · subtle`} />
                       <Text text="The voice is claimed here, one level inside the card." />
@@ -73,38 +90,125 @@ const rowsOfCase1 = [
         </div>
       ))}
     </section>
+
+    <section class="lab-case" id="case-2">
+      <Heading element="h2" size="3" text="Case 2 — a composition turns size in a range" />
+      <Text text="The owner holds a Heading size 4 and a Button sm. In its closed range (30rem ≤ width < 60rem) it wants them larger: Heading as h2, Button as lg. Each row is rendered twice, in a narrow and a wide container." />
+
+      {turnsOfCase2.map(({ turn, title, lead }) => (
+        <div class="lab-row">
+          <Heading element="h3" size="5" text={title} />
+          <Text text={lead} />
+          <div class="lab-ranges">
+            {["narrow", "wide"].map((width) => (
+              <div class="lab-specimen">
+                <div class="lab-range" data-width={width}>
+                  <div class={`lab-owner lab-turn-${turn}`} data-cable="Owner" data-read="--_bt-fontSize,--_hd-fontSize">
+                    <Heading element="h4" size="4" text={`${width} container`} data-cable="Heading" data-read="--_hd-fontSize" />
+                    <LinkButton href="#case-2" size="sm" emphasis="primary" data-cable="Button" data-read="--_bt-fontSize,padding-block-start">Read on</LinkButton>
+                  </div>
+                </div>
+                <dl class="lab-cables" data-cables></dl>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <section class="lab-case" id="case-3">
+      <Heading element="h2" size="3" text="Case 3 — a frame inside a card, made of transparency" />
+      <Text text="A frame drawn with 10% of an ink. The lab mixes it at runtime; a factory would precompute it per voice cell. Switch the appearance to see the other modes — the panels read again." />
+
+      {framesOfCase3.map(({ ink, title, lead }) => (
+        <div class="lab-row">
+          <Heading element="h3" size="5" text={title} />
+          <Text text={lead} />
+          <div class="lab-cards">
+            {groundsOfCase3.map(({ theme, prominence }) => (
+              <div class="lab-specimen">
+                <Card padding="none">
+                  <Surface theme={theme} prominence={prominence} capInline={false} class="lab-card-ground">
+                    <div class="lab-card-body">
+                      <Heading element="h4" size="5" text={`${theme} · ${prominence}`} />
+                      <div class={`lab-frame lab-frame-${ink}`} data-cable="Frame" data-read="background-color" data-contrast="Frame text">
+                        <Text text="Framed by transparency." />
+                        <LinkButton href="#case-3" size="sm" emphasis="primary">Read on</LinkButton>
+                      </div>
+                    </div>
+                  </Surface>
+                </Card>
+                <dl class="lab-cables" data-cables></dl>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
   </main>
 </Layout>
 
 <script>
-  // The cable panel: for each specimen, read what the Card and its inner Surface resolve.
+  // The cable panel: every element marked data-cable inside a specimen (and the ground the
+  // specimen stands on) lists the properties named in its data-read, measured in the browser.
   // An unset custom property reads as an empty string and is shown as "unset".
-  const read = (el: Element, prop: string) => {
-    const style = getComputedStyle(el);
-    const value = prop.startsWith("--") ? style.getPropertyValue(prop).trim() : style.getPropertyValue(prop);
-    return value || "unset";
-  };
+  const read = (el: Element, prop: string) => getComputedStyle(el).getPropertyValue(prop).trim() || "unset";
 
-  const rows = (label: string, el: Element | null, props: string[]) =>
-    el
-      ? props.map((prop) => `<dt>${label} ${prop}</dt><dd>${read(el, prop)}</dd>`).join("")
-      : "";
+  const rows = (el: Element) =>
+    (el.getAttribute("data-read") ?? "")
+      .split(",")
+      .map((prop) => `<dt>${el.getAttribute("data-cable")} ${prop}</dt><dd>${read(el, prop)}</dd>`)
+      .join("");
+
+  // Contrast as the eye gets it: paint every background from the first opaque ancestor up to
+  // the element onto a one-pixel canvas (translucent layers composite as they do on screen),
+  // then compare the element's text colour against the result (WCAG 2 ratio).
+  const ctx = document.createElement("canvas").getContext("2d", { willReadFrequently: true })!;
+  const pixel = (layers: string[]) => {
+    ctx.clearRect(0, 0, 1, 1);
+    for (const layer of layers) {
+      ctx.fillStyle = layer;
+      ctx.fillRect(0, 0, 1, 1);
+    }
+    return [...ctx.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+  };
+  const luminance = (rgb: number[]) => {
+    const [r, g, b] = rgb.map((c) => {
+      const s = c / 255;
+      return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const contrast = (el: Element) => {
+    const layers: string[] = [];
+    for (let node: Element | null = el; node; node = node.parentElement) {
+      const bg = getComputedStyle(node).backgroundColor;
+      if (bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") layers.unshift(bg);
+      ctx.fillStyle = bg;
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillRect(0, 0, 1, 1);
+      if (ctx.getImageData(0, 0, 1, 1).data[3] === 255) break;
+    }
+    const [a, b] = [luminance(pixel(layers)), luminance(pixel([...layers, getComputedStyle(el).color]))];
+    return ((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)).toFixed(2);
+  };
 
   const fill = () => {
     for (const specimen of document.querySelectorAll(".lab-specimen")) {
-      const base = specimen.closest('[data-cable="base"]');
-      const card = specimen.querySelector('[data-cable="card"]');
-      const surface = specimen.querySelector('[data-cable="surface"]');
       const panel = specimen.querySelector("[data-cables]");
       if (!panel) continue;
-      panel.innerHTML =
-        rows("Ground", base, ["--theme-surface"]) +
-        rows("Card", card, ["--theme-surface", "background-color", "box-shadow"]) +
-        rows("Surface", surface, ["--theme-surface", "background-color"]);
+      const ground = specimen.parentElement?.closest("[data-cable]");
+      const cables = [...(ground ? [ground] : []), ...specimen.querySelectorAll("[data-cable]")];
+      const ratios = [...specimen.querySelectorAll("[data-contrast]")]
+        .map((el) => `<dt>${el.getAttribute("data-contrast")} contrast</dt><dd>${contrast(el)} : 1</dd>`)
+        .join("");
+      panel.innerHTML = cables.map(rows).join("") + ratios;
     }
   };
 
   fill();
+  // A container query can change what an element reads without any attribute changing.
+  new ResizeObserver(fill).observe(document.body);
   // The appearance can change under the page (ThemeSwitch, OS); read again when it does.
   new MutationObserver(fill).observe(document.documentElement, { attributes: true, attributeFilter: ["data-appearance"] });
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", fill);
@@ -113,9 +217,7 @@ const rowsOfCase1 = [
 
 <style>
   .SeamsLab {
-    display: grid;
-    gap: var(--size-2xl);
-    padding-block: var(--size-2xl);
+    row-gap: var(--size-2xl);
 
     & .lab-head,
     & .lab-case {
@@ -170,6 +272,71 @@ const rowsOfCase1 = [
       }
     }
 
+    & .lab-ranges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-lg);
+      align-items: start;
+    }
+
+    & .lab-range {
+      container-type: inline-size;
+      max-inline-size: 100%;
+      padding: var(--size-md);
+      border: 1px dashed var(--color-border-default);
+
+      &[data-width="narrow"] {
+        inline-size: 16rem;
+      }
+
+      &[data-width="wide"] {
+        inline-size: 36rem;
+      }
+    }
+
+    & .lab-owner {
+      display: grid;
+      gap: var(--size-md);
+      justify-items: start;
+    }
+
+    /* The turns. Each lives in the owner's one closed range. */
+    @container (30rem <= width < 60rem) {
+      & .lab-turn-inherit {
+        --_bt-fontSize: var(--fontSize-button-large);
+        --_bt-paddingBlock: 0.8em;
+        --_hd-fontSize: var(--fontSize-h2);
+      }
+
+      & .lab-turn-reach {
+        & .Button[data-size] {
+          --_bt-fontSize: var(--fontSize-button-large);
+          --_bt-paddingBlock: 0.8em;
+        }
+
+        & .Heading[data-size] {
+          --_hd-fontSize: var(--fontSize-h2);
+        }
+      }
+    }
+
+    /* Runtime mixes, lab only: the factory would publish these per voice cell. */
+    & .lab-frame {
+      display: grid;
+      gap: var(--size-sm);
+      justify-items: start;
+      padding: var(--size-md);
+      border-radius: 0.5rem;
+    }
+
+    & .lab-frame-global {
+      background-color: color-mix(in oklab, var(--color-text-primary) 10%, transparent);
+    }
+
+    & .lab-frame-voice {
+      background-color: color-mix(in oklab, var(--theme-text, var(--color-text-primary)) 10%, transparent);
+    }
+
     & .lab-cables {
       display: grid;
       grid-template-columns: max-content 1fr;
@@ -179,7 +346,7 @@ const rowsOfCase1 = [
       font-size: var(--fontSize-label-small);
 
       & dt {
-        color: var(--color-text-secondary);
+        color: var(--theme-textMuted, var(--color-text-secondary));
       }
 
       & dd {

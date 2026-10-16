@@ -121,6 +121,37 @@ better: card and base share a voice, so the tone agrees.
 - Open: is a card's prominence absolute (a cell) or relative ("one step
   from the ground I stand on")?
 
+## Transparency inside a component (lab case 3)
+
+A frame inside a card, made of 10% of an ink: a way to set something apart
+inside a component without a voice of its own. (Prior art: Sveriges
+Lärare's near-black text colour in two transparent steps, about 6% and
+12%, for nested menu levels and boxes in cards.) Measured on brand,
+neutral and accent subtle, and on brand primary, in light and dark:
+
+- **A transparent frame goes towards the text of the ground it lies on.**
+  Text always contrasts with its ground, so its direction is always right:
+  the frame sinks on a light ground and lifts on a dark one, in every mode,
+  with no rule of its own. The ink is the voice's text (`--theme-text`),
+  never the global layer: `--color-text-primary` is the *page's* text, and
+  on a dark card (brand primary, light mode) it sinks the frame into the
+  ground until it nearly disappears. The voice's ink lifts it.
+- **Direction is solved; hue is not.** In light mode the three subtle
+  voices share the same near-black text, so the voice's ink and the global
+  ink are the same colour there. On beige the frame turns warm and fine; on
+  light blue it turns a muddy blue-grey. The text ink gives the right
+  direction, not the right hue on coloured light grounds. That would need
+  an ink with the voice's own hue.
+- **Contrast holds at 10%:** text in the frame measured 7.66–15.73 : 1.
+- **Where it lives:** a role per voice cell (alpha steps of the voice's
+  ink), built by the factory in all four modes, with the sRGB fallback
+  computed like every other colour. No runtime `color-mix`: the floor
+  (Chrome 109) lacks it. The lab mixes at runtime only to measure.
+- **Open:** the hue question; stacking depth (the build's WCAG check does
+  not know how deep layers stack — a depth cap, or the worst case
+  checked); and whether the contrast modes replace transparency with a
+  border.
+
 ## Facts (verified)
 
 1. **Custom properties inherit downward only.** A value resolved *inside*
