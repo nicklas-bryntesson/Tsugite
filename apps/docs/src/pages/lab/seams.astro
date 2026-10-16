@@ -21,6 +21,7 @@ const turnsOfCase2 = [
   { turn: "none", title: "No turn", lead: "The baseline: sm and size 4 in every width." },
   { turn: "inherit", title: "The owner sets the private slots on itself", lead: "The owner writes --_bt-fontSize and --_hd-fontSize in its range. They inherit down — and lose, because each component sets its own slot on itself in its size gate." },
   { turn: "reach", title: "The owner reaches into the components (AiPoc's .Hero way)", lead: "The owner selects .Button[data-size] and .Heading[data-size] inside itself and writes their private slots there. It works where its selector outranks the component's gate — a contest of specificity over private names." },
+  { turn: "public", title: "The owner fills the public level", lead: "Each size gate now reads --custom-button-* and --custom-heading-fontSize before its stop. The owner sets them on itself in its range; they inherit down and the gates take them. No selector reaches into a component, and nothing is private." },
 ];
 
 const groundsOfCase3 = [
@@ -95,6 +96,12 @@ const framesOfCase3 = [
       <Heading element="h2" size="3" text="Case 2 — a composition turns size in a range" />
       <Text text="The owner holds a Heading size 4 and a Button sm. In its closed range (30rem ≤ width < 60rem) it wants them larger: Heading as h2, Button as lg. Each row is rendered twice, in a narrow and a wide container." />
 
+      {/* The stops as the system gives them, outside any owner: what "no exception" measures against. */}
+      <div hidden data-stops>
+        <Heading element="h4" size="4" text="stop" />
+        <LinkButton href="#case-2" size="sm" emphasis="primary">stop</LinkButton>
+      </div>
+
       {turnsOfCase2.map(({ turn, title, lead }) => (
         <div class="lab-row">
           <Heading element="h3" size="5" text={title} />
@@ -103,12 +110,12 @@ const framesOfCase3 = [
             {["narrow", "wide"].map((width) => (
               <div class="lab-specimen">
                 <div class="lab-range" data-width={width}>
-                  <div class={`lab-owner lab-turn-${turn}`} data-cable="Owner" data-read="--_bt-fontSize,--_hd-fontSize">
-                    <Heading element="h4" size="4" text={`${width} container`} data-cable="Heading" data-read="--_hd-fontSize" />
-                    <LinkButton href="#case-2" size="sm" emphasis="primary" data-cable="Button" data-read="--_bt-fontSize,padding-block-start">Read on</LinkButton>
+                  <div class={`lab-owner lab-turn-${turn}`}>
+                    <Heading element="h4" size="4" text={`${width} container`} />
+                    <LinkButton href="#case-2" size="sm" emphasis="primary">Read on</LinkButton>
                   </div>
                 </div>
-                <dl class="lab-cables" data-cables></dl>
+                <dl class="lab-cables" data-diagnose></dl>
               </div>
             ))}
           </div>
@@ -151,8 +158,8 @@ const framesOfCase3 = [
 <script>
   // The cable panel: every element marked data-cable inside a specimen (and the ground the
   // specimen stands on) lists the properties named in its data-read, measured in the browser.
-  // An unset custom property reads as an empty string and is shown as "unset".
-  const read = (el: Element, prop: string) => getComputedStyle(el).getPropertyValue(prop).trim() || "unset";
+  // An unset custom property reads as an empty string and is shown as "not set".
+  const read = (el: Element, prop: string) => getComputedStyle(el).getPropertyValue(prop).trim() || "not set";
 
   const rows = (el: Element) =>
     (el.getAttribute("data-read") ?? "")
@@ -193,7 +200,40 @@ const framesOfCase3 = [
     return ((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)).toFixed(2);
   };
 
+  // Case 2: for each component, where its size came from — read on the owner (the public
+  // level and the private slot it may set on itself) and on the component (its slot),
+  // compared with the stop the same component has outside any owner.
+  const parts = [
+    { name: "Heading", root: ".Heading", leaf: ".text", slot: "--_hd-fontSize", level: "--custom-heading-fontSize" },
+    { name: "Button", root: ".Button", leaf: ".text", slot: "--_bt-fontSize", level: "--custom-button-fontSize" },
+  ];
+  const stops = document.querySelector("[data-stops]");
+  const source = (owner: Element, el: Element, stop: Element, part: (typeof parts)[number]) => {
+    const value = (node: Element, prop: string) => getComputedStyle(node).getPropertyValue(prop).trim();
+    if (value(owner, part.level)) return `public level: the owner fills ${part.level}. An owned exception, visible where it is made.`;
+    if (value(el, part.slot) !== value(stop, part.slot)) return `private slot written from outside. It works, but the owner shows nothing, and ${part.slot} is now a dependency.`;
+    if (value(owner, part.slot)) return `the owner set ${part.slot} on itself, and the component's own size gate overruled it.`;
+    return "no exception: the stop answers.";
+  };
+  const diagnose = () => {
+    if (!stops) return;
+    for (const panel of document.querySelectorAll("[data-diagnose]")) {
+      const owner = panel.closest(".lab-specimen")?.querySelector(".lab-owner");
+      if (!owner) continue;
+      panel.innerHTML = parts
+        .map((part) => {
+          const el = owner.querySelector(part.root);
+          const stop = stops.querySelector(part.root);
+          if (!el || !stop) return "";
+          const size = getComputedStyle(el.querySelector(part.leaf) ?? el).fontSize;
+          return `<dt>${part.name} ${size}</dt><dd>${source(owner, el, stop, part)}</dd>`;
+        })
+        .join("");
+    }
+  };
+
   const fill = () => {
+    diagnose();
     for (const specimen of document.querySelectorAll(".lab-specimen")) {
       const panel = specimen.querySelector("[data-cables]");
       if (!panel) continue;
@@ -317,6 +357,16 @@ const framesOfCase3 = [
         & .Heading[data-size] {
           --_hd-fontSize: var(--fontSize-h2);
         }
+      }
+
+      /* The lg stop's values, written out: the stops are not yet published as pointers. */
+      & .lab-turn-public {
+        --custom-button-iconSize: 1.75rem;
+        --custom-button-iconMargin: 1rem;
+        --custom-button-fontSize: var(--fontSize-button-large);
+        --custom-button-paddingBlock: 0.8em;
+        --custom-button-paddingInline: 1.6em;
+        --custom-heading-fontSize: var(--fontSize-h2);
       }
     }
 
