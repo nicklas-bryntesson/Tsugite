@@ -16,6 +16,8 @@ import Padding from "../../examples/card/Padding.astro";
 import paddingSrc from "../../examples/card/Padding.astro?raw";
 import Elevation from "../../examples/card/Elevation.astro";
 import elevationSrc from "../../examples/card/Elevation.astro?raw";
+import Ground from "../../examples/card/Ground.astro";
+import groundSrc from "../../examples/card/Ground.astro?raw";
 import Element from "../../examples/card/Element.astro";
 import elementSrc from "../../examples/card/Element.astro?raw";
 import Frame from "../../examples/card/Frame.astro";
@@ -41,8 +43,12 @@ const entry = entryFor("card");
       <Padding />
     </Example>
 
-    <Example id="elevation" title="Elevation" lead="Three steps of shadow. Every card states its depth: without the prop it carries data-elevation=&quot;none&quot;." source={elevationSrc} block>
+    <Example id="elevation" title="Elevation" lead="Three steps of shadow, in the ink of the ground the card lies on — here the page's. Every card states its depth: without the prop it carries data-elevation=&quot;none&quot;." source={elevationSrc} block>
       <Elevation />
+    </Example>
+
+    <Example id="ground" title="Elevation on a ground" lead="The shadow takes the tone of the ground it falls on. A Surface publishes its ground's shadow, precomputed by the colour factory for every voice and mode; the card casts it. A card that speaks another voice still casts its ground's." source={groundSrc} block>
+      <Ground />
     </Example>
 
     <Example id="element" title="Element" lead="The markup shape is independent of the look. Cards as list items: the list owns the flow, the card owns the frame." source={elementSrc} block>
