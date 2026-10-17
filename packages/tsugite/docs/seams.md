@@ -664,7 +664,10 @@ declaration per level, one seam each" can be held mechanically instead of
 by discipline. A freshness test guards it like every other generated
 file (hard rule 4).
 
-Open: what is the source table (per component, or one map for all), and
+Built for voice claims: a composition declares `claims` in its recipe and
+`engine/claims.js` writes the channel lines (ADR-0006 amendment;
+CoverComposition is the first consumer). Open: what is the source table for
+the other resolve maps (per component, or one map for all), and
 where does the lab live (the control room, or a `lab/` branch as with the
 grid playground)?
 
