@@ -60,6 +60,9 @@ function colorSection() {
     // computed by the factory from the page surface and the shadow recipe, not authored
     "--color-shadow-ground": "The page's shadow ink: what a card casts with no Surface above it (computed).",
     "--color-shadow-ground-soft": "The page's soft shadow ink, the tighter second layer (computed).",
+    "--shadow-glow-lightness": "The glow's lightness valve, a number: how much of the card's own lightness its glow keeps.",
+    "--shadow-glow-chroma": "The glow's chroma valve, a number: how much of the card's colour its glow keeps.",
+    "--shadow-glow-alpha": "The glow's alpha valve, a number: how strong the card's own tone is in its shadow.",
   };
   const rows = names.map((n) => [n, roles[n] ?? ""]);
   return [
@@ -205,7 +208,7 @@ function themeSection() {
     "",
     inlineList(channels) + ".",
     "",
-    `The last ${Object.keys(computedChannels).length} (${inlineList(Object.values(computedChannels))}) are computed by the factory from each voice's surface and the shadow recipe (theme-default/shadow.tokens.js), never authored per voice.`,
+    `The last ${Object.keys(computedChannels).length} (${inlineList(Object.values(computedChannels))}) are computed by the factory from each voice's surface and the shadow and glow recipes (theme-default/shadow.tokens.js), never authored per voice.`,
     "",
     voicePointerSection(),
     "",

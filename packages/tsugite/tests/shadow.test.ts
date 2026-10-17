@@ -2,9 +2,9 @@
 // by one recipe per mode, overridable per voice, precomputed at build.
 import { describe, it, expect } from "vitest";
 import { oklch } from "culori";
-import { shadowInk, validateShadowTint, generateThemesStylesheet, generateStylesheet } from "../engine/collector.js";
+import { shadowInk, validateShadowTint, generateThemesStylesheet, generateStylesheet, glowKnob } from "../engine/collector.js";
 import { resolveValue } from "../engine/color-engine.js";
-import { shadowTint, voiceShadowTint } from "../theme-default/shadow.tokens.js";
+import { shadowTint, voiceShadowTint, glowTint, voiceGlowTint } from "../theme-default/shadow.tokens.js";
 import { themeVoices } from "../theme-default/theme.voices.tokens.js";
 import { rawColorTokens } from "../theme-default/raw.color.tokens.js";
 
@@ -62,5 +62,24 @@ describe("shadow inks", () => {
     expect(themes).toContain("--theme-shadow: var(--theme-cell-primary-shadow);");
     expect(themes).toMatch(/--voice-inverse-primary-shadow: rgba\(/);
     expect(generateStylesheet()).toMatch(/--color-shadow-ground: rgba\(/);
+  });
+
+  it("the glow's valves are published per voice cell and for the page, and dark turns them down", () => {
+    const themes = generateThemesStylesheet();
+    expect(themes).toContain("--theme-glow-alpha: var(--theme-cell-primary-glowAlpha);");
+    expect(generateStylesheet()).toContain(`--shadow-glow-alpha: ${glowTint.alpha.light};`);
+    expect(glowTint.alpha.dark).toBeLessThan(glowTint.alpha.light);
+    expect(glowTint.alpha["light-contrast"]).toBe(0);
+  });
+
+  it("a voice's glow override wins for that voice only", () => {
+    Object.assign(voiceGlowTint, { accent: { alpha: { light: 0.1, dark: 0.1, "light-contrast": 0, "dark-contrast": 0 } } });
+    try {
+      expect(glowKnob("accent", "alpha", "light")).toBe("0.1");
+      expect(glowKnob("brand", "alpha", "light")).toBe(String(glowTint.alpha.light));
+      expect(() => validateShadowTint()).not.toThrow();
+    } finally {
+      delete (voiceGlowTint as Record<string, unknown>).accent;
+    }
   });
 });

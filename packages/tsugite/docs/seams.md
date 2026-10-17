@@ -193,11 +193,13 @@ black (today), tinted by the card's voice, tinted by the ground, and both
 `--ground-shadow` and `--ground-shadow-soft`, the inks the shadow factory
 precomputes from each voice cell's surface and the recipe in
 `theme-default/shadow.tokens.js`; Card's elevation reads them, with the page's
-ink as fallback. That is the first of two layers. **The intent is a mix:** the
-ground's ink and the card's own surface, each with intensity valves per mode
-(light and dark set separately). The second layer is not built: it needs the
-card to know its own surface — the card's surface slot with its resolve chain
-(`--_cd-surface: var(--custom-card-surface, var(--theme-surface, …))`).
+ink as fallback. **The shadow is a mix of two tones**, both built: the
+ground's ink, and a glow of the card's own surface. Card resolves its surface
+through a chain (`--_cd-surface-voice: var(--theme-surface, …)`, then
+`--_cd-surface: var(--custom-card-surface, …)`) and paints it; the glow mixes that
+surface at runtime through the voice's glow valves (`glowTint`, per mode and per
+voice), behind a support pair — the floor casts the ground's tone alone. A card
+whose voice lives on a Surface inside it still glows with its ground's tone.
 
 **As first described:** whoever paints a
 ground (Surface) always publishes it under a name of its own, e.g.

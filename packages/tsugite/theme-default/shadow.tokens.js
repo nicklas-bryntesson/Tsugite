@@ -28,3 +28,20 @@ export const SHADOW_SOFT_RATIO = 0.5;
 
 /** Per-voice overrides: { <voice>: { <knob>: t(…) } }. Empty: every voice takes the recipe. */
 export const voiceShadowTint = {};
+
+// THE GLOW — the shadow's second layer: the card's own surface mixed in. A card's surface is
+// known only at runtime (its resolve chain), so the glow is mixed in the browser by relative
+// colour, behind a support gate; the floor casts the ground's layer alone. The valves are the
+// same three knobs, per mode, published as numbers so the mix can read them; a voice may
+// override them, and a card reads the valves of the voice it speaks.
+
+/** The global glow valves. Lightness 1 keeps the card's own tone; dark mode turns chroma and
+    alpha down, since a coloured glow on a dark ground reads as coloured light. */
+export const glowTint = {
+  lightness: t(1, 1, 0, 0),
+  chroma: t(1, 0.5, 0, 0),
+  alpha: t(0.35, 0.25, 0, 0),
+};
+
+/** Per-voice glow overrides: { <voice>: { <knob>: t(…) } }. */
+export const voiceGlowTint = {};

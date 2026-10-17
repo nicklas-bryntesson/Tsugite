@@ -1,12 +1,13 @@
 /*
  * Card — a visual frame around other components. It owns a surface, a radius
- * and clipping, nothing about its content.
+ * and clipping, nothing about its content. The surface is the ground the card stands
+ * on unless the card claims a voice or an exception fills --custom-card-surface.
  *
  * Three gates over one base:
  *   data-border      a border, width and colour from the border tokens.
  *   data-padding     none | sm | md | lg, inset from the size scale.
- *   data-elevation   none | sm | md | lg, depth as shadow, in the ink of the ground the
- *                    card lies on (the Surface's snapshot, or the page's).
+ *   data-elevation   none | sm | md | lg, depth as shadow: two tones mixed, the ink of
+ *                    the ground the card lies on and a glow of the card's own surface.
  */
 
 .Card {
@@ -15,16 +16,27 @@
   --_cd-borderRadius: 0.5rem;
   /* TODO(token): the chain skips the theme layer; --ui-border exists as the seam. */
   --_cd-borderColor: var(--color-border-default);
-  /* The shadow's ink is the ground's, not the card's: a Surface publishes the shadow it
-     casts as a finished colour, so a card that claims a voice of its own still casts the
-     ground's (docs/seams.md, lab case 7). No Surface above: the page's ink. */
+  /* The surface, one seam per declaration (ADR-0008): the voice the card speaks — its own
+     claim, or the ground it stands on — then an exception's custom level (ADR-0005). */
+  --_cd-surface-voice:   var(--theme-surface, var(--color-surface-page));
+  --_cd-surface:         var(--custom-card-surface, var(--_cd-surface-voice));
+  /* The shadow's first tone is the ground's: a Surface publishes the shadow it casts as a
+     finished colour, so a card that claims a voice of its own still casts the ground's
+     (docs/seams.md, lab case 7). No Surface above: the page's ink. */
   --_cd-shadowColor:     var(--ground-shadow, var(--color-shadow-ground));
   --_cd-shadowColorSoft: var(--ground-shadow-soft, var(--color-shadow-ground-soft));
+  /* The second tone, the glow, is the card's own surface through the valves of the voice
+     it speaks (theme-default/shadow.tokens.js, per mode and per voice). */
+  --_cd-glowLightness:   var(--theme-glow-lightness, var(--shadow-glow-lightness));
+  --_cd-glowChroma:      var(--theme-glow-chroma, var(--shadow-glow-chroma));
+  --_cd-glowAlpha:       var(--theme-glow-alpha, var(--shadow-glow-alpha));
 
   overflow: hidden;
   display: flex;
   flex-direction: column;
   border-radius: var(--_cd-borderRadius);
+  background-color: var(--_cd-surface);
+  color: var(--theme-text, var(--color-text-primary));
 
   &[data-border="false"] {
     border: none;
@@ -53,16 +65,41 @@
     box-shadow: none;
   }
 
-  /* TODO(token): the shadow geometry (offsets and blurs) is raw; the inks are tokens. */
+  /* TODO(token): the shadow geometry (offsets and blurs) is raw; the inks are tokens.
+     The glow mixes the card's surface at runtime, which needs relative colour; the floor
+     (Chrome 109) casts the ground's tone alone. A pair, fallback first; the branch goes
+     wholesale when the floor moves (doctrine §5). */
   &[data-elevation="sm"] {
-    box-shadow: 0 1px 3px var(--_cd-shadowColor), 0 1px 2px var(--_cd-shadowColorSoft);
+    @supports not (color: oklch(from red l c h)) {
+      box-shadow: 0 1px 3px var(--_cd-shadowColor), 0 1px 2px var(--_cd-shadowColorSoft);
+    }
+
+    @supports (color: oklch(from red l c h)) {
+      box-shadow: 0 1px 3px var(--_cd-shadowColor), 0 1px 2px var(--_cd-shadowColorSoft), 0 6px 14px -4px var(--_cd-glow);
+    }
   }
 
   &[data-elevation="md"] {
-    box-shadow: 0 4px 12px var(--_cd-shadowColor), 0 1px 3px var(--_cd-shadowColorSoft);
+    @supports not (color: oklch(from red l c h)) {
+      box-shadow: 0 4px 12px var(--_cd-shadowColor), 0 1px 3px var(--_cd-shadowColorSoft);
+    }
+
+    @supports (color: oklch(from red l c h)) {
+      box-shadow: 0 4px 12px var(--_cd-shadowColor), 0 1px 3px var(--_cd-shadowColorSoft), 0 14px 32px -6px var(--_cd-glow);
+    }
   }
 
   &[data-elevation="lg"] {
-    box-shadow: 0 10px 24px var(--_cd-shadowColor), 0 4px 8px var(--_cd-shadowColorSoft);
+    @supports not (color: oklch(from red l c h)) {
+      box-shadow: 0 10px 24px var(--_cd-shadowColor), 0 4px 8px var(--_cd-shadowColorSoft);
+    }
+
+    @supports (color: oklch(from red l c h)) {
+      box-shadow: 0 10px 24px var(--_cd-shadowColor), 0 4px 8px var(--_cd-shadowColorSoft), 0 24px 48px -10px var(--_cd-glow);
+    }
+  }
+
+  @supports (color: oklch(from red l c h)) {
+    --_cd-glow: oklch(from var(--_cd-surface) calc(l * var(--_cd-glowLightness)) calc(c * var(--_cd-glowChroma)) h / var(--_cd-glowAlpha));
   }
 }
