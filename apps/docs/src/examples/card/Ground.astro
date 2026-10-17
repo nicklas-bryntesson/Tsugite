@@ -1,0 +1,32 @@
+---
+import Card from "tsugite/Card/Card.astro";
+import Surface from "tsugite/Surface/Surface.astro";
+import Text from "tsugite/Text/Text.astro";
+
+const grounds = [
+  { theme: "neutral", prominence: "subtle" },
+  { theme: "brand", prominence: "subtle" },
+  { theme: "accent", prominence: "subtle" },
+  { theme: "inverse", prominence: "primary" },
+];
+---
+{/* The card's ground is a Surface inside it, so the card itself takes the shadow of the
+    Surface it lies on. The last card speaks brand on a neutral ground and still casts
+    neutral's ink: the ground's shadow is resolved on the ground, and the card's own voice
+    cannot repaint it. */}
+{grounds.map(({ theme, prominence }) => (
+  <Surface theme={theme} prominence={prominence} capInline={false}>
+    <Card elevation="md" padding="none">
+      <Surface theme="neutral" prominence="primary" capInline={false}>
+        <Text text={`On ${theme} · ${prominence}: the shadow is this ground's ink.`} />
+      </Surface>
+    </Card>
+  </Surface>
+))}
+<Surface theme="neutral" prominence="subtle" capInline={false}>
+  <Card elevation="md" padding="none">
+    <Surface theme="brand" prominence="primary" capInline={false}>
+      <Text text="A brand card on neutral · subtle casts neutral's shadow, not its own." />
+    </Surface>
+  </Card>
+</Surface>
