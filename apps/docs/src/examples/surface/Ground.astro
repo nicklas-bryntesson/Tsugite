@@ -1,0 +1,18 @@
+---
+import Surface from "tsugite/Surface/Surface.astro";
+import Card from "tsugite/Card/Card.astro";
+import Text from "tsugite/Text/Text.astro";
+---
+{/* A Surface publishes the shadow it casts (--ground-shadow), resolved where it is painted.
+    A card lying on it casts that ink — even a card that speaks another voice — and mixes in
+    a glow of its own surface. The nearest Surface wins. */}
+<Surface theme="brand" prominence="subtle">
+  <Card elevation="md">
+    <Text text="On brand · subtle: brand's ink." />
+  </Card>
+</Surface>
+<Surface theme="accent" prominence="subtle">
+  <Card elevation="md" data-theme="neutral" data-prominence="primary">
+    <Text text="A neutral card on accent · subtle: accent's ink, and a glow of neutral." />
+  </Card>
+</Surface>

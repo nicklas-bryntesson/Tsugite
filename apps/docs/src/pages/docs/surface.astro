@@ -1,0 +1,63 @@
+---
+// /docs/surface — explicit page. Each example is one file under src/examples/surface/,
+// mounted twice (Figure + Code). The Surface fixture is mounted last as the bench.
+import Text from "tsugite/Text/Text.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import SurfaceSection from "tsugite/fixtures/SurfaceSection.astro";
+import Layout from "../../layouts/Layout.astro";
+import Example from "../../components/Example/Example.astro";
+import DocPage from "../../components/DocPage/DocPage.astro";
+import { entryFor } from "../../lib/manifest.ts";
+
+import Voices from "../../examples/surface/Voices.astro";
+import voicesSrc from "../../examples/surface/Voices.astro?raw";
+import Volume from "../../examples/surface/Volume.astro";
+import volumeSrc from "../../examples/surface/Volume.astro?raw";
+import Adjacency from "../../examples/surface/Adjacency.astro";
+import adjacencySrc from "../../examples/surface/Adjacency.astro?raw";
+import Ground from "../../examples/surface/Ground.astro";
+import groundSrc from "../../examples/surface/Ground.astro?raw";
+import Measure from "../../examples/surface/Measure.astro";
+import measureSrc from "../../examples/surface/Measure.astro?raw";
+import Law from "../../examples/surface/Law.astro";
+import lawSrc from "../../examples/surface/Law.astro?raw";
+
+const entry = entryFor("surface");
+---
+
+<Layout title={entry.title}>
+  <DocPage
+    entry={entry}
+    lead="A region that claims a voice for everything it hosts. theme says whose palette speaks, prominence how loud; the Surface paints the ground, sets the ink, owns the rhythm between grounds, and publishes the shadow its ground casts. Nothing inside it knows which voice it is in — every component reads the voice's channels."
+  >
+    <Example id="voices" title="Voice × volume" lead="Every pair the matrix allows. The same heading, text and button take each voice's ground, ink and button colours, in all four appearance modes." source={voicesSrc} block frame={false}>
+      <Voices />
+    </Example>
+
+    <Example id="volume" title="Volume without a voice" lead="prominence alone keeps the surrounding voice and changes only how loud it is." source={volumeSrc} frontmatter={false} block frame={false}>
+      <Volume />
+    </Example>
+
+    <Example id="adjacency" title="Equal neighbours are one ground" lead="Two Surfaces of the same voice and volume side by side read as one: the second drops its start padding. The rules are generated from the combination matrix, so no pair is left behind." source={adjacencySrc} frontmatter={false} block frame={false}>
+      <Adjacency />
+    </Example>
+
+    <Example id="ground" title="The ground's shadow" lead="A Surface publishes the shadow its ground casts, resolved where it is painted. A card on it casts that ink, even when the card speaks another voice, and mixes in a glow of its own surface." source={groundSrc} frontmatter={false} block frame={false}>
+      <Ground />
+    </Example>
+
+    <Example id="measure" title="The content measure" lead="The ground runs edge to edge; the content is held to the site's measure unless capInline is off (ADR-0015)." source={measureSrc} frontmatter={false} block frame={false}>
+      <Measure />
+    </Example>
+
+    <Example id="law" title="Only allowed pairs exist" lead="The combination law: inverse has no subtle volume. Asked for anyway, the Surface refuses in development rather than render a guess." source={lawSrc} frontmatter={false} block>
+      <Law />
+    </Example>
+
+    <section class="doc-bench" id="test-bench">
+      <Heading text="Test bench" element="h2" size="2" />
+      <div class="doc-note"><Text text="The Surface fixture, mounted unchanged." /></div>
+      <SurfaceSection />
+    </section>
+  </DocPage>
+</Layout>

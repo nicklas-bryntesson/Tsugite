@@ -1,0 +1,9 @@
+---
+import Surface from "tsugite/Surface/Surface.astro";
+import Text from "tsugite/Text/Text.astro";
+---
+{/* The combination law (ADR-0006 §6): only the pairs the matrix allows exist. inverse has
+    no subtle volume, so asking for it is refused in development. */}
+<Surface theme="inverse" prominence="subtle">
+  <Text text="Never shown." />
+</Surface>
