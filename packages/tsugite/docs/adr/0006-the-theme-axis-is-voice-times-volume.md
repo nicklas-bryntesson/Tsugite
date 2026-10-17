@@ -155,3 +155,22 @@ name of its own:
   combination cannot be claimed (the generator throws). CoverComposition is the
   first consumer: its static `data-theme="inverse"` is gone, and below its point
   the content stands on the page and claims nothing.
+
+## Amendment 2026-10-17 — computed channels: the shadow inks
+
+A voice cell may carry channels the factory computes instead of the table
+authoring them. They sit outside the slot schema (§5): a voice pays nothing for
+them, and a new voice gets them for free.
+
+- **`--theme-shadow` and `--theme-shadow-soft`** are the voice's surface tinted by
+  one shadow recipe (`theme-default/shadow.tokens.js`): lightness, chroma and alpha
+  per mode, the soft layer at half the alpha, the contrast modes at alpha 0. A
+  voice may override any knob in any mode, per voice (not per volume); the factory
+  takes the voice's value where it exists, the recipe's otherwise — the same
+  pattern as a voice's optional stop (ADR-0012 law b).
+- **Precomputed at build** by the colour engine (`tint`), emitted as sRGB literals
+  with alpha: the floor lacks relative colour and runtime mixing.
+- They are wired, celled and published as pointers like every channel, so a claim
+  (amended above) carries them too. The page's own inks are semantic tokens,
+  `--color-shadow-ground(-soft)`, computed from `--color-surface-page` by the same
+  recipe.

@@ -5,7 +5,8 @@
  * Three gates over one base:
  *   data-border      a border, width and colour from the border tokens.
  *   data-padding     none | sm | md | lg, inset from the size scale.
- *   data-elevation   none | sm | md | lg, depth as shadow.
+ *   data-elevation   none | sm | md | lg, depth as shadow, in the ink of the ground the
+ *                    card lies on (the Surface's snapshot, or the page's).
  */
 
 .Card {
@@ -14,6 +15,11 @@
   --_cd-borderRadius: 0.5rem;
   /* TODO(token): the chain skips the theme layer; --ui-border exists as the seam. */
   --_cd-borderColor: var(--color-border-default);
+  /* The shadow's ink is the ground's, not the card's: a Surface publishes the shadow it
+     casts as a finished colour, so a card that claims a voice of its own still casts the
+     ground's (docs/seams.md, lab case 7). No Surface above: the page's ink. */
+  --_cd-shadowColor:     var(--ground-shadow, var(--color-shadow-ground));
+  --_cd-shadowColorSoft: var(--ground-shadow-soft, var(--color-shadow-ground-soft));
 
   overflow: hidden;
   display: flex;
@@ -47,17 +53,16 @@
     box-shadow: none;
   }
 
-  /* TODO(token): shadows are raw oklch mixes in the component; they should resolve
-     to precomputed shadow tokens (--color-shadow-popup / --ui-shadow exist). */
+  /* TODO(token): the shadow geometry (offsets and blurs) is raw; the inks are tokens. */
   &[data-elevation="sm"] {
-    box-shadow: 0 1px 3px oklch(0 0 0 / 0.08), 0 1px 2px oklch(0 0 0 / 0.04);
+    box-shadow: 0 1px 3px var(--_cd-shadowColor), 0 1px 2px var(--_cd-shadowColorSoft);
   }
 
   &[data-elevation="md"] {
-    box-shadow: 0 4px 12px oklch(0 0 0 / 0.08), 0 1px 3px oklch(0 0 0 / 0.05);
+    box-shadow: 0 4px 12px var(--_cd-shadowColor), 0 1px 3px var(--_cd-shadowColorSoft);
   }
 
   &[data-elevation="lg"] {
-    box-shadow: 0 10px 24px oklch(0 0 0 / 0.1), 0 4px 8px oklch(0 0 0 / 0.06);
+    box-shadow: 0 10px 24px var(--_cd-shadowColor), 0 4px 8px var(--_cd-shadowColorSoft);
   }
 }

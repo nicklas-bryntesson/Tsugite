@@ -54,9 +54,10 @@ const instancesOfCase6 = [
   { kind: "colour", title: "A colour exception on the instance", style: "--theme-button-color-primary: var(--voice-accent-subtle-buttonColorPrimary); --theme-button-backgroundColor-primary: var(--voice-accent-subtle-buttonBackgroundColorPrimary); --theme-button-borderColor-primary: var(--voice-accent-subtle-buttonBorderColorPrimary); --theme-button-backgroundColor-primary-hover: var(--voice-accent-subtle-buttonBackgroundColorPrimaryHover);" },
 ];
 const shadowsOfCase7 = [
-  { shadow: "black", title: "Black shadow (today)", lead: "Card's own elevation md: the same black on every ground." },
+  { shadow: "black", title: "Black shadow (before the factory)", lead: "Card's elevation md as it was: the same black on every ground. Since the shadow factory this row renders the system's ink as well — see the system row." },
   { shadow: "card", title: "Tinted by the card's own voice", lead: "The claim sits on the Card, so the Card can read its own --theme-surface and darken it into the shadow." },
   { shadow: "ground", title: "Tinted by the ground it falls on", lead: "The claim on the Card rewrites every --theme-* channel there, so the ground's surface is gone on the Card. The ground publishes it under its own name instead (--lab-ground-surface: var(--theme-surface)); a custom property is resolved where it is declared, so the Card inherits the ground's colour, untouched by its own claim." },
+  { shadow: "system", title: "The system: Card's own elevation md, from the shadow factory", lead: "No lab mixing. The neutral · subtle Surface publishes --ground-shadow, precomputed by the factory from its surface and the shadow recipe; the Card's elevation reads it. The claimed card casts the ground's ink." },
   { shadow: "both", title: "Both: the ground's shadow and the card's glow", lead: "Craft's answer as two layers: a shadow tinted by the ground, a wider glow tinted by the card." },
 ];
 const cardsOfCase7 = ["brand", "accent"];
@@ -276,7 +277,7 @@ const volumesOfCase9 = [
             <div class="lab-cards">
               {cardsOfCase7.map((voice) => (
                 <div class="lab-specimen">
-                  <Card padding="md" elevation={shadow === "black" ? "md" : "none"} data-theme={voice} data-prominence="primary" class={`lab-claimed lab-tint-${shadow}`} data-cable="Card" data-read="--theme-surface,--lab-ground-surface,box-shadow">
+                  <Card padding="md" elevation={shadow === "black" || shadow === "system" ? "md" : "none"} data-theme={voice} data-prominence="primary" class={`lab-claimed lab-tint-${shadow}`} data-cable="Card" data-read="--theme-surface,--lab-ground-surface,box-shadow">
                     <div class="lab-claimed-body">
                       <Heading element="h4" size="5" text={`${voice} · primary`} />
                       <Text text="The claim is on the card." />
