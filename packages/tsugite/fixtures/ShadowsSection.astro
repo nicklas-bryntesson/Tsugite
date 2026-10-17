@@ -38,7 +38,9 @@ const label = (voice: string | null, volume: string | null) => (voice ? `${voice
   </Text>
 
   <Text text="The valves" element="h3" size="lg" />
-  <div class="shadows-valves">
+  {/* The table scrolls sideways on a narrow screen, so the region takes focus and a name:
+      a keyboard can scroll it too. */}
+  <div class="shadows-valves" role="region" aria-label="Shadow valves per mode" tabindex="0">
     <table>
       <caption><Caption size="sm" text={`Ground ink (soft layer at ${SHADOW_SOFT_RATIO} × alpha) · glow`} /></caption>
       <thead>
