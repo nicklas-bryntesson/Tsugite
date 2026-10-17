@@ -668,7 +668,26 @@ Open: what is the source table (per component, or one map for all), and
 where does the lab live (the control room, or a `lab/` branch as with the
 grid playground)?
 
-### 3. A future bench: size as one knob (parked)
+### 3. A consumer guide: how values reach the front end (later)
+
+The lab describes the seams by measuring them; a consumer needs them
+described as an API. When the answers settle, a guide (a docs page, not
+this draft) should say:
+- **how a value reaches the page** — table → factory → token → voice cell →
+  channel → component slot → property, and where each step is visible in
+  the inspector;
+- **what can be turned**, and by whom — the instance's custom level
+  (`--custom-*`), a composition's claim (channels pointed at `--voice-*`),
+  a voice's optional overrides in the theme;
+- **how one should turn it** — the recommended way per case, the ways the
+  lab showed to be wrong (reaching into private slots, RAW values, static
+  claims where the answer depends on context, colour without a ground), and
+  who answers for an exception.
+
+The lab page stays the evidence; the guide is the distilled form, refined as
+the open questions close.
+
+### 4. A future bench: size as one knob (parked)
 
 If every size slot in buttons and fields were in `em` (padding, icon size,
 icon margin), a size would be a single font-size stop and everything else
