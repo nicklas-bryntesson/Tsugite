@@ -159,6 +159,44 @@ neutral and accent subtle, and on brand primary, in light and dark:
   checked); and whether the contrast modes replace transparency with a
   border.
 
+## The ground as a snapshot (lab case 7)
+
+Open question 12 asked how a claimed card's shadow can read the base it
+falls on, when the claim rewrites every `--theme-*` channel on the card.
+The lab answers it without a `parentTheme` prop (Craft's cost):
+
+**`var()` is resolved on the element where the custom property is
+declared, and children inherit the finished value, not the expression.**
+
+1. The section (Surface, neutral · subtle) has its voice: there,
+   `--theme-surface` is neutral subtle's ground.
+2. The section declares `--lab-ground-surface: var(--theme-surface)`. The
+   browser resolves the `var()` right there and keeps the result,
+   `oklch(0.985 0.004 74)`. From then on it is a colour, not a reference.
+3. The card inherits that finished colour.
+4. The card's own claim (`data-theme="brand"`) rewrites `--theme-surface`
+   on the card, but nothing rewrites `--lab-ground-surface`. It stays the
+   ground's colour.
+5. The card's shadow reads `--lab-ground-surface` and takes the ground's
+   tone.
+
+A snapshot of the ground: the section takes the picture and passes it
+down; a claim can repaint itself but not the picture. (Had the card
+declared the name itself, the picture would have been taken on the card,
+showing its own colour.)
+
+Measured: a brand and an accent card on neutral · subtle, four ways —
+black (today), tinted by the card's voice, tinted by the ground, and both
+(a ground-tinted shadow plus a card-tinted glow: Craft's two layers).
+
+**As a system mechanism (direction, not decided):** whoever paints a
+ground (Surface) always publishes it under a name of its own, e.g.
+`--ground-surface`. Anything lying on the ground reads it, claimed or not.
+In nested grounds the nearest painter wins, so a shadow always reads the
+ground directly beneath it. The shadow colours themselves would be
+precomputed by the factory (the lab mixes them with relative colour,
+which the floor lacks).
+
 ## Facts (verified)
 
 1. **Custom properties inherit downward only.** A value resolved *inside*
@@ -620,4 +658,4 @@ ratios?
 9. Which components are a ground, and may claim at all?
 10. Is the nesting matrix brand data or a system rule?
 11. Is a card's prominence absolute or relative to its ground?
-12. How does a claimed card's shadow read the base it falls on?
+12. How does a claimed card's shadow read the base it falls on? (Answered in the lab: the ground as a snapshot, case 7.)
