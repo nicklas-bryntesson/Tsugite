@@ -102,3 +102,8 @@ colour, so a claimed card below still casts the ground's ink; the nearest Surfac
 wins (docs/seams.md, lab case 7). Card's elevation reads it with the page's ink as
 the one fallback. Surface stays the ground's only painter; it now also says which
 ground it is.
+
+This is the shadow's first layer. The intent is a mix of two tones — the ground's
+ink and the card's own surface (lab case 7, "both"), each with its own intensity per
+mode. The second layer needs the card to know its own surface, which it does not
+yet (docs/seams.md).
