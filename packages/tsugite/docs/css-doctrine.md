@@ -54,10 +54,13 @@ component slot (--_*) → theme claim (--theme-*) → semantic (--color-*) → R
 - Never skip a layer. Each layer references exactly the layer below it.
 - At most **one** fallback per expression, and only at a seam where
   absence is the contract, so that one declaration covers both worlds.
-  Two seams exist: the theme claim, `var(--theme-x, var(--color-y))` —
-  the donut is present or it is not — and a voice's optional stop,
+  Three seams exist: the theme claim, `var(--theme-x, var(--color-y))` —
+  the donut is present or it is not — a voice's optional stop,
   `var(--fontWeight-label-bold, var(--fontWeight-label))` (ADR-0012
-  law b) — the theme gives the stop or it does not. A chain may be five
+  law b) — the theme gives the stop or it does not — and the custom
+  level, `var(--custom-button-fontSize, var(--fontSize-button-small))`
+  (ADR-0005, ADR-0008 amendment 2026-10-17) — an exception has been
+  filled or it has not. A chain may be five
   hops deep; each hop is its own declaration in its own layer.
 - Nested defensive fallbacks — `var(--a, var(--b, var(--c, …)))` — are
   forbidden. A chain describes ownership, never guesswork.

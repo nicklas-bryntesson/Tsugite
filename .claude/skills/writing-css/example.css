@@ -56,9 +56,10 @@
      component slot → theme claim → semantic → RAW. The chain may be five hops deep, but
      each hop is its own declaration in its own layer, and one EXPRESSION holds at most
      one fallback — only at a seam where absence is the contract, so that the same
-     declaration covers both worlds. Two such seams exist: the theme claim (the donut is
-     present or it is not) and a voice's optional stop (the bold weight the theme may or
-     may not give, ADR-0012 law b). A fallback pyramid — var(--a, var(--b, var(--c))) —
+     declaration covers both worlds. Three such seams exist: the theme claim (the donut is
+     present or it is not), a voice's optional stop (the bold weight the theme may or
+     may not give, ADR-0012 law b), and the custom level where a component has opened
+     it (an exception filled or not, ADR-0005/0008 amended 2026-10-17). A fallback pyramid — var(--a, var(--b, var(--c))) —
      guesses its way down through layers in one expression and is forbidden. */
   color: var(--theme-text, var(--color-text-primary));
   background-color: var(--_co-backgroundColor);
