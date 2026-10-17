@@ -1,0 +1,45 @@
+/* GENERATED — do not edit. Source: recipes/covercomposition.recipe.ts (claims) via engine/claims.js.
+   A composition's voice claims: in its range, the part's channels point at the voice's
+   pointers (ADR-0006, amended 2026-10-17). Regenerate: pnpm tokens   (freshness guarded
+   by tests/claims.test.ts) */
+
+/* content-container: inverse × primary from 21.25rem */
+.CoverComposition {
+  @supports not (container-type: inline-size) {
+    @media (min-width: 21.25rem) {
+      & .content-container {
+        --theme-surface: var(--voice-inverse-primary-surface);
+        --theme-text: var(--voice-inverse-primary-text);
+        --theme-textMuted: var(--voice-inverse-primary-textMuted);
+        --theme-border: var(--voice-inverse-primary-border);
+        --theme-button-color-primary: var(--voice-inverse-primary-buttonColorPrimary);
+        --theme-button-backgroundColor-primary: var(--voice-inverse-primary-buttonBackgroundColorPrimary);
+        --theme-button-borderColor-primary: var(--voice-inverse-primary-buttonBorderColorPrimary);
+        --theme-button-backgroundColor-primary-hover: var(--voice-inverse-primary-buttonBackgroundColorPrimaryHover);
+        --theme-button-color-secondary: var(--voice-inverse-primary-buttonColorSecondary);
+        --theme-button-borderColor-secondary: var(--voice-inverse-primary-buttonBorderColorSecondary);
+        --theme-button-borderColor-secondary-hover: var(--voice-inverse-primary-buttonBorderColorSecondaryHover);
+        --theme-button-backgroundColor-secondary-hover: var(--voice-inverse-primary-buttonBackgroundColorSecondaryHover);
+      }
+    }
+  }
+
+  @supports (container-type: inline-size) {
+    @container (min-width: 21.25rem) {
+      & .content-container {
+        --theme-surface: var(--voice-inverse-primary-surface);
+        --theme-text: var(--voice-inverse-primary-text);
+        --theme-textMuted: var(--voice-inverse-primary-textMuted);
+        --theme-border: var(--voice-inverse-primary-border);
+        --theme-button-color-primary: var(--voice-inverse-primary-buttonColorPrimary);
+        --theme-button-backgroundColor-primary: var(--voice-inverse-primary-buttonBackgroundColorPrimary);
+        --theme-button-borderColor-primary: var(--voice-inverse-primary-buttonBorderColorPrimary);
+        --theme-button-backgroundColor-primary-hover: var(--voice-inverse-primary-buttonBackgroundColorPrimaryHover);
+        --theme-button-color-secondary: var(--voice-inverse-primary-buttonColorSecondary);
+        --theme-button-borderColor-secondary: var(--voice-inverse-primary-buttonBorderColorSecondary);
+        --theme-button-borderColor-secondary-hover: var(--voice-inverse-primary-buttonBorderColorSecondaryHover);
+        --theme-button-backgroundColor-secondary-hover: var(--voice-inverse-primary-buttonBackgroundColorSecondaryHover);
+      }
+    }
+  }
+}

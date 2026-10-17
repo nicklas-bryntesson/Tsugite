@@ -146,5 +146,12 @@ name of its own:
   it: a new slot yields its pointers with no further authoring. The cost is
   generated CSS (voices × volumes × channels × eight blocks) — combinatorics
   the machine holds.
-- The channel mapping a claim writes is machine-shaped and is still written by
-  hand where it is used; generating it is open (`docs/seams.md`).
+- **The claim is data, and its CSS is generated.** A composition declares its
+  claims in its recipe — `claims: [{ part, range: { min?, max? }, voice, volume }]`
+  (`lib/recipe.ts`) — and `engine/claims.js` writes
+  `<Composition>.claims.generated.css`: per claim, the part's channel lines in
+  the composition's range, as a pair (`@supports not (container-type)` → viewport
+  query first, then the container query; the same lines in both). A forbidden
+  combination cannot be claimed (the generator throws). CoverComposition is the
+  first consumer: its static `data-theme="inverse"` is gone, and below its point
+  the content stands on the page and claims nothing.

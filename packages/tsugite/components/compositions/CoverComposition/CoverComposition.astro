@@ -13,6 +13,7 @@ import Heading from "../../primitives/typography/Heading/Heading.astro";
 import Prose from "../../primitives/Prose/Prose.astro";
 import LinkButton from "../../primitives/buttons/Button/LinkButton.astro";
 import Picture from "../../primitives/Picture/Picture.astro";
+import "./CoverComposition.claims.generated.css";
 
 interface CtaButton {
   url: string;
@@ -73,7 +74,7 @@ const isVideo = !!videoSrc;
         </video>
       </div>
 
-      <div class="content-container" data-theme="inverse">
+      <div class="content-container">
         <div class="content">
           <Heading element={headingLevel} voice="display" size="1" text={title} />
           {preamble && (
@@ -107,7 +108,7 @@ const isVideo = !!videoSrc;
         <Picture image={image} preset="hero" alt={title} loading="eager" />
       </div>
 
-      <div class="content-container" data-theme="inverse">
+      <div class="content-container">
         {/* Upstream renders a class-less <div> here, but every layout rule in
             CoverComposition.css targets .content — deliberate deviation. */}
         <div class="content">
@@ -218,13 +219,13 @@ const isVideo = !!videoSrc;
   }
 
   & .content-container {
-    /* Tone donut (ADR-0005/0006): the markup carries data-theme="inverse",
-       so the GENERATED voice block supplies every claim channel — this CSS
-       only consumes. Cover never paints --theme-surface: the scrim is its
-       ground, which is exactly why the inverse voice is authored mode-stable.
-       The consumption fallback matters: without it an attribute-less render
-       would leave `color` invalid-at-computed-value (the Button-hover class
-       of bug), not merely unthemed. */
+    /* The voice is claimed, not written in the markup: above 21.25rem the content
+       lies on the media and scrim, and CoverComposition.claims.generated.css points
+       its channels at the inverse voice (recipes/covercomposition.recipe.ts,
+       engine/claims.js). Below, it stands on the page and claims nothing — the
+       baseline. This CSS only consumes. Cover never paints --theme-surface: the
+       scrim is its ground, which is why the inverse voice is authored mode-stable.
+       The fallback answers wherever no claim is active. */
     color: var(--theme-text, var(--color-text-primary));
 
     display: grid;

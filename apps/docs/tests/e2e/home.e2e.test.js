@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test'
 
-// The home page's Cover: a donut whose content takes inverse claims on the scrim through
-// the generated voice (ADR-0006). It moved here from the package's themes suite, which
-// runs on the theme's bench and cannot reach a docs page.
+// The home page's Cover: above its point the content lies on the scrim and claims the
+// inverse voice through its generated claim (recipes/covercomposition.recipe.ts,
+// ADR-0006 amended 2026-10-17); below it the content stands on the page and claims
+// nothing. It moved here from the package's themes suite, which runs on the theme's
+// bench and cannot reach a docs page.
 
 /** Computed [r,g,b] via canvas — immune to rgb/oklch serialization. */
 const colorOf = (page, selector, prop) =>
@@ -21,11 +23,22 @@ const luminance = ([r, g, b]) => {
   return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b)
 }
 
-test('the Cover donut still gets its inverse claims through the generated voice', async ({ page }) => {
+test('the Cover claims the inverse voice on the scrim', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 })
   await page.goto('/')
   await page.emulateMedia({ colorScheme: 'light' })
   const btn = await colorOf(page, '.CoverComposition .content-container .Button[data-emphasis="primary"]', 'backgroundColor')
   const text = await colorOf(page, '.CoverComposition .content-container .Heading', 'color')
   expect(luminance(btn), 'light chip on the scrim (preserved rows)').toBeGreaterThan(0.9)
   expect(luminance(text), 'light heading on the scrim').toBeGreaterThan(0.9)
+})
+
+test('narrow, the Cover stands on the page and claims nothing', async ({ page }) => {
+  await page.setViewportSize({ width: 338, height: 800 })
+  await page.emulateMedia({ colorScheme: 'light' })
+  await page.goto('/')
+  const text = await colorOf(page, '.CoverComposition .content-container .Heading', 'color')
+  const ground = await colorOf(page, '.Main', 'backgroundColor')
+  expect(luminance(text), 'dark heading on the light page').toBeLessThan(0.1)
+  expect(luminance(ground), 'the page itself is light').toBeGreaterThan(0.9)
 })
