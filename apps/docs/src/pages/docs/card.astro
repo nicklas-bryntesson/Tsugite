@@ -47,7 +47,7 @@ const entry = entryFor("card");
       <Elevation />
     </Example>
 
-    <Example id="ground" title="Elevation on a ground" lead="The shadow takes the tone of the ground it falls on. A Surface publishes its ground's shadow, precomputed by the colour factory for every voice and mode; the card casts it. A card that speaks another voice still casts its ground's." source={groundSrc} block>
+    <Example id="ground" title="Elevation on a ground" lead="A card's shadow is meant to mix two tones: the ground it falls on and the card's own surface. The first layer is built — a Surface publishes its ground's shadow, precomputed by the colour factory for every voice and mode, and the card casts it, so a card that speaks another voice still casts its ground's. The second layer, the card's own tone, is not built yet." source={groundSrc} block>
       <Ground />
     </Example>
 
