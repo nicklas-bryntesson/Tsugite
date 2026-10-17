@@ -684,8 +684,10 @@ this draft) should say:
   claims where the answer depends on context, colour without a ground), and
   who answers for an exception.
 
-The lab page stays the evidence; the guide is the distilled form, refined as
-the open questions close.
+The lab page stays the evidence; the guide is the distilled form. It is
+written when the factories are in place — the generated resolve maps, the
+channel mapping a claim writes, the shadow recipe — since the guide
+describes what they produce, and refined as the open questions close.
 
 ### 4. A future bench: size as one knob (parked)
 
