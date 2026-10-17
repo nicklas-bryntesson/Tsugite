@@ -8,12 +8,15 @@
 //      the forced fallback (ADR-0024), and the md controls beside a field: which
 //      control lines up with the field (one height, 2.5rem) is a finding, not a given.
 //   3. The donut matrix — voices × volumes (shared with the bench).
+//   4. Shadows — every ground × every card voice: the ground's ink and the card's glow,
+//      read as this browser resolves them, and the recipe's valves.
 import Layout from "../layouts/Layout.astro";
 import ResolutionPanel from "../components/ResolutionPanel/ResolutionPanel.astro";
 import TextBoxBench from "../components/TextBoxBench/TextBoxBench.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import TextBlock from "tsugite/TextBlock/TextBlock.astro";
 import ThemesSection from "tsugite/fixtures/ThemesSection.astro";
+import ShadowsSection from "tsugite/fixtures/ShadowsSection.astro";
 ---
 
 <Layout title="Control room">
@@ -47,6 +50,8 @@ import ThemesSection from "tsugite/fixtures/ThemesSection.astro";
       </section>
 
       <ThemesSection />
+
+      <ShadowsSection />
     </div>
   </main>
 </Layout>
