@@ -46,6 +46,11 @@ const turnsOfCase5 = [
   { turn: "public", title: "Both public levels at once", lead: "Size through --custom-button-*, colour by pointing the button channels at inverse's pointers. Only the button's channels are claimed — the text around it keeps the page's voice." },
   { turn: "ground", title: "Both public levels, and the owner creates its ground", lead: "The same, but in its range the owner also paints the inverse voice's ground and claims the whole voice through the pointers. The white now has something to stand on." },
 ];
+const instancesOfCase6 = [
+  { kind: "none", title: "The system's answer", style: undefined },
+  { kind: "size", title: "A size exception on the instance", style: "--custom-button-fontSize: var(--fontSize-button-large); --custom-button-paddingBlock: 0.8em; --custom-button-paddingInline: 1.6em;" },
+  { kind: "colour", title: "A colour exception on the instance", style: "--theme-button-color-primary: var(--voice-accent-subtle-buttonColorPrimary); --theme-button-backgroundColor-primary: var(--voice-accent-subtle-buttonBackgroundColorPrimary); --theme-button-borderColor-primary: var(--voice-accent-subtle-buttonBorderColorPrimary); --theme-button-backgroundColor-primary-hover: var(--voice-accent-subtle-buttonBackgroundColorPrimaryHover);" },
+];
 ---
 
 <Layout title="Seams lab">
@@ -216,6 +221,24 @@ const turnsOfCase5 = [
         </div>
       ))}
     </section>
+    <section class="lab-case" id="case-6">
+      <Heading element="h2" size="3" text="Case 6 — this one button, only here" />
+      <Text text="Three buttons side by side on the brand · subtle ground. Two carry an exception on the instance itself. If an exception is a filled level, a detector can find every one of them without being told where they are: each panel reports what it found, and a found exception is outlined." />
+
+      <Surface theme="brand" prominence="subtle" capInline={false}>
+        <div class="lab-cards">
+          {instancesOfCase6.map(({ kind, title, style }) => (
+            <div class="lab-specimen">
+              <div class="lab-instance">
+                <Text text={title} />
+                <LinkButton href="#case-6" size="sm" emphasis="primary" style={style} data-detect="Button">Become a member</LinkButton>
+              </div>
+              <dl class="lab-cables" data-detections></dl>
+            </div>
+          ))}
+        </div>
+      </Surface>
+    </section>
   </main>
 </Layout>
 
@@ -327,7 +350,31 @@ const turnsOfCase5 = [
     return ((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)).toFixed(2);
   };
 
+  // Case 6: the exception detector. Size: a filled --custom-button-* level on the element.
+  // Colour: a theme channel whose value differs from the one the element would inherit,
+  // i.e. claimed on the element itself. Neither needs to know where to look.
+  const customLevels = ["iconSize", "iconMargin", "fontSize", "paddingBlock", "paddingInline"].map((slot) => `--custom-button-${slot}`);
+  const channels = ["--theme-button-color-primary", "--theme-button-backgroundColor-primary", "--theme-button-borderColor-primary"];
+  const detect = () => {
+    for (const panel of document.querySelectorAll("[data-detections]")) {
+      const el = panel.closest(".lab-specimen")?.querySelector("[data-detect]");
+      const parent = el?.parentElement;
+      if (!el || !parent) continue;
+      const own = getComputedStyle(el);
+      const inherited = getComputedStyle(parent);
+      const filled = customLevels.filter((prop) => own.getPropertyValue(prop).trim() && !inherited.getPropertyValue(prop).trim());
+      const claimed = channels.filter((prop) => own.getPropertyValue(prop).trim() !== inherited.getPropertyValue(prop).trim());
+      const found = [
+        ...filled.map((prop) => `<dt>Exception</dt><dd>${prop}, filled on the instance (a custom level)</dd>`),
+        ...claimed.map((prop) => `<dt>Exception</dt><dd>${prop}, claimed on the instance (a theme channel, not a custom level)</dd>`),
+      ];
+      el.toggleAttribute("data-lab-exception", found.length > 0);
+      panel.innerHTML = found.length ? found.join("") : "<dt>Exception</dt><dd>none: the system answers</dd>";
+    }
+  };
+
   const fill = () => {
+    detect();
     diagnose();
     for (const specimen of document.querySelectorAll(".lab-specimen")) {
       const panel = specimen.querySelector("[data-cables]");
@@ -635,6 +682,19 @@ const turnsOfCase5 = [
 
         background-color: var(--theme-surface);
       }
+    }
+
+    & .lab-instance {
+      display: grid;
+      align-content: start;
+      gap: var(--size-sm);
+      justify-items: start;
+    }
+
+    /* Lab only: what a debug mode could show. */
+    & [data-lab-exception] {
+      outline: 2px dashed var(--color-feedback-error);
+      outline-offset: 4px;
     }
 
     & .lab-cables {
