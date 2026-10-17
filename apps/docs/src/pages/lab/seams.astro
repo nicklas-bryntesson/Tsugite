@@ -41,6 +41,11 @@ const turnsOfCase4 = [
   { turn: "reach", expect: { light: ["pass", "pass"], dark: ["pass", "pass"] }, title: "The owner reaches into the components (AiPoc's .Hero way)", lead: "On the media the owner sets color on itself and writes Button's private colour slots per emphasis and per state, with RAW values — white regardless of the global theme." },
   { turn: "pointer", expect: { light: ["pass", "pass"], dark: ["pass", "pass"] }, title: "The owner claims inverse through the voice's pointers", lead: "The colour factory now also publishes every voice cell on the root under its own name (--voice-inverse-primary-text …). On the media the owner points the --theme-* channels there. Text, buttons and every state follow, because they already read the channels: no private names, no RAW, no states written by hand." },
 ];
+const turnsOfCase5 = [
+  { turn: "reach", title: "The owner reaches into the button (AiPoc's .Hero way)", lead: "In its range the owner writes Button's private size and colour slots, with RAW values for white." },
+  { turn: "public", title: "Both public levels at once", lead: "Size through --custom-button-*, colour by pointing the button channels at inverse's pointers. Only the button's channels are claimed — the text around it keeps the page's voice." },
+  { turn: "ground", title: "Both public levels, and the owner creates its ground", lead: "The same, but in its range the owner also paints the inverse voice's ground and claims the whole voice through the pointers. The white now has something to stand on." },
+];
 ---
 
 <Layout title="Seams lab">
@@ -187,6 +192,30 @@ const turnsOfCase4 = [
         </div>
       ))}
     </section>
+    <section class="lab-case" id="case-5">
+      <Heading element="h2" size="3" text="Case 5 — the worst case: colour and size in one range" />
+      <Text text="Below the point (21.25rem, 340px) the button is sm in the global theme's default colour. In the owner's closed range (21.25rem ≤ width < 60rem) it is lg and white, whatever the global theme says. Both stand on the page's ground." />
+
+      {turnsOfCase5.map(({ turn, title, lead }) => (
+        <div class="lab-row">
+          <Heading element="h3" size="5" text={title} />
+          <Text text={lead} />
+          <div class="lab-ranges">
+            {["narrow", "wide"].map((width) => (
+              <div class="lab-specimen">
+                <div class="lab-range" data-width={width}>
+                  <div class={`lab-worst lab-worst-${turn}`}>
+                    <Text text={width === "narrow" ? "Below the point" : "In the range"} />
+                    <LinkButton href="#case-5" size="sm" emphasis="primary" data-contrast="Button label" data-edge="Button edge">Become a member</LinkButton>
+                  </div>
+                </div>
+                <dl class="lab-cables" data-cables></dl>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
   </main>
 </Layout>
 
@@ -279,6 +308,25 @@ const turnsOfCase4 = [
     return `<dt>Expected (${appearance()})</dt><dd>${expected} · measured ${result} · ${agrees}</dd>`;
   };
 
+  // The edge of a filled element (WCAG 1.4.11, 3:1 for a component's boundary): its own
+  // composited background against the composited background of what lies under it.
+  const stack = (from: Element | null) => {
+    const layers: string[] = [];
+    for (let node = from; node; node = node.parentElement) {
+      const bg = getComputedStyle(node).backgroundColor;
+      if (bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") layers.unshift(bg);
+      ctx.fillStyle = bg;
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillRect(0, 0, 1, 1);
+      if (ctx.getImageData(0, 0, 1, 1).data[3] === 255) break;
+    }
+    return layers;
+  };
+  const edge = (el: Element) => {
+    const [a, b] = [luminance(pixel(stack(el))), luminance(pixel(stack(el.parentElement)))];
+    return ((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)).toFixed(2);
+  };
+
   const fill = () => {
     diagnose();
     for (const specimen of document.querySelectorAll(".lab-specimen")) {
@@ -286,6 +334,16 @@ const turnsOfCase4 = [
       if (!panel) continue;
       const ground = specimen.parentElement?.closest("[data-cable]");
       const cables = [...(ground ? [ground] : []), ...specimen.querySelectorAll("[data-cable]")];
+      const edges = [...specimen.querySelectorAll("[data-edge]")]
+        .map((el) => {
+          const ratio = edge(el);
+          const verdict = Number(ratio) < 3 ? " — below 3:1, no visible edge" : "";
+          return `<dt>${el.getAttribute("data-edge")} contrast</dt><dd>${ratio} : 1${verdict}</dd>`;
+        })
+        .join("");
+      const sizes = [...specimen.querySelectorAll("[data-edge]")]
+        .map((el) => `<dt>Button font size</dt><dd>${getComputedStyle(el.querySelector(".text") ?? el).fontSize}</dd>`)
+        .join("");
       const ratios = [...specimen.querySelectorAll("[data-contrast]")]
         .map((el) => {
           const ratio = contrast(el);
@@ -293,7 +351,7 @@ const turnsOfCase4 = [
           return `<dt>${el.getAttribute("data-contrast")} contrast</dt><dd>${ratio} : 1${verdict}</dd>`;
         })
         .join("");
-      panel.innerHTML = cables.map(rows).join("") + ratios + verdict(specimen, ratios);
+      panel.innerHTML = cables.map(rows).join("") + sizes + ratios + edges + verdict(specimen, ratios);
     }
   };
 
@@ -524,6 +582,58 @@ const turnsOfCase4 = [
             --_bt-borderColor-hover: var(--COLOR-SUMI-00);
           }
         }
+      }
+    }
+
+    /* Case 5. Width is the point here: the owner's closed range, as Cover's would be. */
+    & .lab-worst {
+      color: var(--theme-text, var(--color-text-primary));
+      padding: var(--size-md);
+      display: grid;
+      gap: var(--size-md);
+      justify-items: start;
+    }
+
+    @container (21.25rem <= width < 60rem) {
+      & .lab-worst-reach .Button[data-size] {
+        --_bt-iconSize: 1.75rem;
+        --_bt-iconMargin: 1rem;
+        --_bt-fontSize: var(--fontSize-button-large);
+        --_bt-paddingBlock: 0.8em;
+        --_bt-paddingInline: 1.6em;
+        --_bt-color: var(--COLOR-SUMI-90);
+        --_bt-backgroundColor: var(--COLOR-SUMI-00);
+        --_bt-borderColor: var(--COLOR-SUMI-00);
+      }
+
+      & .lab-worst-public {
+        --custom-button-iconSize: 1.75rem;
+        --custom-button-iconMargin: 1rem;
+        --custom-button-fontSize: var(--fontSize-button-large);
+        --custom-button-paddingBlock: 0.8em;
+        --custom-button-paddingInline: 1.6em;
+        --theme-button-color-primary: var(--voice-inverse-primary-buttonColorPrimary);
+        --theme-button-backgroundColor-primary: var(--voice-inverse-primary-buttonBackgroundColorPrimary);
+        --theme-button-borderColor-primary: var(--voice-inverse-primary-buttonBorderColorPrimary);
+        --theme-button-backgroundColor-primary-hover: var(--voice-inverse-primary-buttonBackgroundColorPrimaryHover);
+      }
+
+      & .lab-worst-ground {
+        --custom-button-iconSize: 1.75rem;
+        --custom-button-iconMargin: 1rem;
+        --custom-button-fontSize: var(--fontSize-button-large);
+        --custom-button-paddingBlock: 0.8em;
+        --custom-button-paddingInline: 1.6em;
+        --theme-surface: var(--voice-inverse-primary-surface);
+        --theme-text: var(--voice-inverse-primary-text);
+        --theme-textMuted: var(--voice-inverse-primary-textMuted);
+        --theme-border: var(--voice-inverse-primary-border);
+        --theme-button-color-primary: var(--voice-inverse-primary-buttonColorPrimary);
+        --theme-button-backgroundColor-primary: var(--voice-inverse-primary-buttonBackgroundColorPrimary);
+        --theme-button-borderColor-primary: var(--voice-inverse-primary-buttonBorderColorPrimary);
+        --theme-button-backgroundColor-primary-hover: var(--voice-inverse-primary-buttonBackgroundColorPrimaryHover);
+
+        background-color: var(--theme-surface);
       }
     }
 
