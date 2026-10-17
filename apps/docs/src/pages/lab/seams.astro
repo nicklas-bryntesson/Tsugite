@@ -57,7 +57,7 @@ const shadowsOfCase7 = [
   { shadow: "black", title: "Black shadow (before the factory)", lead: "Card's elevation md as it was: the same black on every ground. Since the shadow factory this row renders the system's ink as well — see the system row." },
   { shadow: "card", title: "Tinted by the card's own voice", lead: "The claim sits on the Card, so the Card can read its own --theme-surface and darken it into the shadow." },
   { shadow: "ground", title: "Tinted by the ground it falls on", lead: "The claim on the Card rewrites every --theme-* channel there, so the ground's surface is gone on the Card. The ground publishes it under its own name instead (--lab-ground-surface: var(--theme-surface)); a custom property is resolved where it is declared, so the Card inherits the ground's colour, untouched by its own claim." },
-  { shadow: "system", title: "The system: Card's own elevation md, from the shadow factory", lead: "No lab mixing. The neutral · subtle Surface publishes --ground-shadow, precomputed by the factory from its surface and the shadow recipe; the Card's elevation reads it. The claimed card casts the ground's ink." },
+  { shadow: "system", title: "The system: Card's own elevation md, from the shadow factory", lead: "No lab mixing. The neutral · subtle Surface publishes --ground-shadow, precomputed by the factory; the Card's elevation casts it and mixes in a glow of its own surface through its voice's valves (the mix, built). The claimed card casts the ground's ink and its own tone." },
   { shadow: "both", title: "Both: the ground's shadow and the card's glow", lead: "Craft's answer as two layers: a shadow tinted by the ground, a wider glow tinted by the card." },
 ];
 const cardsOfCase7 = ["brand", "accent"];

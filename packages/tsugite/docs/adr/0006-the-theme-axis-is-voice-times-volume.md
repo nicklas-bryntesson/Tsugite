@@ -174,3 +174,9 @@ them, and a new voice gets them for free.
   (amended above) carries them too. The page's own inks are semantic tokens,
   `--color-shadow-ground(-soft)`, computed from `--color-surface-page` by the same
   recipe.
+- **The glow valves** — `--theme-glow-lightness`, `--theme-glow-chroma`,
+  `--theme-glow-alpha` — are computed channels too: numbers from the glow recipe in the
+  same file, per mode and overridable per voice, with the page's own as
+  `--shadow-glow-*`. They are the valves of a shadow's second tone: a card mixes a glow
+  of its own surface with them at runtime (relative colour, behind a support gate), so
+  a card reads the valves of the voice it speaks.

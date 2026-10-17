@@ -103,7 +103,8 @@ wins (docs/seams.md, lab case 7). Card's elevation reads it with the page's ink 
 the one fallback. Surface stays the ground's only painter; it now also says which
 ground it is.
 
-This is the shadow's first layer. The intent is a mix of two tones — the ground's
-ink and the card's own surface (lab case 7, "both"), each with its own intensity per
-mode. The second layer needs the card to know its own surface, which it does not
-yet (docs/seams.md).
+This is the shadow's first tone. A card's shadow mixes two: the ground's ink and a
+glow of the card's own surface (lab case 7, "both"), each with its own valves per
+mode. Card now resolves its surface itself (`--_cd-surface`: the voice it speaks,
+then `--custom-card-surface`) and paints it, and adds the glow behind a support gate;
+the floor casts the ground's tone alone.

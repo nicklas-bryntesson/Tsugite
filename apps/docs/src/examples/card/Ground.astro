@@ -5,28 +5,26 @@ import Text from "tsugite/Text/Text.astro";
 
 const grounds = [
   { theme: "neutral", prominence: "subtle" },
-  { theme: "brand", prominence: "subtle" },
-  { theme: "accent", prominence: "subtle" },
   { theme: "inverse", prominence: "primary" },
 ];
+const cards = [
+  { theme: undefined, prominence: undefined, text: "No voice of its own: the card is its ground's colour, and both tones are the ground's." },
+  { theme: "brand", prominence: "primary", text: "Brand on this ground: the ground's ink, and a glow of brand." },
+  { theme: "accent", prominence: "primary", text: "Accent on this ground: the ground's ink, and a glow of accent." },
+];
 ---
-{/* The shadow's first layer: the ink of the Surface the card lies on. The last card
-    speaks brand on a neutral ground and still casts neutral's ink — the ground's shadow is
-    resolved on the ground, and the card's own voice cannot repaint it. The second layer,
-    the card's own tone mixed in, is not built yet. */}
-{grounds.map(({ theme, prominence }) => (
-  <Surface theme={theme} prominence={prominence} capInline={false}>
-    <Card elevation="md" padding="none">
-      <Surface theme="neutral" prominence="primary" capInline={false}>
-        <Text text={`On ${theme} · ${prominence}: the shadow is this ground's ink.`} />
-      </Surface>
-    </Card>
+{/* A card's shadow mixes two tones. The first is the ground's ink, published by the
+    Surface the card lies on. The second is a glow of the card's own surface, through the
+    valves of the voice it speaks — per mode, turned down in dark. Here the voice is
+    claimed on the card itself (data-theme, data-prominence); whether Card takes them as
+    props is still open. A card whose voice lives on a Surface inside it glows with its
+    ground's tone, since a card cannot read what lies inside it. */}
+{grounds.map((ground) => (
+  <Surface theme={ground.theme} prominence={ground.prominence} capInline={false}>
+    {cards.map(({ theme, prominence, text }) => (
+      <Card elevation="md" data-theme={theme} data-prominence={prominence}>
+        <Text text={text} />
+      </Card>
+    ))}
   </Surface>
 ))}
-<Surface theme="neutral" prominence="subtle" capInline={false}>
-  <Card elevation="md" padding="none">
-    <Surface theme="brand" prominence="primary" capInline={false}>
-      <Text text="A brand card on neutral · subtle casts neutral's shadow, not its own." />
-    </Surface>
-  </Card>
-</Surface>
