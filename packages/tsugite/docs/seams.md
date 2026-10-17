@@ -197,6 +197,43 @@ ground directly beneath it. The shadow colours themselves would be
 precomputed by the factory (the lab mixes them with relative colour,
 which the floor lacks).
 
+## A card in a modal (lab case 8)
+
+- **Today the card is see-through.** Card paints no ground and the modal is
+  a transparent layer: background `rgba(0, 0, 0, 0)` over the backdrop.
+- **Direction A holds.** With `var(--theme-surface, var(--color-surface-page))`
+  painted on the card, a modal opened from the page takes the page surface.
+- **A modal takes the voice of where it stands in the markup, not of where
+  it shows.** The same card in a modal placed inside a brand · primary
+  Surface turns brand blue. The top layer detaches the dialog visually;
+  inheritance still follows the DOM. Where a modal is written decides its
+  colour. Open: is that a feature (a modal speaks its section's voice) or a
+  trap (a modal written in a dark band looks foreign over a light page)?
+
+## A card's volume: absolute or relative (lab case 9)
+
+A card that stands out only inside its ground's voice, on neutral · subtle,
+brand · subtle, brand · primary and inverse. Edge contrast against the
+ground, light mode (dark in brackets):
+
+- **Absolute** (the card asks for subtle): 1.00, 1.00, 13.65, 19.21
+  (1.00, 1.00, 1.86, 1.07). Invisible on its own volume; inverse has no
+  subtle and falls back to the page surface.
+- **Relative, the other volume of the voice** (the cells are inherited from
+  the ground's voice block): 1.05, 13.65, 13.65, 19.21 (1.19, 1.86, 1.86,
+  1.07). Either almost nothing (neutral) or a whole volume flip (a dark
+  card on light). Never "stands out a little"; inverse has no second
+  volume.
+- **Relative, one step of the voice's ink** (10% of `--theme-text`, case 3):
+  1.25, 1.25, 1.35, 1.28 (1.33, 1.27, 1.32, 1.22). **The only one that
+  gives an even, small step on every ground and in both modes.**
+
+The answer to open question 11 leans to relative, through the voice's
+ink rather than the other cell. Case 3's hue question comes with it.
+
+(The 3:1 edge rule of WCAG 1.4.11 binds a control's boundary; a card's
+edge is reported, not judged.)
+
 ## Facts (verified)
 
 1. **Custom properties inherit downward only.** A value resolved *inside*
@@ -657,5 +694,5 @@ ratios?
    couplings?
 9. Which components are a ground, and may claim at all?
 10. Is the nesting matrix brand data or a system rule?
-11. Is a card's prominence absolute or relative to its ground?
+11. Is a card's prominence absolute or relative to its ground? (Lab case 9 leans relative, through the voice's ink.)
 12. How does a claimed card's shadow read the base it falls on? (Answered in the lab: the ground as a snapshot, case 7.)

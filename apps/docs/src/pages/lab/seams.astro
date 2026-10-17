@@ -8,6 +8,8 @@ import Text from "tsugite/Text/Text.astro";
 import LinkButton from "tsugite/Button/LinkButton.astro";
 import Card from "tsugite/Card/Card.astro";
 import Surface from "tsugite/Surface/Surface.astro";
+import Modal from "tsugite/Modal/Modal.astro";
+import ActionButton from "tsugite/Button/ActionButton.astro";
 
 const voices = ["brand", "neutral", "accent"];
 const rowsOfCase1 = [
@@ -58,6 +60,22 @@ const shadowsOfCase7 = [
   { shadow: "both", title: "Both: the ground's shadow and the card's glow", lead: "Craft's answer as two layers: a shadow tinted by the ground, a wider glow tinted by the card." },
 ];
 const cardsOfCase7 = ["brand", "accent"];
+const modalsOfCase8 = [
+  { id: "lab-modal-page", opener: "page", ground: "none", title: "Opened from the page, Card as it is", lead: "The modal is a transparent layer and Card paints no ground: the card is see-through over the backdrop." },
+  { id: "lab-modal-page-chain", opener: "page", ground: "chain", title: "Opened from the page, Card with a default ground", lead: "The lab paints the card with direction A: var(--theme-surface, var(--color-surface-page)). No voice above it, so the page surface answers." },
+  { id: "lab-modal-brand-chain", opener: "brand", ground: "chain", title: "Opened from inside a brand · primary section", lead: "The same card, but the modal sits in the DOM inside a brand · primary Surface. The top layer detaches it visually; inheritance still follows the DOM, so the card takes brand's ground." },
+];
+const groundsOfCase9 = [
+  { theme: "neutral", prominence: "subtle" },
+  { theme: "brand", prominence: "subtle" },
+  { theme: "brand", prominence: "primary" },
+  { theme: "inverse", prominence: "primary" },
+];
+const volumesOfCase9 = [
+  { volume: "absolute", title: "Absolute: the card asks for subtle", lead: "data-prominence=\"subtle\" on the Card, no voice: the surrounding voice at subtle volume. On a subtle ground it is the ground's own colour; inverse has no subtle, so the semantic page surface answers." },
+  { volume: "other", title: "Relative: the other volume of the same voice", lead: "The card reads the cell of the volume its ground is not (the cells are inherited from the ground's voice block). Inverse has no second volume, so it falls back." },
+  { volume: "ink", title: "Relative: one step of the voice's ink", lead: "Case 3's transparency as the card's ground: 10% of the voice's text over whatever lies beneath. Every ground, every mode, one rule." },
+];
 ---
 
 <Layout title="Seams lab">
@@ -272,6 +290,64 @@ const cardsOfCase7 = ["brand", "accent"];
         </div>
       ))}
     </section>
+    <section class="lab-case" id="case-8">
+      <Heading element="h2" size="3" text="Case 8 — a card in a modal, with no ground under it" />
+      <Text text="Open each modal to see it; the panels read the card while it is closed as well." />
+
+      <div class="lab-cards">
+        {modalsOfCase8.map(({ id, opener, ground, title, lead }) => {
+          const body = (
+            <div class="lab-specimen">
+              <div class="lab-instance">
+                <Heading element="h3" size="5" text={title} />
+                <Text text={lead} />
+                <ActionButton command="show-modal" commandfor={id} size="sm">Open</ActionButton>
+              </div>
+              <Modal id={id}>
+                <Card padding="md" class={`lab-modal-card lab-modal-${ground}`} data-cable="Card" data-read="--theme-surface,background-color">
+                  <div class="lab-claimed-body">
+                    <Heading element="h4" size="5" text={title} data-channel="title" />
+                    <Text text="A frame on whatever lies under it." />
+                    <ActionButton emphasis="secondary" size="sm" data-channel="close" value="close">Close</ActionButton>
+                  </div>
+                </Card>
+              </Modal>
+              <dl class="lab-cables" data-cables></dl>
+            </div>
+          );
+          return opener === "brand" ? (
+            <Surface theme="brand" prominence="primary" capInline={false}>{body}</Surface>
+          ) : body;
+        })}
+      </div>
+    </section>
+
+    <section class="lab-case" id="case-9">
+      <Heading element="h2" size="3" text="Case 9 — a card's volume: absolute or relative" />
+      <Text text="A card that stands out only inside its ground's voice (no voice of its own). The panel gives the card's edge against its ground." />
+
+      {volumesOfCase9.map(({ volume, title, lead }) => (
+        <div class="lab-row">
+          <Heading element="h3" size="5" text={title} />
+          <Text text={lead} />
+          <div class="lab-cards">
+            {groundsOfCase9.map(({ theme, prominence }) => (
+              <div class="lab-specimen">
+                <Surface theme={theme} prominence={prominence} capInline={false}>
+                  <Card padding="md" data-prominence={volume === "absolute" ? "subtle" : undefined} class={`lab-vol lab-vol-${volume}`} data-edge="Card edge">
+                    <div class="lab-claimed-body">
+                      <Heading element="h4" size="5" text={`on ${theme} · ${prominence}`} />
+                      <Text text="Stands out inside the voice." />
+                    </div>
+                  </Card>
+                </Surface>
+                <dl class="lab-cables" data-cables></dl>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
   </main>
 </Layout>
 
@@ -417,11 +493,12 @@ const cardsOfCase7 = ["brand", "accent"];
       const edges = [...specimen.querySelectorAll("[data-edge]")]
         .map((el) => {
           const ratio = edge(el);
-          const verdict = Number(ratio) < 3 ? " — below 3:1, no visible edge" : "";
+          // 3:1 binds a control's boundary (WCAG 1.4.11); a card's edge is reported, not judged.
+          const verdict = el.matches(".Button") && Number(ratio) < 3 ? " — below 3:1, no visible edge" : "";
           return `<dt>${el.getAttribute("data-edge")} contrast</dt><dd>${ratio} : 1${verdict}</dd>`;
         })
         .join("");
-      const sizes = [...specimen.querySelectorAll("[data-edge]")]
+      const sizes = [...specimen.querySelectorAll(".Button[data-edge]")]
         .map((el) => `<dt>Button font size</dt><dd>${getComputedStyle(el.querySelector(".text") ?? el).fontSize}</dd>`)
         .join("");
       const ratios = [...specimen.querySelectorAll("[data-contrast]")]
@@ -744,6 +821,38 @@ const cardsOfCase7 = ["brand", "accent"];
       box-shadow:
         0 4px 10px oklch(from var(--lab-ground-surface) calc(l * 0.45) c h / 0.4),
         0 14px 32px -6px oklch(from var(--theme-surface) l c h / 0.55);
+    }
+
+    /* Case 8. Direction A, painted by the lab: the ground the card stands on, or the page. */
+    & .lab-modal-card {
+      justify-self: center;
+      max-inline-size: 28rem;
+      color: var(--theme-text, var(--color-text-primary));
+    }
+
+    & .lab-modal-chain {
+      background-color: var(--theme-surface, var(--color-surface-page));
+    }
+
+    /* Case 9. Three ways for a card to stand out inside its ground's voice. */
+    & .lab-vol {
+      color: var(--theme-text, var(--color-text-primary));
+    }
+
+    & .lab-vol-absolute {
+      background-color: var(--theme-surface, var(--color-surface-page));
+    }
+
+    & [data-prominence="subtle"] .lab-vol-other {
+      background-color: var(--theme-cell-primary-surface, var(--color-surface-page));
+    }
+
+    & [data-prominence="primary"] .lab-vol-other {
+      background-color: var(--theme-cell-subtle-surface, var(--color-surface-page));
+    }
+
+    & .lab-vol-ink {
+      background-color: color-mix(in oklab, var(--theme-text, var(--color-text-primary)) 10%, transparent);
     }
 
     & .lab-instance {
