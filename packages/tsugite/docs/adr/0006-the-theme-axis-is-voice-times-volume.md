@@ -116,3 +116,35 @@ komponentslots.
   endast om den är ortogonal och (i huvudsak) total — enstaka hörn får
   saknas via matrisen, men en axel där nästan inget kombinerar är en
   förklädd enum.
+
+## Amendment 2026-10-17 — a voice can be claimed from CSS (seams lab)
+
+`data-theme` is an attribute, and an attribute cannot change inside a media
+or container query. A composition whose content must change voice at a point
+— Cover above its breakpoint, where the content lies on media the composition
+creates — could not claim a voice there: the cells exist only under
+`[data-theme="<voice>"]`, so pointing the channels at them resolves to nothing
+(seams lab, case 4).
+
+**Decision:** the factory also publishes every voice cell on the root under a
+name of its own:
+
+```
+--voice-<voice>-<volume>-<channel>     e.g. --voice-inverse-primary-text
+```
+
+- Emitted in each of the eight appearance blocks, from the same table as the
+  cells, and only for matrix-allowed combinations: the combination law (§6)
+  holds — `--voice-inverse-subtle-*` does not exist.
+- **A claim from CSS points the channels at the pointers**, never at values:
+  `--theme-text: var(--voice-inverse-primary-text)`, one line per channel.
+  Text, buttons and every state follow, because they already read the
+  channels.
+- **§7 is unchanged:** components still read only `--theme-*`. The pointers
+  are read only by claims — by compositions, in the range they own.
+- **§5's frozen interface stays the slot schema.** The pointers derive from
+  it: a new slot yields its pointers with no further authoring. The cost is
+  generated CSS (voices × volumes × channels × eight blocks) — combinatorics
+  the machine holds.
+- The channel mapping a claim writes is machine-shaped and is still written by
+  hand where it is used; generating it is open (`docs/seams.md`).

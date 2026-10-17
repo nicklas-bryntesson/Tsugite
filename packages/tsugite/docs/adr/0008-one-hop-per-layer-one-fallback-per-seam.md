@@ -67,3 +67,29 @@ between layers, one declaration each, not a pyramid.
   claim → semantic → raw. Which truth is active is visible per element.
 - Theme donuts opt in by defining `--theme-*` tokens; their absence
   costs nothing and requires no authored fallback path.
+
+## Amendment 2026-10-17 — a third seam: the custom level
+
+The custom level of the ownership chain (ADR-0005) is a seam of the same kind:
+absence is the contract — no exception has been filled, and the layer below
+answers. Rule 2 now names three seams: the theme claim, a voice's optional
+stop, and the custom level:
+
+```css
+--_bt-fontSize: var(--custom-button-fontSize, var(--fontSize-button-small));
+max-inline-size: var(--custom-heading-lineLength, var(--_hd-lineLength));
+```
+
+The custom level was already live for line length (ADR-0021); this amendment
+records it as a seam rather than leaving it implied. One fallback per
+expression still holds: where a value needs both the custom level and the
+theme claim, it is two declarations — the theme seam resolves into a private
+slot, and the custom seam reads that slot:
+
+```css
+--_bt-backgroundColor-voice: var(--theme-button-backgroundColor-primary, var(--color-interactive-primary));
+--_bt-backgroundColor:       var(--custom-button-backgroundColor-primary, var(--_bt-backgroundColor-voice));
+```
+
+(The second pair is the form, not a decision: no colour slot has a custom
+level today — `docs/seams.md`.)

@@ -25,7 +25,7 @@ import { existsSync } from "node:fs";
 import { oklch } from "culori";
 import { rawColorTokens, rawRefName, assertRawReferences } from "../theme-default/raw.color.tokens.js";
 import { semanticColorTokens } from "../theme-default/semantic.color.tokens.js";
-import { themeVoices, themeChannels, voiceMatrix, cellName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
+import { themeVoices, themeChannels, voiceMatrix, cellName, voicePointerName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
 import { uiSeamTokens } from "../theme-default/seam.ui.tokens.js";
 import { TIERS, typeFamilies, typeWeights, typeVoices, typeSizes, typeLineLengths } from "../theme-default/typography.tokens.js";
 import { spaceScale, spaceSteps, sizeConstantName, sizeTokenName } from "../theme-default/size.tokens.js";
@@ -284,13 +284,28 @@ export function generateThemesStylesheet() {
       )
       .join("\n");
 
-  const voiceBlocks = (rootSelector, appearance) =>
+  // The same cells as named pointers on the root, every voice at once: what a
+  // composition points the channels at when it claims a voice from CSS.
+  const pointers = (appearance, indent) =>
     Object.keys(voiceMatrix)
-      .map(
+      .flatMap((voice) =>
+        voiceMatrix[voice].flatMap((vol) =>
+          Object.keys(themeChannels).map(
+            (key) =>
+              `${indent}${voicePointerName(voice, vol, key)}: ${resolveValue(themeVoices[voice][vol][key][appearance]).css};`,
+          ),
+        ),
+      )
+      .join("\n");
+
+  const voiceBlocks = (rootSelector, appearance) =>
+    [
+      `  ${rootSelector} {\n${pointers(appearance, "    ")}\n  }`,
+      ...Object.keys(voiceMatrix).map(
         (voice) =>
           `  ${rootSelector} [data-theme="${voice}"] {\n${cells(voice, appearance, "    ")}\n  }`,
-      )
-      .join("\n\n");
+      ),
+    ].join("\n\n");
 
   const attr = (scheme, contrastMedia, appearance) =>
     `@media (prefers-contrast: ${contrastMedia}) {\n${voiceBlocks(`:root[data-appearance="${scheme}"]`, appearance)}\n}`;
