@@ -19,6 +19,8 @@ import {
 import { generateTokenRegistry } from "./registry.js";
 import { generateSurfaceStylesheet } from "./surface.js";
 import { generateTextBoxStylesheet } from "./text-box.js";
+import { generateClaimsStylesheet } from "./claims.js";
+import { covercomposition } from "../recipes/covercomposition.recipe.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const rawOut = resolve(here, "../styles/tokens/color/color.raw.generated.css");
@@ -31,6 +33,7 @@ const baseOut = resolve(here, "../styles/tokens/base/base.generated.css");
 const registryOut = resolve(here, "../docs/tokens.generated.md");
 const surfaceOut = resolve(here, "../components/regions/Surface/Surface.generated.css");
 const textBoxOut = resolve(here, "../kernel/css/text-box.generated.css");
+const coverClaimsOut = resolve(here, "../components/compositions/CoverComposition/CoverComposition.claims.generated.css");
 
 mkdirSync(dirname(out), { recursive: true });
 mkdirSync(dirname(typeOut), { recursive: true });
@@ -45,6 +48,8 @@ writeFileSync(baseOut, generateBaseStylesheet());
 writeFileSync(registryOut, generateTokenRegistry());
 writeFileSync(surfaceOut, generateSurfaceStylesheet());
 writeFileSync(textBoxOut, generateTextBoxStylesheet());
+writeFileSync(coverClaimsOut, generateClaimsStylesheet(covercomposition, "recipes/covercomposition.recipe.ts"));
+console.log(`claims → ${coverClaimsOut}`);
 console.log(`raw    → ${rawOut}`);
 console.log(`tokens → ${out}`);
 console.log(`themes → ${themesOut}`);

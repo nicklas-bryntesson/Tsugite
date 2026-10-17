@@ -82,6 +82,20 @@ export interface Absent {
   readonly message: string;
 }
 
+/** A composition's claim of a voice from CSS (ADR-0006, amended 2026-10-17): in its range,
+ *  the part's --theme-* channels point at the voice's pointers. The CSS is generated
+ *  (engine/claims.js); the composition writes the data, never the channel lines. The range
+ *  is the composition's own: a container query, with the viewport query as its fallback
+ *  where containers are unsupported. */
+export interface Claim {
+  /** the part (bare lowercase class under the root) whose channels the claim points */
+  readonly part: string;
+  /** the range, as lengths: from `min` (inclusive) to `max` (exclusive); one or both */
+  readonly range: { readonly min?: string; readonly max?: string };
+  readonly voice: string;
+  readonly volume: string;
+}
+
 export interface Recipe {
   readonly name: string;
   /** one sentence: what the component does; the new-component test compares against it */
@@ -104,6 +118,8 @@ export interface Recipe {
   /** what a component with nothing to host does; `unless` names parts or host attributes
    *  whose presence counts as content */
   readonly content: { readonly empty: "suppress" | "render"; readonly unless?: readonly string[] };
+  /** voices the composition claims from CSS in a range of its own (engine/claims.js) */
+  readonly claims?: readonly Claim[];
 }
 
 type EnumValues<A> = A extends { values: readonly (infer V)[] }
