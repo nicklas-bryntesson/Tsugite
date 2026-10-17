@@ -1,0 +1,12 @@
+---
+import Surface from "tsugite/Surface/Surface.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import Text from "tsugite/Text/Text.astro";
+---
+{/* prominence without a theme: the surrounding voice, at another volume. */}
+<Surface theme="brand">
+  <Heading element="h3" size="5" text="brand · primary" />
+  <Surface prominence="subtle" capInline={false}>
+    <Text text="No voice of its own: brand, quieter." />
+  </Surface>
+</Surface>

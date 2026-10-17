@@ -1,0 +1,15 @@
+---
+import Surface from "tsugite/Surface/Surface.astro";
+import Text from "tsugite/Text/Text.astro";
+---
+{/* Two neighbours of the same voice and volume are one ground: the second drops its start
+    padding. A different voice keeps it. */}
+<Surface theme="neutral" prominence="subtle" element="section">
+  <Text text="First neutral · subtle — keeps its start padding." />
+</Surface>
+<Surface theme="neutral" prominence="subtle" element="section">
+  <Text text="Second neutral · subtle — one ground, one rhythm." />
+</Surface>
+<Surface theme="brand" prominence="subtle" element="section">
+  <Text text="Then brand · subtle — a new ground, so the padding stays." />
+</Surface>

@@ -1,0 +1,12 @@
+---
+import Surface from "tsugite/Surface/Surface.astro";
+import Text from "tsugite/Text/Text.astro";
+---
+{/* capInline holds the hosted content to the site's content measure (on by default,
+    ADR-0015). Off, the content spans the Surface. */}
+<Surface theme="neutral" prominence="subtle">
+  <Text text="Held to the site's measure — the ground runs edge to edge, the words do not." />
+</Surface>
+<Surface theme="neutral" prominence="subtle" capInline={false}>
+  <Text text="capInline off — the content spans the Surface, for a component that sets its own width." />
+</Surface>

@@ -1,0 +1,25 @@
+---
+import Surface from "tsugite/Surface/Surface.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import Text from "tsugite/Text/Text.astro";
+import LinkButton from "tsugite/Button/LinkButton.astro";
+
+const pairs = [
+  { theme: "neutral", prominence: "primary" },
+  { theme: "neutral", prominence: "subtle" },
+  { theme: "brand", prominence: "primary" },
+  { theme: "brand", prominence: "subtle" },
+  { theme: "accent", prominence: "primary" },
+  { theme: "accent", prominence: "subtle" },
+  { theme: "inverse", prominence: "primary" },
+];
+---
+{/* theme is whose palette speaks, prominence how loud. Nothing inside knows which: the
+    heading, the text and the button read the voice's channels. */}
+{pairs.map(({ theme, prominence }) => (
+  <Surface theme={theme} prominence={prominence}>
+    <Heading element="h3" size="5" text={`${theme} · ${prominence}`} />
+    <Text text="Everything in here speaks this voice." />
+    <LinkButton href="#voices" size="sm">Read on</LinkButton>
+  </Surface>
+))}
