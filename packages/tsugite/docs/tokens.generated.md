@@ -20,7 +20,7 @@ token; write a `TODO(token)` beside the raw value and raise it as a finding.
 Declared by the component that owns them, on its root (ADR-0013). Never read
 another component's slot. The prefix register lives in ADR-0013.
 
-### Custom levels — `--custom-<component>-<slot>` (10) — public, filled by an exception
+### Custom levels — `--custom-<component>-<slot>` (11) — public, filled by an exception
 
 The instance's level of the ownership chain (ADR-0005), opened per property where a
 real need showed it. A component reads it with one fallback to its own stop — the
@@ -35,13 +35,14 @@ for it. Found in the component tree, not authored here.
 | `--custom-button-iconSize` | Button |
 | `--custom-button-paddingBlock` | Button |
 | `--custom-button-paddingInline` | Button |
+| `--custom-card-surface` | Card |
 | `--custom-heading-fontSize` | Heading |
 | `--custom-heading-lineLength` | Heading |
 | `--custom-prose-lineLength` | Prose |
 | `--custom-text-lineLength` | Text |
 | `--custom-textblock-lineLength` | TextBlock |
 
-## 2. Theme channels — `--theme-*` (14) — read with one fallback
+## 2. Theme channels — `--theme-*` (17) — read with one fallback
 
 A channel is present when a voice region (`data-theme`) is an ancestor and absent
 otherwise, so it is read with exactly one fallback to the semantic token the
@@ -49,18 +50,18 @@ component would otherwise use (ADR-0008): `var(--theme-text, var(--color-text-pr
 Voices and their volumes (`data-prominence`, primary | subtle): `neutral` (primary, subtle), `brand` (primary, subtle), `accent` (primary, subtle), `inverse` (primary).
 `--theme-cell-*` names are generated wiring and are never referenced.
 
-`--theme-surface`, `--theme-text`, `--theme-textMuted`, `--theme-border`, `--theme-button-color-primary`, `--theme-button-backgroundColor-primary`, `--theme-button-borderColor-primary`, `--theme-button-backgroundColor-primary-hover`, `--theme-button-color-secondary`, `--theme-button-borderColor-secondary`, `--theme-button-borderColor-secondary-hover`, `--theme-button-backgroundColor-secondary-hover`, `--theme-shadow`, `--theme-shadow-soft`.
+`--theme-surface`, `--theme-text`, `--theme-textMuted`, `--theme-border`, `--theme-button-color-primary`, `--theme-button-backgroundColor-primary`, `--theme-button-borderColor-primary`, `--theme-button-backgroundColor-primary-hover`, `--theme-button-color-secondary`, `--theme-button-borderColor-secondary`, `--theme-button-borderColor-secondary-hover`, `--theme-button-backgroundColor-secondary-hover`, `--theme-shadow`, `--theme-shadow-soft`, `--theme-glow-lightness`, `--theme-glow-chroma`, `--theme-glow-alpha`.
 
-The last 2 (`--theme-shadow`, `--theme-shadow-soft`) are computed by the factory from each voice's surface and the shadow recipe (theme-default/shadow.tokens.js), never authored per voice.
+The last 5 (`--theme-shadow`, `--theme-shadow-soft`, `--theme-glow-lightness`, `--theme-glow-chroma`, `--theme-glow-alpha`) are computed by the factory from each voice's surface and the shadow and glow recipes (theme-default/shadow.tokens.js), never authored per voice.
 
-### Voice pointers — `--voice-<voice>-<volume>-<channel>` (98) — read only by a claim
+### Voice pointers — `--voice-<voice>-<volume>-<channel>` (119) — read only by a claim
 
 Every voice cell, published on the root under its own name (ADR-0006, amended
 2026-10-17), so a composition can claim a voice from CSS where an attribute cannot
 change: `--theme-text: var(--voice-inverse-primary-text)`, one line per channel. A component never
 reads them; it reads the channels above.
 
-Voice-volume pairs: `neutral-primary`, `neutral-subtle`, `brand-primary`, `brand-subtle`, `accent-primary`, `accent-subtle`, `inverse-primary`. Channels: `surface`, `text`, `textMuted`, `border`, `buttonColorPrimary`, `buttonBackgroundColorPrimary`, `buttonBorderColorPrimary`, `buttonBackgroundColorPrimaryHover`, `buttonColorSecondary`, `buttonBorderColorSecondary`, `buttonBorderColorSecondaryHover`, `buttonBackgroundColorSecondaryHover`, `shadow`, `shadowSoft`.
+Voice-volume pairs: `neutral-primary`, `neutral-subtle`, `brand-primary`, `brand-subtle`, `accent-primary`, `accent-subtle`, `inverse-primary`. Channels: `surface`, `text`, `textMuted`, `border`, `buttonColorPrimary`, `buttonBackgroundColorPrimary`, `buttonBorderColorPrimary`, `buttonBackgroundColorPrimaryHover`, `buttonColorSecondary`, `buttonBorderColorSecondary`, `buttonBorderColorSecondaryHover`, `buttonBackgroundColorSecondaryHover`, `shadow`, `shadowSoft`, `glowLightness`, `glowChroma`, `glowAlpha`.
 
 ### The ground's snapshot — `--ground-shadow`, `--ground-shadow-soft` — published by Surface
 
@@ -73,7 +74,7 @@ Read with one fallback to the page's ink: `var(--ground-shadow, var(--color-shad
 The layer a component's slot resolves to when no theme channel applies, and the
 only layer allowed to reference RAW.
 
-### Colour — `--color-*` (46, four-mode)
+### Colour — `--color-*` (49, four-mode)
 
 Each name switches light · dark · light-contrast · dark-contrast by itself; the
 component never mentions appearance (ADR-0004 §2).
@@ -126,6 +127,9 @@ component never mentions appearance (ADR-0004 §2).
 | `--color-cta-reflection` | The reflection: the ink at a quarter, over whatever the gradient is doing. |
 | `--color-shadow-ground` | The page's shadow ink: what a card casts with no Surface above it (computed). |
 | `--color-shadow-ground-soft` | The page's soft shadow ink, the tighter second layer (computed). |
+| `--shadow-glow-lightness` | The glow's lightness valve, a number: how much of the card's own lightness its glow keeps. |
+| `--shadow-glow-chroma` | The glow's chroma valve, a number: how much of the card's colour its glow keeps. |
+| `--shadow-glow-alpha` | The glow's alpha valve, a number: how strong the card's own tone is in its shadow. |
 
 ### Spacing — `--size-*` (19)
 

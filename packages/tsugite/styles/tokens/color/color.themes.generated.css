@@ -37,6 +37,9 @@
   --theme-button-backgroundColor-secondary-hover: var(--theme-cell-primary-buttonBackgroundColorSecondaryHover);
   --theme-shadow: var(--theme-cell-primary-shadow);
   --theme-shadow-soft: var(--theme-cell-primary-shadowSoft);
+  --theme-glow-lightness: var(--theme-cell-primary-glowLightness);
+  --theme-glow-chroma: var(--theme-cell-primary-glowChroma);
+  --theme-glow-alpha: var(--theme-cell-primary-glowAlpha);
 }
 
 [data-prominence="primary"] {
@@ -54,6 +57,9 @@
   --theme-button-backgroundColor-secondary-hover: var(--theme-cell-primary-buttonBackgroundColorSecondaryHover);
   --theme-shadow: var(--theme-cell-primary-shadow);
   --theme-shadow-soft: var(--theme-cell-primary-shadowSoft);
+  --theme-glow-lightness: var(--theme-cell-primary-glowLightness);
+  --theme-glow-chroma: var(--theme-cell-primary-glowChroma);
+  --theme-glow-alpha: var(--theme-cell-primary-glowAlpha);
 }
 
 [data-prominence="subtle"] {
@@ -71,6 +77,9 @@
   --theme-button-backgroundColor-secondary-hover: var(--theme-cell-subtle-buttonBackgroundColorSecondaryHover);
   --theme-shadow: var(--theme-cell-subtle-shadow);
   --theme-shadow-soft: var(--theme-cell-subtle-shadowSoft);
+  --theme-glow-lightness: var(--theme-cell-subtle-glowLightness);
+  --theme-glow-chroma: var(--theme-cell-subtle-glowChroma);
+  --theme-glow-alpha: var(--theme-cell-subtle-glowAlpha);
 }
 
 
@@ -93,6 +102,9 @@
     --voice-neutral-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-20);
     --voice-neutral-primary-shadow: rgba(58, 55, 52, 0.14);
     --voice-neutral-primary-shadowSoft: rgba(58, 55, 52, 0.07);
+    --voice-neutral-primary-glowLightness: 1;
+    --voice-neutral-primary-glowChroma: 1;
+    --voice-neutral-primary-glowAlpha: 0.35;
     --voice-neutral-subtle-surface: var(--COLOR-SUMI-05);
     --voice-neutral-subtle-text: var(--COLOR-SUMI-90);
     --voice-neutral-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -107,6 +119,9 @@
     --voice-neutral-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-15);
     --voice-neutral-subtle-shadow: rgba(58, 57, 55, 0.14);
     --voice-neutral-subtle-shadowSoft: rgba(58, 57, 55, 0.07);
+    --voice-neutral-subtle-glowLightness: 1;
+    --voice-neutral-subtle-glowChroma: 1;
+    --voice-neutral-subtle-glowAlpha: 0.35;
     --voice-brand-primary-surface: var(--COLOR-AI-80);
     --voice-brand-primary-text: var(--COLOR-SUMI-00);
     --voice-brand-primary-textMuted: var(--COLOR-AI-10);
@@ -121,6 +136,9 @@
     --voice-brand-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-primary-shadow: rgba(0, 1, 21, 0.14);
     --voice-brand-primary-shadowSoft: rgba(0, 1, 21, 0.07);
+    --voice-brand-primary-glowLightness: 1;
+    --voice-brand-primary-glowChroma: 1;
+    --voice-brand-primary-glowAlpha: 0.35;
     --voice-brand-subtle-surface: var(--COLOR-AI-05);
     --voice-brand-subtle-text: var(--COLOR-SUMI-90);
     --voice-brand-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -135,6 +153,9 @@
     --voice-brand-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-AI-10);
     --voice-brand-subtle-shadow: rgba(51, 56, 63, 0.14);
     --voice-brand-subtle-shadowSoft: rgba(51, 56, 63, 0.07);
+    --voice-brand-subtle-glowLightness: 1;
+    --voice-brand-subtle-glowChroma: 1;
+    --voice-brand-subtle-glowAlpha: 0.35;
     --voice-accent-primary-surface: var(--COLOR-HINOKI-80);
     --voice-accent-primary-text: var(--COLOR-SUMI-00);
     --voice-accent-primary-textMuted: var(--COLOR-HINOKI-20);
@@ -149,6 +170,9 @@
     --voice-accent-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-primary-shadow: rgba(22, 6, 0, 0.14);
     --voice-accent-primary-shadowSoft: rgba(22, 6, 0, 0.07);
+    --voice-accent-primary-glowLightness: 1;
+    --voice-accent-primary-glowChroma: 1;
+    --voice-accent-primary-glowAlpha: 0.35;
     --voice-accent-subtle-surface: var(--COLOR-HINOKI-05);
     --voice-accent-subtle-text: var(--COLOR-SUMI-90);
     --voice-accent-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -163,6 +187,9 @@
     --voice-accent-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-HINOKI-20);
     --voice-accent-subtle-shadow: rgba(62, 55, 44, 0.14);
     --voice-accent-subtle-shadowSoft: rgba(62, 55, 44, 0.07);
+    --voice-accent-subtle-glowLightness: 1;
+    --voice-accent-subtle-glowChroma: 1;
+    --voice-accent-subtle-glowAlpha: 0.35;
     --voice-inverse-primary-surface: var(--COLOR-SUMI-90);
     --voice-inverse-primary-text: var(--COLOR-SUMI-00);
     --voice-inverse-primary-textMuted: var(--COLOR-SUMI-25);
@@ -177,6 +204,9 @@
     --voice-inverse-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-inverse-primary-shadow: rgba(1, 1, 0, 0.14);
     --voice-inverse-primary-shadowSoft: rgba(1, 1, 0, 0.07);
+    --voice-inverse-primary-glowLightness: 1;
+    --voice-inverse-primary-glowChroma: 1;
+    --voice-inverse-primary-glowAlpha: 0.35;
   }
 
   :root[data-appearance="light"] [data-theme="neutral"] {
@@ -194,6 +224,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-20);
     --theme-cell-primary-shadow: rgba(58, 55, 52, 0.14);
     --theme-cell-primary-shadowSoft: rgba(58, 55, 52, 0.07);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 1;
+    --theme-cell-primary-glowAlpha: 0.35;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-05);
     --theme-cell-subtle-text: var(--COLOR-SUMI-90);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -208,6 +241,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-15);
     --theme-cell-subtle-shadow: rgba(58, 57, 55, 0.14);
     --theme-cell-subtle-shadowSoft: rgba(58, 57, 55, 0.07);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 1;
+    --theme-cell-subtle-glowAlpha: 0.35;
   }
 
   :root[data-appearance="light"] [data-theme="brand"] {
@@ -225,6 +261,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 1, 21, 0.14);
     --theme-cell-primary-shadowSoft: rgba(0, 1, 21, 0.07);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 1;
+    --theme-cell-primary-glowAlpha: 0.35;
     --theme-cell-subtle-surface: var(--COLOR-AI-05);
     --theme-cell-subtle-text: var(--COLOR-SUMI-90);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -239,6 +278,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-AI-10);
     --theme-cell-subtle-shadow: rgba(51, 56, 63, 0.14);
     --theme-cell-subtle-shadowSoft: rgba(51, 56, 63, 0.07);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 1;
+    --theme-cell-subtle-glowAlpha: 0.35;
   }
 
   :root[data-appearance="light"] [data-theme="accent"] {
@@ -256,6 +298,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(22, 6, 0, 0.14);
     --theme-cell-primary-shadowSoft: rgba(22, 6, 0, 0.07);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 1;
+    --theme-cell-primary-glowAlpha: 0.35;
     --theme-cell-subtle-surface: var(--COLOR-HINOKI-05);
     --theme-cell-subtle-text: var(--COLOR-SUMI-90);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -270,6 +315,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-HINOKI-20);
     --theme-cell-subtle-shadow: rgba(62, 55, 44, 0.14);
     --theme-cell-subtle-shadowSoft: rgba(62, 55, 44, 0.07);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 1;
+    --theme-cell-subtle-glowAlpha: 0.35;
   }
 
   :root[data-appearance="light"] [data-theme="inverse"] {
@@ -287,6 +335,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(1, 1, 0, 0.14);
     --theme-cell-primary-shadowSoft: rgba(1, 1, 0, 0.07);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 1;
+    --theme-cell-primary-glowAlpha: 0.35;
   }
 }
 
@@ -306,6 +357,9 @@
     --voice-neutral-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-neutral-primary-shadow: rgba(0, 0, 0, 0);
     --voice-neutral-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-neutral-primary-glowLightness: 0;
+    --voice-neutral-primary-glowChroma: 0;
+    --voice-neutral-primary-glowAlpha: 0;
     --voice-neutral-subtle-surface: var(--COLOR-SUMI-00);
     --voice-neutral-subtle-text: var(--COLOR-SUMI-95);
     --voice-neutral-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -320,6 +374,9 @@
     --voice-neutral-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-neutral-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-neutral-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-neutral-subtle-glowLightness: 0;
+    --voice-neutral-subtle-glowChroma: 0;
+    --voice-neutral-subtle-glowAlpha: 0;
     --voice-brand-primary-surface: var(--COLOR-AI-90);
     --voice-brand-primary-text: var(--COLOR-SUMI-00);
     --voice-brand-primary-textMuted: var(--COLOR-SUMI-00);
@@ -334,6 +391,9 @@
     --voice-brand-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-primary-shadow: rgba(0, 0, 0, 0);
     --voice-brand-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-brand-primary-glowLightness: 0;
+    --voice-brand-primary-glowChroma: 0;
+    --voice-brand-primary-glowAlpha: 0;
     --voice-brand-subtle-surface: var(--COLOR-SUMI-00);
     --voice-brand-subtle-text: var(--COLOR-SUMI-95);
     --voice-brand-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -348,6 +408,9 @@
     --voice-brand-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-brand-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-brand-subtle-glowLightness: 0;
+    --voice-brand-subtle-glowChroma: 0;
+    --voice-brand-subtle-glowAlpha: 0;
     --voice-accent-primary-surface: var(--COLOR-HINOKI-95);
     --voice-accent-primary-text: var(--COLOR-SUMI-00);
     --voice-accent-primary-textMuted: var(--COLOR-SUMI-00);
@@ -362,6 +425,9 @@
     --voice-accent-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-primary-shadow: rgba(0, 0, 0, 0);
     --voice-accent-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-accent-primary-glowLightness: 0;
+    --voice-accent-primary-glowChroma: 0;
+    --voice-accent-primary-glowAlpha: 0;
     --voice-accent-subtle-surface: var(--COLOR-SUMI-00);
     --voice-accent-subtle-text: var(--COLOR-SUMI-95);
     --voice-accent-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -376,6 +442,9 @@
     --voice-accent-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-accent-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-accent-subtle-glowLightness: 0;
+    --voice-accent-subtle-glowChroma: 0;
+    --voice-accent-subtle-glowAlpha: 0;
     --voice-inverse-primary-surface: var(--COLOR-SUMI-95);
     --voice-inverse-primary-text: var(--COLOR-SUMI-00);
     --voice-inverse-primary-textMuted: var(--COLOR-SUMI-00);
@@ -390,6 +459,9 @@
     --voice-inverse-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-inverse-primary-shadow: rgba(0, 0, 0, 0);
     --voice-inverse-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-inverse-primary-glowLightness: 0;
+    --voice-inverse-primary-glowChroma: 0;
+    --voice-inverse-primary-glowAlpha: 0;
   }
 
   :root[data-appearance="light"] [data-theme="neutral"] {
@@ -407,6 +479,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-00);
     --theme-cell-subtle-text: var(--COLOR-SUMI-95);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -421,6 +496,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root[data-appearance="light"] [data-theme="brand"] {
@@ -438,6 +516,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-00);
     --theme-cell-subtle-text: var(--COLOR-SUMI-95);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -452,6 +533,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root[data-appearance="light"] [data-theme="accent"] {
@@ -469,6 +553,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-00);
     --theme-cell-subtle-text: var(--COLOR-SUMI-95);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -483,6 +570,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root[data-appearance="light"] [data-theme="inverse"] {
@@ -500,6 +590,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
   }
 }
 
@@ -519,6 +612,9 @@
     --voice-neutral-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-75);
     --voice-neutral-primary-shadow: rgba(2, 1, 1, 0.45);
     --voice-neutral-primary-shadowSoft: rgba(2, 1, 1, 0.23);
+    --voice-neutral-primary-glowLightness: 1;
+    --voice-neutral-primary-glowChroma: 0.5;
+    --voice-neutral-primary-glowAlpha: 0.25;
     --voice-neutral-subtle-surface: var(--COLOR-SUMI-85);
     --voice-neutral-subtle-text: var(--COLOR-SUMI-05);
     --voice-neutral-subtle-textMuted: var(--COLOR-SUMI-35);
@@ -533,6 +629,9 @@
     --voice-neutral-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-80);
     --voice-neutral-subtle-shadow: rgba(1, 1, 0, 0.45);
     --voice-neutral-subtle-shadowSoft: rgba(1, 1, 0, 0.23);
+    --voice-neutral-subtle-glowLightness: 1;
+    --voice-neutral-subtle-glowChroma: 0.5;
+    --voice-neutral-subtle-glowAlpha: 0.25;
     --voice-brand-primary-surface: var(--COLOR-AI-70);
     --voice-brand-primary-text: var(--COLOR-SUMI-00);
     --voice-brand-primary-textMuted: var(--COLOR-AI-10);
@@ -547,6 +646,9 @@
     --voice-brand-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-primary-shadow: rgba(0, 2, 18, 0.45);
     --voice-brand-primary-shadowSoft: rgba(0, 2, 18, 0.23);
+    --voice-brand-primary-glowLightness: 1;
+    --voice-brand-primary-glowChroma: 0.5;
+    --voice-brand-primary-glowAlpha: 0.25;
     --voice-brand-subtle-surface: var(--COLOR-AI-90);
     --voice-brand-subtle-text: var(--COLOR-SUMI-05);
     --voice-brand-subtle-textMuted: var(--COLOR-AI-20);
@@ -561,6 +663,9 @@
     --voice-brand-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-AI-80);
     --voice-brand-subtle-shadow: rgba(0, 0, 3, 0.45);
     --voice-brand-subtle-shadowSoft: rgba(0, 0, 3, 0.23);
+    --voice-brand-subtle-glowLightness: 1;
+    --voice-brand-subtle-glowChroma: 0.5;
+    --voice-brand-subtle-glowAlpha: 0.25;
     --voice-accent-primary-surface: var(--COLOR-HINOKI-80);
     --voice-accent-primary-text: var(--COLOR-SUMI-00);
     --voice-accent-primary-textMuted: var(--COLOR-HINOKI-20);
@@ -575,6 +680,9 @@
     --voice-accent-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-primary-shadow: rgba(10, 2, 0, 0.45);
     --voice-accent-primary-shadowSoft: rgba(10, 2, 0, 0.23);
+    --voice-accent-primary-glowLightness: 1;
+    --voice-accent-primary-glowChroma: 0.5;
+    --voice-accent-primary-glowAlpha: 0.25;
     --voice-accent-subtle-surface: var(--COLOR-HINOKI-95);
     --voice-accent-subtle-text: var(--COLOR-HINOKI-05);
     --voice-accent-subtle-textMuted: var(--COLOR-HINOKI-20);
@@ -589,6 +697,9 @@
     --voice-accent-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-HINOKI-80);
     --voice-accent-subtle-shadow: rgba(2, 0, 0, 0.45);
     --voice-accent-subtle-shadowSoft: rgba(2, 0, 0, 0.23);
+    --voice-accent-subtle-glowLightness: 1;
+    --voice-accent-subtle-glowChroma: 0.5;
+    --voice-accent-subtle-glowAlpha: 0.25;
     --voice-inverse-primary-surface: var(--COLOR-SUMI-95);
     --voice-inverse-primary-text: var(--COLOR-SUMI-00);
     --voice-inverse-primary-textMuted: var(--COLOR-SUMI-25);
@@ -603,6 +714,9 @@
     --voice-inverse-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-inverse-primary-shadow: rgba(0, 0, 0, 0.45);
     --voice-inverse-primary-shadowSoft: rgba(0, 0, 0, 0.23);
+    --voice-inverse-primary-glowLightness: 1;
+    --voice-inverse-primary-glowChroma: 0.5;
+    --voice-inverse-primary-glowAlpha: 0.25;
   }
 
   :root[data-appearance="dark"] [data-theme="neutral"] {
@@ -620,6 +734,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-75);
     --theme-cell-primary-shadow: rgba(2, 1, 1, 0.45);
     --theme-cell-primary-shadowSoft: rgba(2, 1, 1, 0.23);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 0.5;
+    --theme-cell-primary-glowAlpha: 0.25;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-85);
     --theme-cell-subtle-text: var(--COLOR-SUMI-05);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-35);
@@ -634,6 +751,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-80);
     --theme-cell-subtle-shadow: rgba(1, 1, 0, 0.45);
     --theme-cell-subtle-shadowSoft: rgba(1, 1, 0, 0.23);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 0.5;
+    --theme-cell-subtle-glowAlpha: 0.25;
   }
 
   :root[data-appearance="dark"] [data-theme="brand"] {
@@ -651,6 +771,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 2, 18, 0.45);
     --theme-cell-primary-shadowSoft: rgba(0, 2, 18, 0.23);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 0.5;
+    --theme-cell-primary-glowAlpha: 0.25;
     --theme-cell-subtle-surface: var(--COLOR-AI-90);
     --theme-cell-subtle-text: var(--COLOR-SUMI-05);
     --theme-cell-subtle-textMuted: var(--COLOR-AI-20);
@@ -665,6 +788,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-AI-80);
     --theme-cell-subtle-shadow: rgba(0, 0, 3, 0.45);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 3, 0.23);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 0.5;
+    --theme-cell-subtle-glowAlpha: 0.25;
   }
 
   :root[data-appearance="dark"] [data-theme="accent"] {
@@ -682,6 +808,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(10, 2, 0, 0.45);
     --theme-cell-primary-shadowSoft: rgba(10, 2, 0, 0.23);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 0.5;
+    --theme-cell-primary-glowAlpha: 0.25;
     --theme-cell-subtle-surface: var(--COLOR-HINOKI-95);
     --theme-cell-subtle-text: var(--COLOR-HINOKI-05);
     --theme-cell-subtle-textMuted: var(--COLOR-HINOKI-20);
@@ -696,6 +825,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-HINOKI-80);
     --theme-cell-subtle-shadow: rgba(2, 0, 0, 0.45);
     --theme-cell-subtle-shadowSoft: rgba(2, 0, 0, 0.23);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 0.5;
+    --theme-cell-subtle-glowAlpha: 0.25;
   }
 
   :root[data-appearance="dark"] [data-theme="inverse"] {
@@ -713,6 +845,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0.45);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0.23);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 0.5;
+    --theme-cell-primary-glowAlpha: 0.25;
   }
 }
 
@@ -732,6 +867,9 @@
     --voice-neutral-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-neutral-primary-shadow: rgba(0, 0, 0, 0);
     --voice-neutral-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-neutral-primary-glowLightness: 0;
+    --voice-neutral-primary-glowChroma: 0;
+    --voice-neutral-primary-glowAlpha: 0;
     --voice-neutral-subtle-surface: var(--COLOR-SUMI-95);
     --voice-neutral-subtle-text: var(--COLOR-SUMI-00);
     --voice-neutral-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -746,6 +884,9 @@
     --voice-neutral-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-neutral-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-neutral-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-neutral-subtle-glowLightness: 0;
+    --voice-neutral-subtle-glowChroma: 0;
+    --voice-neutral-subtle-glowAlpha: 0;
     --voice-brand-primary-surface: var(--COLOR-AI-95);
     --voice-brand-primary-text: var(--COLOR-SUMI-00);
     --voice-brand-primary-textMuted: var(--COLOR-SUMI-00);
@@ -760,6 +901,9 @@
     --voice-brand-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-primary-shadow: rgba(0, 0, 0, 0);
     --voice-brand-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-brand-primary-glowLightness: 0;
+    --voice-brand-primary-glowChroma: 0;
+    --voice-brand-primary-glowAlpha: 0;
     --voice-brand-subtle-surface: var(--COLOR-SUMI-95);
     --voice-brand-subtle-text: var(--COLOR-SUMI-00);
     --voice-brand-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -774,6 +918,9 @@
     --voice-brand-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-brand-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-brand-subtle-glowLightness: 0;
+    --voice-brand-subtle-glowChroma: 0;
+    --voice-brand-subtle-glowAlpha: 0;
     --voice-accent-primary-surface: var(--COLOR-HINOKI-95);
     --voice-accent-primary-text: var(--COLOR-SUMI-00);
     --voice-accent-primary-textMuted: var(--COLOR-SUMI-00);
@@ -788,6 +935,9 @@
     --voice-accent-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-primary-shadow: rgba(0, 0, 0, 0);
     --voice-accent-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-accent-primary-glowLightness: 0;
+    --voice-accent-primary-glowChroma: 0;
+    --voice-accent-primary-glowAlpha: 0;
     --voice-accent-subtle-surface: var(--COLOR-SUMI-95);
     --voice-accent-subtle-text: var(--COLOR-SUMI-00);
     --voice-accent-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -802,6 +952,9 @@
     --voice-accent-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-accent-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-accent-subtle-glowLightness: 0;
+    --voice-accent-subtle-glowChroma: 0;
+    --voice-accent-subtle-glowAlpha: 0;
     --voice-inverse-primary-surface: var(--COLOR-SUMI-95);
     --voice-inverse-primary-text: var(--COLOR-SUMI-00);
     --voice-inverse-primary-textMuted: var(--COLOR-SUMI-00);
@@ -816,6 +969,9 @@
     --voice-inverse-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-inverse-primary-shadow: rgba(0, 0, 0, 0);
     --voice-inverse-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-inverse-primary-glowLightness: 0;
+    --voice-inverse-primary-glowChroma: 0;
+    --voice-inverse-primary-glowAlpha: 0;
   }
 
   :root[data-appearance="dark"] [data-theme="neutral"] {
@@ -833,6 +989,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-95);
     --theme-cell-subtle-text: var(--COLOR-SUMI-00);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -847,6 +1006,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root[data-appearance="dark"] [data-theme="brand"] {
@@ -864,6 +1026,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-95);
     --theme-cell-subtle-text: var(--COLOR-SUMI-00);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -878,6 +1043,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root[data-appearance="dark"] [data-theme="accent"] {
@@ -895,6 +1063,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-95);
     --theme-cell-subtle-text: var(--COLOR-SUMI-00);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -909,6 +1080,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root[data-appearance="dark"] [data-theme="inverse"] {
@@ -926,6 +1100,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
   }
 }
 
@@ -949,6 +1126,9 @@
     --voice-neutral-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-20);
     --voice-neutral-primary-shadow: rgba(58, 55, 52, 0.14);
     --voice-neutral-primary-shadowSoft: rgba(58, 55, 52, 0.07);
+    --voice-neutral-primary-glowLightness: 1;
+    --voice-neutral-primary-glowChroma: 1;
+    --voice-neutral-primary-glowAlpha: 0.35;
     --voice-neutral-subtle-surface: var(--COLOR-SUMI-05);
     --voice-neutral-subtle-text: var(--COLOR-SUMI-90);
     --voice-neutral-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -963,6 +1143,9 @@
     --voice-neutral-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-15);
     --voice-neutral-subtle-shadow: rgba(58, 57, 55, 0.14);
     --voice-neutral-subtle-shadowSoft: rgba(58, 57, 55, 0.07);
+    --voice-neutral-subtle-glowLightness: 1;
+    --voice-neutral-subtle-glowChroma: 1;
+    --voice-neutral-subtle-glowAlpha: 0.35;
     --voice-brand-primary-surface: var(--COLOR-AI-80);
     --voice-brand-primary-text: var(--COLOR-SUMI-00);
     --voice-brand-primary-textMuted: var(--COLOR-AI-10);
@@ -977,6 +1160,9 @@
     --voice-brand-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-primary-shadow: rgba(0, 1, 21, 0.14);
     --voice-brand-primary-shadowSoft: rgba(0, 1, 21, 0.07);
+    --voice-brand-primary-glowLightness: 1;
+    --voice-brand-primary-glowChroma: 1;
+    --voice-brand-primary-glowAlpha: 0.35;
     --voice-brand-subtle-surface: var(--COLOR-AI-05);
     --voice-brand-subtle-text: var(--COLOR-SUMI-90);
     --voice-brand-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -991,6 +1177,9 @@
     --voice-brand-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-AI-10);
     --voice-brand-subtle-shadow: rgba(51, 56, 63, 0.14);
     --voice-brand-subtle-shadowSoft: rgba(51, 56, 63, 0.07);
+    --voice-brand-subtle-glowLightness: 1;
+    --voice-brand-subtle-glowChroma: 1;
+    --voice-brand-subtle-glowAlpha: 0.35;
     --voice-accent-primary-surface: var(--COLOR-HINOKI-80);
     --voice-accent-primary-text: var(--COLOR-SUMI-00);
     --voice-accent-primary-textMuted: var(--COLOR-HINOKI-20);
@@ -1005,6 +1194,9 @@
     --voice-accent-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-primary-shadow: rgba(22, 6, 0, 0.14);
     --voice-accent-primary-shadowSoft: rgba(22, 6, 0, 0.07);
+    --voice-accent-primary-glowLightness: 1;
+    --voice-accent-primary-glowChroma: 1;
+    --voice-accent-primary-glowAlpha: 0.35;
     --voice-accent-subtle-surface: var(--COLOR-HINOKI-05);
     --voice-accent-subtle-text: var(--COLOR-SUMI-90);
     --voice-accent-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -1019,6 +1211,9 @@
     --voice-accent-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-HINOKI-20);
     --voice-accent-subtle-shadow: rgba(62, 55, 44, 0.14);
     --voice-accent-subtle-shadowSoft: rgba(62, 55, 44, 0.07);
+    --voice-accent-subtle-glowLightness: 1;
+    --voice-accent-subtle-glowChroma: 1;
+    --voice-accent-subtle-glowAlpha: 0.35;
     --voice-inverse-primary-surface: var(--COLOR-SUMI-90);
     --voice-inverse-primary-text: var(--COLOR-SUMI-00);
     --voice-inverse-primary-textMuted: var(--COLOR-SUMI-25);
@@ -1033,6 +1228,9 @@
     --voice-inverse-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-inverse-primary-shadow: rgba(1, 1, 0, 0.14);
     --voice-inverse-primary-shadowSoft: rgba(1, 1, 0, 0.07);
+    --voice-inverse-primary-glowLightness: 1;
+    --voice-inverse-primary-glowChroma: 1;
+    --voice-inverse-primary-glowAlpha: 0.35;
   }
 
   :root:not([data-appearance]) [data-theme="neutral"] {
@@ -1050,6 +1248,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-20);
     --theme-cell-primary-shadow: rgba(58, 55, 52, 0.14);
     --theme-cell-primary-shadowSoft: rgba(58, 55, 52, 0.07);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 1;
+    --theme-cell-primary-glowAlpha: 0.35;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-05);
     --theme-cell-subtle-text: var(--COLOR-SUMI-90);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -1064,6 +1265,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-15);
     --theme-cell-subtle-shadow: rgba(58, 57, 55, 0.14);
     --theme-cell-subtle-shadowSoft: rgba(58, 57, 55, 0.07);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 1;
+    --theme-cell-subtle-glowAlpha: 0.35;
   }
 
   :root:not([data-appearance]) [data-theme="brand"] {
@@ -1081,6 +1285,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 1, 21, 0.14);
     --theme-cell-primary-shadowSoft: rgba(0, 1, 21, 0.07);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 1;
+    --theme-cell-primary-glowAlpha: 0.35;
     --theme-cell-subtle-surface: var(--COLOR-AI-05);
     --theme-cell-subtle-text: var(--COLOR-SUMI-90);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -1095,6 +1302,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-AI-10);
     --theme-cell-subtle-shadow: rgba(51, 56, 63, 0.14);
     --theme-cell-subtle-shadowSoft: rgba(51, 56, 63, 0.07);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 1;
+    --theme-cell-subtle-glowAlpha: 0.35;
   }
 
   :root:not([data-appearance]) [data-theme="accent"] {
@@ -1112,6 +1322,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(22, 6, 0, 0.14);
     --theme-cell-primary-shadowSoft: rgba(22, 6, 0, 0.07);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 1;
+    --theme-cell-primary-glowAlpha: 0.35;
     --theme-cell-subtle-surface: var(--COLOR-HINOKI-05);
     --theme-cell-subtle-text: var(--COLOR-SUMI-90);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-60);
@@ -1126,6 +1339,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-HINOKI-20);
     --theme-cell-subtle-shadow: rgba(62, 55, 44, 0.14);
     --theme-cell-subtle-shadowSoft: rgba(62, 55, 44, 0.07);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 1;
+    --theme-cell-subtle-glowAlpha: 0.35;
   }
 
   :root:not([data-appearance]) [data-theme="inverse"] {
@@ -1143,6 +1359,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(1, 1, 0, 0.14);
     --theme-cell-primary-shadowSoft: rgba(1, 1, 0, 0.07);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 1;
+    --theme-cell-primary-glowAlpha: 0.35;
   }
 }
 
@@ -1162,6 +1381,9 @@
     --voice-neutral-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-neutral-primary-shadow: rgba(0, 0, 0, 0);
     --voice-neutral-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-neutral-primary-glowLightness: 0;
+    --voice-neutral-primary-glowChroma: 0;
+    --voice-neutral-primary-glowAlpha: 0;
     --voice-neutral-subtle-surface: var(--COLOR-SUMI-00);
     --voice-neutral-subtle-text: var(--COLOR-SUMI-95);
     --voice-neutral-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -1176,6 +1398,9 @@
     --voice-neutral-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-neutral-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-neutral-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-neutral-subtle-glowLightness: 0;
+    --voice-neutral-subtle-glowChroma: 0;
+    --voice-neutral-subtle-glowAlpha: 0;
     --voice-brand-primary-surface: var(--COLOR-AI-90);
     --voice-brand-primary-text: var(--COLOR-SUMI-00);
     --voice-brand-primary-textMuted: var(--COLOR-SUMI-00);
@@ -1190,6 +1415,9 @@
     --voice-brand-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-primary-shadow: rgba(0, 0, 0, 0);
     --voice-brand-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-brand-primary-glowLightness: 0;
+    --voice-brand-primary-glowChroma: 0;
+    --voice-brand-primary-glowAlpha: 0;
     --voice-brand-subtle-surface: var(--COLOR-SUMI-00);
     --voice-brand-subtle-text: var(--COLOR-SUMI-95);
     --voice-brand-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -1204,6 +1432,9 @@
     --voice-brand-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-brand-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-brand-subtle-glowLightness: 0;
+    --voice-brand-subtle-glowChroma: 0;
+    --voice-brand-subtle-glowAlpha: 0;
     --voice-accent-primary-surface: var(--COLOR-HINOKI-95);
     --voice-accent-primary-text: var(--COLOR-SUMI-00);
     --voice-accent-primary-textMuted: var(--COLOR-SUMI-00);
@@ -1218,6 +1449,9 @@
     --voice-accent-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-primary-shadow: rgba(0, 0, 0, 0);
     --voice-accent-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-accent-primary-glowLightness: 0;
+    --voice-accent-primary-glowChroma: 0;
+    --voice-accent-primary-glowAlpha: 0;
     --voice-accent-subtle-surface: var(--COLOR-SUMI-00);
     --voice-accent-subtle-text: var(--COLOR-SUMI-95);
     --voice-accent-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -1232,6 +1466,9 @@
     --voice-accent-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-accent-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-accent-subtle-glowLightness: 0;
+    --voice-accent-subtle-glowChroma: 0;
+    --voice-accent-subtle-glowAlpha: 0;
     --voice-inverse-primary-surface: var(--COLOR-SUMI-95);
     --voice-inverse-primary-text: var(--COLOR-SUMI-00);
     --voice-inverse-primary-textMuted: var(--COLOR-SUMI-00);
@@ -1246,6 +1483,9 @@
     --voice-inverse-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-inverse-primary-shadow: rgba(0, 0, 0, 0);
     --voice-inverse-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-inverse-primary-glowLightness: 0;
+    --voice-inverse-primary-glowChroma: 0;
+    --voice-inverse-primary-glowAlpha: 0;
   }
 
   :root:not([data-appearance]) [data-theme="neutral"] {
@@ -1263,6 +1503,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-00);
     --theme-cell-subtle-text: var(--COLOR-SUMI-95);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -1277,6 +1520,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root:not([data-appearance]) [data-theme="brand"] {
@@ -1294,6 +1540,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-00);
     --theme-cell-subtle-text: var(--COLOR-SUMI-95);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -1308,6 +1557,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root:not([data-appearance]) [data-theme="accent"] {
@@ -1325,6 +1577,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-00);
     --theme-cell-subtle-text: var(--COLOR-SUMI-95);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-95);
@@ -1339,6 +1594,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root:not([data-appearance]) [data-theme="inverse"] {
@@ -1356,6 +1614,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
   }
 }
 
@@ -1375,6 +1636,9 @@
     --voice-neutral-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-75);
     --voice-neutral-primary-shadow: rgba(2, 1, 1, 0.45);
     --voice-neutral-primary-shadowSoft: rgba(2, 1, 1, 0.23);
+    --voice-neutral-primary-glowLightness: 1;
+    --voice-neutral-primary-glowChroma: 0.5;
+    --voice-neutral-primary-glowAlpha: 0.25;
     --voice-neutral-subtle-surface: var(--COLOR-SUMI-85);
     --voice-neutral-subtle-text: var(--COLOR-SUMI-05);
     --voice-neutral-subtle-textMuted: var(--COLOR-SUMI-35);
@@ -1389,6 +1653,9 @@
     --voice-neutral-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-80);
     --voice-neutral-subtle-shadow: rgba(1, 1, 0, 0.45);
     --voice-neutral-subtle-shadowSoft: rgba(1, 1, 0, 0.23);
+    --voice-neutral-subtle-glowLightness: 1;
+    --voice-neutral-subtle-glowChroma: 0.5;
+    --voice-neutral-subtle-glowAlpha: 0.25;
     --voice-brand-primary-surface: var(--COLOR-AI-70);
     --voice-brand-primary-text: var(--COLOR-SUMI-00);
     --voice-brand-primary-textMuted: var(--COLOR-AI-10);
@@ -1403,6 +1670,9 @@
     --voice-brand-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-primary-shadow: rgba(0, 2, 18, 0.45);
     --voice-brand-primary-shadowSoft: rgba(0, 2, 18, 0.23);
+    --voice-brand-primary-glowLightness: 1;
+    --voice-brand-primary-glowChroma: 0.5;
+    --voice-brand-primary-glowAlpha: 0.25;
     --voice-brand-subtle-surface: var(--COLOR-AI-90);
     --voice-brand-subtle-text: var(--COLOR-SUMI-05);
     --voice-brand-subtle-textMuted: var(--COLOR-AI-20);
@@ -1417,6 +1687,9 @@
     --voice-brand-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-AI-80);
     --voice-brand-subtle-shadow: rgba(0, 0, 3, 0.45);
     --voice-brand-subtle-shadowSoft: rgba(0, 0, 3, 0.23);
+    --voice-brand-subtle-glowLightness: 1;
+    --voice-brand-subtle-glowChroma: 0.5;
+    --voice-brand-subtle-glowAlpha: 0.25;
     --voice-accent-primary-surface: var(--COLOR-HINOKI-80);
     --voice-accent-primary-text: var(--COLOR-SUMI-00);
     --voice-accent-primary-textMuted: var(--COLOR-HINOKI-20);
@@ -1431,6 +1704,9 @@
     --voice-accent-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-primary-shadow: rgba(10, 2, 0, 0.45);
     --voice-accent-primary-shadowSoft: rgba(10, 2, 0, 0.23);
+    --voice-accent-primary-glowLightness: 1;
+    --voice-accent-primary-glowChroma: 0.5;
+    --voice-accent-primary-glowAlpha: 0.25;
     --voice-accent-subtle-surface: var(--COLOR-HINOKI-95);
     --voice-accent-subtle-text: var(--COLOR-HINOKI-05);
     --voice-accent-subtle-textMuted: var(--COLOR-HINOKI-20);
@@ -1445,6 +1721,9 @@
     --voice-accent-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-HINOKI-80);
     --voice-accent-subtle-shadow: rgba(2, 0, 0, 0.45);
     --voice-accent-subtle-shadowSoft: rgba(2, 0, 0, 0.23);
+    --voice-accent-subtle-glowLightness: 1;
+    --voice-accent-subtle-glowChroma: 0.5;
+    --voice-accent-subtle-glowAlpha: 0.25;
     --voice-inverse-primary-surface: var(--COLOR-SUMI-95);
     --voice-inverse-primary-text: var(--COLOR-SUMI-00);
     --voice-inverse-primary-textMuted: var(--COLOR-SUMI-25);
@@ -1459,6 +1738,9 @@
     --voice-inverse-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-inverse-primary-shadow: rgba(0, 0, 0, 0.45);
     --voice-inverse-primary-shadowSoft: rgba(0, 0, 0, 0.23);
+    --voice-inverse-primary-glowLightness: 1;
+    --voice-inverse-primary-glowChroma: 0.5;
+    --voice-inverse-primary-glowAlpha: 0.25;
   }
 
   :root:not([data-appearance]) [data-theme="neutral"] {
@@ -1476,6 +1758,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-75);
     --theme-cell-primary-shadow: rgba(2, 1, 1, 0.45);
     --theme-cell-primary-shadowSoft: rgba(2, 1, 1, 0.23);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 0.5;
+    --theme-cell-primary-glowAlpha: 0.25;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-85);
     --theme-cell-subtle-text: var(--COLOR-SUMI-05);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-35);
@@ -1490,6 +1775,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-SUMI-80);
     --theme-cell-subtle-shadow: rgba(1, 1, 0, 0.45);
     --theme-cell-subtle-shadowSoft: rgba(1, 1, 0, 0.23);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 0.5;
+    --theme-cell-subtle-glowAlpha: 0.25;
   }
 
   :root:not([data-appearance]) [data-theme="brand"] {
@@ -1507,6 +1795,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 2, 18, 0.45);
     --theme-cell-primary-shadowSoft: rgba(0, 2, 18, 0.23);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 0.5;
+    --theme-cell-primary-glowAlpha: 0.25;
     --theme-cell-subtle-surface: var(--COLOR-AI-90);
     --theme-cell-subtle-text: var(--COLOR-SUMI-05);
     --theme-cell-subtle-textMuted: var(--COLOR-AI-20);
@@ -1521,6 +1812,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-AI-80);
     --theme-cell-subtle-shadow: rgba(0, 0, 3, 0.45);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 3, 0.23);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 0.5;
+    --theme-cell-subtle-glowAlpha: 0.25;
   }
 
   :root:not([data-appearance]) [data-theme="accent"] {
@@ -1538,6 +1832,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(10, 2, 0, 0.45);
     --theme-cell-primary-shadowSoft: rgba(10, 2, 0, 0.23);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 0.5;
+    --theme-cell-primary-glowAlpha: 0.25;
     --theme-cell-subtle-surface: var(--COLOR-HINOKI-95);
     --theme-cell-subtle-text: var(--COLOR-HINOKI-05);
     --theme-cell-subtle-textMuted: var(--COLOR-HINOKI-20);
@@ -1552,6 +1849,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: var(--COLOR-HINOKI-80);
     --theme-cell-subtle-shadow: rgba(2, 0, 0, 0.45);
     --theme-cell-subtle-shadowSoft: rgba(2, 0, 0, 0.23);
+    --theme-cell-subtle-glowLightness: 1;
+    --theme-cell-subtle-glowChroma: 0.5;
+    --theme-cell-subtle-glowAlpha: 0.25;
   }
 
   :root:not([data-appearance]) [data-theme="inverse"] {
@@ -1569,6 +1869,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0.45);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0.23);
+    --theme-cell-primary-glowLightness: 1;
+    --theme-cell-primary-glowChroma: 0.5;
+    --theme-cell-primary-glowAlpha: 0.25;
   }
 }
 
@@ -1588,6 +1891,9 @@
     --voice-neutral-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-neutral-primary-shadow: rgba(0, 0, 0, 0);
     --voice-neutral-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-neutral-primary-glowLightness: 0;
+    --voice-neutral-primary-glowChroma: 0;
+    --voice-neutral-primary-glowAlpha: 0;
     --voice-neutral-subtle-surface: var(--COLOR-SUMI-95);
     --voice-neutral-subtle-text: var(--COLOR-SUMI-00);
     --voice-neutral-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -1602,6 +1908,9 @@
     --voice-neutral-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-neutral-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-neutral-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-neutral-subtle-glowLightness: 0;
+    --voice-neutral-subtle-glowChroma: 0;
+    --voice-neutral-subtle-glowAlpha: 0;
     --voice-brand-primary-surface: var(--COLOR-AI-95);
     --voice-brand-primary-text: var(--COLOR-SUMI-00);
     --voice-brand-primary-textMuted: var(--COLOR-SUMI-00);
@@ -1616,6 +1925,9 @@
     --voice-brand-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-primary-shadow: rgba(0, 0, 0, 0);
     --voice-brand-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-brand-primary-glowLightness: 0;
+    --voice-brand-primary-glowChroma: 0;
+    --voice-brand-primary-glowAlpha: 0;
     --voice-brand-subtle-surface: var(--COLOR-SUMI-95);
     --voice-brand-subtle-text: var(--COLOR-SUMI-00);
     --voice-brand-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -1630,6 +1942,9 @@
     --voice-brand-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-brand-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-brand-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-brand-subtle-glowLightness: 0;
+    --voice-brand-subtle-glowChroma: 0;
+    --voice-brand-subtle-glowAlpha: 0;
     --voice-accent-primary-surface: var(--COLOR-HINOKI-95);
     --voice-accent-primary-text: var(--COLOR-SUMI-00);
     --voice-accent-primary-textMuted: var(--COLOR-SUMI-00);
@@ -1644,6 +1959,9 @@
     --voice-accent-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-primary-shadow: rgba(0, 0, 0, 0);
     --voice-accent-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-accent-primary-glowLightness: 0;
+    --voice-accent-primary-glowChroma: 0;
+    --voice-accent-primary-glowAlpha: 0;
     --voice-accent-subtle-surface: var(--COLOR-SUMI-95);
     --voice-accent-subtle-text: var(--COLOR-SUMI-00);
     --voice-accent-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -1658,6 +1976,9 @@
     --voice-accent-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --voice-accent-subtle-shadow: rgba(0, 0, 0, 0);
     --voice-accent-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-accent-subtle-glowLightness: 0;
+    --voice-accent-subtle-glowChroma: 0;
+    --voice-accent-subtle-glowAlpha: 0;
     --voice-inverse-primary-surface: var(--COLOR-SUMI-95);
     --voice-inverse-primary-text: var(--COLOR-SUMI-00);
     --voice-inverse-primary-textMuted: var(--COLOR-SUMI-00);
@@ -1672,6 +1993,9 @@
     --voice-inverse-primary-buttonBackgroundColorSecondaryHover: transparent;
     --voice-inverse-primary-shadow: rgba(0, 0, 0, 0);
     --voice-inverse-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --voice-inverse-primary-glowLightness: 0;
+    --voice-inverse-primary-glowChroma: 0;
+    --voice-inverse-primary-glowAlpha: 0;
   }
 
   :root:not([data-appearance]) [data-theme="neutral"] {
@@ -1689,6 +2013,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-95);
     --theme-cell-subtle-text: var(--COLOR-SUMI-00);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -1703,6 +2030,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root:not([data-appearance]) [data-theme="brand"] {
@@ -1720,6 +2050,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-95);
     --theme-cell-subtle-text: var(--COLOR-SUMI-00);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -1734,6 +2067,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root:not([data-appearance]) [data-theme="accent"] {
@@ -1751,6 +2087,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
     --theme-cell-subtle-surface: var(--COLOR-SUMI-95);
     --theme-cell-subtle-text: var(--COLOR-SUMI-00);
     --theme-cell-subtle-textMuted: var(--COLOR-SUMI-00);
@@ -1765,6 +2104,9 @@
     --theme-cell-subtle-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-subtle-shadow: rgba(0, 0, 0, 0);
     --theme-cell-subtle-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-subtle-glowLightness: 0;
+    --theme-cell-subtle-glowChroma: 0;
+    --theme-cell-subtle-glowAlpha: 0;
   }
 
   :root:not([data-appearance]) [data-theme="inverse"] {
@@ -1782,6 +2124,9 @@
     --theme-cell-primary-buttonBackgroundColorSecondaryHover: transparent;
     --theme-cell-primary-shadow: rgba(0, 0, 0, 0);
     --theme-cell-primary-shadowSoft: rgba(0, 0, 0, 0);
+    --theme-cell-primary-glowLightness: 0;
+    --theme-cell-primary-glowChroma: 0;
+    --theme-cell-primary-glowAlpha: 0;
   }
 }
 

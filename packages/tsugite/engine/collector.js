@@ -26,7 +26,7 @@ import { oklch } from "culori";
 import { rawColorTokens, rawRefName, assertRawReferences } from "../theme-default/raw.color.tokens.js";
 import { semanticColorTokens } from "../theme-default/semantic.color.tokens.js";
 import { themeVoices, themeChannels, computedChannels, voiceMatrix, cellName, voicePointerName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
-import { shadowTint, voiceShadowTint, SHADOW_KNOBS, SHADOW_SOFT_RATIO } from "../theme-default/shadow.tokens.js";
+import { shadowTint, voiceShadowTint, glowTint, voiceGlowTint, SHADOW_KNOBS, SHADOW_SOFT_RATIO } from "../theme-default/shadow.tokens.js";
 import { uiSeamTokens } from "../theme-default/seam.ui.tokens.js";
 import { TIERS, typeFamilies, typeWeights, typeVoices, typeSizes, typeLineLengths } from "../theme-default/typography.tokens.js";
 import { spaceScale, spaceSteps, sizeConstantName, sizeTokenName } from "../theme-default/size.tokens.js";
@@ -60,7 +60,13 @@ export function shadowInk(surfaceValue, appearance, voice = null, soft = false) 
   return tint(base, { lightness, chroma, alpha: alpha * (soft ? SHADOW_SOFT_RATIO : 1) });
 }
 
-/** The recipe and its overrides are total and in range; an override names a real voice. */
+/** A glow valve for one appearance: the voice's override, else the global. Emitted as a number. */
+export const glowKnob = (voice, knob, appearance) =>
+  String(voiceGlowTint[voice]?.[knob]?.[appearance] ?? glowTint[knob][appearance]);
+
+const GLOW_KEYS = { glowLightness: "lightness", glowChroma: "chroma", glowAlpha: "alpha" };
+
+/** The recipes and their overrides are total and in range; an override names a real voice. */
 export function validateShadowTint() {
   const problems = [];
   const check = (where, table) => {
@@ -75,10 +81,16 @@ export function validateShadowTint() {
   for (const knob of SHADOW_KNOBS) {
     for (const a of APPEARANCES) if (!(a in (shadowTint[knob] ?? {}))) problems.push(`shadowTint/${knob} is missing ${a}`);
   }
+  for (const knob of SHADOW_KNOBS) {
+    for (const a of APPEARANCES) if (!(a in (glowTint[knob] ?? {}))) problems.push(`glowTint/${knob} is missing ${a}`);
+  }
   check("shadowTint", shadowTint);
-  for (const [voice, table] of Object.entries(voiceShadowTint)) {
-    if (!voiceMatrix[voice]) problems.push(`voiceShadowTint: "${voice}" is not a voice`);
-    check(`voiceShadowTint/${voice}`, table);
+  check("glowTint", glowTint);
+  for (const [name, overrides] of [["voiceShadowTint", voiceShadowTint], ["voiceGlowTint", voiceGlowTint]]) {
+    for (const [voice, table] of Object.entries(overrides)) {
+      if (!voiceMatrix[voice]) problems.push(`${name}: "${voice}" is not a voice`);
+      check(`${name}/${voice}`, table);
+    }
   }
   if (problems.length) throw new Error(`The shadow recipe is invalid:\n${problems.join("\n")}`);
 }
@@ -87,9 +99,13 @@ export function validateShadowTint() {
 const groundShadowTokens = () => {
   const page = semanticColorTokens["--color-surface-page"];
   const modes = (soft) => Object.fromEntries(APPEARANCES.map((a) => [a, shadowInk(page[a], a, null, soft)]));
+  const valve = (knob) => Object.fromEntries(APPEARANCES.map((a) => [a, glowKnob(null, knob, a)]));
   return {
     "--color-shadow-ground": modes(false),
     "--color-shadow-ground-soft": modes(true),
+    "--shadow-glow-lightness": valve("lightness"),
+    "--shadow-glow-chroma": valve("chroma"),
+    "--shadow-glow-alpha": valve("alpha"),
   };
 };
 
@@ -302,6 +318,7 @@ export function validateVoices() {
 
 /** One cell's CSS value: authored channels from the table, computed ones from the recipes. */
 function cellValue(voice, vol, key, appearance) {
+  if (key in GLOW_KEYS) return glowKnob(voice, GLOW_KEYS[key], appearance);
   if (key in computedChannels) {
     const surface = themeVoices[voice][vol].surface[appearance];
     return resolveValue(shadowInk(surface, appearance, voice, key === "shadowSoft")).css;
