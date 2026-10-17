@@ -74,7 +74,7 @@ const groundsOfCase9 = [
 ];
 const volumesOfCase9 = [
   { volume: "absolute", title: "Absolute: the card asks for subtle", lead: "data-prominence=\"subtle\" on the Card, no voice: the surrounding voice at subtle volume. On a subtle ground it is the ground's own colour; inverse has no subtle, so the semantic page surface answers." },
-  { volume: "other", title: "Relative: the other volume of the same voice", lead: "The card reads the cell of the volume its ground is not (the cells are inherited from the ground's voice block). Inverse has no second volume, so it falls back." },
+  { volume: "other", title: "Relative: the other volume of the same voice", lead: "The card reads the surface cell of the volume its ground is not (the cells are inherited from the ground's voice block) — and only the surface. Its text keeps the ground's ink, so where the volume flips the text sinks into the card: turning the surface is not turning the voice. Inverse has no second volume and falls back to the page surface under inverse's white text." },
   { volume: "ink", title: "Relative: one step of the voice's ink", lead: "Case 3's transparency as the card's ground: 10% of the voice's text over whatever lies beneath. Every ground, every mode, one rule." },
 ];
 ---
@@ -338,7 +338,7 @@ const volumesOfCase9 = [
                   <Card padding="md" data-prominence={volume === "absolute" ? "subtle" : undefined} class={`lab-vol lab-vol-${volume}`} data-edge="Card edge">
                     <div class="lab-claimed-body">
                       <Heading element="h4" size="5" text={`on ${theme} · ${prominence}`} />
-                      <Text text="Stands out inside the voice." />
+                      <Text text="Stands out inside the voice." data-contrast="Card text" />
                     </div>
                   </Card>
                 </Surface>
