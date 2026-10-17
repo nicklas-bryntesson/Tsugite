@@ -262,7 +262,9 @@ test.describe('backdrop and motion', () => {
     // a frame into the exit: no longer [open], still displayed
     const during = await card.evaluate((el) => new Promise((done) => requestAnimationFrame(() => done(el.getBoundingClientRect().height))))
     expect(await animations(page, 'modal-signup')).toBeGreaterThan(0)
-    expect(during).toBe(before)
+    // a frame mid-animation can land a fraction of a pixel off (seen: 0.00003px); within
+    // 0.05px the child has kept its size, which is the claim
+    expect(during).toBeCloseTo(before, 1)
   })
 
   test('under reduced motion nothing moves', async ({ page }) => {
