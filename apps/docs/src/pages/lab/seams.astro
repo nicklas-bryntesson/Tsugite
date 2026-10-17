@@ -39,6 +39,7 @@ const turnsOfCase4 = [
   { turn: "static", expect: { light: ["fail", "pass"], dark: ["pass", "pass"] }, title: "A static inverse claim (Cover today)", lead: "data-theme=\"inverse\" in the markup, on every ground. Right on the media, wrong on the page: there light ink stands on a light ground." },
   { turn: "claim", expect: { light: ["pass", "fail"], dark: ["pass", "pass"] }, title: "The owner claims inverse from CSS, on the media", lead: "An attribute cannot change in a query, so the owner points the --theme-* channels at the voice cells itself. The cells exist only under [data-theme], so the pointers resolve to nothing and the semantic fallback answers." },
   { turn: "reach", expect: { light: ["pass", "pass"], dark: ["pass", "pass"] }, title: "The owner reaches into the components (AiPoc's .Hero way)", lead: "On the media the owner sets color on itself and writes Button's private colour slots per emphasis and per state, with RAW values — white regardless of the global theme." },
+  { turn: "pointer", expect: { light: ["pass", "pass"], dark: ["pass", "pass"] }, title: "The owner claims inverse through the voice's pointers", lead: "The colour factory now also publishes every voice cell on the root under its own name (--voice-inverse-primary-text …). On the media the owner points the --theme-* channels there. Text, buttons and every state follow, because they already read the channels: no private names, no RAW, no states written by hand." },
 ];
 ---
 
@@ -480,6 +481,23 @@ const turnsOfCase4 = [
         --theme-button-borderColor-primary: var(--theme-cell-primary-buttonBorderColorPrimary);
         --theme-button-color-secondary: var(--theme-cell-primary-buttonColorSecondary);
         --theme-button-borderColor-secondary: var(--theme-cell-primary-buttonBorderColorSecondary);
+      }
+
+      /* The claim, channel by channel. Written by hand here; the mapping is generated
+         vocabulary too, so a factory could emit it. */
+      & .lab-cover-pointer {
+        --theme-surface: var(--voice-inverse-primary-surface);
+        --theme-text: var(--voice-inverse-primary-text);
+        --theme-textMuted: var(--voice-inverse-primary-textMuted);
+        --theme-border: var(--voice-inverse-primary-border);
+        --theme-button-color-primary: var(--voice-inverse-primary-buttonColorPrimary);
+        --theme-button-backgroundColor-primary: var(--voice-inverse-primary-buttonBackgroundColorPrimary);
+        --theme-button-borderColor-primary: var(--voice-inverse-primary-buttonBorderColorPrimary);
+        --theme-button-backgroundColor-primary-hover: var(--voice-inverse-primary-buttonBackgroundColorPrimaryHover);
+        --theme-button-color-secondary: var(--voice-inverse-primary-buttonColorSecondary);
+        --theme-button-borderColor-secondary: var(--voice-inverse-primary-buttonBorderColorSecondary);
+        --theme-button-borderColor-secondary-hover: var(--voice-inverse-primary-buttonBorderColorSecondaryHover);
+        --theme-button-backgroundColor-secondary-hover: var(--voice-inverse-primary-buttonBackgroundColorSecondaryHover);
       }
 
       & .lab-cover-reach {
