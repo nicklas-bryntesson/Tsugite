@@ -41,7 +41,7 @@ for it. Found in the component tree, not authored here.
 | `--custom-text-lineLength` | Text |
 | `--custom-textblock-lineLength` | TextBlock |
 
-## 2. Theme channels — `--theme-*` (12) — read with one fallback
+## 2. Theme channels — `--theme-*` (14) — read with one fallback
 
 A channel is present when a voice region (`data-theme`) is an ancestor and absent
 otherwise, so it is read with exactly one fallback to the semantic token the
@@ -49,23 +49,31 @@ component would otherwise use (ADR-0008): `var(--theme-text, var(--color-text-pr
 Voices and their volumes (`data-prominence`, primary | subtle): `neutral` (primary, subtle), `brand` (primary, subtle), `accent` (primary, subtle), `inverse` (primary).
 `--theme-cell-*` names are generated wiring and are never referenced.
 
-`--theme-surface`, `--theme-text`, `--theme-textMuted`, `--theme-border`, `--theme-button-color-primary`, `--theme-button-backgroundColor-primary`, `--theme-button-borderColor-primary`, `--theme-button-backgroundColor-primary-hover`, `--theme-button-color-secondary`, `--theme-button-borderColor-secondary`, `--theme-button-borderColor-secondary-hover`, `--theme-button-backgroundColor-secondary-hover`.
+`--theme-surface`, `--theme-text`, `--theme-textMuted`, `--theme-border`, `--theme-button-color-primary`, `--theme-button-backgroundColor-primary`, `--theme-button-borderColor-primary`, `--theme-button-backgroundColor-primary-hover`, `--theme-button-color-secondary`, `--theme-button-borderColor-secondary`, `--theme-button-borderColor-secondary-hover`, `--theme-button-backgroundColor-secondary-hover`, `--theme-shadow`, `--theme-shadow-soft`.
 
-### Voice pointers — `--voice-<voice>-<volume>-<channel>` (84) — read only by a claim
+The last 2 (`--theme-shadow`, `--theme-shadow-soft`) are computed by the factory from each voice's surface and the shadow recipe (theme-default/shadow.tokens.js), never authored per voice.
+
+### Voice pointers — `--voice-<voice>-<volume>-<channel>` (98) — read only by a claim
 
 Every voice cell, published on the root under its own name (ADR-0006, amended
 2026-10-17), so a composition can claim a voice from CSS where an attribute cannot
 change: `--theme-text: var(--voice-inverse-primary-text)`, one line per channel. A component never
 reads them; it reads the channels above.
 
-Voice-volume pairs: `neutral-primary`, `neutral-subtle`, `brand-primary`, `brand-subtle`, `accent-primary`, `accent-subtle`, `inverse-primary`. Channels: `surface`, `text`, `textMuted`, `border`, `buttonColorPrimary`, `buttonBackgroundColorPrimary`, `buttonBorderColorPrimary`, `buttonBackgroundColorPrimaryHover`, `buttonColorSecondary`, `buttonBorderColorSecondary`, `buttonBorderColorSecondaryHover`, `buttonBackgroundColorSecondaryHover`.
+Voice-volume pairs: `neutral-primary`, `neutral-subtle`, `brand-primary`, `brand-subtle`, `accent-primary`, `accent-subtle`, `inverse-primary`. Channels: `surface`, `text`, `textMuted`, `border`, `buttonColorPrimary`, `buttonBackgroundColorPrimary`, `buttonBorderColorPrimary`, `buttonBackgroundColorPrimaryHover`, `buttonColorSecondary`, `buttonBorderColorSecondary`, `buttonBorderColorSecondaryHover`, `buttonBackgroundColorSecondaryHover`, `shadow`, `shadowSoft`.
+
+### The ground's snapshot — `--ground-shadow`, `--ground-shadow-soft` — published by Surface
+
+The shadow a ground casts, resolved on the Surface that paints it and inherited as a
+finished colour, so a claim further down cannot repaint it (docs/seams.md, lab case 7).
+Read with one fallback to the page's ink: `var(--ground-shadow, var(--color-shadow-ground))`.
 
 ## 3. Semantic tokens — read directly
 
 The layer a component's slot resolves to when no theme channel applies, and the
 only layer allowed to reference RAW.
 
-### Colour — `--color-*` (44, four-mode)
+### Colour — `--color-*` (46, four-mode)
 
 Each name switches light · dark · light-contrast · dark-contrast by itself; the
 component never mentions appearance (ADR-0004 §2).
@@ -116,6 +124,8 @@ component never mentions appearance (ADR-0004 §2).
 | `--color-cta-gradient-4` | Gradient stop 4. |
 | `--color-cta-ink` | Ink on the CTA gradient. |
 | `--color-cta-reflection` | The reflection: the ink at a quarter, over whatever the gradient is doing. |
+| `--color-shadow-ground` | The page's shadow ink: what a card casts with no Surface above it (computed). |
+| `--color-shadow-ground-soft` | The page's soft shadow ink, the tighter second layer (computed). |
 
 ### Spacing — `--size-*` (19)
 

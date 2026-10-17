@@ -7,7 +7,7 @@
 // writes the CSS. The range is the composition's own: a container query, and the viewport
 // query as its fallback where containers are unsupported (doctrine §5: a pair, fallback first,
 // nothing declared in both).
-import { themeChannels, voiceMatrix, voicePointerName } from "../theme-default/theme.voices.tokens.js";
+import { themeChannels, computedChannels, voiceMatrix, voicePointerName } from "../theme-default/theme.voices.tokens.js";
 
 const condition = (feature, { min, max }) =>
   [min && `(min-${feature}: ${min})`, max && `(max-${feature}: calc(${max} - 0.001rem))`].filter(Boolean).join(" and ");
@@ -17,7 +17,7 @@ export function claimLines(voice, volume, indent) {
   if (!voiceMatrix[voice]?.includes(volume)) {
     throw new Error(`a claim of ${voice} × ${volume} is not an allowed combination (ADR-0006 §6)`);
   }
-  return Object.entries(themeChannels).map(
+  return Object.entries({ ...themeChannels, ...computedChannels }).map(
     ([key, channel]) => `${indent}${channel}: var(${voicePointerName(voice, volume, key)});`,
   );
 }

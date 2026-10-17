@@ -25,13 +25,14 @@ import { existsSync } from "node:fs";
 import { oklch } from "culori";
 import { rawColorTokens, rawRefName, assertRawReferences } from "../theme-default/raw.color.tokens.js";
 import { semanticColorTokens } from "../theme-default/semantic.color.tokens.js";
-import { themeVoices, themeChannels, voiceMatrix, cellName, voicePointerName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
+import { themeVoices, themeChannels, computedChannels, voiceMatrix, cellName, voicePointerName, VOLUMES } from "../theme-default/theme.voices.tokens.js";
+import { shadowTint, voiceShadowTint, SHADOW_KNOBS, SHADOW_SOFT_RATIO } from "../theme-default/shadow.tokens.js";
 import { uiSeamTokens } from "../theme-default/seam.ui.tokens.js";
 import { TIERS, typeFamilies, typeWeights, typeVoices, typeSizes, typeLineLengths } from "../theme-default/typography.tokens.js";
 import { spaceScale, spaceSteps, sizeConstantName, sizeTokenName } from "../theme-default/size.tokens.js";
 import { siteConstants, siteOffset, siteOffsetConstantName } from "../theme-default/site.tokens.js";
 import { GRID_STEPS, GRID_MEDIA, gridSteps, gridGapConstantName, gridColumnsConstantName } from "../theme-default/grid.tokens.js";
-import { resolveValue, computeMix, isRecipe, toSrgbCss, toSrgbHex } from "./color-engine.js";
+import { resolveValue, computeMix, isRecipe, toSrgbCss, toSrgbHex, tint } from "./color-engine.js";
 
 export const APPEARANCES = ["light", "dark", "light-contrast", "dark-contrast"];
 
@@ -45,8 +46,56 @@ export const TIER_MEDIA = {
   wide: "(min-width: 90rem)",
 };
 
+// ── Shadow inks (docs/seams.md, lab case 7) ───────────────────────────────────
+
+/** A knob of the shadow recipe for one appearance: the voice's override, else the global. */
+const shadowKnob = (voice, knob, appearance) =>
+  voiceShadowTint[voice]?.[knob]?.[appearance] ?? shadowTint[knob][appearance];
+
+/** The shadow ink a ground casts: its surface (a RAW pointer) tinted by the recipe. */
+export function shadowInk(surfaceValue, appearance, voice = null, soft = false) {
+  const base = rawRefName(surfaceValue);
+  if (!base) throw new Error(`shadow: a ground's surface must be a RAW pointer to be tinted, got ${surfaceValue}`);
+  const [lightness, chroma, alpha] = SHADOW_KNOBS.map((k) => shadowKnob(voice, k, appearance));
+  return tint(base, { lightness, chroma, alpha: alpha * (soft ? SHADOW_SOFT_RATIO : 1) });
+}
+
+/** The recipe and its overrides are total and in range; an override names a real voice. */
+export function validateShadowTint() {
+  const problems = [];
+  const check = (where, table) => {
+    for (const [knob, modes] of Object.entries(table)) {
+      if (!SHADOW_KNOBS.includes(knob)) problems.push(`${where}: unknown knob "${knob}"`);
+      for (const [a, v] of Object.entries(modes)) {
+        if (!APPEARANCES.includes(a)) problems.push(`${where}/${knob}: unknown mode "${a}"`);
+        if (typeof v !== "number" || v < 0 || v > 1) problems.push(`${where}/${knob}/${a}: ${v} is not within 0–1`);
+      }
+    }
+  };
+  for (const knob of SHADOW_KNOBS) {
+    for (const a of APPEARANCES) if (!(a in (shadowTint[knob] ?? {}))) problems.push(`shadowTint/${knob} is missing ${a}`);
+  }
+  check("shadowTint", shadowTint);
+  for (const [voice, table] of Object.entries(voiceShadowTint)) {
+    if (!voiceMatrix[voice]) problems.push(`voiceShadowTint: "${voice}" is not a voice`);
+    check(`voiceShadowTint/${voice}`, table);
+  }
+  if (problems.length) throw new Error(`The shadow recipe is invalid:\n${problems.join("\n")}`);
+}
+
+/** The page's own shadow inks, from the page surface: what a ground with no voice casts. */
+const groundShadowTokens = () => {
+  const page = semanticColorTokens["--color-surface-page"];
+  const modes = (soft) => Object.fromEntries(APPEARANCES.map((a) => [a, shadowInk(page[a], a, null, soft)]));
+  return {
+    "--color-shadow-ground": modes(false),
+    "--color-shadow-ground-soft": modes(true),
+  };
+};
+
 const factories = {
   semantic: semanticColorTokens,
+  ground: groundShadowTokens(),
 };
 
 export function allTokens() {
@@ -251,14 +300,24 @@ export function validateVoices() {
   if (problems.length) throw new Error(`The voice table is incomplete:\n${problems.join("\n")}`);
 }
 
+/** One cell's CSS value: authored channels from the table, computed ones from the recipes. */
+function cellValue(voice, vol, key, appearance) {
+  if (key in computedChannels) {
+    const surface = themeVoices[voice][vol].surface[appearance];
+    return resolveValue(shadowInk(surface, appearance, voice, key === "shadowSoft")).css;
+  }
+  return resolveValue(themeVoices[voice][vol][key][appearance]).css;
+}
+
 export function generateThemesStylesheet() {
   validateVoices();
+  validateShadowTint();
 
   // Channel wiring: [data-theme] defaults every channel to the primary
   // column; [data-prominence] re-aims. Voice-agnostic, appearance-agnostic —
   // one block per volume stop, exactly as ADR-0006 §3 promises.
   const wire = (volume, indent) =>
-    Object.entries(themeChannels)
+    Object.entries({ ...themeChannels, ...computedChannels })
       .map(([key, channel]) => `${indent}${channel}: var(${cellName(volume, key)});`)
       .join("\n");
 
@@ -277,9 +336,8 @@ export function generateThemesStylesheet() {
   const cells = (voice, appearance, indent) =>
     voiceMatrix[voice]
       .flatMap((vol) =>
-        Object.keys(themeChannels).map(
-          (key) =>
-            `${indent}${cellName(vol, key)}: ${resolveValue(themeVoices[voice][vol][key][appearance]).css};`,
+        Object.keys({ ...themeChannels, ...computedChannels }).map(
+          (key) => `${indent}${cellName(vol, key)}: ${cellValue(voice, vol, key, appearance)};`,
         ),
       )
       .join("\n");
@@ -290,9 +348,8 @@ export function generateThemesStylesheet() {
     Object.keys(voiceMatrix)
       .flatMap((voice) =>
         voiceMatrix[voice].flatMap((vol) =>
-          Object.keys(themeChannels).map(
-            (key) =>
-              `${indent}${voicePointerName(voice, vol, key)}: ${resolveValue(themeVoices[voice][vol][key][appearance]).css};`,
+          Object.keys({ ...themeChannels, ...computedChannels }).map(
+            (key) => `${indent}${voicePointerName(voice, vol, key)}: ${cellValue(voice, vol, key, appearance)};`,
           ),
         ),
       )

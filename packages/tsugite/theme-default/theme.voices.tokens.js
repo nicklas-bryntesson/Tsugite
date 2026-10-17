@@ -42,6 +42,14 @@ export const themeChannels = {
   buttonBackgroundColorSecondaryHover: "--theme-button-backgroundColor-secondary-hover",
 };
 
+// Computed channels: derived by the factory from a voice's own cells, never authored per
+// voice, so they sit outside the slot schema (§5) and cost a voice nothing. The shadow inks
+// are the voice's surface tinted by the shadow recipe (theme-default/shadow.tokens.js).
+export const computedChannels = {
+  shadow: "--theme-shadow",
+  shadowSoft: "--theme-shadow-soft",
+};
+
 /** Cell name for a volume × channel pair — generated vocabulary, never typed. */
 export const cellName = (volume, channelKey) => `--theme-cell-${volume}-${channelKey}`;
 
