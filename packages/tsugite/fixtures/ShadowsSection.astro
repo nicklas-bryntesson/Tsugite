@@ -1,0 +1,199 @@
+---
+// The shadow matrix (ADR-0006 and ADR-0016, amended 2026-10-17): every ground the voices
+// allow, and the page, each holding a card of every voice. A card's shadow mixes two tones —
+// the ground's ink, published by the Surface it lies on, and a glow of the card's own surface
+// through the valves of the voice it speaks. The readout under each card names both, as this
+// browser resolves them, in the current appearance; the valve table is the recipe itself
+// (theme-default/shadow.tokens.js).
+import Heading from "../components/primitives/typography/Heading/Heading.astro";
+import Text from "../components/primitives/typography/Text/Text.astro";
+import Caption from "../components/primitives/typography/Caption/Caption.astro";
+import Card from "../components/primitives/Card/Card.astro";
+import Surface from "../components/regions/Surface/Surface.astro";
+import { voiceMatrix } from "../theme-default/theme.voices.tokens.js";
+import { shadowTint, glowTint, voiceShadowTint, voiceGlowTint, SHADOW_KNOBS, SHADOW_SOFT_RATIO } from "../theme-default/shadow.tokens.js";
+
+const MODES = ["light", "dark", "light-contrast", "dark-contrast"];
+const grounds = [
+  { voice: null, volume: null },
+  ...Object.entries(voiceMatrix).flatMap(([voice, volumes]) => volumes.map((volume) => ({ voice, volume }))),
+];
+const cardVoices = [null, ...Object.keys(voiceMatrix)];
+const overrides = [
+  ...Object.entries(voiceShadowTint).map(([voice, t]) => ({ layer: "ground ink", voice, knobs: Object.keys(t) })),
+  ...Object.entries(voiceGlowTint).map(([voice, t]) => ({ layer: "glow", voice, knobs: Object.keys(t) })),
+];
+const label = (voice: string | null, volume: string | null) => (voice ? `${voice} × ${volume}` : "the page");
+---
+
+<section class="KitchenSink-section" id="Shadows">
+  <Heading text="Shadows" element="h2" size="2" />
+
+  <Text>
+    A card's shadow mixes two tones: the <em>ground's ink</em>, which the Surface a card lies on
+    publishes, and a <em>glow</em> of the card's own surface, through the valves of the voice it
+    speaks. Each row is a ground; each card in it speaks a voice (claimed on the card). The readout
+    gives both tones as this browser resolves them — switch the appearance to read the other modes.
+    Where relative colour is missing, the glow is absent and the ground's ink stands alone.
+  </Text>
+
+  <Text text="The valves" element="h3" size="lg" />
+  {/* The table scrolls sideways on a narrow screen, so the region takes focus and a name:
+      a keyboard can scroll it too. */}
+  <div class="shadows-valves" role="region" aria-label="Shadow valves per mode" tabindex="0">
+    <table>
+      <caption><Caption size="sm" text={`Ground ink (soft layer at ${SHADOW_SOFT_RATIO} × alpha) · glow`} /></caption>
+      <thead>
+        <tr>
+          <th scope="col">Knob</th>
+          {MODES.map((m) => <th scope="col">{m}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {SHADOW_KNOBS.map((k) => (
+          <tr>
+            <th scope="row">ink {k}</th>
+            {MODES.map((m) => <td>{shadowTint[k][m]}</td>)}
+          </tr>
+        ))}
+        {SHADOW_KNOBS.map((k) => (
+          <tr>
+            <th scope="row">glow {k}</th>
+            {MODES.map((m) => <td>{glowTint[k][m]}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <Caption
+      size="sm"
+      text={overrides.length
+        ? `Per-voice overrides: ${overrides.map((o) => `${o.voice} (${o.layer}: ${o.knobs.join(", ")})`).join("; ")}.`
+        : "Per-voice overrides: none — every voice takes the recipe."}
+    />
+  </div>
+
+  <Text text="Every ground, every voice" element="h3" size="lg" />
+  <div class="shadows-matrix">
+    {grounds.map(({ voice, volume }) => {
+      const row = (
+        <div class="shadows-row">
+          <div class="shadows-ground-label"><Caption size="sm" text={`On ${label(voice, volume)}`} /></div>
+          <div class="shadows-cards">
+            {cardVoices.map((cv) => (
+              <div class="shadows-cell" data-shadow-cell>
+                <Card elevation="md" padding="sm" data-theme={cv ?? undefined} data-prominence={cv ? "primary" : undefined}>
+                  <Caption size="sm" text={cv ? `${cv} × primary` : "no voice"} />
+                </Card>
+                <dl class="shadows-readout" data-shadow-readout></dl>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+      return voice ? (
+        <Surface theme={voice} prominence={volume} capInline={false}>{row}</Surface>
+      ) : (
+        row
+      );
+    })}
+  </div>
+</section>
+
+<script>
+  // The readout: split each card's computed box-shadow into its layers — the ground's ink is
+  // the first, the glow (when this browser mixes it) the third — and show each as a swatch.
+  const layers = (shadow: string) => (shadow === "none" ? [] : shadow.split(/,(?![^(]*\))/).map((l) => l.trim()));
+  const colorOf = (layer: string) => layer.match(/^(rgba?\([^)]*\)|oklch\([^)]*\)|oklab\([^)]*\)|color\([^)]*\))/)?.[1] ?? layer;
+  const swatch = (color: string) => `<span class="shadows-swatch" style="background:${color}"></span><code>${color}</code>`;
+
+  const read = () => {
+    for (const cell of document.querySelectorAll("[data-shadow-cell]")) {
+      const card = cell.querySelector(".Card");
+      const out = cell.querySelector("[data-shadow-readout]");
+      if (!card || !out) continue;
+      const parts = layers(getComputedStyle(card).boxShadow);
+      const ink = parts[0] ? swatch(colorOf(parts[0])) : "none";
+      const glow = parts[2] ? swatch(colorOf(parts[2])) : "absent";
+      out.innerHTML = `<dt>ink</dt><dd>${ink}</dd><dt>glow</dt><dd>${glow}</dd>`;
+    }
+  };
+
+  read();
+  new MutationObserver(read).observe(document.documentElement, { attributes: true, attributeFilter: ["data-appearance"] });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", read);
+  matchMedia("(prefers-contrast: more)").addEventListener("change", read);
+</script>
+
+<style is:global>
+/* Control-room chrome only. The colours on the cards come from the system: the grounds'
+   inks, the cards' surfaces and the glow valves. */
+#Shadows {
+  & .shadows-valves {
+    display: grid;
+    gap: var(--size-sm);
+    inline-size: 100%;
+    overflow-x: auto;
+
+    & table {
+      border-collapse: collapse;
+      font-size: var(--fontSize-label-small);
+    }
+
+    & th,
+    & td {
+      padding: var(--size-xs) var(--size-sm);
+      border-block-end: 1px solid var(--color-border-default);
+      text-align: start;
+    }
+  }
+
+  & .shadows-matrix {
+    display: grid;
+    gap: var(--size-md);
+    inline-size: 100%;
+  }
+
+  & .shadows-row {
+    display: grid;
+    gap: var(--size-sm);
+    padding-block: var(--size-md);
+  }
+
+  & .shadows-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(11rem, 100%), 1fr));
+    gap: var(--size-lg);
+  }
+
+  & .shadows-cell {
+    display: grid;
+    gap: var(--size-sm);
+    align-content: start;
+  }
+
+  & .shadows-readout {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--size-xs) var(--size-sm);
+    margin: 0;
+    font-family: var(--fontFamily-code);
+    font-size: var(--fontSize-label-small);
+
+    & dd {
+      display: flex;
+      align-items: center;
+      gap: var(--size-xs);
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  & .shadows-swatch {
+    flex: none;
+    inline-size: 1rem;
+    block-size: 1rem;
+    border-radius: 0.25rem;
+    box-shadow: inset 0 0 0 1px var(--color-border-default);
+  }
+}
+</style>
