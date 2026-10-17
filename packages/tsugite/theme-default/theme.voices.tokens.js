@@ -45,6 +45,12 @@ export const themeChannels = {
 /** Cell name for a volume × channel pair — generated vocabulary, never typed. */
 export const cellName = (volume, channelKey) => `--theme-cell-${volume}-${channelKey}`;
 
+/** Pointer name for a voice × volume × channel — published on the root, so a
+    composition can claim a voice from CSS where an attribute cannot change (a
+    container query). Generated vocabulary; a claim points the --theme-* channels
+    at these, never at a value. DRAFT: packages/tsugite/docs/seams.md, lab case 4. */
+export const voicePointerName = (voice, volume, channelKey) => `--voice-${voice}-${volume}-${channelKey}`;
+
 // The combination law (ADR-0006 §6): allowed voice × volume pairs, whitelist.
 // inverse × subtle is deliberately undefined — a half-lifted dark ground has
 // no authored meaning yet, so it does not exist.
