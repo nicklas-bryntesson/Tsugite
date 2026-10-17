@@ -43,6 +43,13 @@ What follows from it:
 - **The system's own answers need no override.** A card at a volume
   within its ground's voice is the system. A brown card on blue is an
   exception someone owns.
+- **Responsibility follows ownership.** The system checks its own answers
+  exhaustively (every voice, volume and mode, contrast tested at build).
+  It cannot check every combination its seams make possible, and does not
+  try. Whoever decides that an exception should exist answers for it
+  holding, contrast included. The system's duty towards exceptions is to
+  make them visible (lab case 6: a filled custom level shows by its name),
+  not to validate them.
 
 Open: in Craft, `--component` was the *system's* designed coupling (a card
 telling its buttons what they are inside it) and `--custom` was the
