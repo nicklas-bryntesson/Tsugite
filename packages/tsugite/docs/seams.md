@@ -197,6 +197,35 @@ ground directly beneath it. The shadow colours themselves would be
 precomputed by the factory (the lab mixes them with relative colour,
 which the floor lacks).
 
+### The pressure of the tint, per mode
+
+Dark mode amplifies a coloured glow: on a dark ground it reads as coloured
+light, so the same mix that is gentle in light mode is loud in dark (seen
+on the accent card). The shadow formula already has the knobs — lightness,
+chroma and alpha — hard-coded in the lab (`calc(l * .45) c h / .4`). They
+become tokens authored per mode, like every colour in the four-mode table:
+
+```css
+oklch(from var(--theme-surface)
+      calc(l * var(--shadowTint-lightness))
+      calc(c * var(--shadowTint-chroma))
+      h / var(--shadowTint-alpha))
+```
+
+- **A global recipe in the theme** (theme-default): three knobs × four
+  modes, twelve values. For example chroma 1 in light, 0.5 in dark, 0 in
+  both contrast modes.
+- **An optional override per voice** (decided: per voice is enough, not
+  per voice × volume): `accent: { shadowTint: { chroma: t(…) } }`. The
+  factory takes the voice's value where it exists, otherwise the global
+  one — the same pattern as a voice's optional stop (ADR-0012 law b), not a
+  new kind of thing. "Make the brown less intense" becomes a row in
+  accent's table, not a hack in CSS.
+- **Applied at build.** The factory precomputes the shadow colour per voice
+  cell and mode (the floor lacks relative colour), so an override costs
+  nothing at runtime: no new seam, no channel, no longer chain. The cost is
+  stewardship — every override is a value someone tunes in four modes.
+
 ## A card in a modal (lab case 8)
 
 - **Today the card is see-through.** Card paints no ground and the modal is
