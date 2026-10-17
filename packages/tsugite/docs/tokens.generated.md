@@ -20,6 +20,27 @@ token; write a `TODO(token)` beside the raw value and raise it as a finding.
 Declared by the component that owns them, on its root (ADR-0013). Never read
 another component's slot. The prefix register lives in ADR-0013.
 
+### Custom levels — `--custom-<component>-<slot>` (10) — public, filled by an exception
+
+The instance's level of the ownership chain (ADR-0005), opened per property where a
+real need showed it. A component reads it with one fallback to its own stop — the
+third seam (ADR-0008). An instance or a composition fills it, pointing at a token,
+never a number; a filled custom level is an exception, and whoever fills it answers
+for it. Found in the component tree, not authored here.
+
+| Custom level | Read by |
+|---|---|
+| `--custom-button-fontSize` | Button |
+| `--custom-button-iconMargin` | Button |
+| `--custom-button-iconSize` | Button |
+| `--custom-button-paddingBlock` | Button |
+| `--custom-button-paddingInline` | Button |
+| `--custom-heading-fontSize` | Heading |
+| `--custom-heading-lineLength` | Heading |
+| `--custom-prose-lineLength` | Prose |
+| `--custom-text-lineLength` | Text |
+| `--custom-textblock-lineLength` | TextBlock |
+
 ## 2. Theme channels — `--theme-*` (12) — read with one fallback
 
 A channel is present when a voice region (`data-theme`) is an ancestor and absent
@@ -29,6 +50,15 @@ Voices and their volumes (`data-prominence`, primary | subtle): `neutral` (prima
 `--theme-cell-*` names are generated wiring and are never referenced.
 
 `--theme-surface`, `--theme-text`, `--theme-textMuted`, `--theme-border`, `--theme-button-color-primary`, `--theme-button-backgroundColor-primary`, `--theme-button-borderColor-primary`, `--theme-button-backgroundColor-primary-hover`, `--theme-button-color-secondary`, `--theme-button-borderColor-secondary`, `--theme-button-borderColor-secondary-hover`, `--theme-button-backgroundColor-secondary-hover`.
+
+### Voice pointers — `--voice-<voice>-<volume>-<channel>` (84) — read only by a claim
+
+Every voice cell, published on the root under its own name (ADR-0006, amended
+2026-10-17), so a composition can claim a voice from CSS where an attribute cannot
+change: `--theme-text: var(--voice-inverse-primary-text)`, one line per channel. A component never
+reads them; it reads the channels above.
+
+Voice-volume pairs: `neutral-primary`, `neutral-subtle`, `brand-primary`, `brand-subtle`, `accent-primary`, `accent-subtle`, `inverse-primary`. Channels: `surface`, `text`, `textMuted`, `border`, `buttonColorPrimary`, `buttonBackgroundColorPrimary`, `buttonBorderColorPrimary`, `buttonBackgroundColorPrimaryHover`, `buttonColorSecondary`, `buttonBorderColorSecondary`, `buttonBorderColorSecondaryHover`, `buttonBackgroundColorSecondaryHover`.
 
 ## 3. Semantic tokens — read directly
 

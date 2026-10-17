@@ -4,7 +4,7 @@
 // reference, per layer, in resolution-chain order — names and roles, never
 // values. It is built from the same factories that emit the CSS, so it cannot
 // drift from them; tests/tokens.test.ts keeps the committed copy fresh.
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
   generateRawStylesheet,
@@ -13,13 +13,14 @@ import {
   generateTypographyStylesheet,
   generateBaseStylesheet,
 } from "./collector.js";
-import { themeChannels, voiceMatrix, VOLUMES } from "../theme-default/theme.voices.tokens.js";
+import { themeChannels, voiceMatrix, VOLUMES, voicePointerName } from "../theme-default/theme.voices.tokens.js";
 import { uiSeamTokens } from "../theme-default/seam.ui.tokens.js";
 import { typeVoices, TIERS } from "../theme-default/typography.tokens.js";
 import { spaceSteps } from "../theme-default/size.tokens.js";
 import { GRID_STEPS } from "../theme-default/grid.tokens.js";
 
 const SEMANTIC_COLOR_SOURCE = fileURLToPath(new URL("../theme-default/semantic.color.tokens.js", import.meta.url));
+const COMPONENTS = fileURLToPath(new URL("../components/", import.meta.url));
 
 /** Distinct declared custom-property names in a stylesheet, in source order. */
 const declaredNames = (css) =>
@@ -128,6 +129,52 @@ function baseSection() {
   ].join("\n");
 }
 
+/** The custom levels a component has opened: every `var(--custom-…` its own files read,
+    found in the component tree itself, so the list cannot drift from the code. */
+function customLevels() {
+  const found = new Map();
+  for (const rel of readdirSync(COMPONENTS, { recursive: true })) {
+    if (!/\.(css|astro)$/.test(rel) || /\.generated\.css$/.test(rel)) continue;
+    const text = readFileSync(COMPONENTS + rel, "utf8");
+    for (const m of text.matchAll(/var\((--custom-[A-Za-z0-9-]+)/g)) {
+      const component = rel.split("/").at(-2);
+      if (!found.has(m[1])) found.set(m[1], new Set());
+      found.get(m[1]).add(component);
+    }
+  }
+  return [...found.entries()].sort(([a], [b]) => a.localeCompare(b));
+}
+
+function customSection() {
+  const rows = customLevels().map(([name, components]) => [name, [...components].join(", ")]);
+  return [
+    `### Custom levels — \`--custom-<component>-<slot>\` (${rows.length}) — public, filled by an exception`,
+    "",
+    "The instance's level of the ownership chain (ADR-0005), opened per property where a",
+    "real need showed it. A component reads it with one fallback to its own stop — the",
+    "third seam (ADR-0008). An instance or a composition fills it, pointing at a token,",
+    "never a number; a filled custom level is an exception, and whoever fills it answers",
+    "for it. Found in the component tree, not authored here.",
+    "",
+    table(["Custom level", "Read by"], rows),
+  ].join("\n");
+}
+
+function voicePointerSection() {
+  const pairs = Object.entries(voiceMatrix).flatMap(([v, vols]) => vols.map((vol) => `${v}-${vol}`));
+  const example = voicePointerName("inverse", "primary", "text");
+  return [
+    `### Voice pointers — \`--voice-<voice>-<volume>-<channel>\` (${pairs.length * Object.keys(themeChannels).length}) — read only by a claim`,
+    "",
+    "Every voice cell, published on the root under its own name (ADR-0006, amended",
+    "2026-10-17), so a composition can claim a voice from CSS where an attribute cannot",
+    `change: \`--theme-text: var(${example})\`, one line per channel. A component never`,
+    "reads them; it reads the channels above.",
+    "",
+    `Voice-volume pairs: ${inlineList(pairs)}. Channels: ${inlineList(Object.keys(themeChannels))}.`,
+  ].join("\n");
+}
+
 function themeSection() {
   const channels = Object.values(themeChannels);
   const voices = Object.entries(voiceMatrix).map(([v, vols]) => `\`${v}\` (${vols.join(", ")})`).join(", ");
@@ -141,6 +188,8 @@ function themeSection() {
     "`--theme-cell-*` names are generated wiring and are never referenced.",
     "",
     inlineList(channels) + ".",
+    "",
+    voicePointerSection(),
   ].join("\n");
 }
 
@@ -211,6 +260,8 @@ export function generateTokenRegistry() {
     "",
     "Declared by the component that owns them, on its root (ADR-0013). Never read",
     "another component's slot. The prefix register lives in ADR-0013.",
+    "",
+    customSection(),
     "",
     themeSection(),
     "",
