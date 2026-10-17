@@ -10,10 +10,10 @@ const grounds = [
   { theme: "inverse", prominence: "primary" },
 ];
 ---
-{/* The card's ground is a Surface inside it, so the card itself takes the shadow of the
-    Surface it lies on. The last card speaks brand on a neutral ground and still casts
-    neutral's ink: the ground's shadow is resolved on the ground, and the card's own voice
-    cannot repaint it. */}
+{/* The shadow's first layer: the ink of the Surface the card lies on. The last card
+    speaks brand on a neutral ground and still casts neutral's ink — the ground's shadow is
+    resolved on the ground, and the card's own voice cannot repaint it. The second layer,
+    the card's own tone mixed in, is not built yet. */}
 {grounds.map(({ theme, prominence }) => (
   <Surface theme={theme} prominence={prominence} capInline={false}>
     <Card elevation="md" padding="none">
