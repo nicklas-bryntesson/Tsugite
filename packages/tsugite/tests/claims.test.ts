@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
 import { generateClaimsStylesheet, claimLines } from "../engine/claims.js";
-import { themeChannels } from "../theme-default/theme.voices.tokens.js";
+import { themeChannels, computedChannels } from "../theme-default/theme.voices.tokens.js";
 import { covercomposition } from "../recipes/covercomposition.recipe";
 
 describe("voice claims", () => {
@@ -17,8 +17,9 @@ describe("voice claims", () => {
 
   it("a claim points every channel of the slot schema, at the voice's pointers", () => {
     const lines = claimLines("inverse", "primary", "");
-    expect(lines).toHaveLength(Object.keys(themeChannels).length);
-    for (const channel of Object.values(themeChannels)) {
+    const all = { ...themeChannels, ...computedChannels };
+    expect(lines).toHaveLength(Object.keys(all).length);
+    for (const channel of Object.values(all)) {
       expect(lines.some((l) => l.startsWith(`${channel}: var(--voice-inverse-primary-`))).toBe(true);
     }
   });

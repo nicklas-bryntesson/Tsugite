@@ -13,7 +13,7 @@ import {
   generateTypographyStylesheet,
   generateBaseStylesheet,
 } from "./collector.js";
-import { themeChannels, voiceMatrix, VOLUMES, voicePointerName } from "../theme-default/theme.voices.tokens.js";
+import { themeChannels, computedChannels, voiceMatrix, VOLUMES, voicePointerName } from "../theme-default/theme.voices.tokens.js";
 import { uiSeamTokens } from "../theme-default/seam.ui.tokens.js";
 import { typeVoices, TIERS } from "../theme-default/typography.tokens.js";
 import { spaceSteps } from "../theme-default/size.tokens.js";
@@ -55,7 +55,12 @@ const inlineList = (names) => names.map((n) => `\`${n}\``).join(", ");
 
 function colorSection() {
   const names = declaredNames(generateStylesheet());
-  const roles = docRoles(SEMANTIC_COLOR_SOURCE);
+  const roles = {
+    ...docRoles(SEMANTIC_COLOR_SOURCE),
+    // computed by the factory from the page surface and the shadow recipe, not authored
+    "--color-shadow-ground": "The page's shadow ink: what a card casts with no Surface above it (computed).",
+    "--color-shadow-ground-soft": "The page's soft shadow ink, the tighter second layer (computed).",
+  };
   const rows = names.map((n) => [n, roles[n] ?? ""]);
   return [
     `### Colour — \`--color-*\` (${names.length}, four-mode)`,
@@ -162,21 +167,32 @@ function customSection() {
 
 function voicePointerSection() {
   const pairs = Object.entries(voiceMatrix).flatMap(([v, vols]) => vols.map((vol) => `${v}-${vol}`));
+  const keys = [...Object.keys(themeChannels), ...Object.keys(computedChannels)];
   const example = voicePointerName("inverse", "primary", "text");
   return [
-    `### Voice pointers — \`--voice-<voice>-<volume>-<channel>\` (${pairs.length * Object.keys(themeChannels).length}) — read only by a claim`,
+    `### Voice pointers — \`--voice-<voice>-<volume>-<channel>\` (${pairs.length * keys.length}) — read only by a claim`,
     "",
     "Every voice cell, published on the root under its own name (ADR-0006, amended",
     "2026-10-17), so a composition can claim a voice from CSS where an attribute cannot",
     `change: \`--theme-text: var(${example})\`, one line per channel. A component never`,
     "reads them; it reads the channels above.",
     "",
-    `Voice-volume pairs: ${inlineList(pairs)}. Channels: ${inlineList(Object.keys(themeChannels))}.`,
+    `Voice-volume pairs: ${inlineList(pairs)}. Channels: ${inlineList(keys)}.`,
+  ].join("\n");
+}
+
+function groundSection() {
+  return [
+    "### The ground's snapshot — `--ground-shadow`, `--ground-shadow-soft` — published by Surface",
+    "",
+    "The shadow a ground casts, resolved on the Surface that paints it and inherited as a",
+    "finished colour, so a claim further down cannot repaint it (docs/seams.md, lab case 7).",
+    "Read with one fallback to the page's ink: `var(--ground-shadow, var(--color-shadow-ground))`.",
   ].join("\n");
 }
 
 function themeSection() {
-  const channels = Object.values(themeChannels);
+  const channels = [...Object.values(themeChannels), ...Object.values(computedChannels)];
   const voices = Object.entries(voiceMatrix).map(([v, vols]) => `\`${v}\` (${vols.join(", ")})`).join(", ");
   return [
     `## 2. Theme channels — \`--theme-*\` (${channels.length}) — read with one fallback`,
@@ -189,7 +205,11 @@ function themeSection() {
     "",
     inlineList(channels) + ".",
     "",
+    `The last ${Object.keys(computedChannels).length} (${inlineList(Object.values(computedChannels))}) are computed by the factory from each voice's surface and the shadow recipe (theme-default/shadow.tokens.js), never authored per voice.`,
+    "",
     voicePointerSection(),
+    "",
+    groundSection(),
   ].join("\n");
 }
 

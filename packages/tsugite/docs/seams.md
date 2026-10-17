@@ -189,7 +189,13 @@ Measured: a brand and an accent card on neutral · subtle, four ways —
 black (today), tinted by the card's voice, tinted by the ground, and both
 (a ground-tinted shadow plus a card-tinted glow: Craft's two layers).
 
-**As a system mechanism (direction, not decided):** whoever paints a
+**Built (ADR-0006 and ADR-0016 amendments):** Surface publishes
+`--ground-shadow` and `--ground-shadow-soft`, the inks the shadow factory
+precomputes from each voice cell's surface and the recipe in
+`theme-default/shadow.tokens.js`; Card's elevation reads them, with the page's
+ink as fallback. The glow (the card's own tint) is not built.
+
+**As first described:** whoever paints a
 ground (Surface) always publishes it under a name of its own, e.g.
 `--ground-surface`. Anything lying on the ground reads it, claimed or not.
 In nested grounds the nearest painter wins, so a shadow always reads the

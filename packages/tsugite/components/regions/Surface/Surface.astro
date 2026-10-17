@@ -92,6 +92,13 @@ const cssClass = className && String(className).trim() ? `Surface ${className}` 
   background-color: var(--theme-surface, var(--color-surface-page));
   color: var(--theme-text, var(--color-text-primary));
 
+  /* The ground's snapshot (docs/seams.md, lab case 7): the shadow this ground casts,
+     resolved here and inherited as a finished colour, so a claim further down cannot
+     repaint it — a claimed card still casts the shadow of the ground it lies on. The
+     nearest Surface wins. */
+  --ground-shadow: var(--theme-shadow, var(--color-shadow-ground));
+  --ground-shadow-soft: var(--theme-shadow-soft, var(--color-shadow-ground-soft));
+
   & .content {
     margin-inline: auto;
   }

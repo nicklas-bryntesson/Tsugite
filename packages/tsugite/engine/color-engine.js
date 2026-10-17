@@ -19,7 +19,14 @@ export function mix(base, pct, withColor = "transparent") {
   return { __recipe: "mix", base, pct, with: withColor };
 }
 
-export const isRecipe = (v) => typeof v === "object" && v !== null && v.__recipe === "mix";
+/** Recipe constructor: a tint of a RAW colour — its lightness and chroma scaled, at an
+    alpha. The build-time stand-in for oklch(from <base> calc(l * k) calc(c * k) h / a),
+    which the floor cannot run. Used for shadow inks (theme-default/shadow.tokens.js). */
+export function tint(base, { lightness, chroma, alpha }) {
+  return { __recipe: "tint", base, lightness, chroma, alpha };
+}
+
+export const isRecipe = (v) => typeof v === "object" && v !== null && (v.__recipe === "mix" || v.__recipe === "tint");
 
 function resolveIngredient(name) {
   if (name === "transparent") return { mode: "oklch", l: 0, c: 0, h: 0, alpha: 0 };
@@ -32,6 +39,10 @@ function resolveIngredient(name) {
 
 /** Compute a mix recipe → culori color (oklch mode). Spec-faithful. */
 export function computeMix(recipe) {
+  if (recipe.__recipe === "tint") {
+    const base = resolveIngredient(recipe.base);
+    return { mode: "oklch", l: base.l * recipe.lightness, c: (base.c ?? 0) * recipe.chroma, h: base.h ?? 0, alpha: recipe.alpha };
+  }
   const a = resolveIngredient(recipe.base);
   const b = resolveIngredient(recipe.with);
   const w = recipe.pct / 100;

@@ -20,6 +20,8 @@
         --theme-button-borderColor-secondary: var(--voice-inverse-primary-buttonBorderColorSecondary);
         --theme-button-borderColor-secondary-hover: var(--voice-inverse-primary-buttonBorderColorSecondaryHover);
         --theme-button-backgroundColor-secondary-hover: var(--voice-inverse-primary-buttonBackgroundColorSecondaryHover);
+        --theme-shadow: var(--voice-inverse-primary-shadow);
+        --theme-shadow-soft: var(--voice-inverse-primary-shadowSoft);
       }
     }
   }
@@ -39,6 +41,8 @@
         --theme-button-borderColor-secondary: var(--voice-inverse-primary-buttonBorderColorSecondary);
         --theme-button-borderColor-secondary-hover: var(--voice-inverse-primary-buttonBorderColorSecondaryHover);
         --theme-button-backgroundColor-secondary-hover: var(--voice-inverse-primary-buttonBackgroundColorSecondaryHover);
+        --theme-shadow: var(--voice-inverse-primary-shadow);
+        --theme-shadow-soft: var(--voice-inverse-primary-shadowSoft);
       }
     }
   }

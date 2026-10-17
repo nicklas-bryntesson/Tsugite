@@ -268,6 +268,18 @@
   initial-value: rgba(255, 255, 255, 0.25);
 }
 
+@property --color-shadow-ground {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(58, 58, 58, 0.14);
+}
+
+@property --color-shadow-ground-soft {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(58, 58, 58, 0.07);
+}
+
 
 
 /* User preference pinned (data-appearance from ThemeSwitch) × OS contrast */
@@ -318,6 +330,8 @@
     --color-cta-gradient-4: var(--COLOR-AI-80);
     --color-cta-ink: var(--COLOR-SUMI-00);
     --color-cta-reflection: rgba(255, 255, 255, 0.25);
+    --color-shadow-ground: rgba(58, 58, 58, 0.14);
+    --color-shadow-ground-soft: rgba(58, 58, 58, 0.07);
   }
 }
 
@@ -367,6 +381,8 @@
     --color-cta-gradient-4: var(--COLOR-AI-80);
     --color-cta-ink: var(--COLOR-SUMI-00);
     --color-cta-reflection: transparent;
+    --color-shadow-ground: rgba(0, 0, 0, 0);
+    --color-shadow-ground-soft: rgba(0, 0, 0, 0);
   }
 }
 
@@ -416,6 +432,8 @@
     --color-cta-gradient-4: var(--COLOR-AI-10);
     --color-cta-ink: var(--COLOR-SUMI-95);
     --color-cta-reflection: rgba(255, 255, 255, 0.25);
+    --color-shadow-ground: rgba(0, 0, 0, 0.45);
+    --color-shadow-ground-soft: rgba(0, 0, 0, 0.23);
   }
 }
 
@@ -465,6 +483,8 @@
     --color-cta-gradient-4: var(--COLOR-AI-10);
     --color-cta-ink: var(--COLOR-SUMI-95);
     --color-cta-reflection: transparent;
+    --color-shadow-ground: rgba(0, 0, 0, 0);
+    --color-shadow-ground-soft: rgba(0, 0, 0, 0);
   }
 }
 
@@ -518,6 +538,8 @@
     --color-cta-gradient-4: var(--COLOR-AI-80);
     --color-cta-ink: var(--COLOR-SUMI-00);
     --color-cta-reflection: rgba(255, 255, 255, 0.25);
+    --color-shadow-ground: rgba(58, 58, 58, 0.14);
+    --color-shadow-ground-soft: rgba(58, 58, 58, 0.07);
   }
 }
 
@@ -567,6 +589,8 @@
     --color-cta-gradient-4: var(--COLOR-AI-80);
     --color-cta-ink: var(--COLOR-SUMI-00);
     --color-cta-reflection: transparent;
+    --color-shadow-ground: rgba(0, 0, 0, 0);
+    --color-shadow-ground-soft: rgba(0, 0, 0, 0);
   }
 }
 
@@ -616,6 +640,8 @@
     --color-cta-gradient-4: var(--COLOR-AI-10);
     --color-cta-ink: var(--COLOR-SUMI-95);
     --color-cta-reflection: rgba(255, 255, 255, 0.25);
+    --color-shadow-ground: rgba(0, 0, 0, 0.45);
+    --color-shadow-ground-soft: rgba(0, 0, 0, 0.23);
   }
 }
 
@@ -665,6 +691,8 @@
     --color-cta-gradient-4: var(--COLOR-AI-10);
     --color-cta-ink: var(--COLOR-SUMI-95);
     --color-cta-reflection: transparent;
+    --color-shadow-ground: rgba(0, 0, 0, 0);
+    --color-shadow-ground-soft: rgba(0, 0, 0, 0);
   }
 }
 

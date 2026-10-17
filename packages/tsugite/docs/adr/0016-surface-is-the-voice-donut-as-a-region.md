@@ -84,3 +84,21 @@ content vocabulary and landmark semantics.
 - The rhythm reads `--size-2xl` and `--site-offset` until the spacing
   sweep gives sections their own tokens.
 - Slot prefix `sf` joins the ADR-0013 register.
+
+## Amendment 2026-10-17 — a Surface publishes its ground's snapshot
+
+A shadow takes the tone of the ground it falls on. When a card claims a voice of
+its own, the claim rewrites every `--theme-*` channel on the card, so the ground's
+channels are gone there. A Surface therefore publishes the shadow it casts under
+names no claim rewrites:
+
+```css
+--ground-shadow:      var(--theme-shadow, var(--color-shadow-ground));
+--ground-shadow-soft: var(--theme-shadow-soft, var(--color-shadow-ground-soft));
+```
+
+`var()` resolves where the property is declared and children inherit the finished
+colour, so a claimed card below still casts the ground's ink; the nearest Surface
+wins (docs/seams.md, lab case 7). Card's elevation reads it with the page's ink as
+the one fallback. Surface stays the ground's only painter; it now also says which
+ground it is.
