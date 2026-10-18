@@ -4,6 +4,8 @@
  *
  * Gates over one base:
  *   data-voice          field, always: the text-box engine's cell gives the leading.
+ *   data-size           sm | md | lg, the field voice's font-size stop; the block slot
+ *                       follows it in em, so each size stands on a Button's height (ADR-0030).
  *   aria-invalid        "true" marks the field invalid; set by kernel/js/field-validity.ts
  *                       on leave and submit, or by a server. :invalid is never read.
  *   data-test-state-*   hover | autofill | focus | readonly, one boolean attribute each,
@@ -14,7 +16,6 @@
   /* knobs: the face, the geometry and the rest-state colours; a state reads its own */
   --_in-fontFamily: var(--fontFamily-field);
   --_in-fontWeight: var(--fontWeight-field);
-  --_in-fontSize: var(--fontSize-field);
   --_in-letterSpacing: var(--letterSpacing-field);
   --_in-fontFeatureSettings: var(--fontFeatureSettings-field);
   /* Button's block slot, the same affine formula in the field's em: a field and a button
@@ -68,6 +69,19 @@
   &::placeholder {
     color: var(--_in-placeholderColor);
     opacity: 1;
+  }
+
+  /* Sizes: the font-size stop. */
+  &[data-size="sm"] {
+    --_in-fontSize: var(--fontSize-field-small);
+  }
+
+  &[data-size="md"] {
+    --_in-fontSize: var(--fontSize-field);
+  }
+
+  &[data-size="lg"] {
+    --_in-fontSize: var(--fontSize-field-large);
   }
 
   /* The states, lowest first; a later one wins a property both set (tasks/plan-fields.md):

@@ -247,8 +247,11 @@ export const typeSizes = {
   "button": { floor: "0.9375rem", mobile: "1rem", desktop: "1.125rem", wide: "1.125rem" },
   "button-large": { floor: "1.0625rem", mobile: "1.25rem", desktop: "1.375rem", wide: "1.375rem" },
 
-  // One stop: fields come in md only. Button md's values, so the heights meet.
+  // Button's stops, so a field and a button at the same size stand at the same height
+  // (ADR-0030: the block slot is the same affine formula in each one's em).
+  "field-small": { floor: "0.75rem", mobile: "0.75rem", desktop: "0.85rem", wide: "0.85rem" },
   "field": { floor: "0.9375rem", mobile: "1rem", desktop: "1.125rem", wide: "1.125rem" },
+  "field-large": { floor: "1.0625rem", mobile: "1.25rem", desktop: "1.375rem", wide: "1.375rem" },
 
   "nav-small": { floor: "0.75rem", mobile: "0.75rem", desktop: "0.85rem", wide: "0.85rem" },
   "nav": { floor: "0.9375rem", mobile: "1rem", desktop: "1.125rem", wide: "1.125rem" },
@@ -277,7 +280,7 @@ export const typeLineLengths = {
   "code": "80ch",
   "label-small": "50ch", "label": "50ch", "label-large": "50ch",
   "button-small": "30ch", "button": "30ch", "button-large": "30ch",
-  "field": "30ch",
+  "field-small": "30ch", "field": "30ch", "field-large": "30ch",
   "nav-small": "30ch", "nav": "30ch", "nav-large": "30ch",
   "preamble-small": "60ch", "preamble": "56ch", "preamble-large": "52ch",
 };
