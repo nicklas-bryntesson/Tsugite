@@ -79,6 +79,30 @@ const sliders = [
     </section>
 
     <section class="lab-row">
+      <Heading element="h2" size="4" text="Today's Button, font size on the root" />
+      <Text text="The system's own Button with one change, made by the lab: the font size moves from the label to the a/button itself, and the label inherits it. Every em on the root — padding inline 1.4em, lg's padding block 0.8em, the radius 0.375em — becomes the button's em instead of the page's 16px." />
+      <div class="lab-buttons lab-rootfont">
+        {sizes.map(({ size }) => (
+          <div class="lab-specimen">
+            <LinkButton href="#" size={size} icon="mail" data-measure={`root font ${size}`}>Contact us</LinkButton>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="lab-row">
+      <Heading element="h2" size="4" text="Font size on the root, and the size slots in em (one knob)" />
+      <Text text="The same, with md's ratios filled into the custom levels as em: padding block, icon size and gap follow the button's font size. sm, md and lg now differ by their font-size stop alone — the system's Button, not a dummy." />
+      <div class="lab-buttons lab-rootfont lab-oneknob">
+        {sizes.map(({ size }) => (
+          <div class="lab-specimen">
+            <LinkButton href="#" size={size} icon="mail" data-measure={`one knob ${size}`}>Contact us</LinkButton>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="lab-row">
       <Heading element="h2" size="4" text="Proportional: every slot in em" />
       <div class="lab-buttons">
         {sizes.map(({ size, token }) => (
@@ -321,6 +345,21 @@ const sliders = [
 
     &[data-mode="max"] .lab-em {
       padding-block: calc(max(var(--lab-a) * 1rem, var(--lab-b) * 1em) + var(--lab-trim, 0) * 1em);
+    }
+
+    /* Lab only: the system change under study, made from outside. The root takes the size
+       the label had (Button's private slot, read here on purpose); the label inherits it. */
+    & .lab-rootfont .Button {
+      font-size: var(--_bt-fontSize);
+    }
+
+    /* md's ratios as em in the custom levels: resolved on the icon and the root, at the
+       button's own size now that the root has one. */
+    & .lab-oneknob {
+      --custom-button-paddingBlock: calc(var(--lab-pb) * 1em);
+      --custom-button-iconSize: calc(var(--lab-icon) * 1em);
+      --custom-button-iconMargin: calc(var(--lab-gap) * 1em);
+      --custom-button-paddingInline: calc(var(--lab-pi) * 1em);
     }
 
     &[data-floor] .lab-em {
