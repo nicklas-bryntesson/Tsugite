@@ -1,7 +1,7 @@
 // Input — the table (ADR-0018). One native text field, the skin on the element itself:
 // no box around it, so every state lives on the <input> and nothing mirrors it
 // (tasks/plan-fields.md). It speaks the field voice and reads the --color-field-* roles;
-// at its one size it stands on a Button md's height. Its validity is aria-invalid, set by
+// at each size it stands on a Button's height at that size (ADR-0030). Its validity is aria-invalid, set by
 // the kernel's field-validity script on leave and on submit, or by a server.
 import type { Recipe } from "../lib/recipe";
 
@@ -15,7 +15,6 @@ export const input = {
     "a label, a hint or an error — that is the Field group around it",
     "a box around the control — affixes are AffixField's",
     "the choice and action types — checkbox, radio, range, file, color, hidden and the buttons are other controls",
-    "a size of its own — a field comes in one size, a Button md's height",
   ],
   class: "Input",
   element: { values: ["input"], default: "input" },
@@ -42,7 +41,10 @@ export const input = {
       "aria-label": "string",
     },
   },
-  axes: {},
+  axes: {
+    /** the field voice's font-size stop; every other size slot follows it in em (ADR-0030) */
+    size: { values: ["sm", "md", "lg"], default: "md" },
+  },
   derived: {
     /** the field voice, always — the text-box engine's cell gives the skin its leading */
     voice: { attr: "data-voice", from: [] },

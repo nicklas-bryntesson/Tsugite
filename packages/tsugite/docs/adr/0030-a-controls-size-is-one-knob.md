@@ -54,6 +54,8 @@ slots; a site builder that wanted knobs for its controls had nothing regular to 
 - The radius (`0.375em`, the pill's `3em`) and the inline padding now scale with the size,
   as their units always said.
 - The text-box formula reads `1em` where it multiplied by `var(--_bt-fontSize)`.
-- Not yet: Input has no size axis (fields at sm and lg); FileUpload and NavItem keep their
+- Input gained the size axis in a follow-up (sm, md, lg on `field-small`, `field`,
+  `field-large`, Button's stops), so a field and a button match at every size.
+- Not yet: FileUpload and NavItem keep their
   own `--size-sm` slots; CtaButton keeps its own geometry and its comment that it "stands
   on Button's height" no longer holds — a pass of its own.

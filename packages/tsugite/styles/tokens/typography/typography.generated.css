@@ -96,10 +96,18 @@
   --FONTSIZE-BUTTON-LARGE-MOBILE: 1.25rem;
   --FONTSIZE-BUTTON-LARGE-DESKTOP: 1.375rem;
   --FONTSIZE-BUTTON-LARGE-WIDE: 1.375rem;
+  --FONTSIZE-FIELD-SMALL-FLOOR: 0.75rem;
+  --FONTSIZE-FIELD-SMALL-MOBILE: 0.75rem;
+  --FONTSIZE-FIELD-SMALL-DESKTOP: 0.85rem;
+  --FONTSIZE-FIELD-SMALL-WIDE: 0.85rem;
   --FONTSIZE-FIELD-FLOOR: 0.9375rem;
   --FONTSIZE-FIELD-MOBILE: 1rem;
   --FONTSIZE-FIELD-DESKTOP: 1.125rem;
   --FONTSIZE-FIELD-WIDE: 1.125rem;
+  --FONTSIZE-FIELD-LARGE-FLOOR: 1.0625rem;
+  --FONTSIZE-FIELD-LARGE-MOBILE: 1.25rem;
+  --FONTSIZE-FIELD-LARGE-DESKTOP: 1.375rem;
+  --FONTSIZE-FIELD-LARGE-WIDE: 1.375rem;
   --FONTSIZE-NAV-SMALL-FLOOR: 0.75rem;
   --FONTSIZE-NAV-SMALL-MOBILE: 0.75rem;
   --FONTSIZE-NAV-SMALL-DESKTOP: 0.85rem;
@@ -144,7 +152,9 @@
   --lineLength-button-small: 30ch;
   --lineLength-button: 30ch;
   --lineLength-button-large: 30ch;
+  --lineLength-field-small: 30ch;
   --lineLength-field: 30ch;
+  --lineLength-field-large: 30ch;
   --lineLength-nav-small: 30ch;
   --lineLength-nav: 30ch;
   --lineLength-nav-large: 30ch;
@@ -258,7 +268,9 @@
     --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-button: calc(var(--FONTSIZE-BUTTON-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-field-small: calc(var(--FONTSIZE-FIELD-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-field: calc(var(--FONTSIZE-FIELD-FLOOR) * var(--TYPE-SCALE, 1));
+    --fontSize-field-large: calc(var(--FONTSIZE-FIELD-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-nav: calc(var(--FONTSIZE-NAV-FLOOR) * var(--TYPE-SCALE, 1));
     --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
@@ -289,7 +301,9 @@
     --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-button: calc(var(--FONTSIZE-BUTTON-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-field-small: calc(var(--FONTSIZE-FIELD-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-field: calc(var(--FONTSIZE-FIELD-MOBILE) * var(--TYPE-SCALE, 1));
+    --fontSize-field-large: calc(var(--FONTSIZE-FIELD-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-nav: calc(var(--FONTSIZE-NAV-MOBILE) * var(--TYPE-SCALE, 1));
     --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
@@ -320,7 +334,9 @@
     --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-button: calc(var(--FONTSIZE-BUTTON-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-field-small: calc(var(--FONTSIZE-FIELD-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-field: calc(var(--FONTSIZE-FIELD-DESKTOP) * var(--TYPE-SCALE, 1));
+    --fontSize-field-large: calc(var(--FONTSIZE-FIELD-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-nav: calc(var(--FONTSIZE-NAV-DESKTOP) * var(--TYPE-SCALE, 1));
     --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
@@ -351,7 +367,9 @@
     --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-button: calc(var(--FONTSIZE-BUTTON-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-WIDE) * var(--TYPE-SCALE, 1));
+    --fontSize-field-small: calc(var(--FONTSIZE-FIELD-SMALL-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-field: calc(var(--FONTSIZE-FIELD-WIDE) * var(--TYPE-SCALE, 1));
+    --fontSize-field-large: calc(var(--FONTSIZE-FIELD-LARGE-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-nav: calc(var(--FONTSIZE-NAV-WIDE) * var(--TYPE-SCALE, 1));
     --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-WIDE) * var(--TYPE-SCALE, 1));
@@ -381,7 +399,9 @@
   --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-button: calc(var(--FONTSIZE-BUTTON-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
+  --fontSize-field-small: calc(var(--FONTSIZE-FIELD-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-field: calc(var(--FONTSIZE-FIELD-FLOOR) * var(--TYPE-SCALE, 1));
+  --fontSize-field-large: calc(var(--FONTSIZE-FIELD-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-nav: calc(var(--FONTSIZE-NAV-FLOOR) * var(--TYPE-SCALE, 1));
   --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-FLOOR) * var(--TYPE-SCALE, 1));
@@ -410,7 +430,9 @@
   --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-button: calc(var(--FONTSIZE-BUTTON-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
+  --fontSize-field-small: calc(var(--FONTSIZE-FIELD-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-field: calc(var(--FONTSIZE-FIELD-MOBILE) * var(--TYPE-SCALE, 1));
+  --fontSize-field-large: calc(var(--FONTSIZE-FIELD-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-nav: calc(var(--FONTSIZE-NAV-MOBILE) * var(--TYPE-SCALE, 1));
   --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-MOBILE) * var(--TYPE-SCALE, 1));
@@ -439,7 +461,9 @@
   --fontSize-button-small: calc(var(--FONTSIZE-BUTTON-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-button: calc(var(--FONTSIZE-BUTTON-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-button-large: calc(var(--FONTSIZE-BUTTON-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
+  --fontSize-field-small: calc(var(--FONTSIZE-FIELD-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-field: calc(var(--FONTSIZE-FIELD-DESKTOP) * var(--TYPE-SCALE, 1));
+  --fontSize-field-large: calc(var(--FONTSIZE-FIELD-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-nav-small: calc(var(--FONTSIZE-NAV-SMALL-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-nav: calc(var(--FONTSIZE-NAV-DESKTOP) * var(--TYPE-SCALE, 1));
   --fontSize-nav-large: calc(var(--FONTSIZE-NAV-LARGE-DESKTOP) * var(--TYPE-SCALE, 1));

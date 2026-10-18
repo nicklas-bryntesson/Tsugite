@@ -1,0 +1,14 @@
+---
+import Input from "tsugite/Input/Input.astro";
+import ActionButton from "tsugite/Button/ActionButton.astro";
+
+const sizes = ["sm", "md", "lg"];
+---
+{/* A field and a button at the same size stand at the same height: size sets the
+    font-size stop, and the block padding follows it in each one's em (ADR-0030). */}
+{sizes.map((size) => (
+  <div style="display: flex; flex-wrap: wrap; gap: var(--size-sm); align-items: flex-start">
+    <Input size={size} aria-label={`Email (${size})`} placeholder={`you@example.com · ${size}`} />
+    <ActionButton size={size}>Subscribe</ActionButton>
+  </div>
+))}
