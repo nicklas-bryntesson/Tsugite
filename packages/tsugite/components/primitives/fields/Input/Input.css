@@ -17,7 +17,9 @@
   --_in-fontSize: var(--fontSize-field);
   --_in-letterSpacing: var(--letterSpacing-field);
   --_in-fontFeatureSettings: var(--fontFeatureSettings-field);
-  --_in-paddingBlock: var(--size-sm);
+  /* Button's block slot, the same affine formula in the field's em: a field and a button
+     of the same size stand at the same height (seams.md §4). */
+  --_in-paddingBlock: calc(0.25rem + 0.3em);
   /* TODO(token): the inline padding and the radius are raw; the spacing and radius ramps
      are in the parking lot. The radius is Button's non-pill corner. */
   --_in-paddingInline: 0.75rem;
