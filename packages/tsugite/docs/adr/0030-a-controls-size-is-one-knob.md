@@ -56,6 +56,9 @@ slots; a site builder that wanted knobs for its controls had nothing regular to 
 - The text-box formula reads `1em` where it multiplied by `var(--_bt-fontSize)`.
 - Input gained the size axis in a follow-up (sm, md, lg on `field-small`, `field`,
   `field-large`, Button's stops), so a field and a button match at every size.
+- The field family follows: the date and time fields and AffixField state their bordered
+  box as an Input md's height — leading, twice the block slot, twice the border, in the
+  field voice — instead of a fixed 2.5rem, so the family stays one height at every tier.
 - Not yet: FileUpload and NavItem keep their
   own `--size-sm` slots; CtaButton keeps its own geometry and its comment that it "stands
   on Button's height" no longer holds — a pass of its own.
