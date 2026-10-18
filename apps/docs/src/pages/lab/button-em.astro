@@ -1,0 +1,346 @@
+---
+// /lab/button-em — a bench for "size as one knob" (packages/tsugite/docs/seams.md, Plan §4).
+// Today's Buttons beside dummy buttons whose every size slot is in em, proportional to md:
+// padding, gap and icon follow the font size, so sm, md and lg differ by their font-size stop
+// alone. The sliders turn the ratios live; the readouts measure what each button becomes.
+// Resize the window to walk the tiers. Nothing here changes the system.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import Text from "tsugite/Text/Text.astro";
+import LinkButton from "tsugite/Button/LinkButton.astro";
+import Input from "tsugite/Input/Input.astro";
+
+const sizes = [
+  { size: "sm", token: "--fontSize-button-small" },
+  { size: "md", token: "--fontSize-button" },
+  { size: "lg", token: "--fontSize-button-large" },
+];
+const sliders = [
+  { name: "pb", label: "padding block", min: 0.15, max: 1, step: 0.01, value: 0.444 },
+  { name: "pi", label: "padding inline", min: 0.6, max: 2.2, step: 0.01, value: 1.4 },
+  { name: "icon", label: "icon size", min: 0.8, max: 1.8, step: 0.01, value: 1.333 },
+  { name: "gap", label: "gap", min: 0.2, max: 1.2, step: 0.01, value: 0.667 },
+];
+---
+
+<Layout title="Button em lab">
+  <main class="Main ButtonEmLab grid-container" data-mode="ratio">
+    <header class="lab-head">
+      <Heading element="h1" size="2" text="Button em lab" />
+      <Text text="md is the truth. The dummies take md's ratios in em, so sm and lg are md at another font size. Turn the ratios, resize the window to walk the tiers, and read what each button becomes." />
+      <dl class="lab-readout" data-tier-readout></dl>
+    </header>
+
+    <section class="lab-controls" aria-label="Ratios, in em of the button's own font size">
+      {sliders.map(({ name, label, min, max, step, value }) => (
+        <label class="lab-slider">
+          <span>{label}</span>
+          <input type="range" min={min} max={max} step={step} value={value} data-ratio={name} />
+          <output data-ratio-out={name}>{value}em</output>
+        </label>
+      ))}
+      <label class="lab-slider">
+        <span>24px floor</span>
+        <input type="checkbox" data-floor />
+        <output>min-block-size</output>
+      </label>
+      <label class="lab-slider">
+        <span>padding block mode</span>
+        <select data-mode-select>
+          <option value="ratio">ratio: pb × em</option>
+          <option value="affine">formula: A rem + B em</option>
+          <option value="max">formula: max(A rem, B em)</option>
+        </select>
+        <output data-mode-out>ratio</output>
+      </label>
+      <label class="lab-slider">
+        <span>A (rem)</span>
+        <input type="range" min="0" max="1" step="0.01" value="0.25" data-ratio="a" />
+        <output data-ratio-out="a">0.25</output>
+      </label>
+      <label class="lab-slider">
+        <span>B (em)</span>
+        <input type="range" min="0" max="1" step="0.01" value="0.3" data-ratio="b" />
+        <output data-ratio-out="b">0.3</output>
+      </label>
+      <button type="button" class="lab-reset" data-from-md>Take md's ratios at this tier</button>
+    </section>
+
+    <section class="lab-row">
+      <Heading element="h2" size="4" text="Today: the system's Button" />
+      <div class="lab-buttons">
+        {sizes.map(({ size }) => (
+          <div class="lab-specimen">
+            <LinkButton href="#" size={size} icon="mail" data-measure={`today ${size}`}>Contact us</LinkButton>
+            <LinkButton href="#" size={size} data-measure={`today ${size} (no icon)`}>Contact us</LinkButton>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="lab-row">
+      <Heading element="h2" size="4" text="Proportional: every slot in em" />
+      <div class="lab-buttons">
+        {sizes.map(({ size, token }) => (
+          <div class="lab-specimen">
+            <a href="#" class="lab-em" style={`--lab-fontSize: var(${token})`} data-measure={`em ${size}`}>
+              <span class="label">Contact us</span>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v12H3z M3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg>
+            </a>
+            <a href="#" class="lab-em" style={`--lab-fontSize: var(${token})`} data-measure={`em ${size} (no icon)`}>
+              <span class="label">Contact us</span>
+            </a>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="lab-row">
+      <Heading element="h2" size="4" text="md beside a field" />
+      <Text text="The field contract: an Input is a Button md tall. Compare the field with today's md and the proportional md." />
+      <div class="lab-buttons">
+        <div class="lab-specimen lab-field">
+          <Input aria-label="Email" placeholder="Email" data-measure="Input" />
+          <LinkButton href="#" size="md" data-measure="today md beside field">Send</LinkButton>
+          <a href="#" class="lab-em" style="--lab-fontSize: var(--fontSize-button)" data-measure="em md beside field"><span class="label">Send</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="lab-row">
+      <Heading element="h2" size="4" text="Measured" />
+      <table class="lab-table">
+        <thead>
+          <tr><th scope="col">Button</th><th scope="col">font</th><th scope="col">height</th><th scope="col">padding block</th><th scope="col">block slot in em</th><th scope="col">padding inline</th></tr>
+        </thead>
+        <tbody data-measure-table></tbody>
+      </table>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  const root = document.querySelector<HTMLElement>(".ButtonEmLab");
+  const px = (v: string) => `${Math.round(parseFloat(v) * 10) / 10}px`;
+
+  // A slot's value (calc(), rem, em) in px, resolved the way the button resolves it: a probe
+  // inside the button, at the label's font size, takes it as its width.
+  const toPx = (button: Element, value: string) => {
+    const probe = document.createElement("span");
+    const font = getComputedStyle(button.querySelector(".text") ?? button).fontSize;
+    probe.style.cssText = `position:absolute;visibility:hidden;font-size:${font};inline-size:${value}`;
+    button.appendChild(probe);
+    const w = probe.getBoundingClientRect().width;
+    probe.remove();
+    return w;
+  };
+
+  const setRatio = (name: string, value: string) => {
+    root?.style.setProperty(`--lab-${name}`, value);
+    const out = document.querySelector(`[data-ratio-out="${name}"]`);
+    if (out) out.textContent = `${Number(value).toFixed(3)}${name === "a" ? "rem" : "em"}`;
+  };
+
+  const measure = () => {
+    const rows = [...document.querySelectorAll<HTMLElement>("[data-measure]")].map((el) => {
+      const target = el;
+      const cs = getComputedStyle(target);
+      const label = el.querySelector(".text, .label") ?? el;
+      const font = getComputedStyle(label).fontSize;
+      const h = target.getBoundingClientRect().height;
+      const trim = parseFloat(root?.style.getPropertyValue("--lab-trim") || "0");
+      const slotEm = el.matches(".Button, .lab-em") ? ((parseFloat(cs.paddingBlockStart) / parseFloat(font)) - trim).toFixed(3) : "—";
+      return `<tr><th scope="row">${el.dataset.measure}</th><td>${px(font)}</td><td>${px(String(h))}</td><td>${px(cs.paddingBlockStart)}</td><td>${slotEm}</td><td>${px(cs.paddingInlineStart)}</td></tr>`;
+    });
+    const table = document.querySelector("[data-measure-table]");
+    if (table) table.innerHTML = rows.join("");
+
+    // The tier as the system sees it: md's font size and its padding block today.
+    const md = document.querySelector<HTMLElement>('[data-measure="today md (no icon)"]');
+    const readout = document.querySelector("[data-tier-readout]");
+    if (md && readout) {
+      const font = parseFloat(getComputedStyle(md.querySelector(".text") ?? md).fontSize);
+      const pb = toPx(md, getComputedStyle(md).getPropertyValue("--_bt-paddingBlock").trim());
+      const trim = (parseFloat(getComputedStyle(md).paddingBlockStart) - pb) / font;
+      root?.style.setProperty("--lab-trim", String(trim));
+      readout.innerHTML = `<dt>viewport</dt><dd>${innerWidth}px</dd><dt>md font</dt><dd>${font}px</dd><dt>md's padding block slot</dt><dd>${Math.round(pb * 10) / 10}px = ${(pb / font).toFixed(3)}em</dd>`;
+    }
+  };
+
+  for (const input of document.querySelectorAll<HTMLInputElement>("[data-ratio]")) {
+    setRatio(input.dataset.ratio!, input.value);
+    input.addEventListener("input", () => {
+      setRatio(input.dataset.ratio!, input.value);
+      measure();
+    });
+  }
+
+  document.querySelector<HTMLSelectElement>("[data-mode-select]")?.addEventListener("change", (e) => {
+    const mode = (e.target as HTMLSelectElement).value;
+    root?.setAttribute("data-mode", mode);
+    const out = document.querySelector("[data-mode-out]");
+    if (out) out.textContent = mode;
+    measure();
+  });
+
+  document.querySelector<HTMLInputElement>("[data-floor]")?.addEventListener("change", (e) => {
+    root?.toggleAttribute("data-floor", (e.target as HTMLInputElement).checked);
+    measure();
+  });
+
+  // md's ratios at the current tier, read from today's md: its slots in px over its font size.
+  document.querySelector("[data-from-md]")?.addEventListener("click", () => {
+    const md = document.querySelector<HTMLElement>('[data-measure="today md"]');
+    if (!md) return;
+    const cs = getComputedStyle(md);
+    const font = parseFloat(getComputedStyle(md.querySelector(".text") ?? md).fontSize);
+    const slot = (name: string) => toPx(md, cs.getPropertyValue(name).trim());
+    const values: Record<string, number> = {
+      pb: slot("--_bt-paddingBlock") / font,
+      pi: slot("--_bt-paddingInline") / font,
+      icon: slot("--_bt-iconSize") / font,
+      gap: slot("--_bt-iconMargin") / font,
+    };
+    for (const [name, v] of Object.entries(values)) {
+      if (!Number.isFinite(v)) continue;
+      const input = document.querySelector<HTMLInputElement>(`[data-ratio="${name}"]`);
+      if (input) input.value = String(v);
+      setRatio(name, String(v));
+    }
+    measure();
+  });
+
+  measure();
+  measure(); // the first pass sets the trim the second pass measures with
+  addEventListener("resize", () => {
+    measure();
+    measure();
+  });
+</script>
+
+<style>
+  .ButtonEmLab {
+    row-gap: var(--size-2xl);
+
+    & .lab-head,
+    & .lab-row {
+      display: grid;
+      gap: var(--size-md);
+    }
+
+    & .lab-readout {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: var(--size-xs) var(--size-sm);
+      margin: 0;
+      font-family: var(--fontFamily-code);
+      font-size: var(--fontSize-label-small);
+
+      & dd {
+        margin: 0;
+      }
+    }
+
+    & .lab-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+      gap: var(--size-md);
+      align-items: center;
+    }
+
+    & .lab-slider {
+      display: grid;
+      grid-template-columns: 8rem 1fr 5rem;
+      gap: var(--size-sm);
+      align-items: center;
+      font-size: var(--fontSize-label-small);
+
+      & output {
+        font-family: var(--fontFamily-code);
+      }
+    }
+
+    & .lab-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-xl);
+      align-items: flex-start;
+    }
+
+    & .lab-specimen {
+      display: grid;
+      gap: var(--size-md);
+      justify-items: start;
+    }
+
+    & .lab-field {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-sm);
+      align-items: flex-start;
+    }
+
+    /* The dummy: one font-size stop, every other slot in em of it. */
+    & .lab-em {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(var(--lab-gap) * 1em);
+
+      padding-inline: calc(var(--lab-pi) * 1em);
+      border-radius: 0.35em;
+      font-family: var(--fontFamily-button);
+      font-weight: var(--fontWeight-button);
+      font-size: var(--lab-fontSize);
+      line-height: var(--lineHeight-button);
+      text-decoration: none;
+      color: var(--theme-button-color-primary, var(--color-interactive-onPrimary));
+      background-color: var(--theme-button-backgroundColor-primary, var(--color-interactive-primary));
+
+      & .label {
+        text-box: trim-both cap alphabetic;
+      }
+
+      & .icon {
+        inline-size: calc(var(--lab-icon) * 1em);
+        block-size: calc(var(--lab-icon) * 1em);
+        margin-block: calc((1cap - var(--lab-icon) * 1em) / 2);
+      }
+    }
+
+    /* Padding block, one gate per mode. Each adds the trim's give-back, as today's Button:
+       its label is trimmed to the cap, and the padding returns half the leading (measured
+       from today's md). */
+    &[data-mode="ratio"] .lab-em {
+      padding-block: calc((var(--lab-pb) + var(--lab-trim, 0)) * 1em);
+    }
+
+    &[data-mode="affine"] .lab-em {
+      padding-block: calc(var(--lab-a) * 1rem + (var(--lab-b) + var(--lab-trim, 0)) * 1em);
+    }
+
+    &[data-mode="max"] .lab-em {
+      padding-block: calc(max(var(--lab-a) * 1rem, var(--lab-b) * 1em) + var(--lab-trim, 0) * 1em);
+    }
+
+    &[data-floor] .lab-em {
+      min-block-size: 24px;
+    }
+
+    & .lab-reset {
+      justify-self: start;
+    }
+
+    & .lab-table {
+      border-collapse: collapse;
+      font-family: var(--fontFamily-code);
+      font-size: var(--fontSize-label-small);
+
+      & th,
+      & td {
+        padding: var(--size-xs) var(--size-sm);
+        border-block-end: 1px solid var(--color-border-default);
+        text-align: start;
+      }
+    }
+  }
+</style>
