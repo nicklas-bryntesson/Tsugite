@@ -704,26 +704,58 @@ written when the factories are in place — the generated resolve maps, the
 channel mapping a claim writes, the shadow recipe — since the guide
 describes what they produce, and refined as the open questions close.
 
-### 4. A future bench: size as one knob (parked)
+### 4. Size as one knob — measured, landing (lab: `/lab/button-em`)
 
-If every size slot in buttons and fields were in `em` (padding, icon size,
-icon margin), a size would be a single font-size stop and everything else
-would follow. The custom level would shrink from five fields to one, the
-size fabric would nearly disappear, and a button and a field of the same
-size would share a height by construction. Half of it exists already:
-`paddingInline` is `1.4em`/`1.6em` and lg's `paddingBlock` is `0.8em`.
+The bench was built. What it showed, and where it lands (decided in discussion
+2026-10-18; the ADR follows with the build):
 
-The traps a bench must measure:
-- proportional is not always right: a small button often needs relatively
-  more air, and a scaled-down lg can fall under the minimum target size
-  (WCAG 2.5.8, 24px). It needs a floor that does not scale
-  (`min-block-size`);
-- the stops are not proportional today (sm and md share a rem
-  `paddingBlock`, the em ratios differ per stop), so going all-`em` is a
-  design decision about the ratios, not a rewrite.
+- **Today's Button has no font size on its root.** The size sits on the label
+  (`.text`), so every em on the root resolves against the page's 16px, not the
+  button's: `paddingInline: 1.4em` is 22.4px on sm and md alike, lg's
+  `paddingBlock: 0.8em` is 12.8px, the radius is page-relative, and the
+  text-box formula multiplies by `var(--_bt-fontSize)` by hand. Em that
+  behaves as rem — a silent drift.
+- **Today's stops follow no scale.** In em of each button's size (desktop) the
+  block slot is sm 0.59, md 0.44, lg 0.58 — piecewise, set by hand.
+- **Icon and gap were proportional all along**, only written in rem: 18/24/28px
+  is 1.33em, 8/12/16px about 0.67em.
 
-Open: one ratio for every stop plus a floor, or each stop keeps its own
-ratios?
+**The landing.** The font size moves to the `a`/`button` and the label inherits
+it; every size slot is in em of the button; the block slot is an **affine**
+scale — a fixed part plus a proportional part:
+
+```css
+--_bt-paddingBlock:  calc(0.25rem + 0.3em);
+--_bt-paddingInline: 1.4em;
+--_bt-iconSize:      1.33em;
+--_bt-iconMargin:    0.67em;
+```
+
+- md is the anchor and barely moves: about 42px on desktop (41 today). sm
+  about 34px (36), lg about 50px (56). The fixed part gives small sizes
+  relatively more air — optical compensation; the proportional part keeps the
+  scale one knob: an exception that fills only `--custom-button-fontSize`
+  still carries every other slot.
+- **Fields share the block slot**, so a field and a button of the same size
+  are equal in height by construction (measured equal in every pair). Input
+  needs the same slot and, likely, a size axis (sm, md, lg).
+- Names: a scale `A + B·size` is affine (linear with an offset); with a floor,
+  `max(A, B·size)`, it is clamped; today's matrix is piecewise.
+
+**Button is a control; CtaButton is the expression.** Button belongs with
+fields and choices — it must align with them, so the affine scale and the
+field contract rule it, and its lg needs only to be a larger control, not a
+hero. A large call to action in a Cover section is CtaButton's job: named,
+project-extensible variants with effect parts, free to carry their own
+geometry and air. The expression gets a room of its own instead of bending
+the control's scale.
+
+**The build, in order:** (1) Button — root font size, label inherits, slots in
+em, the affine block slot, the text-box formula in plain em; (2) Input — the
+same slot and a size axis; (3) the ADR for the scale, and the CtaButton line.
+
+Open: one ratio for every stop plus a 24px floor for sm on the smallest tier
+(WCAG 2.5.8) — measure sm on floor before the build.
 
 ## Constraints found so far
 
