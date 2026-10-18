@@ -8,7 +8,8 @@
  *                       per state, from the theme claims with a semantic fallback.
  *   data-intent         destructive | success, feedback colours over the emphasis
  *                       cell; actions only.
- *   data-size           sm | md | lg, the button voice's stops, padding and icon size.
+ *   data-size           sm | md | lg, the button voice's font-size stop and nothing else:
+ *                       every other size slot is in em of it (seams.md §4).
  *   data-voice          button, always: the voice the text-box engine's cell fills.
  *   data-text-box       block, always: the label is a trimmed run on the engine
  *                       (kernel/css/text-box.generated.css, ADR-0024).
@@ -30,6 +31,13 @@
   --_bt-outlineColor: var(--color-focus-ring);
   --_bt-outlineColor-pressed: var(--color-focus-pressedRing);
   --_bt-hoverRingColor: var(--color-interactive-hoverRing);
+  /* The size slots, in em of the button's own size: one knob. The block slot is affine —
+     a fixed part, so small sizes keep relatively more air, plus a part that follows the
+     size (seams.md §4, lab /lab/button-em). Each reads the custom level first (ADR-0005). */
+  --_bt-paddingBlock:    var(--custom-button-paddingBlock, calc(0.25rem + 0.3em));
+  --_bt-paddingInline:   var(--custom-button-paddingInline, 1.4em);
+  --_bt-iconSize:        var(--custom-button-iconSize, 1.33em);
+  --_bt-iconMargin:      var(--custom-button-iconMargin, 0.67em);
 
   position: relative;
   display: inline-grid;
@@ -40,11 +48,14 @@
      to the element: a <button> centres its text by the UA sheet and an <a> does not. */
   justify-content: center;
   text-align: center;
+  /* The size lives on the button itself, so every em in it — padding, radius, icon,
+     gap — is the button's em; the label inherits it. */
+  font-size: var(--_bt-fontSize);
 
   /* The label is trimmed to its cap box, so the padding gives back what the trim took:
-     the size's padding plus half of (leading − cap box), in the label's size. The button
+     the size's padding plus half of (leading − cap box), in the button's em. The button
      keeps the height it had — line-height × font-size + 2 × padding — and states none. */
-  padding-block: calc(var(--_bt-paddingBlock) + (var(--_tbx-lineHeight) - (var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent))) / 2 * var(--_bt-fontSize));
+  padding-block: calc(var(--_bt-paddingBlock) + (var(--_tbx-lineHeight) - (var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent))) / 2 * 1em);
   padding-inline: var(--_bt-paddingInline);
   border-style: solid;
   border-width: var(--_bt-borderWidth);
@@ -126,31 +137,17 @@
   }
 
 
-  /* Sizes. Each slot reads the instance's public level first (ADR-0005, the custom
-     level): an exception a composition owns, filled in its own range. Empty, the stop
-     answers. */
+  /* Sizes: the font-size stop, read through the custom level (ADR-0005). */
   &[data-size="sm"] {
-    --_bt-iconSize:                    var(--custom-button-iconSize, 1.125rem);
-    --_bt-iconMargin:                  var(--custom-button-iconMargin, 0.5rem);
     --_bt-fontSize:                    var(--custom-button-fontSize, var(--fontSize-button-small));
-    --_bt-paddingBlock:                var(--custom-button-paddingBlock, var(--size-sm));
-    --_bt-paddingInline:               var(--custom-button-paddingInline, 1.4em);
   }
 
   &[data-size="md"] {
-    --_bt-iconSize:                    var(--custom-button-iconSize, 1.5rem);
-    --_bt-iconMargin:                  var(--custom-button-iconMargin, 0.75rem);
     --_bt-fontSize:                    var(--custom-button-fontSize, var(--fontSize-button));
-    --_bt-paddingBlock:                var(--custom-button-paddingBlock, var(--size-sm));
-    --_bt-paddingInline:               var(--custom-button-paddingInline, 1.4em);
   }
 
   &[data-size="lg"] {
-    --_bt-iconSize:                    var(--custom-button-iconSize, 1.75rem);
-    --_bt-iconMargin:                  var(--custom-button-iconMargin, 1rem);
     --_bt-fontSize:                    var(--custom-button-fontSize, var(--fontSize-button-large));
-    --_bt-paddingBlock:                var(--custom-button-paddingBlock, 0.8em);
-    --_bt-paddingInline:               var(--custom-button-paddingInline, 1.6em);
   }
 
   /* Emphasis */
@@ -415,7 +412,6 @@
     position: relative;
     color: inherit;
     grid-area: text;
-    font-size: var(--_bt-fontSize);
     font-family: var(--_bt-fontFamily);
     font-weight: var(--_bt-fontWeight);
     line-height: var(--_tbx-lineHeight);
@@ -443,7 +439,7 @@
     min-inline-size: var(--_bt-iconSize);
     block-size: var(--_bt-iconSize);
     position: relative;
-    margin-block: calc(((var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent)) * var(--_bt-fontSize) - var(--_bt-iconSize)) / 2);
+    margin-block: calc(((var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent)) * 1em - var(--_bt-iconSize)) / 2);
   }
 }
 
@@ -456,7 +452,7 @@
     inset-inline: 0;
     inset-block-start: 0;
     width: 100%;
-    height: calc(var(--_bt-paddingBlock) + (var(--_tbx-lineHeight) - (var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent))) / 2 * var(--_bt-fontSize));
+    height: calc(var(--_bt-paddingBlock) + (var(--_tbx-lineHeight) - (var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent))) / 2 * 1em);
     background-color: var(--debug-fill);
   }
 
@@ -466,7 +462,7 @@
     inset-inline: 0;
     inset-block-end: 0;
     width: 100%;
-    height: calc(var(--_bt-paddingBlock) + (var(--_tbx-lineHeight) - (var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent))) / 2 * var(--_bt-fontSize));
+    height: calc(var(--_bt-paddingBlock) + (var(--_tbx-lineHeight) - (var(--_tbx-emBox) - var(--_tbx-capGap) - var(--_tbx-descent))) / 2 * 1em);
     background-color: var(--debug-fill);
   }
 
