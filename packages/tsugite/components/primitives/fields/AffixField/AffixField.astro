@@ -88,8 +88,11 @@ const inputAttrs = { type: "text", ...input };
   --_af-gap: 0.5ch;              /* space between an affix and the value area */
   --_af-inline-padding: 0.75rem; /* inline padding inside the input */
   --_af-border-width: 1px;       /* input border (also part of the sized-width calc) */
-  /* Field-family height contract — every field's bordered box is min 2.5rem tall */
-  --_af-field-min-block-size: 2.5rem;
+  /* Field-family height contract — every field's bordered box is an Input md's height:
+     its leading, twice the block slot and twice the border, in the field voice (ADR-0030).
+     TODO(token): the slot's numbers (0.25rem + 0.3em) are restated here from Button.css
+     and Input.css; one table should hold them. */
+  --_af-field-min-block-size: calc(var(--lineHeight-field) * var(--fontSize-field) + 2 * (0.25rem + 0.3 * var(--fontSize-field)) + 2px);
   /* Design tokens */
   --_af-border-color: currentColor;
   --_af-border-color-hover: CanvasText;

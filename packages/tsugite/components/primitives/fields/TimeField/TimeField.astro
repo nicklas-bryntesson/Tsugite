@@ -120,8 +120,11 @@ const {
   --_tf-popup-width: 14rem;
   --_tf-popup-gap: 1.5rem;
   --_tf-site-padding: var(--SITE--PADDING, 1rem);
-  /* Field-family height contract — every field's bordered box is min 2.5rem tall */
-  --_tf-field-min-block-size: 2.5rem;
+  /* Field-family height contract — every field's bordered box is an Input md's height:
+     its leading, twice the block slot and twice the border, in the field voice (ADR-0030).
+     TODO(token): the slot's numbers (0.25rem + 0.3em) are restated here from Button.css
+     and Input.css; one table should hold them. */
+  --_tf-field-min-block-size: calc(var(--lineHeight-field) * var(--fontSize-field) + 2 * (0.25rem + 0.3 * var(--fontSize-field)) + 2px);
   /* Design tokens — segments */
   --_tf-border-color: currentColor;
   --_tf-border-color-hover: CanvasText;
