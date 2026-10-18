@@ -6,6 +6,9 @@ import Layout from "../../layouts/Layout.astro";
 import Heading from "tsugite/Heading/Heading.astro";
 import InputSection from "tsugite/fixtures/InputSection.astro";
 import DocPage from "../../components/DocPage/DocPage.astro";
+import Example from "../../components/Example/Example.astro";
+import Sizes from "../../examples/input/Sizes.astro";
+import sizesSrc from "../../examples/input/Sizes.astro?raw";
 import { entryFor } from "../../lib/manifest.ts";
 
 const entry = entryFor("input");
@@ -14,8 +17,12 @@ const entry = entryFor("input");
 <Layout title={entry.title}>
   <DocPage
     entry={entry}
-    lead="One native text field, styled on the element itself: no box around it, so every state — hover, autofill, focus, invalid, read-only, disabled — is the field's own and nothing has to mirror it. It speaks the field voice and stands on a button's height; whether it is invalid is decided once, by aria-invalid, so what is seen and what is announced agree."
+    lead="One native text field, styled on the element itself: no box around it, so every state — hover, autofill, focus, invalid, read-only, disabled — is the field's own and nothing has to mirror it. It speaks the field voice and stands on a button's height at each size; whether it is invalid is decided once, by aria-invalid, so what is seen and what is announced agree."
   >
+    <Example id="sizes" title="Sizes" lead="sm, md and lg: the field voice's font-size stop. The block padding follows it, so a field and a button at the same size line up — md by default." source={sizesSrc} block>
+      <Sizes />
+    </Example>
+
     <section class="doc-bench" id="test-bench">
       <Heading text="Test bench" element="h2" size="2" />
       <div class="doc-note"><Text text="The Input fixture — the state map as a matrix, the text types, validity and the height row, mounted unchanged." /></div>
