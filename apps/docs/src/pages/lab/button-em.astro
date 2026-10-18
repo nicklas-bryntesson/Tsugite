@@ -120,6 +120,19 @@ const sliders = [
     </section>
 
     <section class="lab-row">
+      <Heading element="h2" size="4" text="Buttons and fields together, on the formula" />
+      <Text text="The system's Button (font size on the root, slots in em) beside the system's Input at the same font size, both with the block slot from the mode and values above. An Input is its leading plus twice the slot; a Button its trimmed label plus twice the slot and the trim's give-back — equal by construction. The Input's slot and size are set from outside by the lab (it has no custom level and no size axis yet)." />
+      <div class="lab-pairs lab-rootfont lab-oneknob">
+        {sizes.map(({ size, token }) => (
+          <div class="lab-pair" style={`--lab-fieldSize: var(${token})`}>
+            <Input aria-label={`Email (${size})`} placeholder={`Email · ${size}`} data-measure={`field ${size}`} />
+            <LinkButton href="#" size={size} data-measure={`button ${size} beside field`}>Send</LinkButton>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="lab-row">
       <Heading element="h2" size="4" text="md beside a field" />
       <Text text="The field contract: an Input is a Button md tall. Compare the field with today's md and the proportional md." />
       <div class="lab-buttons">
@@ -332,19 +345,23 @@ const sliders = [
       }
     }
 
-    /* Padding block, one gate per mode. Each adds the trim's give-back, as today's Button:
-       its label is trimmed to the cap, and the padding returns half the leading (measured
-       from today's md). */
-    &[data-mode="ratio"] .lab-em {
-      padding-block: calc((var(--lab-pb) + var(--lab-trim, 0)) * 1em);
+    /* The block slot, one gate per mode, as a length in em of whatever reads it. The
+       dummies add the trim's give-back, as today's Button does (its label is trimmed to
+       the cap, and the padding returns half the leading, measured from today's md). */
+    &[data-mode="ratio"] {
+      --lab-slot: calc(var(--lab-pb) * 1em);
     }
 
-    &[data-mode="affine"] .lab-em {
-      padding-block: calc(var(--lab-a) * 1rem + (var(--lab-b) + var(--lab-trim, 0)) * 1em);
+    &[data-mode="affine"] {
+      --lab-slot: calc(var(--lab-a) * 1rem + var(--lab-b) * 1em);
     }
 
-    &[data-mode="max"] .lab-em {
-      padding-block: calc(max(var(--lab-a) * 1rem, var(--lab-b) * 1em) + var(--lab-trim, 0) * 1em);
+    &[data-mode="max"] {
+      --lab-slot: max(var(--lab-a) * 1rem, var(--lab-b) * 1em);
+    }
+
+    & .lab-em {
+      padding-block: calc(var(--lab-slot) + var(--lab-trim, 0) * 1em);
     }
 
     /* Lab only: the system change under study, made from outside. The root takes the size
@@ -356,7 +373,7 @@ const sliders = [
     /* md's ratios as em in the custom levels: resolved on the icon and the root, at the
        button's own size now that the root has one. */
     & .lab-oneknob {
-      --custom-button-paddingBlock: calc(var(--lab-pb) * 1em);
+      --custom-button-paddingBlock: var(--lab-slot);
       --custom-button-iconSize: calc(var(--lab-icon) * 1em);
       --custom-button-iconMargin: calc(var(--lab-gap) * 1em);
       --custom-button-paddingInline: calc(var(--lab-pi) * 1em);
@@ -364,6 +381,24 @@ const sliders = [
 
     &[data-floor] .lab-em {
       min-block-size: 24px;
+    }
+
+    & .lab-pairs {
+      display: grid;
+      gap: var(--size-md);
+    }
+
+    & .lab-pair {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-sm);
+      align-items: flex-start;
+    }
+
+    /* Lab only: the Input on the same formula and at the pair's font size. */
+    & .lab-pair .Input {
+      --_in-fontSize: var(--lab-fieldSize);
+      --_in-paddingBlock: var(--lab-slot);
     }
 
     & .lab-reset {
