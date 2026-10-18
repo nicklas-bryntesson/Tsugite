@@ -67,7 +67,7 @@ const sliders = [
     </section>
 
     <section class="lab-row">
-      <Heading element="h2" size="4" text="Today: the system's Button" />
+      <Heading element="h2" size="4" text="The system's Button (since ADR-0030: font size on the root, the affine scale)" />
       <div class="lab-buttons">
         {sizes.map(({ size }) => (
           <div class="lab-specimen">
@@ -80,7 +80,7 @@ const sliders = [
 
     <section class="lab-row">
       <Heading element="h2" size="4" text="Today's Button, font size on the root" />
-      <Text text="The system's own Button with one change, made by the lab: the font size moves from the label to the a/button itself, and the label inherits it. Every em on the root — padding inline 1.4em, lg's padding block 0.8em, the radius 0.375em — becomes the button's em instead of the page's 16px." />
+      <Text text="Before ADR-0030 this row showed the lab moving the font size from the label to the a/button. The system now does that itself, so this row matches the one above." />
       <div class="lab-buttons lab-rootfont">
         {sizes.map(({ size }) => (
           <div class="lab-specimen">
