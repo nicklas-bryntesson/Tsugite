@@ -52,13 +52,16 @@ test('foundations: the color page renders from the factories', async ({ page }) 
 })
 
 test('control room: the field-height contract holds in the controls row', async ({ page }) => {
-  // The mechanical twin of the controls row (field-height: 2.5rem).
-  // The field is the contract carrier; whether a button lines up with
-  // it is a FINDING the row exists to show — not asserted here.
+  // The mechanical twin of the controls row. Since ADR-0030 the field family stands on
+  // Input md's height and a Button md on the same, so the field and the button beside it
+  // are one height on every tier — the contract, measured against its partner rather
+  // than a fixed number that moves with the tier.
   await page.goto('/control-room')
   for (const side of ['native', 'fallback']) {
-    const affix = await page.locator(`#TextBox .row[data-sample="A field with a value, a button"] [data-side="${side}"] .AffixField .input`).boundingBox()
-    expect(affix.height, `controls row, ${side}: AffixField input = 2.5rem`).toBe(40)
+    const row = page.locator(`#TextBox .row[data-sample="A field with a value, a button"] [data-side="${side}"]`)
+    const affix = await row.locator('.AffixField .input').boundingBox()
+    const button = await row.locator('.Button').boundingBox()
+    expect(affix.height, `controls row, ${side}: AffixField input = Button md`).toBeCloseTo(button.height, 1)
   }
 })
 
