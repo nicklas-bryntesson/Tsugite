@@ -1,0 +1,136 @@
+---
+// /lab/voice-playground — every ground in one row of columns: the page and each allowed
+// voice × volume cell, each hosting the same stack (_VoiceStack.astro): text, border,
+// fields, buttons, notices, then the tone cards. The question is which parts follow the
+// donut and which stand in the page's colours regardless. Nothing here changes the system; switch the appearance from the
+// debug panel to read the four modes.
+import Layout from "../../layouts/Layout.astro";
+import Heading from "tsugite/Heading/Heading.astro";
+import Text from "tsugite/Text/Text.astro";
+import Surface from "tsugite/Surface/Surface.astro";
+import VoiceStack from "./_VoiceStack.astro";
+import Stage from "../../components/Stage/Stage.astro";
+import { voiceMatrix } from "tsugite/theme-default/theme.voices.tokens.js";
+
+const grounds = [
+  { key: "page", label: "page" },
+  ...Object.entries(voiceMatrix).flatMap(([theme, volumes]) =>
+    volumes.map((prominence) => ({ key: `${theme}-${prominence}`, label: `${theme} × ${prominence}`, theme, prominence })),
+  ),
+];
+
+// The tone spoof (tasks/parking-lot.md, "From the voice-carriers discussion"). A ground
+// offers a closed menu of tones; each tone is a cell. A first draft read from the cross
+// matrix of 2026-10-21 — tune here. A tone a ground does not offer is left out.
+const toneMap: Record<string, Record<string, string>> = {
+  page: { soft: "neutral-primary", accent: "brand-primary", contrast: "inverse-primary" },
+  "neutral-primary": { soft: "neutral-subtle", accent: "brand-primary", contrast: "inverse-primary" },
+  "neutral-subtle": { soft: "neutral-primary", accent: "accent-primary", contrast: "inverse-primary" },
+  "brand-primary": { accent: "accent-primary", contrast: "brand-subtle" },
+  "brand-subtle": { soft: "neutral-primary", accent: "brand-primary", contrast: "inverse-primary" },
+  "accent-primary": { accent: "brand-primary", contrast: "accent-subtle" },
+  "accent-subtle": { soft: "neutral-primary", accent: "accent-primary", contrast: "inverse-primary" },
+  "inverse-primary": { soft: "brand-primary", accent: "accent-primary", contrast: "neutral-primary" },
+};
+const TONES = ["soft", "accent", "contrast"];
+
+// Every channel a voice cell carries: the --theme-* name and the pointer's key.
+const channels: [string, string][] = [
+  ["surface", "surface"],
+  ["text", "text"],
+  ["textMuted", "textMuted"],
+  ["border", "border"],
+  ["button-color-primary", "buttonColorPrimary"],
+  ["button-backgroundColor-primary", "buttonBackgroundColorPrimary"],
+  ["button-borderColor-primary", "buttonBorderColorPrimary"],
+  ["button-backgroundColor-primary-hover", "buttonBackgroundColorPrimaryHover"],
+  ["button-color-secondary", "buttonColorSecondary"],
+  ["button-borderColor-secondary", "buttonBorderColorSecondary"],
+  ["button-borderColor-secondary-hover", "buttonBorderColorSecondaryHover"],
+  ["button-backgroundColor-secondary-hover", "buttonBackgroundColorSecondaryHover"],
+  ["shadow", "shadow"],
+  ["shadow-soft", "shadowSoft"],
+  ["glow-lightness", "glowLightness"],
+  ["glow-chroma", "glowChroma"],
+  ["glow-alpha", "glowAlpha"],
+];
+
+// What a generator would write. Each ground publishes its tones as inherited variables
+// pointing at a cell; one rule per tone re-aims a card's channels at what the ground
+// published. Inheritance makes the nearest ground answer, however deep the card sits.
+const groundSelector = (key: string) => {
+  if (key === "page") return ".VoicePlayground";
+  const [theme, prominence] = key.split("-");
+  return `.VoicePlayground [data-theme="${theme}"][data-prominence="${prominence}"]`;
+};
+const toneCss = [
+  ...Object.entries(toneMap).map(([ground, tones]) => {
+    const lines = TONES.flatMap((tone) => {
+      const cell = tones[tone];
+      return cell ? channels.map(([, key]) => `  --tone-${tone}-${key}: var(--voice-${cell}-${key});`) : [];
+    });
+    return `${groundSelector(ground)} {\n${lines.join("\n")}\n}`;
+  }),
+  ...TONES.map(
+    (tone) =>
+      `.VoicePlayground .Card[data-tone="${tone}"] {\n${channels
+        .map(([name, key]) => `  --theme-${name}: var(--tone-${tone}-${key});`)
+        .join("\n")}\n}`,
+  ),
+].join("\n\n");
+
+---
+
+<Layout title="Voice playground">
+  <main class="Main VoicePlayground">
+    <div class="intro grid-container">
+      <Heading element="h1" size="2" text="Voice playground" />
+      <Text text="The same parts on every ground: the page and each allowed voice × volume. Read which parts turn with the donut and which keep the page's colours. Switch the appearance from the debug panel for the other three modes." />
+    </div>
+
+    <Stage id="voice-playground" label="Every ground, side by side">
+      <div class="columns">
+        {grounds.map((g) => {
+          const tones = TONES.map((tone) => ({ tone, cell: toneMap[g.key][tone] }));
+          const stack = <VoiceStack id={g.key} label={g.label} tones={tones} />;
+          return g.theme ? (
+            <Surface class="column" theme={g.theme} prominence={g.prominence} capInline={false}>{stack}</Surface>
+          ) : (
+            <div class="column page">{stack}</div>
+          );
+        })}
+      </div>
+    </Stage>
+  </main>
+  <style is:global set:html={toneCss}></style>
+</Layout>
+
+<style is:global>
+/* A lab instrument: arrangement only. Surface's band padding and the page's own column
+   are evened out so every ground reads the same; the parts are untouched. */
+.VoicePlayground {
+  padding-block: 3rem 4rem;
+
+  & .intro {
+    display: grid;
+    gap: var(--size-sm);
+    margin-block-end: var(--size-xl);
+  }
+
+  & .columns {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 15rem;
+    gap: var(--size-sm);
+  }
+
+  & .column {
+    padding: var(--size-md);
+    border-radius: 0.75rem;
+  }
+
+  & .column.page {
+    outline: 1px dashed var(--color-border-default);
+  }
+}
+</style>
