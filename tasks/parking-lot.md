@@ -610,3 +610,94 @@ wrapperless markup (box, sibling/child selectors such as `.Surface + .Surface` a
     `--site-offset` inline), too much for a card. Open: Card paints the ground of the voice
     it stands in (`--theme-surface`), and/or Card takes `theme`/`prominence` like Surface
     (the same axis, ADR-0006 — no new vocabulary); or Surface gets a padding axis.
+    → Superseded by "From the voice-carriers discussion" below: Card takes a `tone`, not a voice.
+
+## From the voice-carriers discussion (2026-10-20/21)
+
+Tabled with the full reasoning so it can be picked up from the same understanding.
+Instrument: `/lab/voice-playground` (the page and every allowed voice × volume, each with
+fields, choices, buttons and notices). Nothing below is decided until it reaches an ADR.
+
+- **What the playground showed.** Notices melt into grounds of their own lightness (dark:
+  neutral and accent-subtle; light: page, brand-subtle, accent-subtle). Fields and
+  checkboxes stay page-white on brand, accent and inverse primary: `Input.css` reads
+  `--color-field-*` with no `--theme-*` channel between, Notice reads `--ui-*`. Only the
+  buttons turn with the donut. A reference board (one light matrix, fields and tables
+  tinted per theme column) shows the wanted result.
+- **One law: anything that paints a box on a ground takes the box's colour from the
+  ground.** Every primitive that can live on a theme gets the chain custom ← theme ←
+  default (ADR-0008 shape) through roles in the voice cell (`--theme-field-surface`,
+  `-border`, `-text`, `-placeholder`, a notice base, …). It is a lookup table in JS
+  (appearance → voice × volume → role, e.g. a focused input's border), written out ×8
+  contexts by the generator. Cells are filled by a derivation rule with explicit per-cell
+  overrides in the same table (open: rule only, or rule + overrides). Mixing happens at
+  build time: runtime `color-mix` is unguarded under Chrome 109. A feedback colour keeps
+  its meaning in the icon, bar and border; only its box base is derived against the ground.
+  `@scope` was weighed and set aside: inheritance already gives "nearest ground wins" at
+  the floor, and a scoped ground file would have to name every component.
+- **Only containers carry a voice.** Today Surface (the section donut) and Card (the
+  frame); the list may grow, but only with containers. Compositions (Teaser, a future
+  Accordion) stay voiceless and are wrapped in a Surface or a Card for another voice.
+  Teaser: a `container` axis wraps it in Card and maps the card's props, as `frame` does;
+  a voice with no container is an `absent` error.
+- **Card takes a `tone`, not a voice.** JS cannot validate a child's props against the
+  ground it lands on, so an absolute `theme` on Card cannot be checked. A relative prop
+  needs no check: the ground answers it, and combinations the ground's table leaves out
+  are inexpressible. The name was chosen over intensity and separation: elevation already
+  separates by depth, so tone is colour and the two axes are orthogonal; tone is not a
+  volume (prominence) and not a voice (theme). Working values, read from the
+  "every ground, every voice" cross matrix (cards tested at × primary only): `soft`
+  (nearest allowed), `accent` (a jump to brand or accent), `contrast` (the opposite of the
+  ground — on inverse a light card). Grounds offer two to four options; dark and saturated
+  grounds often lack `soft`. The crosses partly judged today's cell values (neutral on
+  inverse "looked wrong today"), so keep *which tones exist* apart from *tuning the cells*.
+  Argyle's colour-schemes (surface1–4) were looked at: the numbers are unordered and there
+  are no voices; a site like that would map the same tone names onto its ladder.
+- **The chain: custom ← tone ← theme ← default** (priority in that order). Tone is a
+  station on the frame alone: for the inside it rewrites `--theme-*`, so children never
+  read tone and need no tone axis. A ground inside a ground is a replacement, not a layer;
+  a toned card is a ground reached by lookup. Naming floated and not settled: custom ←
+  frame ← ground ← appearance ("surface" is a role name, "theme" collides with appearance).
+- **Two tables, a closed set of cells.** (1) cell → roles, per appearance — the
+  `--voice-*` pointer layer that exists since the claims factory (#148). (2) ground ×
+  tone → cell — static, about 8 × 3, no ×8, because it only points at pointers. Each
+  ground publishes its tones as inherited variables (`--tone-<name>-<channel>`), one Card
+  rule per tone re-aims the channels. Inside a toned card is then identical to a Surface
+  of the same cell: a `contrast` card on inverse is a light cell and its fields are light
+  again without a rule. The playground stays primitives × cells, plus one row per ground
+  of three card swatches. Real explosion only if a card's inside must differ from a
+  Surface of the same cell.
+- **Shadow.** The cast keeps the ground's ink (`--ground-shadow`, published by Surface,
+  untouched by the tone's rewrite); the glow comes from the tone's cell. With tones a
+  closed set, the glow can be computed at build per ground × tone and the runtime
+  `oklch(from …)` with its `@supports` pair goes.
+- **Collapse leaves Surface** (ADR-0016 §5 amendment). Collapse is right only when both
+  sides of the seam are inset on the same ground; a bleed edge forbids it even on the same
+  colour (2026-10-20 screenshot). It moves to the site layer, scoped to a page type, with
+  the block type checked on BOTH sides: `.Surface[pair]:is(.A, .B) + .Surface[pair]:is(.A,
+  .B)`. The system may offer a factory writing the pair rows from `voiceMatrix`.
+  `Surface.generated.css` would go. See also the 2026-09-18 `join` position.
+- **Appearance side by side: a test valve, not a capability (tabled again).** Tabled once
+  on 2026-09-02 after a spike: generalising `:root[data-appearance]` split-brained the
+  voice cells (descendant blocks, source order wins); the viable variant moves cell values
+  onto the appearance element as inherited properties with static `[data-theme]` wiring —
+  half of which now exists as the pointer layer. Position now: appearance is never
+  sprinkled and is not a Surface prop; it needs a valve in the `data-test-*` family
+  (ADR-0025) so a container can pin dark beside light for benches and the playground,
+  generated by the JS factories. ADR-0025's one-boolean-per-state shape suggests
+  `data-test-dark` + `data-test-contrast`. Tone and primitive roles do not depend on it.
+- **ADR split when it lands.** (a) a frame takes a tone from its ground — amends ADR-0005,
+  Card drops `data-theme`; (b) every primitive reads its roles from the theme — extends
+  ADR-0006; (c) the collapse amendment to ADR-0016. Open inside them: a tone a ground does
+  not offer (fallback or dev marker), a card inside a card (inherits the outer ground's
+  table, may land in its parent's cell), derivation vs hand overrides, Teaser's
+  `container` axis, whether subtle cards widen the tone menu.
+- **What a test valve costs in production.** Test-state attributes (ADR-0025) are one
+  extra selector on the real rule, close to free. An appearance valve that copies every
+  cell per mode onto a container would ship hundreds of declarations no production page
+  reads. Two ways to weigh: a separate generated file loaded only by benches and labs, or
+  the valve as a selector-list entry on the existing mode blocks
+  (`:root[data-appearance="dark"], [data-test-dark] { --voice-…: … }`) — zero new
+  declarations, but only once the cell values are inherited (variant B); with today's
+  descendant cell blocks the valve split-brains. Ask the same of every factory: does its
+  map ship to every site, or only where it is read?
