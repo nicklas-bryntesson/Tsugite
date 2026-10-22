@@ -99,15 +99,15 @@ const cssClass = className && String(className).trim() ? `Surface ${className}` 
   --ground-shadow: var(--theme-shadow, var(--color-shadow-ground));
   --ground-shadow-soft: var(--theme-shadow-soft, var(--color-shadow-ground-soft));
 
-  & .content {
+  & > .content {
     margin-inline: auto;
   }
 
-  &[data-cap-inline="false"] .content {
+  &[data-cap-inline="false"] > .content {
     max-inline-size: none;
   }
 
-  &[data-cap-inline="true"] .content {
+  &[data-cap-inline="true"] > .content {
     max-inline-size: var(--_sf-contentMaxInlineSize);
   }
 }
