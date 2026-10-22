@@ -1,0 +1,37 @@
+---
+// Stage — a full-width row for wide examples: no maximum width, the content centred
+// while it fits and scrolled once it does not, its edges on the site offset. Built on
+// the package's ScrollArea; the stage pads by the site offset so the ScrollArea's
+// break-out lands on the viewport's edges.
+import ScrollArea from "tsugite/ScrollArea/ScrollArea.astro";
+
+interface Props {
+  id: string;
+  /** accessible name for the scroll region */
+  label: string;
+}
+
+const { id, label } = Astro.props;
+---
+
+<div class="Stage">
+  <ScrollArea
+    id={id}
+    ariaLabel={label}
+    style="--_sc-offset: var(--site-offset)"
+    contentStyle="flex: none; inline-size: max-content; margin-inline: auto; padding-block: var(--size-xl)"
+  >
+    <slot />
+  </ScrollArea>
+</div>
+
+<style is:global>
+/* The content's auto margins centre it in the scroller's flex row while it fits and
+   collapse to zero when it overflows, so the start is never clipped — which
+   justify-content: center would do. The block padding sits on the content, inside the
+   scroller: overflow-x clips the block axis too, and an outline or a border at the
+   content's edge would be cut. */
+.Stage {
+  padding-inline: var(--site-offset);
+}
+</style>
