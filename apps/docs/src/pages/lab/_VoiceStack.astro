@@ -1,0 +1,148 @@
+---
+// The stack every ground in /lab/voice-playground hosts, in a fixed order: text, border,
+// secondary surface, fields, buttons, notices, then the tone cards — each card hosting
+// the same stack without cards, so a card's inside reads against the column of its cell.
+// Raw parts (muted text, the boxes) read the chain a component would; they are probes.
+import Text from "tsugite/Text/Text.astro";
+import Input from "tsugite/Input/Input.astro";
+import ChoiceGroup from "tsugite/ChoiceGroup/ChoiceGroup.astro";
+import ChoiceField from "tsugite/ChoiceField/ChoiceField.astro";
+import ActionButton from "tsugite/Button/ActionButton.astro";
+import Notice from "tsugite/Notice/Notice.astro";
+import Card from "tsugite/Card/Card.astro";
+
+interface Props {
+  /** unique per stack: ids and radio names */
+  id: string;
+  label: string;
+  /** the ground's tone menu; absent inside a card */
+  tones?: { tone: string; cell: string | undefined }[];
+}
+
+const { id, label, tones } = Astro.props;
+const notices = ["error", "warning", "success", "info"];
+---
+
+<div class="VoiceStack">
+  <Text inline size="sm" text={label} />
+
+  <section>
+    <Text size="sm" text="Primary text." />
+    <p class="muted">Secondary text.</p>
+  </section>
+
+  <section>
+    <div class="probe border">border</div>
+    <div class="probe inset">surface inset (no theme channel)</div>
+  </section>
+
+  <section>
+    <Input aria-label={`placeholder (${id})`} placeholder="placeholder" />
+    <Input aria-label={`value (${id})`} value="value" />
+    <Input aria-label={`invalid (${id})`} value="invalid" aria-invalid="true" />
+    <Input aria-label={`disabled (${id})`} value="disabled" disabled />
+    <ChoiceGroup legend="Radio" orientation="horizontal">
+      <ChoiceField type="radio" id={`${id}-r1`} name={`${id}-r`} label="Off" />
+      <ChoiceField type="radio" id={`${id}-r2`} name={`${id}-r`} label="On" checked />
+    </ChoiceGroup>
+    <ChoiceGroup legend="Checkbox" orientation="horizontal">
+      <ChoiceField type="checkbox" id={`${id}-c1`} name={`${id}-c`} label="Off" />
+      <ChoiceField type="checkbox" id={`${id}-c2`} name={`${id}-c`} label="On" checked />
+      <ChoiceField type="checkbox" id={`${id}-c3`} name={`${id}-c`} label="Invalid" invalid />
+    </ChoiceGroup>
+  </section>
+
+  <section class="row">
+    <ActionButton size="sm">Primary</ActionButton>
+    <ActionButton size="sm" emphasis="secondary">Secondary</ActionButton>
+  </section>
+
+  <section>
+    {notices.map((variant) => (
+      <Notice variant={variant} title={variant} capInline={false} />
+    ))}
+  </section>
+
+  <section class="solid">
+    {notices.map((variant) => (
+      <Notice variant={variant} title={`${variant}, solid`} capInline={false} />
+    ))}
+  </section>
+
+  {tones && (
+    <section class="tones">
+      {tones.map(({ tone, cell }) =>
+        cell ? (
+          <Card padding="md" elevation="sm" data-tone={tone}>
+            <Astro.self id={`${id}-${tone}`} label={`${tone} → ${cell.replace("-", " × ")}`} />
+          </Card>
+        ) : (
+          <div class="probe missing">{tone}: not offered</div>
+        ),
+      )}
+    </section>
+  )}
+</div>
+
+<style is:global>
+/* A lab instrument: arrangement only. */
+.VoiceStack {
+  display: grid;
+  gap: var(--size-lg);
+
+  & section {
+    display: grid;
+    gap: var(--size-sm);
+  }
+
+  & section.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--size-xs);
+  }
+
+  & section.tones {
+    gap: var(--size-md);
+  }
+
+  & .muted {
+    margin: 0;
+    font-size: var(--fontSize-body-small);
+    color: var(--theme-textMuted, var(--color-text-secondary));
+  }
+
+  & .probe {
+    padding: var(--size-sm);
+    border-radius: 0.5rem;
+    font-size: var(--fontSize-body-small);
+  }
+
+  & .probe.border {
+    border: 1px solid var(--theme-border, var(--color-border-default));
+  }
+
+  & .probe.inset {
+    background: var(--color-surface-inset);
+  }
+
+  /* SPOOF: the solid treatment reaches into Notice's private slots and its icon part —
+     never done outside a lab. Background = the accent, text and icon = its foreground. */
+  & section.solid .Notice {
+    --_nt-backgroundColor: var(--_nt-accent);
+    --_nt-textColor: var(--ui-primary-foreground);
+
+    & .icon {
+      color: var(--_nt-textColor);
+    }
+
+    &[data-variant="warning"] {
+      --_nt-textColor: var(--ui-warning-foreground);
+    }
+  }
+
+  & .probe.missing {
+    border: 1px dashed currentColor;
+    opacity: 0.6;
+  }
+}
+</style>
